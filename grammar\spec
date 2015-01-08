@@ -1,7 +1,10 @@
 
 
 
-
+keywords
+  seconds
+  milliseconds
+  nanoseconds
 
 basic functions:
   +
