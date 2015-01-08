@@ -1,0 +1,2 @@
+Test files are in src/test.
+To run the tests and compare with expected results just run "test" in the sbt console

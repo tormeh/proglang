@@ -1,0 +1,5 @@
+write examples
+create grammar (not left-recursive)
+write lexer
+write parser
+write tree-walker

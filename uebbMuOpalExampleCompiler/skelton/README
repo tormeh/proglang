@@ -1,0 +1,4 @@
+Test files are in src/test.
+To run the tests and compare with expected results just run "test" in the sbt console
+
+testfiles with annotated right answers are in this folder(skelton)

@@ -1,0 +1,47 @@
+run
+run fac.mo
+clean
+run fac.mo
+clean
+run fac.mo
+clean
+run fac.mo
+clean
+run fac.mo
+clean
+run fac.mo
+clean
+run fac.mo
+clean
+run fac.mo
+clean
+run fac.mo
+run
+run fac.mo
+quit
+exit
+run fac.mo
+q
+quit
+exit
+run
+clean
+run
+run fac.mo
+run
+run fac.mo
+run faultyfac.mo
+run fib.mo
+run fibonacci.mo
+run fib.mo
+run faultyfib.mo
+run faultyfac2.mo
+run faultyfac3.mo
+run -unchecked faultyfac3.mo
+run-unchecked faultyfac3.mo
+run faultyfac3.mo
+run faultyfac2.mo
+run faultyfac.mo
+run faultyfib.mo
+run fib.mo
+run fac.mo
