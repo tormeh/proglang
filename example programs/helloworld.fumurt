@@ -1,5 +1,9 @@
 program p =
-  0 milliseconds to 10 milliseconds do actionPrintHelloWorld
+{
+  between(start=millisecond(0), end=millisecond(10), action=actionPrintHelloWorld)
+}
   
 action actionPrintHello:nothing =
+{
   println("hello world")
+}

@@ -1,3 +1,21 @@
+Prog ::= Def EOF | Def newline Prog
+Def ::= Lhs "=" Rhs
+DefLhs ::= Defdescription _id_args
+args ::= "("_id_":"_type_ args3")" | e
+args3 ::= "," _id_":"_type_ args3 | e
+DefDescription ::= "program" | "action" | "unsafe action" | "function"
+DefRhs ::= _{_ expression _}_
+expression ::= Def newline expression | Statement newline expression | ""
+expression2 ::= expression2 | e
+Statement ::= _id_callargs | basictype
+callargs ::= "("_id_")" | "("basictype")" | "("callargs2")" | e
+callargs2 ::= _id_"="_id_"," _id_"="_id_ callargs3
+callargs3 ::= ","id"="id | ","id"="id callargs3 | e
+basictype ::= "true" | "false" | integer | float | string
+
+where id and type are some names
+newline is \n
+e is the empty token
 
 
 
@@ -5,6 +23,8 @@ keywords
   seconds
   milliseconds
   nanoseconds
+  true
+  false
 
 basic functions:
   +
@@ -13,3 +33,6 @@ basic functions:
   /
   print
   diverse mattestuff
+  after
+  every
+  between

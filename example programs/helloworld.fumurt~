@@ -1,2 +1,9 @@
 program p =
+{
   0 milliseconds to 10 milliseconds do actionPrintHelloWorld
+}
+  
+action actionPrintHello:nothing =
+{
+  println("hello world")
+}

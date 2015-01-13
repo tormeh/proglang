@@ -1,0 +1,126 @@
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403861308715"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:8)" id="196757960"><stats time="678" expectations="1" failures="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:11)" id="-1649879488"><stats time="3" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403861308726"><stats time="56" expectations="3" failures="2" successes="1" examples="3"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403861531573"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:13)" id="196757960"><stats time="9" expectations="1" errors="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403861531584"><stats time="32" expectations="2" errors="1" successes="1" examples="2"><trend><stats time="32" expectations="-1" failures="-2" errors="1" examples="-1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403861656435"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:13)" id="196757960"><stats time="12" expectations="1" errors="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403861656439"><stats time="18" expectations="2" errors="1" successes="1" examples="2"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403861690631"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:13)" id="196757960"><stats time="8" expectations="1" errors="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403861690661"><stats time="35" expectations="2" errors="1" successes="1" examples="2"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403861727418"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:13)" id="196757960"><stats time="7" expectations="1" errors="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403861727432"><stats time="19" expectations="2" errors="1" successes="1" examples="2"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403861761430"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:8)" id="196757960"><stats time="31" expectations="1" errors="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:13)" id="196757960"><stats time="2" expectations="1" errors="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403861761443"><stats time="16" expectations="2" errors="2" examples="2"><trend><stats time="16" errors="1" successes="-1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403861796559"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:8)" id="196757960"><stats time="41" expectations="1" errors="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:13)" id="196757960"><stats time="1" expectations="1" errors="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403861796571"><stats time="26" expectations="2" errors="2" examples="2"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403861843884"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:8)" id="196757960"><stats time="33" expectations="1" errors="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:13)" id="196757960"><stats time="1" expectations="1" errors="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403861843891"><stats time="21" expectations="2" errors="2" examples="2"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403861877664"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:13)" id="196757960"><stats time="8" expectations="1" errors="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403861877674"><stats time="19" expectations="2" errors="1" successes="1" examples="2"><trend><stats time="19" errors="-1" successes="1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403861965968"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:13)" id="196757960"><stats time="98" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403861965994"><stats time="34" expectations="2" failures="1" successes="1" examples="2"><trend><stats time="34" failures="1" errors="-1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403862016947"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:13)" id="196757960"><stats time="48" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403862016963"><stats time="17" expectations="2" failures="1" successes="1" examples="2"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403862373135"><stats time="17" expectations="2" successes="2" examples="2"><trend><stats time="17" failures="-1" successes="1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403862594945"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:28)" id="671277142"><stats time="13" expectations="1" errors="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403862594958"><stats time="21" expectations="6" errors="1" successes="5" examples="6"><trend><stats time="21" expectations="4" errors="1" successes="3" examples="4"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403862835550"><stats time="24" expectations="9" successes="9" examples="9"><trend><stats time="24" expectations="3" errors="-1" successes="4" examples="3"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403862865720"><stats time="20" expectations="9" successes="9" examples="9"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403862989045"><stats time="18" expectations="9" successes="9" examples="9"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403863163674"><stats time="19" expectations="9" successes="9" examples="9"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403863323114"><stats time="21" expectations="9" successes="9" examples="9"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403863841042"><stats time="38" expectations="9" successes="9" examples="9"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403863927493"><stats time="20" expectations="9" successes="9" examples="9"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403864128837"><stats time="17" expectations="9" successes="9" examples="9"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403864238751"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:32)" id="-8327760"><stats time="32" expectations="1" errors="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403864238761"><stats time="18" expectations="9" errors="1" successes="8" examples="9"><trend><stats time="18" errors="1" successes="-1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403864276461"><stats time="19" expectations="9" successes="9" examples="9"><trend><stats time="19" errors="-1" successes="1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403864297340"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:32)" id="-8327760"><stats time="43" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403864297347"><stats time="19" expectations="9" failures="1" successes="8" examples="9"><trend><stats time="19" failures="1" successes="-1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403865428200"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:32)" id="-8327760"><stats time="67" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403865428206"><stats time="17" expectations="9" failures="1" successes="8" examples="9"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403865496450"><stats time="20" expectations="9" successes="9" examples="9"><trend><stats time="20" failures="-1" successes="1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403875843419"><stats time="67" expectations="9" successes="9" examples="9"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403876845557"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:11)" id="107901687"><stats time="17" expectations="1" failures="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:16)" id="-963458854"><stats time="4" expectations="1" failures="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:21)" id="-1517673620"><stats time="7" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403876845572"><stats time="37" expectations="12" failures="3" successes="9" examples="12"><trend><stats time="37" expectations="3" failures="3" examples="3"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403876897320"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:11)" id="107901687"><stats time="17" expectations="1" failures="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:16)" id="-963458854"><stats time="2" expectations="1" failures="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:21)" id="-1517673620"><stats time="2" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403876897352"><stats time="20" expectations="12" failures="3" successes="9" examples="12"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403876923351"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:11)" id="107901687"><stats time="8" expectations="1" failures="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:16)" id="-963458854"><stats time="11" expectations="1" failures="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:21)" id="-1517673620"><stats time="6" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403876923376"><stats time="23" expectations="12" failures="3" successes="9" examples="12"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403876963507"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:11)" id="107901687"><stats time="14" expectations="1" failures="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:16)" id="-963458854"><stats time="3" expectations="1" failures="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:21)" id="-1517673620"><stats time="9" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403876963522"><stats time="20" expectations="12" failures="3" successes="9" examples="12"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403877133303"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:11)" id="107901687"><stats time="18" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403877133311"><stats time="34" expectations="11" failures="1" successes="10" examples="11"><trend><stats time="34" expectations="-1" failures="-2" successes="1" examples="-1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403877186583"><stats time="20" expectations="11" successes="11" examples="11"><trend><stats time="20" failures="-1" successes="1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403877844836"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:11)" id="107901687"><stats time="29" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403877844865"><stats time="43" expectations="11" failures="1" successes="10" examples="11"><trend><stats time="43" failures="1" successes="-1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403879095876"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:11)" id="107901687"><stats time="8" expectations="1" failures="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:16)" id="-1517673620"><stats time="10" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403879095890"><stats time="17" expectations="11" failures="2" successes="9" examples="11"><trend><stats time="17" failures="1" successes="-1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403879176460"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:11)" id="107901687"><stats time="14" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403879176476"><stats time="24" expectations="11" failures="1" successes="10" examples="11"><trend><stats time="24" failures="-1" successes="1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403879315082"><stats time="20" expectations="11" successes="11" examples="11"><trend><stats time="20" failures="-1" successes="1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403879518071"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:21)" id="-963458854"><stats time="8" expectations="1" failures="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:26)" id="-963458854"><stats time="5" expectations="1" failures="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:31)" id="-963458854"><stats time="4" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403879518081"><stats time="22" expectations="14" failures="3" successes="11" examples="14"><trend><stats time="22" expectations="3" failures="3" examples="3"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403879646068"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:21)" id="-963458854"><stats time="21" expectations="1" errors="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:26)" id="-963458854"><stats time="17" expectations="1" failures="1" examples="1"></stats></result>
+<result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:31)" id="-963458854"><stats time="8" expectations="1" errors="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403879646082"><stats time="23" expectations="14" failures="1" errors="2" successes="11" examples="14"><trend><stats time="23" failures="-2" errors="2"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403879719426"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:26)" id="-963458854"><stats time="7" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403879719435"><stats time="20" expectations="14" failures="1" successes="13" examples="14"><trend><stats time="20" errors="-2" successes="2"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403879742978"><stats time="30" expectations="14" successes="14" examples="14"><trend><stats time="30" failures="-1" successes="1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403880537214"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:37)" id="-963458854"><stats time="24" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403880537223"><stats time="30" expectations="15" failures="1" successes="14" examples="15"><trend><stats time="30" expectations="1" failures="1" examples="1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-results timestamp="1403880661668"><result location="de.tuberlin.uebb.comp1.homework.UnitTest (UnitTest.scala:37)" id="-963458854"><stats time="38" expectations="1" failures="1" examples="1"></stats></result>
+</de.tuberlin.uebb.comp1.homework.UnitTest-results>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403880661676"><stats time="30" expectations="15" failures="1" successes="14" examples="15"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403880736768"><stats time="26" expectations="15" successes="15" examples="15"><trend><stats time="26" failures="-1" successes="1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1403880761928"><stats time="21" expectations="15" successes="15" examples="15"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1404114815935"><stats time="128" expectations="16" successes="16" examples="16"><trend><stats time="128" expectations="1" successes="1" examples="1"></stats></trend></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1404114988727"><stats time="17" expectations="16" successes="16" examples="16"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1404115035448"><stats time="18" expectations="16" successes="16" examples="16"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1404115210904"><stats time="16" expectations="16" successes="16" examples="16"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1404115266568"><stats time="18" expectations="16" successes="16" examples="16"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1404118299275"><stats time="85" expectations="16" successes="16" examples="16"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1405478967003"><stats time="53" expectations="16" successes="16" examples="16"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>
+<de.tuberlin.uebb.comp1.homework.UnitTest-stats timestamp="1405499294447"><stats time="17" expectations="16" successes="16" examples="16"></stats></de.tuberlin.uebb.comp1.homework.UnitTest-stats>

@@ -1,16 +1,26 @@
 program p =
+{
   10 milliseconds to 20 milliseconds do actionPrintWorld
   0 milliseconds to 10 milliseconds do actionPrintHello
   20 milliseconds to 30 milliseconds do actionPrintNum
+}
 
 action actionPrintHello:nothing =
+{
   println("hello")
+}
 
 action actionPrintWorld:nothing =
+{
   println("world")
+}
 
 action actionPrintNum:nothing =
+{
   println(string(square(2)))
+}
 
 function square(x:Integer):Integer =
+{
   return x*x
+}

@@ -1,3 +1,7 @@
 program p =
+{
   every 15 milliseconds
+  {
     0 milliseconds to 10 milliseconds do actionPrintHelloWorld
+  }
+}

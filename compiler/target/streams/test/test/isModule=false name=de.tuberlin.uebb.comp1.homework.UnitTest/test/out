@@ -1,0 +1,63 @@
+[0m[[0minfo[0m] [0mUnitTest[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37madd(8,2) should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m be equal 10[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37madd(2147483645,21474836) should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m return error (int overflow)[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37msub(8,2) should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m be equal 6[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37msub(2,8) should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m return error (result is < 0)[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37mmul(8,2) should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m be equal 16[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37mmul(999999,999999) should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m return error (int overflow)[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37mdiv(8,2) should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m be equal 4[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37mdiv(9,2) should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m be equal 4 (int divison)[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37mdiv(8,0) should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m return error (division by 0)[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37mIF eq(2,3) THEN false ELSE eq(2,2) FI should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m be equal true[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37mIF lt(3,4) THEN 5 FI should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m be equal 5[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37mIF or(true, false) THEN[0m[0m
+[0m[[0minfo[0m] [0m[37m	IF or(true, true) THEN or(false, false) ELSE true FI[0m[0m
+[0m[[0minfo[0m] [0m[37mFI should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m be equal false[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37mIF and(true, true) THEN[0m[0m
+[0m[[0minfo[0m] [0m[37m	IF and(false, false) THEN true ELSE and(true, false) FI[0m[0m
+[0m[[0minfo[0m] [0m[37mFI should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m be equal false[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37mIF not(false) THEN not(true) FI should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m be equal false[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37mIF false THEN 1 FI should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m return an error (ELSE missing)[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37mDEF minus(a:nat, b:nat) == sub(a,b):nat [0m[0m
+[0m[[0minfo[0m] [0m[37mDEF combi(a:nat, b:nat, c:nat, d:nat):nat ==[0m[0m
+[0m[[0minfo[0m] [0m[37m	mul(minus(a,b),add(div(b,c),d))[0m[0m
+[0m[[0minfo[0m] [0m[37mDEF isNotSubst(a:nat,b:nat):bool == lt(a,b)[0m[0m
+[0m[[0minfo[0m] [0m[37mDEF isDiv(b:nat, c:nat):bool == not(eq(c,0))[0m[0m
+[0m[[0minfo[0m] [0m[37mDEF MAIN:nat ==[0m[0m
+[0m[[0minfo[0m] [0m[37m	IF and(not(isNotSubst(9,6)), or(isDiv(6,3), false)) THEN combi(9,6,3,2) ELSE 0 FI should[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[32m+[0m be equal 12[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0m[37m[0m[0m
+[0m[[0minfo[0m] [0m[37m[0mTotal for specification UnitTest[0m
+[0m[[0minfo[0m] [0m[36mFinished in 17 ms[0m[0m
+[0m[[0minfo[0m] [0m[36m[0m[36m16 examples, 0 failure, 0 error[0m[0m

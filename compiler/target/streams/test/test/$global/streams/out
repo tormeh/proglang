@@ -1,0 +1,6 @@
+[0m[[0mdebug[0m] [0mRunning TaskDef(de.tuberlin.uebb.comp1.homework.UnitTest, specs2 Specification fingerprint, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mSummary for ScalaCheck not available.[0m
+[0m[[0mdebug[0m] [0mSummary for specs2 not available.[0m
+[0m[[0minfo[0m] [0mPassed: Total 16, Failed 0, Errors 0, Passed 16[0m
+[0m[[0mdebug[0m] [0mPassed tests:[0m
+[0m[[0mdebug[0m] [0m	de.tuberlin.uebb.comp1.homework.UnitTest[0m

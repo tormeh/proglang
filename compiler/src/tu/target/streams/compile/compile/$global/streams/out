@@ -1,0 +1,45 @@
+[0m[[0mdebug[0m] [0m[0m
+[0m[[0mdebug[0m] [0mInitial source changes: [0m
+[0m[[0mdebug[0m] [0m	removed:Set()[0m
+[0m[[0mdebug[0m] [0m	added: Set(/home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Syntax.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Scanner.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Interpreter.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Main.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Checker.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/ParserString.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Coder.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Parser.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Options.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Token.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Position.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Value.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Diag.scala)[0m
+[0m[[0mdebug[0m] [0m	modified: Set()[0m
+[0m[[0mdebug[0m] [0mRemoved products: Set()[0m
+[0m[[0mdebug[0m] [0mExternal API changes: API Changes: Set()[0m
+[0m[[0mdebug[0m] [0mModified binary dependencies: Set()[0m
+[0m[[0mdebug[0m] [0mInitial directly invalidated sources: Set(/home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Syntax.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Scanner.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Interpreter.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Main.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Checker.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/ParserString.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Coder.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Parser.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Options.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Token.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Position.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Value.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Diag.scala)[0m
+[0m[[0mdebug[0m] [0m[0m
+[0m[[0mdebug[0m] [0mSources indirectly invalidated by:[0m
+[0m[[0mdebug[0m] [0m	product: Set()[0m
+[0m[[0mdebug[0m] [0m	binary dep: Set()[0m
+[0m[[0mdebug[0m] [0m	external source: Set()[0m
+[0m[[0mdebug[0m] [0mAll initially invalidated sources: Set(/home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Syntax.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Scanner.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Interpreter.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Main.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Checker.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/ParserString.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Coder.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Parser.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Options.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Token.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Position.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Value.scala, /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Diag.scala)[0m
+[0m[[0mdebug[0m] [0mRecompiling all 13 sources: invalidated sources (13) exceeded 50.0% of all sources[0m
+[0m[[0minfo[0m] [0mCompiling 13 Scala sources to /home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/target/scala-2.10/classes...[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.10.4[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.10.4[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 39e07a, interfacing (CompilerInterface) with Scala compiler version 2.10.4[0m
+[0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
+[0m[[0mdebug[0m] [0m	-bootclasspath[0m
+[0m[[0mdebug[0m] [0m	/usr/lib/jvm/java-7-openjdk-i386/jre/lib/resources.jar:/usr/lib/jvm/java-7-openjdk-i386/jre/lib/rt.jar:/usr/lib/jvm/java-7-openjdk-i386/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-7-openjdk-i386/jre/lib/jsse.jar:/usr/lib/jvm/java-7-openjdk-i386/jre/lib/jce.jar:/usr/lib/jvm/java-7-openjdk-i386/jre/lib/charsets.jar:/usr/lib/jvm/java-7-openjdk-i386/jre/lib/netx.jar:/usr/lib/jvm/java-7-openjdk-i386/jre/lib/plugin.jar:/usr/lib/jvm/java-7-openjdk-i386/jre/lib/rhino.jar:/usr/lib/jvm/java-7-openjdk-i386/jre/lib/jfr.jar:/usr/lib/jvm/java-7-openjdk-i386/jre/classes:/home/guillaume/.sbt/boot/scala-2.10.4/lib/scala-library.jar[0m
+[0m[[0mdebug[0m] [0m	-classpath[0m
+[0m[[0mdebug[0m] [0m	/home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/target/scala-2.10/classes[0m
+[0m[[31merror[0m] [0m/home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Coder.scala:32: object machine is not a member of package de.tuberlin.uebb.comp1[0m
+[0m[[31merror[0m] [0mimport de.tuberlin.uebb.comp1.machine._[0m
+[0m[[31merror[0m] [0m                              ^[0m
+[0m[[31merror[0m] [0m/home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Coder.scala:37: not found: type Instruction[0m
+[0m[[31merror[0m] [0m  type Code = List[Instruction][0m
+[0m[[31merror[0m] [0m                   ^[0m
+[0m[[31merror[0m] [0m/home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Main.scala:33: object machine is not a member of package de.tuberlin.uebb.comp1[0m
+[0m[[31merror[0m] [0mimport de.tuberlin.uebb.comp1.machine.{Machine}[0m
+[0m[[31merror[0m] [0m                              ^[0m
+[0m[[31merror[0m] [0m/home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Main.scala:105: not found: type Machine[0m
+[0m[[31merror[0m] [0m                val machine = new Machine(100,100)[0m
+[0m[[31merror[0m] [0m                                  ^[0m
+[0m[[31merror[0m] [0m/home/guillaume/Bureau/Compiler Construction/skelton/src/main/scala/de/tuberlin/uebb/comp1/homework/Parser.scala:120: type mismatch;[0m
+[0m[[31merror[0m] [0m found   : Unit[0m
+[0m[[31merror[0m] [0m required: ((de.tuberlin.uebb.comp1.homework.Parser.InputElem, String), List[de.tuberlin.uebb.comp1.homework.Parser.InputElem], de.tuberlin.uebb.comp1.homework.Def)[0m
+[0m[[31merror[0m] [0m    if(err == null){[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0m5 errors found[0m
+[0m[[0mdebug[0m] [0mCompilation failed (CompilerInterface)[0m
+[0m[[31merror[0m] [0m(compile:[31mcompile[0m) Compilation failed[0m
