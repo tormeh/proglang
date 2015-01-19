@@ -26,7 +26,7 @@
  *
  * */
 
-package de.tuberlin.uebb.comp1.homework
+package fumurtCompiler
 
 import scala.language.implicitConversions
 import scala.util.parsing.combinator.RegexParsers
@@ -42,23 +42,26 @@ object Scanner extends RegexParsers with Parsers{
 /** Starts scanner
   * @param in The input string
   * @param opts [[Options]] given as arguments to comiler  
-  * @return either an error message [[Diag]] or a list of tokens [[Token]]
+  * @return either an error message [[FumurtError]] or a list of tokens [[Token]]
   * */
-  def scan(in: String,opts:Options): Either[Diag,List[Token]] =
+  def scan(in: String,opts:Options): Either[FumurtError,List[Token]] =
     parseAll(scanToks, new ParserString(in)) match {
       case Success(r, _) => if(opts.debug){println("Tokens:\n" +  r.mkString("\n"))};Right(r)
-      case failure: NoSuccess => Left(Diag(failure.msg,Global))
+      //case failure: NoSuccess => Left(Error(failure.msg,Global))
+      case failure: NoSuccess => Left(FumurtError(Global, failure.msg))
     }
 
   private def scanToks: Parser[List[Token]] = (scanComment*) ~ (scanTok*) ^^ {case _~ l => l:+EofT()}
 
   private def scanTok: Parser[Token] = (scanComment*) ~ (
-      scanOpen   |
-      scanClose  |
+      scanParenthesisOpen   |
+      scanParenthesisClose  |
+      scanCurlyBracketOpen   |
+      scanCurlyBracketClose  |
       scanComma  |
       scanColon  |
       scanDefAs  |
-      scanMain   |
+      scanProgram   |
       scanDef    |
       //
       scanIf     |
@@ -75,8 +78,10 @@ object Scanner extends RegexParsers with Parsers{
       scanVar    ) ^^ {case _~t => t}
       
   private def scanComment = commentRegex
-  private def scanOpen = positioned(OpenLex.r ^^ { _ => OpenT() })
-  private def scanClose = positioned(CloseLex.r ^^ { _ => CloseT() })
+  private def scanParenthesisOpen = positioned(OpenParenthesisLex.r ^^ { _ => OpenT() })
+  private def scanParenthesisClose = positioned(CloseParenthesisLex.r ^^ { _ => CloseT() })
+  private def scanCurlyBracketOpen = positioned(OpenCurlyBracketLex.r ^^ { _ => OpenT() })
+  private def scanCurlyBracketClose = positioned(CloseCurlyBracketLex.r ^^ { _ => CloseT() })
   private def scanComma = positioned(CommaLex.r ^^ { _ => CommaT() })
   private def scanColon = positioned(ColonLex.r ^^ { _ => ColonT() })
   private def scanDefAs = positioned(DefAsLex.r ^^ { _ => DefAsT() })
@@ -98,12 +103,14 @@ object Scanner extends RegexParsers with Parsers{
   private def scanTBool = positioned(TBoolLex.r ^^ { _ => BoolT() })
   private def scanTNat = positioned(TNatLex.r ^^ { _ => NatT() })
 
-  private val commentRegex: Regex = """--[^\n]*\n""".r
+  private val commentRegex: Regex = """\/\/[^\n]*\n""".r
   private val numRegex: Regex = """\d+""".r
   private val varRegex: Regex = """[a-zA-Z][a-zA-Z0-9]*""".r
 
-  private val OpenLex  = """\("""
-  private val CloseLex = """\)"""
+  private val OpenParenthesisLex  = """\("""
+  private val OpenCurlyBracketLex  = """\{"""
+  private val CloseParenthesisLex = """\)"""
+  private val CloseCurlyBracketLex = """\}"""
   private val CommaLex = ""","""
   private val ColonLex = """\:"""
   private val DefAsLex = """=="""

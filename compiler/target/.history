@@ -106,3 +106,4 @@ run newton.mo
 test
 run allTogether.mo
 run
+run helloworld.fumurt

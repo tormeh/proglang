@@ -42,12 +42,13 @@ object Scanner extends RegexParsers with Parsers{
 /** Starts scanner
   * @param in The input string
   * @param opts [[Options]] given as arguments to comiler  
-  * @return either an error message [[Diag]] or a list of tokens [[Token]]
+  * @return either an error message [[FumurtError]] or a list of tokens [[Token]]
   * */
-  def scan(in: String,opts:Options): Either[Diag,List[Token]] =
+  def scan(in: String,opts:Options): Either[FumurtError,List[Token]] =
     parseAll(scanToks, new ParserString(in)) match {
       case Success(r, _) => if(opts.debug){println("Tokens:\n" +  r.mkString("\n"))};Right(r)
-      case failure: NoSuccess => Left(Diag(failure.msg,Global))
+      //case failure: NoSuccess => Left(Error(failure.msg,Global))
+      case failure: NoSuccess => Left(FumurtError(Global, failure.msg))
     }
 
   private def scanToks: Parser[List[Token]] = (scanComment*) ~ (scanTok*) ^^ {case _~ l => l:+EofT()}

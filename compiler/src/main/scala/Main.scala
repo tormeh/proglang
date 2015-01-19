@@ -3,6 +3,14 @@ package fumurtCompiler
 import scala.io.Source._
 import scala.util.parsing.input.Positional
 
+object CompileTypeOption extends Enumeration
+{
+  type CompileTypeOption = Value
+  val compiledToGo, compiledToC, compiledToCpp, interpreted = Value 
+}
+
+import CompileTypeOption._
+
 object Main
 {
   def main(args: Array[String]) :Unit ={
@@ -17,7 +25,7 @@ object Main
       {
         if(parts(1)=="fumurt")
         {
-          compile(getOptions(parts(0), args.drop(1)))
+          compile(getOptions(args.drop(1), args(0)))
         }
         else
         {
@@ -31,9 +39,27 @@ object Main
     }
   }
   
-  def getOptions(args:Array[String],file:String): =
+  def getOptions(args:Array[String],file:String): Options =
   {
+    println(args.toString)
+    new Options(CompileTypeOption.interpreted, true, file)
+  }
   
+  def compile(opts:Options):Unit =
+  {
+    println("Now compiling!")
+    val sourcestring = fromFile(opts.file).mkString
+    val scanRes = FumurtScanner.scan(sourcestring, opts)
+    scanRes match
+    {
+      case Left(error) => println("Error in scanner: " + error.toString)
+      case Right(tokens) => println("successful scan. Tokens: "+tokens.toString)
+    }
+    
   }
   
 }
+
+class Options(val compileTypeOption:CompileTypeOption, val debug:Boolean, val file:String)
+
+
