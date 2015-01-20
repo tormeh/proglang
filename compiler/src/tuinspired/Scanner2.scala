@@ -5,7 +5,7 @@ import scala.util.parsing.combinator.RegexParsers
 import scala.util.parsing.combinator.Parsers
 import scala.util.matching.Regex
 
-object FumurtScanner extends RegexParsers //with Parsers
+object FumurtScanner2 extends RegexParsers //with Parsers
 {
   def scan(in:String, opts:Options):Either[FumurtError, List[Token]] =
   {

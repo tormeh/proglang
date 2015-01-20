@@ -26,6 +26,8 @@
  *
  * */
 
+/*
+
 package fumurtCompiler
 
 import scala.util.parsing.input.Positional
@@ -146,3 +148,6 @@ case class NatT () extends Token{
 
 
 
+
+
+*/
