@@ -1,9 +1,9 @@
 [0m[[0minfo[0m] [0mRunning fumurtCompiler.Main helloworld.fumurt[0m
 [0m[[0mdebug[0m] [0mWaiting for threads to exit or System.exit to be called.[0m
 [0m[[0mdebug[0m] [0m  Classpath:[0m
-[0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/proglang/compiler/target/scala-2.11/classes[0m
-[0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/proglang/compiler/lib/machine_2.10-0.1.0 .jar[0m
-[0m[[0mdebug[0m] [0m	/home/tormod/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.4.jar[0m
+[0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/master/proglang/compiler/target/scala-2.11/classes[0m
+[0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/master/proglang/compiler/lib/machine_2.10-0.1.0 .jar[0m
+[0m[[0mdebug[0m] [0m	/home/tormod/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.5.jar[0m
 [0m[[0mdebug[0m] [0m	/home/tormod/.ivy2/cache/org.specs2/specs2_2.11/jars/specs2_2.11-2.3.12.jar[0m
 [0m[[0mdebug[0m] [0m	/home/tormod/.ivy2/cache/org.scala-lang/scala-compiler/jars/scala-compiler-2.11.0.jar[0m
 [0m[[0mdebug[0m] [0m	/home/tormod/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.11.0.jar[0m
@@ -26,8 +26,8 @@
 [0m[[0mdebug[0m] [0m	/home/tormod/.ivy2/cache/org.objenesis/objenesis/jars/objenesis-1.0.jar[0m
 [0m[[0mdebug[0m] [0m	/home/tormod/.ivy2/cache/junit/junit/jars/junit-4.11.jar[0m
 [0m[[0mdebug[0m] [0m	/home/tormod/.ivy2/cache/org.specs2/classycle/jars/classycle-1.4.3.jar[0m
-[0m[[0mdebug[0m] [0mWaiting for thread run-main-1 to terminate.[0m
-[0m[[0mdebug[0m] [0m	Thread run-main-1 exited.[0m
+[0m[[0mdebug[0m] [0mWaiting for thread run-main-8 to terminate.[0m
+[0m[[0mdebug[0m] [0m	Thread run-main-8 exited.[0m
 [0m[[0mdebug[0m] [0mInterrupting remaining threads (should be all daemons).[0m
 [0m[[0mdebug[0m] [0mSandboxed run complete..[0m
 [0m[[0mdebug[0m] [0mExited with code 0[0m
