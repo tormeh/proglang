@@ -107,3 +107,22 @@ test
 run allTogether.mo
 run
 run helloworld.fumurt
+def programStrParser: Parser[ProgramT] = new Regex("program") ^^ {_ => ProgramT()}
+  def functionParser: Parser[FunctionT]    = new Regex("function") ^^ {_ => FunctionT()}
+  def unsafeActionParser: Parser[UnsafeActionT]    = new Regex("unsafe action") ^^ {_ => UnsafeActionT()}
+  def actionParser: Parser[ActionT]    = new Regex("action") ^^ {_ => ActionT()}
+  def trueParser: Parser[TrueT]    = new Regex("true") ^^ {_ => TrueT()}
+  def falseParser: Parser[FalseT]    = new Regex("false") ^^ {_ => FalseT()}
+  def openParenthesisParser: Parser[OpenParenthesisT]    = new Regex("""\(""") ^^ {_ => OpenParenthesisT()}
+  def closeParenthesisParser: Parser[CloseParenthesisT]    = new Regex("""\)""") ^^ {_ => CloseParenthesisT()}
+  def openCurlyBracketParser: Parser[OpenCurlyBracketT]    = new Regex("""\{""") ^^ {_ => OpenCurlyBracketT()}
+  def closeCurlyBracketParser: Parser[CloseCurlyBracketT]    = new Regex("""\}""") ^^ {_ => CloseCurlyBracketT()}
+  def doubleParser: Parser[DoubleT] = new Regex("""[-+]?[0-9]*\.?[0-9]+""") ^^ {x => DoubleT(x.toDouble)}
+  def intParser: Parser[IntegerT] = new Regex("""(0|[1-9]\d*)""") ^^ {x => IntegerT(x.toInt)}
+  def equalParser: Parser[EqualT] = new Regex("=") ^^ {_ => EqualT()}
+  def colonParser: Parser[ColonT] = new Regex(":") ^^ {_ => ColonT()}
+  def commaParser: Parser[CommaT] = new Regex(",") ^^ {_ => CommaT()}
+  def emptyParser: Parser[EmptyT] = new Regex("") ^^ {_ => EmptyT()}
+  def newlineParser: Parser[NewlineT] = new Regex("\n") ^^ {_ => NewlineT()}
+  def idParser: Parser[IdT]    = new Regex("[a-z]+") ^^ {x => IdT(x.toString)}
+run helloworld.fumurt

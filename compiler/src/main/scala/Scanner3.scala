@@ -9,57 +9,62 @@ import scala.util.parsing.combinator.RegexParsers
 import scala.util.parsing.combinator.Parsers
 import scala.util.matching.Regex
 
-object FumurtScanner extends RegexParsers with Parsers
+object FumurtScanner extends RegexParsers /*with Parsers*/
 {
   def scan(in:String, opts:Options):Either[FumurtError, List[Token]] =
   {
    println(in)
   
-   println(parseAll(scan, in))
+   println(parseAll((scan*), in))
   
-   Left(new FumurtError(Global, "scanscan"))
+   Left(new FumurtError(Global, "testerror"))
   }
 
-  def programStrParser: Parser[ProgramT] = new Regex("program") ^^ {_ => ProgramT()}
-  def functionParser: Parser[FunctionT]    = new Regex("function") ^^ {_ => FunctionT()}
-  def unsafeActionParser: Parser[UnsafeActionT]    = new Regex("unsafe action") ^^ {_ => UnsafeActionT()}
-  def actionParser: Parser[ActionT]    = new Regex("action") ^^ {_ => ActionT()}
-  def trueParser: Parser[TrueT]    = new Regex("true") ^^ {_ => TrueT()}
-  def falseParser: Parser[FalseT]    = new Regex("false") ^^ {_ => FalseT()}
-  def openParenthesisParser: Parser[OpenParenthesisT]    = new Regex("""\(""") ^^ {_ => OpenParenthesisT()}
-  def closeParenthesisParser: Parser[CloseParenthesisT]    = new Regex("""\)""") ^^ {_ => CloseParenthesisT()}
-  def openCurlyBracketParser: Parser[OpenCurlyBracketT]    = new Regex("""\{""") ^^ {_ => OpenCurlyBracketT()}
-  def closeCurlyBracketParser: Parser[CloseCurlyBracketT]    = new Regex("""\}""") ^^ {_ => CloseCurlyBracketT()}
-  def doubleParser: Parser[DoubleT] = new Regex("""[-+]?[0-9]*\.?[0-9]+""") ^^ {_ => DoubleT(_.toDouble)}
-  def intParser: Parser[IntegerT] = new Regex("""(0|[1-9]\d*)""") ^^ {_ => IntegerT(_.toInt)}
-  def equalParser: Parser[EqualT] = new Regex("=") ^^ {_ => EqualT()}
-  def colonParser: Parser[ColonT] = new Regex(":") ^^ {_ => ColonT()}
-  def commaParser: Parser[CommaT] = new Regex(",") ^^ {_ => CommaT()}
-  def emptyParser: Parser[EmptyT] = new Regex("") ^^ {_ => EmptyT()}
-  def newlineParser: Parser[NewlineT] = new Regex("\n") ^^ {_ => NewlineT()}
-  def idParser: Parser[idT]    = new Regex("[a-z]+") ^^ {_ => idT(_.toString)}
-  def typeParser: Parser[TypeT]    = new Regex("[A-Z]+") ^^ {_ => TypeT(_.toString)}
+  def programStrParser: Parser[ProgramT] = new Regex("program") ^^ {x => println("scanned program "+x.toString);ProgramT()}
+  def functionParser: Parser[FunctionT]    = new Regex("function") ^^ {x => println("scanned function "+x.toString);FunctionT()}
+  def unsafeActionParser: Parser[UnsafeActionT]    = new Regex("unsafe action") ^^ {x => println("scanned unsafe action "+x.toString);UnsafeActionT()}
+  def actionParser: Parser[ActionT]    = new Regex("action") ^^ {x => println("scanned action "+x.toString);ActionT()}
+  def trueParser: Parser[TrueT]    = new Regex("true") ^^ {x => println("scanned true "+x.toString);TrueT()}
+  def falseParser: Parser[FalseT]    = new Regex("false") ^^ {x => println("scanned false "+x.toString);FalseT()}
+  def openParenthesisParser: Parser[OpenParenthesisT]    = new Regex("""\(""") ^^ {x => println("scanned ( "+x.toString);OpenParenthesisT()}
+  def closeParenthesisParser: Parser[CloseParenthesisT]    = new Regex("""\)""") ^^ {x => println("scanned ) "+x.toString);CloseParenthesisT()}
+  def openCurlyBracketParser: Parser[OpenCurlyBracketT]    = new Regex("""\{""") ^^ {x => println("scanned { "+x.toString);OpenCurlyBracketT()}
+  def closeCurlyBracketParser: Parser[CloseCurlyBracketT]    = new Regex("""\}""") ^^ {x => println("scanned } "+x.toString);;CloseCurlyBracketT()}
+  def doubleParser: Parser[DoubleT] = new Regex("""[-+]?[0-9]*\.?[0-9]+""") ^^ {x => println("scanned "+x.toString);DoubleT(x.toDouble)}
+  def intParser: Parser[IntegerT] = new Regex("""(0|[1-9]\d*)""") ^^ {x => println("scanned "+x.toString);IntegerT(x.toInt)}
+  def equalParser: Parser[EqualT] = new Regex("=") ^^ {x => println("scanned = "+x.toString);EqualT()}
+  def colonParser: Parser[ColonT] = new Regex(":") ^^ {x => println("scanned : "+x.toString);ColonT()}
+  def commaParser: Parser[CommaT] = new Regex(",") ^^ {x => println("scanned , "+x.toString);CommaT()}
+  //def emptyParser: Parser[EmptyT] = new Regex("") ^^ {x => println("scanned empty");EmptyT()}
+  def newlineParser: Parser[NewlineT] = new Regex("\n") ^^ {x => println("scanned newline "+x.toString);NewlineT()}
+  def idParser: Parser[IdT]    = new Regex("[a-z]+") ^^ {x => println("scanned id "+x.toString);IdT(x.toString)}
+  def typeParser: Parser[TypeT]    = new Regex("[A-Z][a-zA-Z]*") ^^ {x => println("scanned type "+x.toString);TypeT(x.toString)}
   
-  def scan: Parser[List[Token]] = 
-    programStrParser          |
-    unsafeActionParser        |
-    actionParser              |
-    functionParser            |
-    trueParser                |
-    falseParser               |
-    openParenthesisParser     |
-    closeParenthesisParser    |
-    openCurlyBracketParser    |
-    closeCurlyBracketParser   |
-    doubleParser              |
-    intParser                 |
-    equalParser               |
-    colonParser               |
-    commaParser               |
-    emptyParser               |
-    newlineParser             |
-    idParser                  |
-    typeParser                |
+  
+  def scan: Parser[Token] = 
+  {
+    (
+      programStrParser          |
+      unsafeActionParser        |
+      actionParser              |
+      functionParser            |
+      trueParser                |
+      falseParser               |
+      openParenthesisParser     |
+      closeParenthesisParser    |
+      openCurlyBracketParser    |
+      closeCurlyBracketParser   |
+      doubleParser              |
+      intParser                 |
+      equalParser               |
+      colonParser               |
+      commaParser               |
+      //emptyParser               |
+      newlineParser             |
+      idParser                  |
+      typeParser  
+    )            
+  }
   
   /*def progParser: Parser[Program] = defParser ~ (eofParser | (newlineParser ~ progParser))
   def DefParser: Parser[Definition] = deflhsParser ~ equalParser ~ defrhsParser
@@ -88,8 +93,17 @@ case class UnsafeActionT() extends Token
 case class FunctionT() extends Token
 case class OpenParenthesisT() extends Token
 case class CloseParenthesisT() extends Token
-case class OpenCurlyBracket() extends Token
+case class OpenCurlyBracketT() extends Token
 case class CloseCurlyBracketT() extends Token
+case class DoubleT(val value:Double) extends Token
+case class IntegerT(val value:Int) extends Token
+case class EqualT() extends Token
+case class ColonT() extends Token
+case class CommaT() extends Token
+case class NewlineT() extends Token
+case class IdT(val value:String) extends Token
+case class TypeT(val value:String) extends Token
+
 
 
 

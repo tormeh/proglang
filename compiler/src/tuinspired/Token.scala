@@ -26,7 +26,7 @@
  *
  * */
 
-/*
+
 
 package fumurtCompiler
 
@@ -150,4 +150,4 @@ case class NatT () extends Token{
 
 
 
-*/
+
