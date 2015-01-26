@@ -1,8 +1,8 @@
 [0m[[0minfo[0m] [0mRunning fumurtCompiler.Main helloworld.fumurt[0m
 [0m[[0mdebug[0m] [0mWaiting for threads to exit or System.exit to be called.[0m
 [0m[[0mdebug[0m] [0m  Classpath:[0m
-[0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/master/proglang/compiler/target/scala-2.11/classes[0m
-[0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/master/proglang/compiler/lib/machine_2.10-0.1.0 .jar[0m
+[0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/proglang/compiler/target/scala-2.11/classes[0m
+[0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/proglang/compiler/lib/machine_2.10-0.1.0 .jar[0m
 [0m[[0mdebug[0m] [0m	/home/tormod/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.5.jar[0m
 [0m[[0mdebug[0m] [0m	/home/tormod/.ivy2/cache/org.specs2/specs2_2.11/jars/specs2_2.11-2.3.12.jar[0m
 [0m[[0mdebug[0m] [0m	/home/tormod/.ivy2/cache/org.scala-lang/scala-compiler/jars/scala-compiler-2.11.0.jar[0m

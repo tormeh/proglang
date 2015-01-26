@@ -49,11 +49,18 @@ object Main
   {
     println("Now compiling!")
     val sourcestring = fromFile(opts.file).mkString
-    val scanRes = FumurtScanner.scan(sourcestring, opts)
-    scanRes match
+    FumurtScanner.scan(sourcestring, opts) match
     {
       case Left(error) => println("Error in scanner: " + error.toString)
-      case Right(tokens) => println("successful scan. Tokens: "+tokens.toString)
+      case Right(tokens) => 
+      {
+        println("successful scan. Tokens: "+tokens.toString)
+        FumurtParser.parse(tokens) match
+        {
+          case Left(error) => println("Error in scanner: " + error.toString)
+          case Right(ast) => println("Success in parser: " + ast.toString) 
+        }
+      }
     }
     
   }

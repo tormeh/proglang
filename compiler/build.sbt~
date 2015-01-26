@@ -7,6 +7,9 @@ version := "0.1.0"
 
 scalaVersion := "2.11.5"
 
+scalacOptions ++= Seq("-feature")
+scalacOptions ++= Seq("-optimize")
+
 libraryDependencies ++= Seq("org.specs2"  %% "specs2"  % "2.3.12"  withSources())
 	//"org.specs2" %% "specs2" % "2.3.12" % "test")
     //"org.specs2" %% "specs2" % "1.12.4.1" % "test"
