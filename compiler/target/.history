@@ -126,3 +126,5 @@ def programStrParser: Parser[ProgramT] = new Regex("program") ^^ {_ => ProgramT(
   def newlineParser: Parser[NewlineT] = new Regex("\n") ^^ {_ => NewlineT()}
   def idParser: Parser[IdT]    = new Regex("[a-z]+") ^^ {x => IdT(x.toString)}
 run helloworld.fumurt
+clean
+run helloworld.fumurt

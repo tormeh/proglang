@@ -1,5 +1,5 @@
 Prog ::= Def EOF | Def newlines Prog
-Def ::= DefLhs "=" optionalnewlines DefRhs
+Definition ::= DefLhs "=" optionalnewlines DefRhs
 DefLhs ::= Defdescription _id_args
 args ::= "("_id_":"_type_ args2")" | e
 args2 ::= "," _id_":"_type_ args2 | e

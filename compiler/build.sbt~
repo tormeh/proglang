@@ -5,10 +5,9 @@ organization := "NTNU ITK"
 
 version := "0.1.0"
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.10.0"
 
-scalacOptions ++= Seq("-feature")
-scalacOptions ++= Seq("-optimize")
+scalacOptions ++= Seq("-feature", "-optimize")
 
 libraryDependencies ++= Seq("org.specs2"  %% "specs2"  % "2.3.12"  withSources())
 	//"org.specs2" %% "specs2" % "2.3.12" % "test")

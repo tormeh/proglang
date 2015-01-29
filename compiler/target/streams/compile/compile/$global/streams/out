@@ -1,23 +1,23 @@
 [0m[[0mdebug[0m] [0m[0m
 [0m[[0mdebug[0m] [0mInitial source changes: [0m
-[0m[[0mdebug[0m] [0m	removed:Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/preprocessor.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner3.scala)[0m
-[0m[[0mdebug[0m] [0m	added: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala)[0m
-[0m[[0mdebug[0m] [0m	modified: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala)[0m
+[0m[[0mdebug[0m] [0m	removed:Set()[0m
+[0m[[0mdebug[0m] [0m	added: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Error.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala)[0m
+[0m[[0mdebug[0m] [0m	modified: Set()[0m
 [0m[[0mdebug[0m] [0mRemoved products: Set()[0m
 [0m[[0mdebug[0m] [0mExternal API changes: API Changes: Set()[0m
 [0m[[0mdebug[0m] [0mModified binary dependencies: Set()[0m
-[0m[[0mdebug[0m] [0mInitial directly invalidated sources: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner3.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/preprocessor.scala)[0m
+[0m[[0mdebug[0m] [0mInitial directly invalidated sources: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Error.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala)[0m
 [0m[[0mdebug[0m] [0m[0m
 [0m[[0mdebug[0m] [0mSources indirectly invalidated by:[0m
 [0m[[0mdebug[0m] [0m	product: Set()[0m
 [0m[[0mdebug[0m] [0m	binary dep: Set()[0m
 [0m[[0mdebug[0m] [0m	external source: Set()[0m
-[0m[[0mdebug[0m] [0mAll initially invalidated sources: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner3.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/preprocessor.scala)[0m
-[0m[[0mdebug[0m] [0mRecompiling all 4 sources: invalidated sources (5) exceeded 50.0% of all sources[0m
+[0m[[0mdebug[0m] [0mAll initially invalidated sources: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Error.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala)[0m
+[0m[[0mdebug[0m] [0mRecompiling all 4 sources: invalidated sources (4) exceeded 50.0% of all sources[0m
 [0m[[0minfo[0m] [0mCompiling 4 Scala sources to /home/tormod/Documents/skole/spring2015/proglang/compiler/target/scala-2.11/classes...[0m
 [0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.5[0m
 [0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.5[0m
-[0m[[0mdebug[0m] [0mRunning cached compiler 33bcbb8, interfacing (CompilerInterface) with Scala compiler version 2.11.5[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 5d451f09, interfacing (CompilerInterface) with Scala compiler version 2.11.5[0m
 [0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
 [0m[[0mdebug[0m] [0m	-feature[0m
 [0m[[0mdebug[0m] [0m	-optimize[0m
@@ -25,210 +25,114 @@
 [0m[[0mdebug[0m] [0m	/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rhino.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jfr.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/classes:/home/tormod/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.5.jar[0m
 [0m[[0mdebug[0m] [0m	-classpath[0m
 [0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/proglang/compiler/target/scala-2.11/classes:/home/tormod/Documents/skole/spring2015/proglang/compiler/lib/machine_2.10-0.1.0 .jar:/home/tormod/.ivy2/cache/org.specs2/specs2_2.11/jars/specs2_2.11-2.3.12.jar:/home/tormod/.ivy2/cache/org.scala-lang/scala-compiler/jars/scala-compiler-2.11.0.jar:/home/tormod/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.11.0.jar:/home/tormod/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/bundles/scala-xml_2.11-1.0.1.jar:/home/tormod/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/bundles/scala-parser-combinators_2.11-1.0.1.jar:/home/tormod/.ivy2/cache/org.pegdown/pegdown/jars/pegdown-1.2.1.jar:/home/tormod/.ivy2/cache/org.parboiled/parboiled-java/jars/parboiled-java-1.1.4.jar:/home/tormod/.ivy2/cache/org.parboiled/parboiled-core/jars/parboiled-core-1.1.4.jar:/home/tormod/.ivy2/cache/org.ow2.asm/asm/jars/asm-4.1.jar:/home/tormod/.ivy2/cache/org.ow2.asm/asm-tree/jars/asm-tree-4.1.jar:/home/tormod/.ivy2/cache/org.ow2.asm/asm-analysis/jars/asm-analysis-4.1.jar:/home/tormod/.ivy2/cache/org.ow2.asm/asm-util/jars/asm-util-4.1.jar:/home/tormod/.ivy2/cache/org.scalaz/scalaz-core_2.11/bundles/scalaz-core_2.11-7.0.6.jar:/home/tormod/.ivy2/cache/org.scalaz/scalaz-concurrent_2.11/bundles/scalaz-concurrent_2.11-7.0.6.jar:/home/tormod/.ivy2/cache/org.scalaz/scalaz-effect_2.11/bundles/scalaz-effect_2.11-7.0.6.jar:/home/tormod/.ivy2/cache/org.scalacheck/scalacheck_2.11/jars/scalacheck_2.11-1.11.3.jar:/home/tormod/.ivy2/cache/org.scala-sbt/test-interface/jars/test-interface-1.0.jar:/home/tormod/.ivy2/cache/org.hamcrest/hamcrest-core/jars/hamcrest-core-1.3.jar:/home/tormod/.ivy2/cache/org.mockito/mockito-core/jars/mockito-core-1.9.5.jar:/home/tormod/.ivy2/cache/org.objenesis/objenesis/jars/objenesis-1.0.jar:/home/tormod/.ivy2/cache/junit/junit/jars/junit-4.11.jar:/home/tormod/.ivy2/cache/org.specs2/classycle/jars/classycle-1.4.3.jar[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:16: not found: type Program[0m
-[0m[[31merror[0m] [0m  def progParser: Parser[Program] = defParser ~ (eofParser | (newlineParser ~ progParser))[0m
-[0m[[31merror[0m] [0m                         ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:10: type mismatch;[0m
-[0m[[31merror[0m] [0m found   : List[fumurtCompiler.Token][0m
-[0m[[31merror[0m] [0m required: fumurtCompiler.FumurtParser.Input[0m
-[0m[[31merror[0m] [0m    (which expands to)  scala.util.parsing.input.Reader[fumurtCompiler.FumurtParser.Elem][0m
-[0m[[31merror[0m] [0m    val ast = progParser(in)[0m
-[0m[[31merror[0m] [0m                         ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:16: not found: value defParser[0m
-[0m[[31merror[0m] [0m  def progParser: Parser[Program] = defParser ~ (eofParser | (newlineParser ~ progParser))[0m
-[0m[[31merror[0m] [0m                                    ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:16: not found: value eofParser[0m
-[0m[[31merror[0m] [0m  def progParser: Parser[Program] = defParser ~ (eofParser | (newlineParser ~ progParser))[0m
-[0m[[31merror[0m] [0m                                                 ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:16: not found: value newlineParser[0m
-[0m[[31merror[0m] [0m  def progParser: Parser[Program] = defParser ~ (eofParser | (newlineParser ~ progParser))[0m
-[0m[[31merror[0m] [0m                                                              ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:17: not found: type Definition[0m
-[0m[[31merror[0m] [0m  def DefParser: Parser[Definition] = deflhsParser ~ equalParser ~ defrhsParser[0m
-[0m[[31merror[0m] [0m                        ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:18: not found: type DefLhs[0m
-[0m[[31merror[0m] [0m  def deflhsParser: Parser[DefLhs] = Defdescription ~ idParser ~ argsParser[0m
-[0m[[31merror[0m] [0m                           ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:17: not found: value equalParser[0m
-[0m[[31merror[0m] [0m  def DefParser: Parser[Definition] = deflhsParser ~ equalParser ~ defrhsParser[0m
-[0m[[31merror[0m] [0m                                                     ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:22: not found: type DefRhs[0m
-[0m[[31merror[0m] [0m  def defrhsParser: Parser[DefRhs] = openCurlyBracketParser ~ expression ~ closeCurlyBracketParser[0m
-[0m[[31merror[0m] [0m                           ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:18: not found: value Defdescription[0m
-[0m[[31merror[0m] [0m  def deflhsParser: Parser[DefLhs] = Defdescription ~ idParser ~ argsParser[0m
-[0m[[31merror[0m] [0m                                     ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:18: not found: value idParser[0m
-[0m[[31merror[0m] [0m  def deflhsParser: Parser[DefLhs] = Defdescription ~ idParser ~ argsParser[0m
-[0m[[31merror[0m] [0m                                                      ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:19: not found: type Arguments[0m
-[0m[[31merror[0m] [0m  def argsParser: Parser[Arguments] = (openParenthesisParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser ~ closeParenthesisParser) | [0m
-[0m[[31merror[0m] [0m                         ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:20: not found: type Arguments2[0m
-[0m[[31merror[0m] [0m  def args2Parser: Parser[Arguments2] = commaParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                          ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:19: not found: value openParenthesisParser[0m
-[0m[[31merror[0m] [0m  def argsParser: Parser[Arguments] = (openParenthesisParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser ~ closeParenthesisParser) | [0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:9: type Token is not a member of object fumurtCompiler.FumurtScanner[0m
+[0m[[31merror[0m] [0m  type Elem = fumurtCompiler.FumurtScanner.Token[0m
+[0m[[31merror[0m] [0m                                           ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:14: not found: value parseAll[0m
+[0m[[31merror[0m] [0m    val ast = parseAll(progParser*, in)[0m
+[0m[[31merror[0m] [0m              ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:20: not found: value defParser[0m
+[0m[[31merror[0m] [0m  def progParser: Parser[Definition] = defParser ~ (eofParser | (newlineParser ~> progParser))[0m
 [0m[[31merror[0m] [0m                                       ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:19: not found: value idParser[0m
-[0m[[31merror[0m] [0m  def argsParser: Parser[Arguments] = (openParenthesisParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser ~ closeParenthesisParser) | [0m
-[0m[[31merror[0m] [0m                                                               ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:19: not found: value colonParser[0m
-[0m[[31merror[0m] [0m  def argsParser: Parser[Arguments] = (openParenthesisParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser ~ closeParenthesisParser) | [0m
-[0m[[31merror[0m] [0m                                                                          ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:19: not found: value typeParser[0m
-[0m[[31merror[0m] [0m  def argsParser: Parser[Arguments] = (openParenthesisParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser ~ closeParenthesisParser) | [0m
-[0m[[31merror[0m] [0m                                                                                        ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:19: not found: value closeParenthesisParser[0m
-[0m[[31merror[0m] [0m  def argsParser: Parser[Arguments] = (openParenthesisParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser ~ closeParenthesisParser) | [0m
-[0m[[31merror[0m] [0m                                                                                                                   ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:20: not found: value commaParser[0m
-[0m[[31merror[0m] [0m  def args2Parser: Parser[Arguments2] = commaParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                                        ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:20: not found: value idParser[0m
-[0m[[31merror[0m] [0m  def args2Parser: Parser[Arguments2] = commaParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                      ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:20: not found: value colonParser[0m
-[0m[[31merror[0m] [0m  def args2Parser: Parser[Arguments2] = commaParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                                 ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:20: not found: value typeParser[0m
-[0m[[31merror[0m] [0m  def args2Parser: Parser[Arguments2] = commaParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                                               ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:20: not found: value emptyParser[0m
-[0m[[31merror[0m] [0m  def args2Parser: Parser[Arguments2] = commaParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                                                                          ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:21: not found: type DefDescription[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:20: not found: value eofParser[0m
+[0m[[31merror[0m] [0m  def progParser: Parser[Definition] = defParser ~ (eofParser | (newlineParser ~> progParser))[0m
+[0m[[31merror[0m] [0m                                                    ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:21: missing parameter type[0m
+[0m[[31merror[0m] [0m  def DefParser: Parser[Definition] = deflhsParser <~ equalParser ~> defrhsParser ^^ {(x,y)=>Definition(x,y)}[0m
+[0m[[31merror[0m] [0m                                                                                       ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:21: missing parameter type[0m
+[0m[[31merror[0m] [0m  def DefParser: Parser[Definition] = deflhsParser <~ equalParser ~> defrhsParser ^^ {(x,y)=>Definition(x,y)}[0m
+[0m[[31merror[0m] [0m                                                                                         ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:25: not found: type DefDescription[0m
 [0m[[31merror[0m] [0m  def defdescriptionParser: Parser[DefDescription] = programStrParser | unsafeactionParser | actionParser | functionParser[0m
 [0m[[31merror[0m] [0m                                   ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:21: not found: value programStrParser[0m
-[0m[[31merror[0m] [0m  def defdescriptionParser: Parser[DefDescription] = programStrParser | unsafeactionParser | actionParser | functionParser[0m
-[0m[[31merror[0m] [0m                                                     ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:21: not found: value unsafeactionParser[0m
-[0m[[31merror[0m] [0m  def defdescriptionParser: Parser[DefDescription] = programStrParser | unsafeactionParser | actionParser | functionParser[0m
-[0m[[31merror[0m] [0m                                                                        ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:21: not found: value actionParser[0m
-[0m[[31merror[0m] [0m  def defdescriptionParser: Parser[DefDescription] = programStrParser | unsafeactionParser | actionParser | functionParser[0m
-[0m[[31merror[0m] [0m                                                                                             ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:21: not found: value functionParser[0m
-[0m[[31merror[0m] [0m  def defdescriptionParser: Parser[DefDescription] = programStrParser | unsafeactionParser | actionParser | functionParser[0m
-[0m[[31merror[0m] [0m                                                                                                            ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:22: not found: value openCurlyBracketParser[0m
-[0m[[31merror[0m] [0m  def defrhsParser: Parser[DefRhs] = openCurlyBracketParser ~ expression ~ closeCurlyBracketParser[0m
-[0m[[31merror[0m] [0m                                     ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:22: not found: value expression[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:22: not found: value idParser[0m
+[0m[[31merror[0m] [0m  def deflhsParser: Parser[DefLhs] = defdescriptionParser ~ idParser ~ argsParser[0m
+[0m[[31merror[0m] [0m                                                            ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:23: not found: type Arguments[0m
+[0m[[31merror[0m] [0m  def argsParser: Parser[Either[Empty,Arguments]] = (openParenthesisParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser ~ closeParenthesisParser) | emptyParser[0m
+[0m[[31merror[0m] [0m                                      ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:24: not found: type Arguments2[0m
+[0m[[31merror[0m] [0m  def args2Parser: Parser[Arguments2] = commaParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser | emptyParser[0m
+[0m[[31merror[0m] [0m                          ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:23: not found: value idParser[0m
+[0m[[31merror[0m] [0m  def argsParser: Parser[Either[Empty,Arguments]] = (openParenthesisParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser ~ closeParenthesisParser) | emptyParser[0m
+[0m[[31merror[0m] [0m                                                                             ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:23: not found: value typeParser[0m
+[0m[[31merror[0m] [0m  def argsParser: Parser[Either[Empty,Arguments]] = (openParenthesisParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser ~ closeParenthesisParser) | emptyParser[0m
+[0m[[31merror[0m] [0m                                                                                                      ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:24: not found: value idParser[0m
+[0m[[31merror[0m] [0m  def args2Parser: Parser[Arguments2] = commaParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser | emptyParser[0m
+[0m[[31merror[0m] [0m                                                      ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:24: not found: value typeParser[0m
+[0m[[31merror[0m] [0m  def args2Parser: Parser[Arguments2] = commaParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser | emptyParser[0m
+[0m[[31merror[0m] [0m                                                                               ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:26: not found: value expression[0m
 [0m[[31merror[0m] [0m  def defrhsParser: Parser[DefRhs] = openCurlyBracketParser ~ expression ~ closeCurlyBracketParser[0m
 [0m[[31merror[0m] [0m                                                              ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:22: not found: value closeCurlyBracketParser[0m
-[0m[[31merror[0m] [0m  def defrhsParser: Parser[DefRhs] = openCurlyBracketParser ~ expression ~ closeCurlyBracketParser[0m
-[0m[[31merror[0m] [0m                                                                           ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:23: not found: type parser[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:27: not found: type parser[0m
 [0m[[31merror[0m] [0m  def expressionParser: parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | emptyParser[0m
 [0m[[31merror[0m] [0m                        ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:24: not found: type Statement[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:28: not found: type Statement[0m
 [0m[[31merror[0m] [0m  def statementParser: Parser[Statement] = idParser ~ callargsParser | basic[0m
 [0m[[31merror[0m] [0m                              ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:23: not found: value defParser[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:27: not found: value defParser[0m
 [0m[[31merror[0m] [0m  def expressionParser: parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | emptyParser[0m
 [0m[[31merror[0m] [0m                                             ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:23: not found: value newlineParser[0m
-[0m[[31merror[0m] [0m  def expressionParser: parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                         ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:23: not found: value newlineParser[0m
-[0m[[31merror[0m] [0m  def expressionParser: parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                                                                              ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:23: not found: value emptyParser[0m
-[0m[[31merror[0m] [0m  def expressionParser: parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                                                                                                                 ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:25: not found: type Callargs[0m
-[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~ (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) ~ closeParenthesisParser [0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:29: not found: type Callargs[0m
+[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~> (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) <~ closeParenthesisParser [0m
 [0m[[31merror[0m] [0m                             ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:24: not found: value idParser[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:28: not found: value idParser[0m
 [0m[[31merror[0m] [0m  def statementParser: Parser[Statement] = idParser ~ callargsParser | basic[0m
 [0m[[31merror[0m] [0m                                           ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:24: not found: value basic[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:28: not found: value basic[0m
 [0m[[31merror[0m] [0m  def statementParser: Parser[Statement] = idParser ~ callargsParser | basic[0m
 [0m[[31merror[0m] [0m                                                                       ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:26: not found: type Callargs2[0m
-[0m[[31merror[0m] [0m  def callargs2Parser: Parser[Callargs2] = idParser ~ equalParser ~ idParser ~ commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:30: not found: type Callargs2[0m
+[0m[[31merror[0m] [0m  def callargs2Parser: Parser[Callargs2] = idParser <~ equalParser ~> idParser <~ commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser[0m
 [0m[[31merror[0m] [0m                              ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:25: not found: value openParenthesisParser[0m
-[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~ (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) ~ closeParenthesisParser [0m
-[0m[[31merror[0m] [0m                                         ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:25: not found: value idParser[0m
-[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~ (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) ~ closeParenthesisParser [0m
-[0m[[31merror[0m] [0m                                                                  ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:25: not found: value intParser[0m
-[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~ (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) ~ closeParenthesisParser [0m
-[0m[[31merror[0m] [0m                                                                             ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:25: not found: value doubleParser[0m
-[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~ (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) ~ closeParenthesisParser [0m
-[0m[[31merror[0m] [0m                                                                                         ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:25: not found: value trueParser[0m
-[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~ (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) ~ closeParenthesisParser [0m
-[0m[[31merror[0m] [0m                                                                                                        ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:25: not found: value falseParser[0m
-[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~ (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) ~ closeParenthesisParser [0m
-[0m[[31merror[0m] [0m                                                                                                                     ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:25: not found: value closeParenthesisParser[0m
-[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~ (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) ~ closeParenthesisParser [0m
-[0m[[31merror[0m] [0m                                                                                                                                                      ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:26: not found: value idParser[0m
-[0m[[31merror[0m] [0m  def callargs2Parser: Parser[Callargs2] = idParser ~ equalParser ~ idParser ~ commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser[0m
-[0m[[31merror[0m] [0m                                           ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:26: not found: value equalParser[0m
-[0m[[31merror[0m] [0m  def callargs2Parser: Parser[Callargs2] = idParser ~ equalParser ~ idParser ~ commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser[0m
-[0m[[31merror[0m] [0m                                                      ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:26: not found: value idParser[0m
-[0m[[31merror[0m] [0m  def callargs2Parser: Parser[Callargs2] = idParser ~ equalParser ~ idParser ~ commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser[0m
-[0m[[31merror[0m] [0m                                                                    ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:26: not found: value commaParser[0m
-[0m[[31merror[0m] [0m  def callargs2Parser: Parser[Callargs2] = idParser ~ equalParser ~ idParser ~ commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser[0m
-[0m[[31merror[0m] [0m                                                                               ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:26: not found: value idParser[0m
-[0m[[31merror[0m] [0m  def callargs2Parser: Parser[Callargs2] = idParser ~ equalParser ~ idParser ~ commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser[0m
-[0m[[31merror[0m] [0m                                                                                             ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:26: not found: value equalParser[0m
-[0m[[31merror[0m] [0m  def callargs2Parser: Parser[Callargs2] = idParser ~ equalParser ~ idParser ~ commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser[0m
-[0m[[31merror[0m] [0m                                                                                                        ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:26: not found: value idParser[0m
-[0m[[31merror[0m] [0m  def callargs2Parser: Parser[Callargs2] = idParser ~ equalParser ~ idParser ~ commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:29: not found: value idParser[0m
+[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~> (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) <~ closeParenthesisParser [0m
+[0m[[31merror[0m] [0m                                                                   ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:29: not found: value intParser[0m
+[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~> (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) <~ closeParenthesisParser [0m
+[0m[[31merror[0m] [0m                                                                              ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:29: not found: value doubleParser[0m
+[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~> (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) <~ closeParenthesisParser [0m
+[0m[[31merror[0m] [0m                                                                                          ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:29: not found: value trueParser[0m
+[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~> (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) <~ closeParenthesisParser [0m
+[0m[[31merror[0m] [0m                                                                                                         ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:29: not found: value falseParser[0m
+[0m[[31merror[0m] [0m  def callargsParser: Parser[Callargs] = openParenthesisParser ~> (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) <~ closeParenthesisParser [0m
 [0m[[31merror[0m] [0m                                                                                                                      ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:27: not found: type parser[0m
-[0m[[31merror[0m] [0m  def callargs3Parser: parser[Callargs3] = commaParser ~ idParser ~ equalParser ~ idParser | commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                       ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:27: not found: value commaParser[0m
-[0m[[31merror[0m] [0m  def callargs3Parser: parser[Callargs3] = commaParser ~ idParser ~ equalParser ~ idParser | commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser | emptyParser[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:30: not found: value idParser[0m
+[0m[[31merror[0m] [0m  def callargs2Parser: Parser[Callargs2] = idParser <~ equalParser ~> idParser <~ commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser[0m
 [0m[[31merror[0m] [0m                                           ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:27: not found: value idParser[0m
-[0m[[31merror[0m] [0m  def callargs3Parser: parser[Callargs3] = commaParser ~ idParser ~ equalParser ~ idParser | commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                         ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:27: not found: value equalParser[0m
-[0m[[31merror[0m] [0m  def callargs3Parser: parser[Callargs3] = commaParser ~ idParser ~ equalParser ~ idParser | commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                                    ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:27: not found: value idParser[0m
-[0m[[31merror[0m] [0m  def callargs3Parser: parser[Callargs3] = commaParser ~ idParser ~ equalParser ~ idParser | commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                                                  ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:27: not found: value commaParser[0m
-[0m[[31merror[0m] [0m  def callargs3Parser: parser[Callargs3] = commaParser ~ idParser ~ equalParser ~ idParser | commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                                                             ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:27: not found: value idParser[0m
-[0m[[31merror[0m] [0m  def callargs3Parser: parser[Callargs3] = commaParser ~ idParser ~ equalParser ~ idParser | commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                                                                           ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:27: not found: value equalParser[0m
-[0m[[31merror[0m] [0m  def callargs3Parser: parser[Callargs3] = commaParser ~ idParser ~ equalParser ~ idParser | commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                                                                                      ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:27: not found: value idParser[0m
-[0m[[31merror[0m] [0m  def callargs3Parser: parser[Callargs3] = commaParser ~ idParser ~ equalParser ~ idParser | commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                                                                                                    ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:27: not found: value emptyParser[0m
-[0m[[31merror[0m] [0m  def callargs3Parser: parser[Callargs3] = commaParser ~ idParser ~ equalParser ~ idParser | commaParser ~ idParser ~ equalParser ~ idParser ~ callargs3Parser | emptyParser[0m
-[0m[[31merror[0m] [0m                                                                                                                                                                 ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:30: not found: type Lhs[0m
-[0m[[31merror[0m] [0mcase class Def(val leftside:Lhs, val rightside:Rhs)[0m
-[0m[[31merror[0m] [0m                            ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:30: not found: type Rhs[0m
-[0m[[31merror[0m] [0mcase class Def(val leftside:Lhs, val rightside:Rhs)[0m
-[0m[[31merror[0m] [0m                                               ^[0m
-[0m[[31merror[0m] [0m67 errors found[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:30: not found: value idParser[0m
+[0m[[31merror[0m] [0m  def callargs2Parser: Parser[Callargs2] = idParser <~ equalParser ~> idParser <~ commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser[0m
+[0m[[31merror[0m] [0m                                                                      ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:30: not found: value idParser[0m
+[0m[[31merror[0m] [0m  def callargs2Parser: Parser[Callargs2] = idParser <~ equalParser ~> idParser <~ commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser[0m
+[0m[[31merror[0m] [0m                                                                                                 ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:30: not found: value idParser[0m
+[0m[[31merror[0m] [0m  def callargs2Parser: Parser[Callargs2] = idParser <~ equalParser ~> idParser <~ commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser[0m
+[0m[[31merror[0m] [0m                                                                                                                            ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:31: not found: type Callargs3[0m
+[0m[[31merror[0m] [0m  def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> idParser | commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser | emptyParser[0m
+[0m[[31merror[0m] [0m                              ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:31: not found: value idParser[0m
+[0m[[31merror[0m] [0m  def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> idParser | commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser | emptyParser[0m
+[0m[[31merror[0m] [0m                                                          ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:31: not found: value idParser[0m
+[0m[[31merror[0m] [0m  def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> idParser | commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser | emptyParser[0m
+[0m[[31merror[0m] [0m                                                                                     ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:31: not found: value idParser[0m
+[0m[[31merror[0m] [0m  def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> idParser | commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser | emptyParser[0m
+[0m[[31merror[0m] [0m                                                                                                               ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala:31: not found: value idParser[0m
+[0m[[31merror[0m] [0m  def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> idParser | commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser | emptyParser[0m
+[0m[[31merror[0m] [0m                                                                                                                                          ^[0m
+[0m[[31merror[0m] [0m36 errors found[0m
 [0m[[0mdebug[0m] [0mCompilation failed (CompilerInterface)[0m
 [0m[[31merror[0m] [0m(compile:[31mcompile[0m) Compilation failed[0m
