@@ -6,8 +6,8 @@ args2 ::= "," _id_":"_type_ args2 | e
 DefDescription ::= "program" | "action" | "unsafe action" | "function" | "value"
 DefRhs ::= _{_ expressions _}_ | Statement newlines
 expressions ::= Def | Statement | Def newlines expressions | Statement newlines expressions | e
-Statement ::= _id_callargs | basictype
-callargs ::= "("_id_")" | "("basictype")" | "("callargs2")" | e
+Statement ::= basictype | _id_callargs
+callargs ::= "("_id_")" | "("Statement")" | "("callargs2")" | e
 callargs2 ::= _id_"="_id_"," _id_"="_id_ callargs3
 callargs3 ::= ","id"="id | ","id"="id callargs3 | e
 basictype ::= "true" | "false" | integerobject | doubleobject | stringobject

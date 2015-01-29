@@ -32,8 +32,8 @@ object FumurtParser extends TokenParsers //with PackratParsers
   def args2Parser: Parser[Arguments2] = commaParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser | emptyParser
   def defdescriptionParser: Parser[DefDescription] = programStrParser | unsafeactionParser | actionParser | functionParser
   def defrhsParser: Parser[DefRhs] = openCurlyBracketParser ~ expression ~ closeCurlyBracketParser
-  def expressionParser: parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | emptyParser
-  def statementParser: Parser[Statement] = idParser ~ callargsParser | basic
+  def expressionParser: Parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | emptyParser
+  def statementParser: Parser[Statement] = basicStatementParser | idParser ~ callargsParser
   def callargsParser: Parser[Callargs] = openParenthesisParser ~> (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) <~ closeParenthesisParser 
   def callargs2Parser: Parser[Callargs2] = idParser <~ equalParser ~> idParser <~ commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser
   def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> idParser | commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser | emptyParser
@@ -57,6 +57,12 @@ object FumurtParser extends TokenParsers //with PackratParsers
   def idParser:Parser[Elem] = accept("identifier", {case IdT(value) => IdT(value)})
   def trueParser:Parser[Elem] = accept(TrueT())
   def falseParser:Parser[Elem] = accept(FalseT())
+  def basicStatementParser:Parser[Elem] = accept("expected string, integer, boolean or float", {case StringT(value) => StringT(value); 
+                                                                                                case IntegerT(value)=> IntegerT(value)
+                                                                                                case DoubleT(value) => DoubleT(value)
+                                                                                                case TrueT() => TrueT()
+                                                                                                case FalseT() => FalseT()})
+  def typeParser:parser[Elem] = accept("expected type. Types are written with a leading capital letter", {case TypeT(value) => TypeT(value)})
   
   /*def equalParser:Parser[Token] = accept("colon":String, EqualT)
   def colonParser:Parser[Elem] = accept("colon":String, {case ColonT() => EmptyT()})
