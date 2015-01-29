@@ -8,6 +8,7 @@ import scala.language.implicitConversions
 import scala.util.parsing.combinator.RegexParsers
 import scala.util.matching.Regex
 import scala.language.postfixOps
+import scala.util.parsing.combinator.lexical._
 
 object FumurtScanner extends RegexParsers /*with Parsers*/
 {
@@ -21,7 +22,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
     {
       case Success(result, _) =>
       {
-        val tokens = result.filter(x=>x match{case SpaceT() => false; case _ => true})
+        val tokens = result.filter(x=>x match{case SpaceT() => false; case _ => true}) :+ EofT()
         Right(tokens)
       }
       case Failure(message, _) => Left(new FumurtError(Global, "Failure: "+message))
@@ -114,6 +115,7 @@ case class TypeT(val value:String) extends Token
 case class StringT(val value:String) extends Token
 case class SpaceT() extends Token
 case class DummyT() extends Token
+case class EofT() extends Token
 
 
 

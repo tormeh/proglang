@@ -4,7 +4,7 @@
 		module="solution_2.11"
 		revision="0.1.0"
 		status="integration"
-		publication="20150128190051"
+		publication="20150129163121"
 	>
 		<description>
 		solution
@@ -38,5 +38,6 @@
 			<artifact name="specs2_2.11" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 			<artifact name="specs2_2.11" type="jar" ext="jar" conf="*"/>
 		</dependency>
+		<dependency org="org.scala-lang.modules" name="scala-parser-combinators_2.11" rev="1.0.3" conf="compile->default(compile)"/>
 	</dependencies>
 </ivy-module>
