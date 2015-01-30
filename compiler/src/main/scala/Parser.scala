@@ -34,10 +34,11 @@ object FumurtParser extends TokenParsers //with PackratParsers
   def expressionParser: Parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | (emptyParser ^^^ Statement())
   def statementParser: Parser[Statement] = basicStatementParser | idParser ~ callargsParser
   def callargsParser: Parser[Callarg] = openParenthesisParser ~> callargParser <~ closeParenthesisParser
-  def callargParser:Parser[Callarg] = idParser | basicStatementParser | callargs2Parser
-  def callargs2Parser: Parser[Callargs2] = (idParser <~ equalParser) ~ callargParser ~ callargs3Parser.*
+  def callargParser: Parser[Callarg] = idParser | basicStatementParser | callargs2Parser
+  def callargs2Parser: Parser[List[NamedCallarg]] = namedargParser ~ callargs3Parser.* ^^ {x=>x._1 +: x._2}
   //def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> callargParser ~ callargs3Parser | emptyParser
-  def callargs3Parser: Parser[Callargs2] = (commaParser ~> idParser <~ equalParser) ~ callargParser
+  def callargs3Parser: Parser[NamedCallarg] = commaParser ~> namedargParser
+  def namedargParser:Parser[NamedCallarg] = (idParser <~ equalParser) ~ callargParser ^^ {x=>NamedCallarg(x._1, x._2)}
   
   
   def equalParser:Parser[Token] = accept(EqualT())
@@ -103,7 +104,7 @@ case class DefDescription(val value:Token)
 case class MaybeArguments(val value:Option[Arguments])
 case class MaybeArguments2(val value:Option[Arguments2])
 case class Arguments2(val id:String, val typestr:String, val args2:MaybeArguments)
-case class Callargs2(id:Option[IdT], basicStatement:Option[BasicValueT], callargs2:Option[Callargs2]) extends Callarg
+case class NamedCallarg(id:IdT, argument:Callarg) extends Callarg
 
 
 
