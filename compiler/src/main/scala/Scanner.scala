@@ -92,14 +92,15 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
 }
 
 class Token()
+class DefDescriptionT() extends Token
 
 case class EmptyT() extends Token
 case class TrueT() extends Token
 case class FalseT() extends Token
-case class ProgramT() extends Token
-case class ActionT() extends Token
-case class UnsafeActionT() extends Token
-case class FunctionT() extends Token
+case class ProgramT() extends DefDescriptionT
+case class ActionT() extends DefDescriptionT
+case class UnsafeActionT() extends DefDescriptionT
+case class FunctionT() extends DefDescriptionT
 case class OpenParenthesisT() extends Token
 case class CloseParenthesisT() extends Token
 case class OpenCurlyBracketT() extends Token

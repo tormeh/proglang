@@ -10,7 +10,7 @@ import scala.util.matching.Regex
 import scala.language.postfixOps
 import scala.util.parsing.combinator.lexical._
 
-object FumurtScanner extends Scanners /*with Parsers*/
+object FumurtScanner extends RegexParsers /*with Parsers*/
 {
   override val skipWhitespace = false
   
@@ -92,11 +92,12 @@ object FumurtScanner extends Scanners /*with Parsers*/
 }
 
 class Token()
+class DefDescriptionT() extends Token
 
 case class EmptyT() extends Token
 case class TrueT() extends Token
 case class FalseT() extends Token
-case class ProgramT() extends Token
+case class ProgramT() extends DefDescriptionT
 case class ActionT() extends Token
 case class UnsafeActionT() extends Token
 case class FunctionT() extends Token
