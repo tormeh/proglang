@@ -33,9 +33,11 @@ object FumurtParser extends TokenParsers //with PackratParsers
   def defrhsParser: Parser[DefRhs] = openCurlyBracketParser ~ expressionParser ~ closeCurlyBracketParser
   def expressionParser: Parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | (emptyParser ^^^ Statement())
   def statementParser: Parser[Statement] = basicStatementParser | idParser ~ callargsParser
-  def callargsParser: Parser[Callarg] = openParenthesisParser ~> (idParser | basicStatementParser | callargs2Parser) <~ closeParenthesisParser
-  def callargs2Parser: Parser[Callargs2] = idParser <~ equalParser ~> idParser <~ commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser
-  def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> idParser | commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser | emptyParser
+  def callargsParser: Parser[Callarg] = openParenthesisParser ~> callargParser <~ closeParenthesisParser
+  def callargParser:Parser[Callarg] = idParser | basicStatementParser | callargs2Parser
+  def callargs2Parser: Parser[Callargs2] = (idParser <~ equalParser) ~ callargParser ~ callargs3Parser.*
+  //def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> callargParser ~ callargs3Parser | emptyParser
+  def callargs3Parser: Parser[Callargs2] = (commaParser ~> idParser <~ equalParser) ~ callargParser
   
   
   def equalParser:Parser[Token] = accept(EqualT())
