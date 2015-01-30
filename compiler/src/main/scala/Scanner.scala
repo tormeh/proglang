@@ -93,30 +93,32 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
 
 class Token()
 class DefDescriptionT() extends Token
+class BasicValueT() extends Token with Callarg
+class SyntaxT() extends Token
 
 case class EmptyT() extends Token
-case class TrueT() extends Token
-case class FalseT() extends Token
+case class TrueT() extends BasicValueT
+case class FalseT() extends BasicValueT
 case class ProgramT() extends DefDescriptionT
 case class ActionT() extends DefDescriptionT
 case class UnsafeActionT() extends DefDescriptionT
 case class FunctionT() extends DefDescriptionT
-case class OpenParenthesisT() extends Token
-case class CloseParenthesisT() extends Token
-case class OpenCurlyBracketT() extends Token
-case class CloseCurlyBracketT() extends Token
-case class DoubleT(val value:Double) extends Token
-case class IntegerT(val value:Int) extends Token
-case class EqualT() extends Token
-case class ColonT() extends Token
-case class CommaT() extends Token
-case class NewlineT() extends Token
-case class IdT(val value:String) extends Token
+case class OpenParenthesisT() extends SyntaxT
+case class CloseParenthesisT() extends SyntaxT
+case class OpenCurlyBracketT() extends SyntaxT
+case class CloseCurlyBracketT() extends SyntaxT
+case class DoubleT(val value:Double) extends BasicValueT
+case class IntegerT(val value:Int) extends BasicValueT
+case class EqualT() extends SyntaxT
+case class ColonT() extends SyntaxT
+case class CommaT() extends SyntaxT
+case class NewlineT() extends SyntaxT
+case class IdT(val value:String) extends Token with Callarg
 case class TypeT(val value:String) extends Token
-case class StringT(val value:String) extends Token
-case class SpaceT() extends Token
+case class StringT(val value:String) extends BasicValueT
+case class SpaceT() extends SyntaxT
 case class DummyT() extends Token
-case class EofT() extends Token
+case class EofT() extends SyntaxT
 
 
 

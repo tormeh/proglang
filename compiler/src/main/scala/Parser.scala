@@ -27,13 +27,13 @@ object FumurtParser extends TokenParsers //with PackratParsers
   def progParser: Parser[List[Definition]] = (defParser.*) <~ eofParser
   //def progParser: Parser[Definition] = defParser ~ (eofParser | (newlinesParser ~ progParser))
   def defParser: Parser[Definition] = (deflhsParser <~ equalParser ~ optionalNewlinesParser) ~ defrhsParser ^^ {x=>Definition(x._1,x._2)}
-  def deflhsParser: Parser[DefLhs] = (defdescriptionParser ~ idParser ~ argsParser) ^^ {x=>DefLhs(x._1._1,x._1._2,x._2)}
-  def argsParser: Parser[MaybeArguments] = openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ args2Parser) <~ closeParenthesisParser | emptyParser ^^ {x=>MaybeArguments(Left(x))}
-  def args2Parser: Parser[Arguments2] = commaParser ~ idParser ~ colonParser ~ typeParser ~ args2Parser | emptyParser
+  def deflhsParser: Parser[DefLhs] = (defdescriptionParser ~ idParser ~ argsParser) ^^ {x=>DefLhs(x._1._1, x._1._2, x._2)}
+  def argsParser: Parser[MaybeArguments] = openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ args2Parser) <~ closeParenthesisParser | emptyParser ^^ {x=>MaybeArguments(None)}
+  def args2Parser: Parser[MaybeArguments2] = commaParser ~> (idParser <~ colonParser) ~ typeParser ~ args2Parser | emptyParser
   def defrhsParser: Parser[DefRhs] = openCurlyBracketParser ~ expressionParser ~ closeCurlyBracketParser
   def expressionParser: Parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | (emptyParser ^^^ Statement())
   def statementParser: Parser[Statement] = basicStatementParser | idParser ~ callargsParser
-  def callargsParser: Parser[Callargs] = openParenthesisParser ~> (idParser | intParser | doubleParser | trueParser | falseParser | callargs2Parser) <~ closeParenthesisParser 
+  def callargsParser: Parser[Callarg] = openParenthesisParser ~> (idParser | basicStatementParser | callargs2Parser) <~ closeParenthesisParser
   def callargs2Parser: Parser[Callargs2] = idParser <~ equalParser ~> idParser <~ commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser
   def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> idParser | commaParser ~> idParser <~ equalParser ~> idParser ~ callargs3Parser | emptyParser
   
@@ -54,10 +54,10 @@ object FumurtParser extends TokenParsers //with PackratParsers
   def unsafeactionParser:Parser[Elem] = accept(UnsafeActionT())
   def functionParser:Parser[DefDescription] = accept("function", {case FunctionT() => DefDescription(FunctionT())})
   def eofParser:Parser[Elem] = accept(EofT())
-  def idParser:Parser[String] = accept("identifier", {case IdT(value) => value})
+  def idParser:Parser[IdT] = accept("identifier", {case IdT(value) => IdT(value)})
   def trueParser:Parser[Elem] = accept(TrueT())
   def falseParser:Parser[Elem] = accept(FalseT())
-  def basicStatementParser:Parser[Elem] = accept("expected string, integer, boolean or float", {case StringT(value) => StringT(value); 
+  def basicStatementParser:Parser[BasicValueT] = accept("expected string, integer, boolean or float", {case StringT(value) => StringT(value); 
                                                                                                 case IntegerT(value)=> IntegerT(value)
                                                                                                 case DoubleT(value) => DoubleT(value)
                                                                                                 case TrueT() => TrueT()
@@ -70,20 +70,12 @@ object FumurtParser extends TokenParsers //with PackratParsers
                                                                                                 case UnsafeActionT() => UnsafeActionT()
                                                                                                 case ProgramT() => ProgramT()})
   
-  /*def equalParser:Parser[Token] = accept("colon":String, EqualT)
-  def colonParser:Parser[Elem] = accept("colon":String, {case ColonT() => EmptyT()})
-  def commaParser:Parser[Elem] = accept("colon":String, {case CommaT() => })
-  def newlineParser:Parser[Elem] = accept("colon":String, {case NewlineT() => })
-  def emptyParser:Parser[Elem] = success()
-  def openParenthesisParser:Parser[Elem] = accept("colon":String, {case OpenParenthesisT() => })
-  def closeParenthesisParser:Parser[Elem] = accept("colon":String, {case CloseParenthesisT() => })
-  def openCurlyBracketParser:Parser[Elem] = accept("colon":String, {case OpenCurlyBracketT() => })
-  def closeCurlyBracketParser:Parser[Elem] = accept("colon":String, {case CloseCurlyBracketT() => })
-  def programStrParser:Parser[Elem] = accept("colon":String, {case ProgramT() => })
-  def actionParser:Parser[Elem] = accept("colon":String, {case ActionT() => })
-  def unsafeactionParser:Parser[Elem] = accept("colon":String, {case UnsafeActionT() => })
-  def functionParser:Parser[Elem] = accept("colon":String, {case FunctionT() => })
-  def eofParser:Parser[Elem] = accept("end of file":String, {case EofT() => })*/
+  
+  
+  
+  
+  
+  
 
 
   class TokenReader(in:List[Token]) extends Reader[Elem]
@@ -97,61 +89,24 @@ object FumurtParser extends TokenParsers //with PackratParsers
 
 class AstNode()
 class Expression()
+trait Callarg
 
 case class Definition(val leftside:DefLhs, val rightside:DefRhs) extends Expression
-case class DefLhs(val description:DefDescriptionT, val id:String, val args:MaybeArguments)
-case class Arguments(val id:String, val typestr:String, val args2:Either[Empty, Arguments])
+case class DefLhs(val description:DefDescriptionT, val id:IdT, val args:MaybeArguments)
+case class Arguments(val id:String, val typestr:String, val args2:Option[Arguments])
 case class DefRhs(val expression:Expression )
 case class Statement() extends Expression
 case class Empty();
 case class DefDescription(val value:Token)
-case class MaybeArguments(value:Either[Empty,Arguments])
+case class MaybeArguments(val value:Option[Arguments])
+case class MaybeArguments2(val value:Option[Arguments2])
+case class Arguments2(val id:String, val typestr:String, val args2:MaybeArguments)
+case class Callargs2(id:Option[IdT], basicStatement:Option[BasicValueT], callargs2:Option[Callargs2]) extends Callarg
 
 
 
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
 
 
 
-class PackratReader[+T](underlying: Reader[T]) extends Reader[T] { outer =>
-
-    /*
-     * caching of intermediate parse results and information about recursion
-     */
-    private[PackratParsers] val cache = mutable.HashMap.empty[(Parser[_], Position), MemoEntry[_]]
-
-    private[PackratParsers] def getFromCache[T](p: Parser[T]): Option[MemoEntry[T]] = {
-      cache.get((p, pos)).asInstanceOf[Option[MemoEntry[T]]]
-    }
-
-    private[PackratParsers] def updateCacheAndGet[T](p: Parser[T], w: MemoEntry[T]): MemoEntry[T] = {
-      cache.put((p, pos),w)
-      w
-    }
-
-    /* a cache for storing parser heads: allows to know which parser is involved
-       in a recursion*/
-    private[PackratParsers] val recursionHeads: mutable.HashMap[Position, Head] = mutable.HashMap.empty
-
-    //a stack that keeps a list of all involved rules
-    private[PackratParsers] var lrStack: List[LR] = Nil
-
-    override def source: java.lang.CharSequence = underlying.source
-    override def offset: Int = underlying.offset
-
-    def first: T = underlying.first
-    def rest: Reader[T] = new PackratReader(underlying.rest) {
-      override private[PackratParsers] val cache = outer.cache
-      override private[PackratParsers] val recursionHeads = outer.recursionHeads
-      lrStack = outer.lrStack
-    }
-
-    def pos: Position = underlying.pos
-    def atEnd: Boolean = underlying.atEnd
-  }
-  
-*/
