@@ -32,10 +32,10 @@ object FumurtParser extends TokenParsers //with PackratParsers
   def args2Parser: Parser[MaybeArguments2] = commaParser ~> (idParser <~ colonParser) ~ typeParser ~ args2Parser | emptyParser
   def defrhsParser: Parser[DefRhs] = openCurlyBracketParser ~ expressionParser ~ closeCurlyBracketParser
   def expressionParser: Parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | (emptyParser ^^^ Statement())
-  def statementParser: Parser[Statement] = basicStatementParser | idParser ~ callargsParser
-  def callargsParser: Parser[Callarg] = openParenthesisParser ~> callargParser <~ closeParenthesisParser
-  def callargParser: Parser[Callarg] = idParser | basicStatementParser | callargs2Parser
-  def callargs2Parser: Parser[List[NamedCallarg]] = namedargParser ~ callargs3Parser.* ^^ {x=>x._1 +: x._2}
+  def statementParser: Parser[Statement] = basicStatementParser | idParser ~ callargsParser | idParser
+  def callargsParser: Parser[Either[Callarg,NamedCallargs]] = openParenthesisParser ~> (callargParser | callargs2Parser) <~ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCallargs=>Right(x)}}
+  def callargParser: Parser[Callarg] = idParser | basicStatementParser
+  def callargs2Parser: Parser[NamedCallargs] = namedargParser ~ callargs3Parser.* ^^ {x => NamedCallargs(x._1 +: x._2)}
   //def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> callargParser ~ callargs3Parser | emptyParser
   def callargs3Parser: Parser[NamedCallarg] = commaParser ~> namedargParser
   def namedargParser:Parser[NamedCallarg] = (idParser <~ equalParser) ~ callargParser ^^ {x=>NamedCallarg(x._1, x._2)}
@@ -78,9 +78,6 @@ object FumurtParser extends TokenParsers //with PackratParsers
   
   
   
-  
-
-
   class TokenReader(in:List[Token]) extends Reader[Elem]
   {
     def atEnd:Boolean = in.isEmpty
@@ -94,6 +91,7 @@ class AstNode()
 class Expression()
 trait Callarg
 
+
 case class Definition(val leftside:DefLhs, val rightside:DefRhs) extends Expression
 case class DefLhs(val description:DefDescriptionT, val id:IdT, val args:MaybeArguments)
 case class Arguments(val id:String, val typestr:String, val args2:Option[Arguments])
@@ -105,6 +103,7 @@ case class MaybeArguments(val value:Option[Arguments])
 case class MaybeArguments2(val value:Option[Arguments2])
 case class Arguments2(val id:String, val typestr:String, val args2:MaybeArguments)
 case class NamedCallarg(id:IdT, argument:Callarg) extends Callarg
+case class NamedCallargs(val value:List[NamedCallarg])
 
 
 

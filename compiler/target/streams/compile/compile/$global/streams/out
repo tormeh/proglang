@@ -17,7 +17,7 @@
 [0m[[0minfo[0m] [0mCompiling 4 Scala sources to /home/tormod/Documents/skole/spring2015/master/proglang/compiler/target/scala-2.11/classes...[0m
 [0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.5[0m
 [0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.5[0m
-[0m[[0mdebug[0m] [0mRunning cached compiler 1da47614, interfacing (CompilerInterface) with Scala compiler version 2.11.5[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 71d349b8, interfacing (CompilerInterface) with Scala compiler version 2.11.5[0m
 [0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
 [0m[[0mdebug[0m] [0m	-feature[0m
 [0m[[0mdebug[0m] [0m	-optimize[0m
@@ -47,15 +47,10 @@
 [0m[[31merror[0m] [0m  def expressionParser: Parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | (emptyParser ^^^ Statement())[0m
 [0m[[31merror[0m] [0m                                                                                                                                               ^[0m
 [0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Parser.scala:35: type mismatch;[0m
-[0m[[31merror[0m] [0m found   : fumurtCompiler.FumurtParser.Parser[fumurtCompiler.FumurtParser.~[fumurtCompiler.IdT,fumurtCompiler.Callarg]][0m
+[0m[[31merror[0m] [0m found   : fumurtCompiler.FumurtParser.Parser[fumurtCompiler.IdT][0m
 [0m[[31merror[0m] [0m required: fumurtCompiler.FumurtParser.Parser[fumurtCompiler.Statement][0m
-[0m[[31merror[0m] [0m  def statementParser: Parser[Statement] = basicStatementParser | idParser ~ callargsParser[0m
-[0m[[31merror[0m] [0m                                                                           ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Parser.scala:37: type mismatch;[0m
-[0m[[31merror[0m] [0m found   : fumurtCompiler.FumurtParser.Parser[List[fumurtCompiler.NamedCallarg]][0m
-[0m[[31merror[0m] [0m required: fumurtCompiler.FumurtParser.Parser[fumurtCompiler.Callarg][0m
-[0m[[31merror[0m] [0m  def callargParser: Parser[Callarg] = idParser | basicStatementParser | callargs2Parser[0m
-[0m[[31merror[0m] [0m                                                                         ^[0m
-[0m[[31merror[0m] [0m6 errors found[0m
+[0m[[31merror[0m] [0m  def statementParser: Parser[Statement] = basicStatementParser | idParser ~ callargsParser | idParser[0m
+[0m[[31merror[0m] [0m                                                                                              ^[0m
+[0m[[31merror[0m] [0m5 errors found[0m
 [0m[[0mdebug[0m] [0mCompilation failed (CompilerInterface)[0m
 [0m[[31merror[0m] [0m(compile:[31mcompile[0m) Compilation failed[0m
