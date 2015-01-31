@@ -30,8 +30,8 @@ object FumurtParser extends TokenParsers //with PackratParsers
   def deflhsParser: Parser[DefLhs] = (defdescriptionParser ~ idParser ~ argsParser) ^^ {x=>DefLhs(x._1._1, x._1._2, x._2)}
   def argsParser: Parser[MaybeArguments] = openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ args2Parser) <~ closeParenthesisParser ^^{x=>MaybeArguments(Some(Arguments(x._1._1, x._1._2, x._2)))} | emptyParser ^^ {x=>MaybeArguments(None)}
   def args2Parser: Parser[MaybeArguments2] = commaParser ~> (idParser <~ colonParser) ~ typeParser ~ args2Parser ^^{x=>MaybeArguments2(Some(Arguments2(x._1._1, x._1._2, x._2)))} | emptyParser ^^^{MaybeArguments2(None)}
-  def defrhsParser: Parser[DefRhs] = openCurlyBracketParser ~ expressionParser ~ closeCurlyBracketParser
-  def expressionParser: Parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | (emptyParser ^^^ Statement())
+  def defrhsParser: Parser[DefRhs] = (openCurlyBracketParser ~> expressionParser) <~ closeCurlyBracketParser ^^{x=>DefRhs(x)}
+  def expressionParser: Parser[Expression] = (defParser <~ newlineParser) ~ expressionParser | (statementParser <~ newlineParser) ~ expressionParser ^^ {x=>} | (emptyParser ^^^ Statement())
   def statementParser: Parser[Statement] = basicStatementParser | idParser ~ callargsParser | idParser
   def callargsParser: Parser[Either[Callarg,NamedCallargs]] = openParenthesisParser ~> (callargParser | callargs2Parser) <~ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCallargs=>Right(x)}}
   def callargParser: Parser[Callarg] = idParser | basicStatementParser
