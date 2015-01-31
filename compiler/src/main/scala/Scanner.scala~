@@ -93,7 +93,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
 
 class Token()
 class DefDescriptionT() extends Token
-class BasicValueT() extends Token with Callarg
+class BasicValueT() extends Token
 class SyntaxT() extends Token
 
 case class EmptyT() extends Token

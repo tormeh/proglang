@@ -25,8 +25,8 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
         val tokens = result.filter(x=>x match{case SpaceT() => false; case _ => true}) :+ EofT()
         Right(tokens)
       }
-      case Failure(message, _) => Left(new FumurtError(Global, "Failure: "+message))
-      case Error(message,_) => Left(new FumurtError(Global, "Error: " + message))
+      case Failure(message, _) => Left(new FumurtError(Global, "Failure: "+message, ""))
+      case Error(message,_) => Left(new FumurtError(Global, "Error: " + message, ""))
     }
    
   }
@@ -93,7 +93,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
 
 class Token()
 class DefDescriptionT() extends Token
-class BasicValueT() extends Token with Callarg
+class BasicValueT() extends Token
 class SyntaxT() extends Token
 
 case class EmptyT() extends Token
@@ -113,7 +113,7 @@ case class EqualT() extends SyntaxT
 case class ColonT() extends SyntaxT
 case class CommaT() extends SyntaxT
 case class NewlineT() extends SyntaxT
-case class IdT(val value:String) extends Token with Callarg
+case class IdT(val value:String) extends Token
 case class TypeT(val value:String) extends Token
 case class StringT(val value:String) extends BasicValueT
 case class SpaceT() extends SyntaxT

@@ -9,10 +9,10 @@ import scala.util.parsing.combinator._
 import scala.util.parsing.combinator.syntactical._
 import scala.util.parsing.combinator.PackratParsers
 
-object FumurtParser extends TokenParsers //with PackratParsers
+object FumurtParser extends Parsers //with PackratParsers
 {
-  type Elem = Token
-  type Tokens = Token
+  override type Elem = Token
+  //type Tokens = Token
   //type Token = Elem
 
   def parse(in:List[Token]):Either[FumurtError, List[Definition]]=
@@ -20,7 +20,7 @@ object FumurtParser extends TokenParsers //with PackratParsers
     //val ast = parseAll((progParser), in)
     val ast = progParser(new TokenReader(in))
     println(ast.toString)
-    Left(FumurtError(Global, "testerror"))
+    Left(FumurtError(Global, "testerror", "no line contents"))
   }
   
   
@@ -30,15 +30,16 @@ object FumurtParser extends TokenParsers //with PackratParsers
   def deflhsParser: Parser[DefLhs] = (defdescriptionParser ~ idParser ~ argsParser) ^^ {x=>DefLhs(x._1._1, x._1._2, x._2)}
   def argsParser: Parser[MaybeArguments] = openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ args2Parser) <~ closeParenthesisParser ^^{x=>MaybeArguments(Some(Arguments(x._1._1, x._1._2, x._2)))} | emptyParser ^^ {x=>MaybeArguments(None)}
   def args2Parser: Parser[MaybeArguments2] = commaParser ~> (idParser <~ colonParser) ~ typeParser ~ args2Parser ^^{x=>MaybeArguments2(Some(Arguments2(x._1._1, x._1._2, x._2)))} | emptyParser ^^^{MaybeArguments2(None)}
-  def defrhsParser: Parser[DefRhs] = (openCurlyBracketParser ~> expressionParser) <~ closeCurlyBracketParser ^^{x=>DefRhs(x)}
-  def expressionParser: Parser[Expression] = (defParser <~ newlineParser) ~ expressionParser | (statementParser <~ newlineParser) ~ expressionParser ^^ {x=>} | (emptyParser ^^^ Statement())
-  def statementParser: Parser[Statement] = basicStatementParser | idParser ~ callargsParser | idParser
+  def defrhsParser: Parser[DefRhs] = (openCurlyBracketParser ~> expressionParser.*) <~ closeCurlyBracketParser ^^{x=>DefRhs(x)}
+  def expressionParser: Parser[Expression] = defParser <~ newlineParser | statementParser <~ newlineParser
+  def statementParser: Parser[Statement] = basicStatementParser | functionCallParser | identifierStatementParser
   def callargsParser: Parser[Either[Callarg,NamedCallargs]] = openParenthesisParser ~> (callargParser | callargs2Parser) <~ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCallargs=>Right(x)}}
-  def callargParser: Parser[Callarg] = idParser | basicStatementParser
+  def callargParser: Parser[Callarg] = identifierStatementParser | basicStatementParser
   def callargs2Parser: Parser[NamedCallargs] = namedargParser ~ callargs3Parser.* ^^ {x => NamedCallargs(x._1 +: x._2)}
   //def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> callargParser ~ callargs3Parser | emptyParser
   def callargs3Parser: Parser[NamedCallarg] = commaParser ~> namedargParser
   def namedargParser:Parser[NamedCallarg] = (idParser <~ equalParser) ~ callargParser ^^ {x=>NamedCallarg(x._1, x._2)}
+  def functionCallParser:Parser[FunctionCallStatement] = idParser ~ callargsParser ^^ {x=>FunctionCallStatement(x._1 match{case IdT(str)=>str}, x._2)}
   
   
   def equalParser:Parser[Token] = accept(EqualT())
@@ -60,11 +61,12 @@ object FumurtParser extends TokenParsers //with PackratParsers
   def idParser:Parser[IdT] = accept("identifier", {case IdT(value) => IdT(value)})
   def trueParser:Parser[Elem] = accept(TrueT())
   def falseParser:Parser[Elem] = accept(FalseT())
-  def basicStatementParser:Parser[BasicValueT] = accept("expected string, integer, boolean or float", {case StringT(value) => StringT(value); 
-                                                                                                case IntegerT(value)=> IntegerT(value)
-                                                                                                case DoubleT(value) => DoubleT(value)
-                                                                                                case TrueT() => TrueT()
-                                                                                                case FalseT() => FalseT()})
+  def identifierStatementParser:Parser[IdentifierStatement] = accept("identifier", {case IdT(str)=>IdentifierStatement(str)}) 
+  def basicStatementParser:Parser[BasicValueStatement] = accept("expected string, integer, boolean or float", {case StringT(value) => StringStatement(value); 
+                                                                                                case IntegerT(value)=> IntegerStatement(value)
+                                                                                                case DoubleT(value) => DoubleStatement(value)
+                                                                                                case TrueT() => TrueStatement()
+                                                                                                case FalseT() => FalseStatement()})
   def typeParser:Parser[TypeT] = accept("expected type. Types are written with a leading capital letter", {case TypeT(value) => TypeT(value)})
   def intParser:Parser[Elem] = accept("integer", {case IntegerT(value) => IntegerT(value)})
   def doubleParser:Parser[Elem] = accept("double", {case DoubleT(value) => DoubleT(value)})
@@ -90,14 +92,14 @@ object FumurtParser extends TokenParsers //with PackratParsers
 class AstNode()
 class Expression()
 trait Callarg
-
+trait Statement extends Expression
+trait BasicValueStatement extends Statement with Callarg
 
 case class Definition(val leftside:DefLhs, val rightside:DefRhs) extends Expression
 case class DefLhs(val description:DefDescriptionT, val id:IdT, val args:MaybeArguments)
 case class Arguments(val id:IdT, val typestr:TypeT, val args2:MaybeArguments2)
 case class Arguments2(val id:IdT, val typestr:TypeT, val args2:MaybeArguments2)
-case class DefRhs(val expression:Expression )
-case class Statement() extends Expression
+case class DefRhs(val expressions:List[Expression] )
 case class Empty();
 case class DefDescription(val value:Token)
 case class MaybeArguments(val value:Option[Arguments])
@@ -105,7 +107,13 @@ case class MaybeArguments2(val value:Option[Arguments2])
 case class NamedCallarg(id:IdT, argument:Callarg) extends Callarg
 case class NamedCallargs(val value:List[NamedCallarg])
 
-
+case class StringStatement(val value:String) extends BasicValueStatement
+case class IntegerStatement(val value:Int) extends BasicValueStatement
+case class DoubleStatement(val value:Double) extends BasicValueStatement
+case class TrueStatement() extends BasicValueStatement
+case class FalseStatement() extends BasicValueStatement
+case class IdentifierStatement(val value:String) extends Statement with Callarg
+case class FunctionCallStatement(val functionidentifier:String, val args:Either[Callarg,NamedCallargs]) extends Statement with Callarg
 
 
 

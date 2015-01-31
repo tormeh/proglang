@@ -57,7 +57,7 @@ object Main
         println("successful scan. Tokens: "+tokens.toString)
         FumurtParser.parse(tokens) match
         {
-          case Left(error) => println("Error in scanner: " + error.toString)
+          case Left(error) => println("Error in parser: " + error.toString)
           case Right(ast) => println("Success in parser: " + ast.toString) 
         }
       }
