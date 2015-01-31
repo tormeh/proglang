@@ -28,8 +28,8 @@ object FumurtParser extends TokenParsers //with PackratParsers
   //def progParser: Parser[Definition] = defParser ~ (eofParser | (newlinesParser ~ progParser))
   def defParser: Parser[Definition] = (deflhsParser <~ equalParser ~ optionalNewlinesParser) ~ defrhsParser ^^ {x=>Definition(x._1,x._2)}
   def deflhsParser: Parser[DefLhs] = (defdescriptionParser ~ idParser ~ argsParser) ^^ {x=>DefLhs(x._1._1, x._1._2, x._2)}
-  def argsParser: Parser[MaybeArguments] = openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ args2Parser) <~ closeParenthesisParser | emptyParser ^^ {x=>MaybeArguments(None)}
-  def args2Parser: Parser[MaybeArguments2] = commaParser ~> (idParser <~ colonParser) ~ typeParser ~ args2Parser | emptyParser
+  def argsParser: Parser[MaybeArguments] = openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ args2Parser) <~ closeParenthesisParser ^^{x=>MaybeArguments(Some(Arguments(x._1._1, x._1._2, x._2)))} | emptyParser ^^ {x=>MaybeArguments(None)}
+  def args2Parser: Parser[MaybeArguments2] = commaParser ~> (idParser <~ colonParser) ~ typeParser ~ args2Parser ^^{x=>MaybeArguments2(Some(Arguments2(x._1._1, x._1._2, x._2)))} | emptyParser ^^^{MaybeArguments2(None)}
   def defrhsParser: Parser[DefRhs] = openCurlyBracketParser ~ expressionParser ~ closeCurlyBracketParser
   def expressionParser: Parser[Expression] = defParser ~ newlineParser ~ expressionParser | statementParser ~ newlineParser ~ expressionParser | (emptyParser ^^^ Statement())
   def statementParser: Parser[Statement] = basicStatementParser | idParser ~ callargsParser | idParser
@@ -65,7 +65,7 @@ object FumurtParser extends TokenParsers //with PackratParsers
                                                                                                 case DoubleT(value) => DoubleT(value)
                                                                                                 case TrueT() => TrueT()
                                                                                                 case FalseT() => FalseT()})
-  def typeParser:Parser[Elem] = accept("expected type. Types are written with a leading capital letter", {case TypeT(value) => TypeT(value)})
+  def typeParser:Parser[TypeT] = accept("expected type. Types are written with a leading capital letter", {case TypeT(value) => TypeT(value)})
   def intParser:Parser[Elem] = accept("integer", {case IntegerT(value) => IntegerT(value)})
   def doubleParser:Parser[Elem] = accept("double", {case DoubleT(value) => DoubleT(value)})
   def defdescriptionParser: Parser[DefDescriptionT] = accept("expected function, action, unsafe action or program", {case FunctionT() => FunctionT()
@@ -94,14 +94,14 @@ trait Callarg
 
 case class Definition(val leftside:DefLhs, val rightside:DefRhs) extends Expression
 case class DefLhs(val description:DefDescriptionT, val id:IdT, val args:MaybeArguments)
-case class Arguments(val id:String, val typestr:String, val args2:Option[Arguments])
+case class Arguments(val id:IdT, val typestr:TypeT, val args2:MaybeArguments2)
+case class Arguments2(val id:IdT, val typestr:TypeT, val args2:MaybeArguments2)
 case class DefRhs(val expression:Expression )
 case class Statement() extends Expression
 case class Empty();
 case class DefDescription(val value:Token)
 case class MaybeArguments(val value:Option[Arguments])
 case class MaybeArguments2(val value:Option[Arguments2])
-case class Arguments2(val id:String, val typestr:String, val args2:MaybeArguments)
 case class NamedCallarg(id:IdT, argument:Callarg) extends Callarg
 case class NamedCallargs(val value:List[NamedCallarg])
 
