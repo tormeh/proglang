@@ -29,7 +29,7 @@ object Main
         }
         else
         {
-          println("unknown file ending\n")
+          println("unknown file ending: " + parts(1) + "\n")
         }
       }
       else
@@ -54,7 +54,7 @@ object Main
       case Left(error) => println("Error in scanner: " + error.toString)
       case Right(tokens) => 
       {
-        println("successful scan. Tokens: "+tokens.toString)
+        println("successful scan. Tokens: "+tokens.toString+"\n")
         FumurtParser.parse(tokens) match
         {
           case Left(error) => println("Error in parser: " + error.toString)

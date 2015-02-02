@@ -9,6 +9,7 @@ import scala.util.parsing.combinator.RegexParsers
 import scala.util.matching.Regex
 import scala.language.postfixOps
 import scala.util.parsing.combinator.lexical._
+import scala.util.parsing.input.Positional
 
 object FumurtScanner extends RegexParsers /*with Parsers*/
 {
@@ -25,8 +26,8 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
         val tokens = result.filter(x=>x match{case SpaceT() => false; case _ => true}) :+ EofT()
         Right(tokens)
       }
-      case Failure(message, _) => Left(new FumurtError(Global, "Failure: "+message))
-      case Error(message,_) => Left(new FumurtError(Global, "Error: " + message))
+      case Failure(message, _) => Left(new FumurtError(Global, "Failure: "+message, ""))
+      case Error(message,_) => Left(new FumurtError(Global, "Error: " + message, ""))
     }
    
   }
@@ -37,27 +38,27 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
     intokens
   }
 
-  def spaceParser:Parser[SpaceT] = new Regex(""" """) ^^ {x => println("scanned space");SpaceT()}
-  def programStrParser: Parser[ProgramT] = new Regex("program ") ^^ {x => println("scanned program "+x.toString);ProgramT()}
-  def functionParser: Parser[FunctionT]    = new Regex("function ") ^^ {x => println("scanned function "+x.toString);FunctionT()}
-  def unsafeActionParser: Parser[UnsafeActionT]    = new Regex("unsafe action ") ^^ {x => println("scanned unsafe action "+x.toString);UnsafeActionT()}
-  def actionParser: Parser[ActionT]    = new Regex("action ") ^^ {x => println("scanned action "+x.toString);ActionT()}
-  def trueParser: Parser[TrueT]    = new Regex("true") ^^ {x => println("scanned true "+x.toString);TrueT()}
-  def falseParser: Parser[FalseT]    = new Regex("false") ^^ {x => println("scanned false "+x.toString);FalseT()}
-  def openParenthesisParser: Parser[OpenParenthesisT]    = new Regex("""\(""") ^^ {x => println("scanned ( "+x.toString);OpenParenthesisT()}
-  def closeParenthesisParser: Parser[CloseParenthesisT]    = new Regex("""\)""") ^^ {x => println("scanned ) "+x.toString);CloseParenthesisT()}
-  def openCurlyBracketParser: Parser[OpenCurlyBracketT]    = new Regex("""\{""") ^^ {x => println("scanned { "+x.toString);OpenCurlyBracketT()}
-  def closeCurlyBracketParser: Parser[CloseCurlyBracketT]    = new Regex("""\}""") ^^ {x => println("scanned } "+x.toString);;CloseCurlyBracketT()}
-  def doubleParser: Parser[DoubleT] = new Regex("""[-+]?[0-9]*\.?[0-9]+""") ^^ {x => println("scanned double "+x.toString);DoubleT(x.toDouble)}
-  def intParser: Parser[IntegerT] = new Regex("""(0|[1-9]\d*)""") ^^ {x => println("scanned integer "+x.toString);IntegerT(x.toInt)}
-  def equalParser: Parser[EqualT] = new Regex("=") ^^ {x => println("scanned = "+x.toString);EqualT()}
-  def colonParser: Parser[ColonT] = new Regex(":") ^^ {x => println("scanned : "+x.toString);ColonT()}
-  def commaParser: Parser[CommaT] = new Regex(",") ^^ {x => println("scanned , "+x.toString);CommaT()}
+  def spaceParser:Parser[SpaceT] = positioned( new Regex(""" """) ^^ {x => println("scanned space");SpaceT()} )
+  def programStrParser: Parser[ProgramT] = positioned( new Regex("program ") ^^ {x => println("scanned program "+x.toString);ProgramT()} )
+  def functionParser: Parser[FunctionT] = positioned( new Regex("function ") ^^ {x => println("scanned function "+x.toString);FunctionT()} )
+  def unsafeActionParser: Parser[UnsafeActionT] = positioned( new Regex("unsafe action ") ^^ {x => println("scanned unsafe action "+x.toString);UnsafeActionT()} )
+  def actionParser: Parser[ActionT] = positioned( new Regex("action ") ^^ {x => println("scanned action "+x.toString);ActionT()} )
+  def trueParser: Parser[TrueT] = positioned( new Regex("true") ^^ {x => println("scanned true "+x.toString);TrueT()} )
+  def falseParser: Parser[FalseT] = positioned( new Regex("false") ^^ {x => println("scanned false "+x.toString);FalseT()} )
+  def openParenthesisParser: Parser[OpenParenthesisT] = positioned( new Regex("""\(""") ^^ {x => println("scanned ( "+x.toString);OpenParenthesisT()} )
+  def closeParenthesisParser: Parser[CloseParenthesisT] = positioned( new Regex("""\)""") ^^ {x => println("scanned ) "+x.toString);CloseParenthesisT()} )
+  def openCurlyBracketParser: Parser[OpenCurlyBracketT] = positioned( new Regex("""\{""") ^^ {x => println("scanned { "+x.toString);OpenCurlyBracketT()} )
+  def closeCurlyBracketParser: Parser[CloseCurlyBracketT] = positioned( new Regex("""\}""") ^^ {x => println("scanned } "+x.toString);;CloseCurlyBracketT()} )
+  def doubleParser: Parser[DoubleT] = positioned( new Regex("""[-+]?[0-9]*\.?[0-9]+""") ^^ {x => println("scanned double "+x.toString);DoubleT(x.toDouble)} )
+  def intParser: Parser[IntegerT] = positioned( new Regex("""(0|[1-9]\d*)""") ^^ {x => println("scanned integer "+x.toString);IntegerT(x.toInt)} )
+  def equalParser: Parser[EqualT] = positioned( new Regex("=") ^^ {x => println("scanned = "+x.toString);EqualT()} )
+  def colonParser: Parser[ColonT] = positioned( new Regex(":") ^^ {x => println("scanned : "+x.toString);ColonT()} )
+  def commaParser: Parser[CommaT] = positioned( new Regex(",") ^^ {x => println("scanned , "+x.toString);CommaT()} )
   //def emptyParser: Parser[EmptyT] = new Regex("") ^^ {x => println("scanned empty");EmptyT()}
-  def newlineParser: Parser[NewlineT] = new Regex("\n") ^^ {x => println("scanned newline ");NewlineT()}
-  def idParser: Parser[IdT]    = new Regex("[a-z]+") ^^ {x => println("scanned id "+x.toString);IdT(x.toString)}
-  def stringParser: Parser[StringT] = new Regex("""("[^"]*")""") ^^ {x => println("scanned string "+x.toString);StringT(x.toString)}
-  def typeParser: Parser[TypeT]    = new Regex("[A-Z][a-zA-Z]*") ^^ {x => println("scanned type "+x.toString);TypeT(x.toString)}
+  def newlineParser: Parser[NewlineT] = positioned( new Regex("\n") ^^ {x => println("scanned newline ");NewlineT()} )
+  def idParser: Parser[IdT] = positioned( new Regex("[a-z]+") ^^ {x => println("scanned id "+x.toString);IdT(x.toString)} )
+  def stringParser: Parser[StringT] = positioned( new Regex("""("[^"]*")""") ^^ {x => println("scanned string "+x.toString);StringT(x.toString)} )
+  def typeParser: Parser[TypeT] = positioned( new Regex("[A-Z][a-zA-Z]*") ^^ {x => println("scanned type "+x.toString);TypeT(x.toString)} )
   
   
   def scan: Parser[Token] = 
@@ -91,10 +92,13 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
 
 }
 
-class Token()
-class DefDescriptionT() extends Token
-class BasicValueT() extends Token
-class SyntaxT() extends Token
+abstract class Token() extends Positional
+{
+  def position = Source(this.pos.line, this.pos.column, this.pos.longString)
+}
+abstract class DefDescriptionT() extends Token
+abstract class BasicValueT() extends Token
+abstract class SyntaxT() extends Token
 
 case class EmptyT() extends Token
 case class TrueT() extends BasicValueT

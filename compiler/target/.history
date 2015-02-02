@@ -128,3 +128,5 @@ def programStrParser: Parser[ProgramT] = new Regex("program") ^^ {_ => ProgramT(
 run helloworld.fumurt
 clean
 run helloworld.fumurt
+run helloworld.fumur
+run helloworld.fumurt

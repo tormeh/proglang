@@ -24,7 +24,8 @@ object FumurtParser extends Parsers //with PackratParsers
   }
   
   
-  def progParser: Parser[List[Definition]] = (defParser.*) <~ eofParser
+  def progParser: Parser[List[Definition]] = (paddedDefParser.*) <~ eofParser
+  def paddedDefParser:Parser[Definition] = optionalNewlinesParser ~> defParser <~ optionalNewlinesParser
   //def progParser: Parser[Definition] = defParser ~ (eofParser | (newlinesParser ~ progParser))
   def defParser: Parser[Definition] = (deflhsParser <~ equalParser ~ optionalNewlinesParser) ~ defrhsParser ^^ {x=>Definition(x._1,x._2)}
   def deflhsParser: Parser[DefLhs] = (defdescriptionParser ~ idParser ~ argsParser) ^^ {x=>DefLhs(x._1._1, x._1._2, x._2)}
@@ -84,7 +85,7 @@ object FumurtParser extends Parsers //with PackratParsers
   {
     def atEnd:Boolean = in.isEmpty
     def first:Elem = in.head
-    def pos:Position = Global;
+    def pos:Position = in.head.pos;
     def rest = new TokenReader(in.tail)
   }
 }
