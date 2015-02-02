@@ -24,23 +24,23 @@ object FumurtParser extends Parsers //with PackratParsers
   }
   
   
-  def progParser: Parser[List[Definition]] = (paddedDefParser.*) <~ eofParser
+  def progParser: Parser[List[Definition]] = /*(paddedDefParser.*)*/ defParser <~ eofParser ^^{x=>List(x)}
   def paddedDefParser:Parser[Definition] = optionalNewlinesParser ~> defParser <~ optionalNewlinesParser
   //def progParser: Parser[Definition] = defParser ~ (eofParser | (newlinesParser ~ progParser))
   def defParser: Parser[Definition] = (deflhsParser <~ equalParser ~ optionalNewlinesParser) ~ defrhsParser ^^ {x=>Definition(x._1,x._2)}
   def deflhsParser: Parser[DefLhs] = (defdescriptionParser ~ idParser ~ argsParser) ^^ {x=>DefLhs(x._1._1, x._1._2, x._2)}
   def argsParser: Parser[MaybeArguments] = openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ args2Parser) <~ closeParenthesisParser ^^{x=>MaybeArguments(Some(Arguments(x._1._1, x._1._2, x._2)))} | emptyParser ^^ {x=>MaybeArguments(None)}
   def args2Parser: Parser[MaybeArguments2] = commaParser ~> (idParser <~ colonParser) ~ typeParser ~ args2Parser ^^{x=>MaybeArguments2(Some(Arguments2(x._1._1, x._1._2, x._2)))} | emptyParser ^^^{MaybeArguments2(None)}
-  def defrhsParser: Parser[DefRhs] = (openCurlyBracketParser ~> expressionParser.*) <~ closeCurlyBracketParser ^^{x=>DefRhs(x)}
-  def expressionParser: Parser[Expression] = defParser <~ newlineParser | statementParser <~ newlineParser
-  def statementParser: Parser[Statement] = basicStatementParser | functionCallParser | identifierStatementParser
-  def callargsParser: Parser[Either[Callarg,NamedCallargs]] = openParenthesisParser ~> (callargParser | callargs2Parser) <~ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCallargs=>Right(x)}}
-  def callargParser: Parser[Callarg] = identifierStatementParser | basicStatementParser
-  def callargs2Parser: Parser[NamedCallargs] = namedargParser ~ callargs3Parser.* ^^ {x => NamedCallargs(x._1 +: x._2)}
+  def defrhsParser: Parser[DefRhs] = {println("defrhsparser"); (openCurlyBracketParser ~ newlineParser.* ~> expressionParser.*) <~ closeCurlyBracketParser ^^{x=>DefRhs(x)} }
+  def expressionParser: Parser[Expression] = {println("expressionparser"); defParser <~ newlineParser | statementParser <~ newlineParser }
+  def statementParser: Parser[Statement] = {println("statementparser"); basicStatementParser | functionCallParser | identifierStatementParser }
+  def callargsParser: Parser[Either[Callarg,NamedCallargs]] = {println("callargsparser"); openParenthesisParser ~> (callargs2Parser | callargParser) <~ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCallargs=>Right(x)}} }
+  def callargParser: Parser[Callarg] = {println("callargparser"); identifierStatementParser | basicStatementParser }
+  def callargs2Parser: Parser[NamedCallargs] = {println("callargs2parser"); namedargParser ~ callargs3Parser.* ^^ {x => NamedCallargs(x._1 +: x._2)} }
   //def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> callargParser ~ callargs3Parser | emptyParser
-  def callargs3Parser: Parser[NamedCallarg] = commaParser ~> namedargParser
+  def callargs3Parser: Parser[NamedCallarg] = {println("callargs3parser"); commaParser ~> namedargParser }
   def namedargParser:Parser[NamedCallarg] = (idParser <~ equalParser) ~ callargParser ^^ {x=>NamedCallarg(x._1, x._2)}
-  def functionCallParser:Parser[FunctionCallStatement] = idParser ~ callargsParser ^^ {x=>FunctionCallStatement(x._1 match{case IdT(str)=>str}, x._2)}
+  def functionCallParser:Parser[FunctionCallStatement] = {println("functioncallparser"); idParser ~ callargsParser ^^ {x=>FunctionCallStatement(x._1 match{case IdT(str)=>str}, x._2)} }
   
   
   def equalParser:Parser[Token] = accept(EqualT())
@@ -62,7 +62,7 @@ object FumurtParser extends Parsers //with PackratParsers
   def idParser:Parser[IdT] = accept("identifier", {case IdT(value) => IdT(value)})
   def trueParser:Parser[Elem] = accept(TrueT())
   def falseParser:Parser[Elem] = accept(FalseT())
-  def identifierStatementParser:Parser[IdentifierStatement] = accept("identifier", {case IdT(str)=>IdentifierStatement(str)}) 
+  def identifierStatementParser:Parser[IdentifierStatement] ={println("identifierstatementparser"); accept("identifier", {case IdT(str)=>IdentifierStatement(str)}) }
   def basicStatementParser:Parser[BasicValueStatement] = accept("expected string, integer, boolean or float", {case StringT(value) => StringStatement(value); 
                                                                                                 case IntegerT(value)=> IntegerStatement(value)
                                                                                                 case DoubleT(value) => DoubleStatement(value)

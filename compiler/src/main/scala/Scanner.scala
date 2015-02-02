@@ -98,28 +98,28 @@ abstract class BasicValueT() extends Token
 abstract class SyntaxT() extends Token
 
 case class EmptyT() extends Token
-case class TrueT() extends BasicValueT
-case class FalseT() extends BasicValueT
-case class ProgramT() extends DefDescriptionT
-case class ActionT() extends DefDescriptionT
-case class UnsafeActionT() extends DefDescriptionT
-case class FunctionT() extends DefDescriptionT
-case class OpenParenthesisT() extends SyntaxT
-case class CloseParenthesisT() extends SyntaxT
-case class OpenCurlyBracketT() extends SyntaxT
-case class CloseCurlyBracketT() extends SyntaxT
-case class DoubleT(val value:Double) extends BasicValueT
-case class IntegerT(val value:Int) extends BasicValueT
-case class EqualT() extends SyntaxT
-case class ColonT() extends SyntaxT
-case class CommaT() extends SyntaxT
-case class NewlineT() extends SyntaxT
-case class IdT(val value:String) extends Token
-case class TypeT(val value:String) extends Token
-case class StringT(val value:String) extends BasicValueT
+case class TrueT() extends BasicValueT {override def toString = "true"}
+case class FalseT() extends BasicValueT {override def toString = "false"}
+case class ProgramT() extends DefDescriptionT {override def toString = "program"}
+case class ActionT() extends DefDescriptionT {override def toString = "action"}
+case class UnsafeActionT() extends DefDescriptionT {override def toString = "unsafe action"}
+case class FunctionT() extends DefDescriptionT {override def toString = "function"}
+case class OpenParenthesisT() extends SyntaxT {override def toString = "("}
+case class CloseParenthesisT() extends SyntaxT {override def toString = ")"}
+case class OpenCurlyBracketT() extends SyntaxT {override def toString = "{"}
+case class CloseCurlyBracketT() extends SyntaxT {override def toString = "}"}
+case class DoubleT(val value:Double) extends BasicValueT {override def toString = "decimal number"}
+case class IntegerT(val value:Int) extends BasicValueT {override def toString = "integer"}
+case class EqualT() extends SyntaxT {override def toString = "="}
+case class ColonT() extends SyntaxT {override def toString = ":"}
+case class CommaT() extends SyntaxT {override def toString = ","}
+case class NewlineT() extends SyntaxT {override def toString = "a newline"}
+case class IdT(val value:String) extends Token {override def toString = "identifier"}
+case class TypeT(val value:String) extends Token {override def toString = "type"}
+case class StringT(val value:String) extends BasicValueT {override def toString = "string"}
 case class SpaceT() extends SyntaxT
 case class DummyT() extends Token
-case class EofT() extends SyntaxT
+case class EofT() extends SyntaxT {override def toString = "end of file"}
 
 
 
