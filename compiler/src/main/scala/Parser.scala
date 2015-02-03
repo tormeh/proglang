@@ -25,13 +25,13 @@ object FumurtParser extends Parsers //with PackratParsers
   
   
   def progParser: Parser[List[Definition]] = (paddedDefParser.+) <~ eofParser //^^{x=>List(x)}
-  def paddedDefParser:Parser[Definition] = newlineParser.* ~> defParser <~ newlineParser.*
+  def paddedDefParser:Parser[Definition] = {println("paddeddefparser"); newlineParser.* ~> defParser <~ newlineParser.* }
   //def progParser: Parser[Definition] = defParser ~ (eofParser | (newlinesParser ~ progParser))
   def defParser: Parser[Definition] = {println("defparser");  (deflhsParser <~ equalParser ~ optionalNewlinesParser) ~ defrhsParser ^^ {x=>Definition(x._1,x._2)} }
   def deflhsParser: Parser[DefLhs] = {println("deflhsparser");  (defdescriptionParser ~ idParser ~ argsParser) ^^ {x=>DefLhs(x._1._1, x._1._2, x._2)} }
   def argsParser: Parser[MaybeArguments] = {println("argsparser"); openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ args2Parser) <~ closeParenthesisParser ^^{x=>MaybeArguments(Some(Arguments(x._1._1, x._1._2, x._2)))} | emptyParser ^^ {x=>MaybeArguments(None)} }
   def args2Parser: Parser[MaybeArguments2] = {println("args2parserparser");  commaParser ~> (idParser <~ colonParser) ~ typeParser ~ args2Parser ^^{x=>MaybeArguments2(Some(Arguments2(x._1._1, x._1._2, x._2)))} | emptyParser ^^^{MaybeArguments2(None)} }
-  def defrhsParser: Parser[DefRhs] = {println("defrhsparser"); (openCurlyBracketParser ~> expressionParser.+) <~ closeCurlyBracketParser ^^{x=>DefRhs(x)} }
+  def defrhsParser: Parser[DefRhs] = {println("-defrhsparser"); (openCurlyBracketParser ~> expressionParser.+) <~ closeCurlyBracketParser ^^{x=>DefRhs(x)} }
   def expressionParser: Parser[Expression] = {println("expressionparser"); newlineParser.+ ~> (defParser <~ newlineParser | statementParser <~ newlineParser) }
   def statementParser: Parser[Statement] = {println("statementparser"); functionCallParser | basicStatementParser  | identifierStatementParser }
   def callargsParser: Parser[Either[Callarg,NamedCallargs]] = {println("callargsparser"); openParenthesisParser ~> (namedcallargsParser | callargParser) <~ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCallargs=>Right(x)}} }
@@ -71,10 +71,10 @@ object FumurtParser extends Parsers //with PackratParsers
   def typeParser:Parser[TypeT] = accept("expected type. Types are written with a leading capital letter", {case TypeT(value) => TypeT(value)})
   def intParser:Parser[Elem] = accept("integer", {case IntegerT(value) => IntegerT(value)})
   def doubleParser:Parser[Elem] = accept("double", {case DoubleT(value) => DoubleT(value)})
-  def defdescriptionParser: Parser[DefDescriptionT] = accept("expected function, action, unsafe action or program", {case FunctionT() => FunctionT()
+  def defdescriptionParser: Parser[DefDescriptionT] = {println("defdescriptionParser"); accept("expected function, action, unsafe action or program", {case FunctionT() => FunctionT()
                                                                                                 case ActionT() => ActionT()
                                                                                                 case UnsafeActionT() => UnsafeActionT()
-                                                                                                case ProgramT() => ProgramT()})
+                                                                                                case ProgramT() => ProgramT()}) }
   
   
   
