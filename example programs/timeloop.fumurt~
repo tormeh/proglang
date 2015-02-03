@@ -1,4 +1,4 @@
 program p =
 {
-  every(increment=milliseconds(15),action=between(start=millisecond(0), end=millisecond(10), action=actionPrintHelloWorld))
+  every(increment=milliseconds(15), action=between(start=millisecond(0), end=millisecond(10), action=actionPrintHelloWorld))
 }
