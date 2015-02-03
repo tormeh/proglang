@@ -5,17 +5,17 @@ program p =
   between(start=millisecond(20), end=millisecond(30), action=actionPrintNum)
 }
 
-action actionPrintHello:nothing =
+action actionPrintHello:Nothing =
 {
   println("hello")
 }
 
-action actionPrintWorld:nothing =
+action actionPrintWorld:Nothing =
 {
   println("world")
 }
 
-action actionPrintNum:nothing =
+action actionPrintNum:Nothing =
 {
   println(string(square(2)))
   //alternativt println(square(2).toString), men det forutsetter implementasjon av argumentløse metoder. Noe lenger ned på listen over ting å gjøre, sammen med generelle operatorer.
