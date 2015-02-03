@@ -1,8 +1,8 @@
 program p =
 {
-  10 milliseconds to 20 milliseconds do actionPrintWorld
-  0 milliseconds to 10 milliseconds do actionPrintHello
-  20 milliseconds to 30 milliseconds do actionPrintNum
+  between(start=millisecond(10), end=millisecond(20), action=actionPrintWorld)
+  between(start=millisecond(0), end=millisecond(10), action=actionPrintHello)
+  between(start=millisecond(20), end=millisecond(30), action=actionPrintNum)
 }
 
 action actionPrintHello:nothing =
@@ -18,9 +18,10 @@ action actionPrintWorld:nothing =
 action actionPrintNum:nothing =
 {
   println(string(square(2)))
+  //alternativt println(square(2).toString), men det forutsetter implementasjon av argumentløse metoder. Noe lenger ned på listen over ting å gjøre, sammen med generelle operatorer.
 }
 
 function square(x:Integer):Integer =
 {
-  return x*x
+  x*x
 }
