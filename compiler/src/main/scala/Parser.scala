@@ -15,30 +15,41 @@ object FumurtParser extends Parsers //with PackratParsers
   //type Tokens = Token
   //type Token = Elem
 
-  def parse(in:List[Token]):Either[FumurtError, List[Definition]]=
+  def parse(in:List[Token]):Either[NoSuccess, List[Definition]]=
   {
     //val ast = parseAll((progParser), in)
-    val ast = progParser(new TokenReader(in)).get
-    println("\n")
-    println(ast.toString)
-    Right(ast)
+    val res = progParser(new TokenReader(in))
+    res match
+    {
+      case ns:NoSuccess=>
+      {
+         println(res+"\n")
+         //Left(new FumurtError(ns.next.pos, ns.msg, ""))
+         Left(ns)
+      }
+      case _=>
+      {
+        val ast = res.get
+        println("\n")
+        println(ast.toString+"\n")
+        Right(ast)
+      }
+    }
   }
   
   
-  def progParser: Parser[List[Definition]] = (paddedDefParser.+) <~ eofParser //^^{x=>List(x)}
+  def progParser: Parser[List[Definition]] = (paddedDefParser.+) <~ eofParser
   def paddedDefParser:Parser[Definition] = {println("paddeddefparser"); newlineParser.* ~> defParser <~ newlineParser.* }
-  //def progParser: Parser[Definition] = defParser ~ (eofParser | (newlinesParser ~ progParser))
-  def defParser: Parser[Definition] = {println("defparser");  (deflhsParser <~ equalParser ~ optionalNewlinesParser) ~ defrhsParser ^^ {x=>Definition(x._1,x._2)} }
+  def defParser: Parser[Definition] = {println("defparser");  (deflhsParser <~ equalParser ~ newlineParser.*) ~ defrhsParser ^^ {x=>Definition(x._1,x._2)} }
   def deflhsParser: Parser[DefLhs] = {println("deflhsparser");  (defdescriptionParser ~ idParser ~ argsParser ~ (colonParser ~> typeParser)) ^^ {x=>DefLhs(x._1._1._1, x._1._1._2, x._1._2, x._2)} }
-  def argsParser: Parser[MaybeArguments] = {println("argsparser"); openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ args2Parser) <~ closeParenthesisParser ^^{x=>MaybeArguments(Some(Arguments(x._1._1, x._1._2, x._2)))} | emptyParser ^^ {x=>MaybeArguments(None)} }
-  def args2Parser: Parser[MaybeArguments2] = {println("args2parserparser");  commaParser ~> (idParser <~ colonParser) ~ typeParser ~ args2Parser ^^{x=>MaybeArguments2(Some(Arguments2(x._1._1, x._1._2, x._2)))} | emptyParser ^^^{MaybeArguments2(None)} }
-  def defrhsParser: Parser[DefRhs] = {println("-defrhsparser"); (openCurlyBracketParser ~> expressionParser.+) <~ closeCurlyBracketParser ^^{x=>DefRhs(x)} }
-  def expressionParser: Parser[Expression] = {println("expressionparser"); newlineParser.+ ~> (defParser <~ newlineParser | statementParser <~ newlineParser) }
+  def argsParser: Parser[Option[Arguments]] = {println("argsparser"); openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ args2Parser) <~ closeParenthesisParser ^^{x=>Some(Arguments(x._1._1, x._1._2, x._2))} | emptyParser ^^ {x=>None} }
+  def args2Parser: Parser[Option[Arguments2]] = {println("args2parserparser");  commaParser ~> (idParser <~ colonParser) ~ typeParser ~ args2Parser ^^{x=>Some(Arguments2(x._1._1, x._1._2, x._2))} | emptyParser ^^^{None} }
+  def defrhsParser: Parser[DefRhs] = {println("-defrhsparser"); (openCurlyBracketParser ~> expressionParser.+) <~ newlineParser.* ~ closeCurlyBracketParser ^^{x=>DefRhs(x)} }
+  def expressionParser: Parser[Expression] = {println("expressionparser"); newlineParser.+ ~> (defParser | statementParser) }
   def statementParser: Parser[Statement] = {println("statementparser"); functionCallParser | basicStatementParser  | identifierStatementParser }
   def callargsParser: Parser[Either[Callarg,NamedCallargs]] = {println("callargsparser"); openParenthesisParser ~> (namedcallargsParser | callargParser) <~ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCallargs=>Right(x)}} }
   def callargParser: Parser[Callarg] = {println("callargparser"); functionCallParser | identifierStatementParser | basicStatementParser }
   def namedcallargsParser: Parser[NamedCallargs] = {println("namedcallargsparser"); namedcallargParser ~ subsequentnamedcallargsParser.+ ^^ {x => NamedCallargs(x._1 +: x._2)} }
-  //def callargs3Parser: Parser[Callargs3] = commaParser ~> idParser <~ equalParser ~> callargParser ~ callargs3Parser | emptyParser
   def subsequentnamedcallargsParser: Parser[NamedCallarg] = {println("subsequentnamedcallargsParser"); commaParser ~> namedcallargParser }
   def namedcallargParser:Parser[NamedCallarg] = {println("namedcallargparser"); (idParser <~ equalParser) ~ callargParser ^^ {x=>NamedCallarg(x._1, x._2)} }
   def functionCallParser:Parser[FunctionCallStatement] = {println("functioncallparser"); idParser ~ callargsParser ^^ {x=>FunctionCallStatement(x._1 match{case IdT(str)=>str}, x._2)} }
@@ -48,8 +59,6 @@ object FumurtParser extends Parsers //with PackratParsers
   def colonParser:Parser[Elem] = accept(ColonT())
   def commaParser:Parser[Elem] = accept(CommaT())
   def newlineParser:Parser[Elem] = accept(NewlineT())
-  def newlinesParser:Parser[List[Elem]] = newlineParser ~> newlineParser.*
-  def optionalNewlinesParser:Parser[List[Elem]] = newlineParser.*
   def emptyParser:Parser[Empty] = success(Empty())
   def openParenthesisParser:Parser[Elem] = accept(OpenParenthesisT())
   def closeParenthesisParser:Parser[Elem] = accept(CloseParenthesisT())
@@ -98,14 +107,12 @@ trait Statement extends Expression
 trait BasicValueStatement extends Statement with Callarg
 
 case class Definition(val leftside:DefLhs, val rightside:DefRhs) extends Expression
-case class DefLhs(val description:DefDescriptionT, val id:IdT, val args:MaybeArguments, val returntype:TypeT)
-case class Arguments(val id:IdT, val typestr:TypeT, val args2:MaybeArguments2)
-case class Arguments2(val id:IdT, val typestr:TypeT, val args2:MaybeArguments2)
+case class DefLhs(val description:DefDescriptionT, val id:IdT, val args:Option[Arguments], val returntype:TypeT)
+case class Arguments(val id:IdT, val typestr:TypeT, val args2:Option[Arguments2])
+case class Arguments2(val id:IdT, val typestr:TypeT, val args2:Option[Arguments2])
 case class DefRhs(val expressions:List[Expression] )
 case class Empty();
 case class DefDescription(val value:Token)
-case class MaybeArguments(val value:Option[Arguments])
-case class MaybeArguments2(val value:Option[Arguments2])
 case class NamedCallarg(id:IdT, argument:Callarg) extends Callarg
 case class NamedCallargs(val value:List[NamedCallarg])
 

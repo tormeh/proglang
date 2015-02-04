@@ -15,7 +15,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
 {
   override val skipWhitespace = false
   
-  def scan(in:String, opts:Options):Either[FumurtError, List[Token]] =
+  def scan(in:String, opts:Options):Either[NoSuccess, List[Token]] =
   {
     println(in) 
    
@@ -26,8 +26,10 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
         val tokens = result.filter(x=>x match{case SpaceT() => false; case _ => true}) :+ EofT()
         Right(tokens)
       }
-      case Failure(message, _) => Left(new FumurtError(Global, "Failure: "+message, ""))
-      case Error(message,_) => Left(new FumurtError(Global, "Error: " + message, ""))
+      case f:Failure => Left(f)
+      case e:Error => Left(e)
+      //case Failure(message, reader) => Left(new FumurtError(reader.pos, "Failure: "+message,"\n" + in.lines.toList(reader.pos.line) +"\n"))
+      //case Error(message,_) => Left(new FumurtError(Global, "Error: " + message, ""))
     }
    
   }
