@@ -130,3 +130,5 @@ clean
 run helloworld.fumurt
 run helloworld.fumur
 run helloworld.fumurt
+last compile:run
+run helloworld.fumurt

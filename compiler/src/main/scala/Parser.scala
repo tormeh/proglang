@@ -18,9 +18,10 @@ object FumurtParser extends Parsers //with PackratParsers
   def parse(in:List[Token]):Either[FumurtError, List[Definition]]=
   {
     //val ast = parseAll((progParser), in)
-    val ast = progParser(new TokenReader(in))
+    val ast = progParser(new TokenReader(in)).get
+    println("\n")
     println(ast.toString)
-    Left(FumurtError(Global, "testerror", "no line contents"))
+    Right(ast)
   }
   
   
@@ -28,7 +29,7 @@ object FumurtParser extends Parsers //with PackratParsers
   def paddedDefParser:Parser[Definition] = {println("paddeddefparser"); newlineParser.* ~> defParser <~ newlineParser.* }
   //def progParser: Parser[Definition] = defParser ~ (eofParser | (newlinesParser ~ progParser))
   def defParser: Parser[Definition] = {println("defparser");  (deflhsParser <~ equalParser ~ optionalNewlinesParser) ~ defrhsParser ^^ {x=>Definition(x._1,x._2)} }
-  def deflhsParser: Parser[DefLhs] = {println("deflhsparser");  (defdescriptionParser ~ idParser ~ argsParser) ^^ {x=>DefLhs(x._1._1, x._1._2, x._2)} }
+  def deflhsParser: Parser[DefLhs] = {println("deflhsparser");  (defdescriptionParser ~ idParser ~ argsParser ~ (colonParser ~> typeParser)) ^^ {x=>DefLhs(x._1._1._1, x._1._1._2, x._1._2, x._2)} }
   def argsParser: Parser[MaybeArguments] = {println("argsparser"); openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ args2Parser) <~ closeParenthesisParser ^^{x=>MaybeArguments(Some(Arguments(x._1._1, x._1._2, x._2)))} | emptyParser ^^ {x=>MaybeArguments(None)} }
   def args2Parser: Parser[MaybeArguments2] = {println("args2parserparser");  commaParser ~> (idParser <~ colonParser) ~ typeParser ~ args2Parser ^^{x=>MaybeArguments2(Some(Arguments2(x._1._1, x._1._2, x._2)))} | emptyParser ^^^{MaybeArguments2(None)} }
   def defrhsParser: Parser[DefRhs] = {println("-defrhsparser"); (openCurlyBracketParser ~> expressionParser.+) <~ closeCurlyBracketParser ^^{x=>DefRhs(x)} }
@@ -44,7 +45,7 @@ object FumurtParser extends Parsers //with PackratParsers
   
   
   def equalParser:Parser[Token] = accept(EqualT())
-  def colonParser:Parser[Elem] = accept(EmptyT())
+  def colonParser:Parser[Elem] = accept(ColonT())
   def commaParser:Parser[Elem] = accept(CommaT())
   def newlineParser:Parser[Elem] = accept(NewlineT())
   def newlinesParser:Parser[List[Elem]] = newlineParser ~> newlineParser.*
@@ -97,7 +98,7 @@ trait Statement extends Expression
 trait BasicValueStatement extends Statement with Callarg
 
 case class Definition(val leftside:DefLhs, val rightside:DefRhs) extends Expression
-case class DefLhs(val description:DefDescriptionT, val id:IdT, val args:MaybeArguments)
+case class DefLhs(val description:DefDescriptionT, val id:IdT, val args:MaybeArguments, val returntype:TypeT)
 case class Arguments(val id:IdT, val typestr:TypeT, val args2:MaybeArguments2)
 case class Arguments2(val id:IdT, val typestr:TypeT, val args2:MaybeArguments2)
 case class DefRhs(val expressions:List[Expression] )
