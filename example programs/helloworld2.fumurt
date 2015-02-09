@@ -1,4 +1,4 @@
-program p =
+program p:Nothing =
 {
   between(start=millisecond(10), end=millisecond(20), action=actionPrintWorld)
   between(start=millisecond(0), end=millisecond(10), action=actionPrintHello)
@@ -23,5 +23,5 @@ action actionPrintNum:Nothing =
 
 function square(x:Integer):Integer =
 {
-  x*x
+  multiply(left=x,right=x)
 }

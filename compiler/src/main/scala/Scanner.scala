@@ -44,6 +44,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
   def programStrParser: Parser[ProgramT] = positioned( new Regex("program ") ^^ {x => println("scanned program "+x.toString);ProgramT()} )
   def functionParser: Parser[FunctionT] = positioned( new Regex("function ") ^^ {x => println("scanned function "+x.toString);FunctionT()} )
   def unsafeActionParser: Parser[UnsafeActionT] = positioned( new Regex("unsafe action ") ^^ {x => println("scanned unsafe action "+x.toString);UnsafeActionT()} )
+  def valueParser: Parser[ValueT] = positioned( new Regex("value ") ^^ {x => println("scanned unsafe value "+x.toString);ValueT()} )
   def actionParser: Parser[ActionT] = positioned( new Regex("action ") ^^ {x => println("scanned action "+x.toString);ActionT()} )
   def trueParser: Parser[TrueT] = positioned( new Regex("true") ^^ {x => println("scanned true "+x.toString);TrueT()} )
   def falseParser: Parser[FalseT] = positioned( new Regex("false") ^^ {x => println("scanned false "+x.toString);FalseT()} )
@@ -106,6 +107,7 @@ case class ProgramT() extends DefDescriptionT {override def toString = "program"
 case class ActionT() extends DefDescriptionT {override def toString = "action"}
 case class UnsafeActionT() extends DefDescriptionT {override def toString = "unsafe action"}
 case class FunctionT() extends DefDescriptionT {override def toString = "function"}
+case class ValueT() extends DefDescriptionT {override def toString = "value"}
 case class OpenParenthesisT() extends SyntaxT {override def toString = "\"(\""}
 case class CloseParenthesisT() extends SyntaxT {override def toString = "\")\""}
 case class OpenCurlyBracketT() extends SyntaxT {override def toString = "\"{\""}

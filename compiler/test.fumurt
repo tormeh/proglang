@@ -1,9 +1,26 @@
 program p:Nothing =
 {
-  every(increment=milliseconds(15), action=between(start=millisecond(0), end=millisecond(10), action=actionPrintHelloWorld))
+  between(start=millisecond(10), end=millisecond(20), action=actionPrintWorld)
+  between(start=millisecond(0), end=millisecond(10), action=actionPrintHello)
+  between(start=millisecond(20), end=millisecond(30), action=actionPrintNum)
 }
 
 action actionPrintHello:Nothing =
 {
-  println("hello world")
+  println("hello")
+}
+
+action actionPrintWorld:Nothing =
+{
+  println("world")
+}
+
+action actionPrintNum:Nothing =
+{
+  println(string(square(2)))
+}
+
+function square(x:Integer):Integer =
+{
+  multiply(left=x,right=x)
 }
