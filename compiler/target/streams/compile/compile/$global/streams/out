@@ -1,15 +1,69 @@
 [0m[[0mdebug[0m] [0m[0m
 [0m[[0mdebug[0m] [0mInitial source changes: [0m
-[0m[[0mdebug[0m] [0m	removed:Set()[0m
-[0m[[0mdebug[0m] [0m	added: Set()[0m
-[0m[[0mdebug[0m] [0m	modified: Set()[0m
+[0m[[0mdebug[0m] [0m	removed:Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/typechecker.scala)[0m
+[0m[[0mdebug[0m] [0m	added: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala)[0m
+[0m[[0mdebug[0m] [0m	modified: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala)[0m
 [0m[[0mdebug[0m] [0mRemoved products: Set()[0m
 [0m[[0mdebug[0m] [0mExternal API changes: API Changes: Set()[0m
 [0m[[0mdebug[0m] [0mModified binary dependencies: Set()[0m
-[0m[[0mdebug[0m] [0mInitial directly invalidated sources: Set()[0m
+[0m[[0mdebug[0m] [0mInitial directly invalidated sources: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/typechecker.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala)[0m
 [0m[[0mdebug[0m] [0m[0m
 [0m[[0mdebug[0m] [0mSources indirectly invalidated by:[0m
 [0m[[0mdebug[0m] [0m	product: Set()[0m
 [0m[[0mdebug[0m] [0m	binary dep: Set()[0m
 [0m[[0mdebug[0m] [0m	external source: Set()[0m
-[0m[[0mdebug[0m] [0mAll initially invalidated sources: Set()[0m
+[0m[[0mdebug[0m] [0mAll initially invalidated sources: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/typechecker.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala)[0m
+[0m[[0mdebug[0m] [0mRecompiling all 5 sources: invalidated sources (4) exceeded 50.0% of all sources[0m
+[0m[[0minfo[0m] [0mCompiling 5 Scala sources to /home/tormod/Documents/skole/spring2015/proglang/compiler/target/scala-2.11/classes...[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.5[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.5[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 1a7f0168, interfacing (CompilerInterface) with Scala compiler version 2.11.5[0m
+[0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
+[0m[[0mdebug[0m] [0m	-feature[0m
+[0m[[0mdebug[0m] [0m	-optimize[0m
+[0m[[0mdebug[0m] [0m	-bootclasspath[0m
+[0m[[0mdebug[0m] [0m	/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rhino.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jfr.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/classes:/home/tormod/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.5.jar[0m
+[0m[[0mdebug[0m] [0m	-classpath[0m
+[0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/proglang/compiler/target/scala-2.11/classes:/home/tormod/Documents/skole/spring2015/proglang/compiler/lib/machine_2.10-0.1.0 .jar:/home/tormod/.ivy2/cache/org.specs2/specs2_2.11/jars/specs2_2.11-2.3.12.jar:/home/tormod/.ivy2/cache/org.scala-lang/scala-compiler/jars/scala-compiler-2.11.0.jar:/home/tormod/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.11.0.jar:/home/tormod/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/bundles/scala-xml_2.11-1.0.1.jar:/home/tormod/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/bundles/scala-parser-combinators_2.11-1.0.3.jar:/home/tormod/.ivy2/cache/org.pegdown/pegdown/jars/pegdown-1.2.1.jar:/home/tormod/.ivy2/cache/org.parboiled/parboiled-java/jars/parboiled-java-1.1.4.jar:/home/tormod/.ivy2/cache/org.parboiled/parboiled-core/jars/parboiled-core-1.1.4.jar:/home/tormod/.ivy2/cache/org.ow2.asm/asm/jars/asm-4.1.jar:/home/tormod/.ivy2/cache/org.ow2.asm/asm-tree/jars/asm-tree-4.1.jar:/home/tormod/.ivy2/cache/org.ow2.asm/asm-analysis/jars/asm-analysis-4.1.jar:/home/tormod/.ivy2/cache/org.ow2.asm/asm-util/jars/asm-util-4.1.jar:/home/tormod/.ivy2/cache/org.scalaz/scalaz-core_2.11/bundles/scalaz-core_2.11-7.0.6.jar:/home/tormod/.ivy2/cache/org.scalaz/scalaz-concurrent_2.11/bundles/scalaz-concurrent_2.11-7.0.6.jar:/home/tormod/.ivy2/cache/org.scalaz/scalaz-effect_2.11/bundles/scalaz-effect_2.11-7.0.6.jar:/home/tormod/.ivy2/cache/org.scalacheck/scalacheck_2.11/jars/scalacheck_2.11-1.11.3.jar:/home/tormod/.ivy2/cache/org.scala-sbt/test-interface/jars/test-interface-1.0.jar:/home/tormod/.ivy2/cache/org.hamcrest/hamcrest-core/jars/hamcrest-core-1.3.jar:/home/tormod/.ivy2/cache/org.mockito/mockito-core/jars/mockito-core-1.9.5.jar:/home/tormod/.ivy2/cache/org.objenesis/objenesis/jars/objenesis-1.0.jar:/home/tormod/.ivy2/cache/junit/junit/jars/junit-4.11.jar:/home/tormod/.ivy2/cache/org.specs2/classycle/jars/classycle-1.4.3.jar[0m
+[0m[[0mdebug[0m] [0mScala compilation took 15.537859385 s[0m
+[0m[[0mdebug[0m] [0mInvalidating /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala)[0m
+[0m[[0mdebug[0m] [0mThe /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, ValueT, wait, valueParser, $asInstanceOf, productArity, equals, asInstanceOf, pos, synchronized, $isInstanceOf, canEqual, productPrefix, notifyAll, isInstanceOf, <init>, ==, clone, setPos, copy, toString, !=, getClass, ne, eq, productIterator, ##, finalize, productElement, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala: Set(asInstanceOf, pos, isInstanceOf, <init>, ==, toString, ne, eq)[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala: Set(asInstanceOf, isInstanceOf, <init>, ==, toString)[0m
+[0m[[0mdebug[0m] [0mInvalidating /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/typechecker.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/typechecker.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/typechecker.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/typechecker.scala)[0m
+[0m[[0mdebug[0m] [0mThe /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/typechecker.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, wait, $asInstanceOf, equals, asInstanceOf, synchronized, $isInstanceOf, FumurtTypeChecker, notifyAll, isInstanceOf, check, ==, clone, toString, !=, getClass, ne, eq, ##, finalize, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mInvalidating /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala)[0m
+[0m[[0mdebug[0m] [0mThe /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, Argument, subsequentArgsParser, wait, copy$default$2, $asInstanceOf, productArity, equals, typestr, asInstanceOf, synchronized, $isInstanceOf, canEqual, productPrefix, notifyAll, isInstanceOf, args2Parser, <init>, id, ==, clone, Arguments2, copy$default$3, copy, toString, args, !=, getClass, copy$default$1, args2, ne, eq, productIterator, ##, finalize, productElement, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala: Set(asInstanceOf, isInstanceOf, <init>, ==, toString, eq)[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala: Set(asInstanceOf, isInstanceOf, <init>, ==, toString, args)[0m
+[0m[[0mdebug[0m] [0mInvalidating /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala)[0m
+[0m[[0mdebug[0m] [0mThe /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	DefinitionType, notify, UnsafeActionType, name, wait, outType, copy$default$2, $asInstanceOf, location, productArity, equals, typee, FunctionType, ValueType, asInstanceOf, DefinitionC, synchronized, $isInstanceOf, FumurtTypeChecker, inTypes, canEqual, productPrefix, notifyAll, isInstanceOf, <init>, check, ==, clone, copy, toString, ArgumentC, !=, getClass, copy$default$1, ActionType, ne, eq, productIterator, ##, finalize, productElement, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mNew invalidations:[0m
+[0m[[0mdebug[0m] [0m	Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala)[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala)[0m
+[0m[[0mdebug[0m] [0mIncluding /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala by /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala[0m
+[0m[[0mdebug[0m] [0mIncluding /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala by /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala[0m
+[0m[[0mdebug[0m] [0mIncluding /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala by /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala[0m
+[0m[[0mdebug[0m] [0mPreviously invalidated, but (transitively) depend on new invalidations:[0m
+[0m[[0mdebug[0m] [0m	Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala)[0m
+[0m[[0mdebug[0m] [0mAll newly invalidated sources after taking into account (previously) recompiled sources:Set()[0m
