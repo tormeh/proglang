@@ -5,6 +5,7 @@ object FumurtTypeChecker
   def check(in:List[Definition]):Option[List[FumurtError]] =
   {
     val providedTypes = List("Integer", "Double", "Boolean", "String", "Nothing")
+    val stdlib = List("println")
     
     //step 1: make list of object/function/action definitions and their scope/location
     //step 2: check that all statements and definitions uses definitions that are in scope. Also that actions are not called from functions.
