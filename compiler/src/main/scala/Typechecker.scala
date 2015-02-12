@@ -18,7 +18,7 @@ object FumurtTypeChecker
     None
   }
   
-  /*def makeDefinitionList(in:List[Expression], scopePath:String):List[DefinitionC] =
+  /*def makeDefinitionList(in:List[Expression], scopePath:List[String]):List[DefinitionC] =
   {
     in.head match
     {
@@ -44,6 +44,24 @@ object FumurtTypeChecker
   
     //in.head :+ makeDefinitionList(in.tail)
   }*/
+  
+  def searchForDefinition(tree:List[Expression], askingDefinition:List[String], currentdepth:Int, searchFor:String):Option[Definition] =
+  {
+    tree.head match
+    {
+      case Definition(left, right) =>
+      {
+        if (left.id.value == searchFor)
+        {
+          
+        }
+      }
+      case Statement =>
+      {}
+    }
+    searchForDefinition
+    None
+  }
 }
 
 class DefinitionC(val location:List[String], val outType:String, val inTypes:Option[List[ArgumentC]], typee:DefinitionType)
