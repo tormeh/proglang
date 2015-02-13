@@ -68,9 +68,12 @@ object FumurtTypeChecker
         }
       }
     }
+    else
+    {
+      None
+    }
     
     //searchForDefinition
-    None
   }
 }
 
