@@ -47,19 +47,29 @@ object FumurtTypeChecker
   
   def searchForDefinition(tree:List[Expression], askingDefinition:List[String], currentdepth:Int, searchFor:String):Option[Definition] =
   {
-    tree.head match
+    if (!tree.isEmpty)
     {
-      case Definition(left, right) =>
+      tree.head match
       {
-        if (left.id.value == searchFor)
+        case Definition(left, right) =>
         {
-          
+          if (left.id.value == searchFor)
+          {
+            Some(left)
+          }
+          else
+          {
+            
+          }
+        }
+        case Statement =>
+        {
+        
         }
       }
-      case Statement =>
-      {}
     }
-    searchForDefinition
+    
+    //searchForDefinition
     None
   }
 }
