@@ -5,7 +5,9 @@ object FumurtTypeChecker
   def check(in:List[Definition]):Option[List[FumurtError]] =
   {
     val providedTypes = List("Integer", "Double", "Boolean", "String", "Nothing")
-    val stdlib = List("println")
+    val println = DefLhs(ActionT(), IdT("actionPrintln"), Some(Arguments(List(Argument(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
+    val stdlib = List(println)
+    
     
     //step 1: make list of object/function/action definitions and their scope/location
     //step 2: check that all statements and definitions uses definitions that are in scope. Also that actions are not called from functions.
@@ -13,7 +15,7 @@ object FumurtTypeChecker
     //step 4: check that all returning statements have type corresponding to the definition they belong to
     
     
-    
+    //all standard library functions available everywhere (maybe also actions). 
     
     None
   }
@@ -45,7 +47,7 @@ object FumurtTypeChecker
     //in.head :+ makeDefinitionList(in.tail)
   }*/
   
-  def searchForDefinition(tree:List[Expression], askingDefinition:List[String], currentdepth:Int, searchFor:String):Option[Definition] =
+  /*def searchForDefinition(tree:List[Expression], askingDefinition:List[String], currentdepth:Int, searchFor:String):Option[Definition] =
   {
     if (!tree.isEmpty)
     {
@@ -71,6 +73,11 @@ object FumurtTypeChecker
     
     //searchForDefinition
     None
+  }*/
+  
+  def checkfunction(tree:List[Expression], leftside:DefLhs, libs:List[List[Definition]], basicFunctions:List[DefLhs], inScope:List[Definition]):Option[FumurtError]=
+  {
+    
   }
 }
 
