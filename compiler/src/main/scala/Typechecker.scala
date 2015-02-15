@@ -6,7 +6,8 @@ object FumurtTypeChecker
   {
     val providedTypes = List("Integer", "Double", "Boolean", "String", "Nothing")
     val println = DefLhs(ActionT(), IdT("actionPrintln"), Some(Arguments(List(Argument(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
-    val stdlib = List(println)
+    val basicsides = List(println)
+    //val basics = List(multiply, sum, divide, subtract)
     
     
     //step 1: make list of object/function/action definitions and their scope/location
@@ -16,6 +17,7 @@ object FumurtTypeChecker
     
     
     //all standard library functions available everywhere (maybe also actions). 
+    checkexpression(in, DefLhs(UnsafeActionT(), IdT(""), None, TypeT("Nothing")), List(List():List[Definition]), basics, List():List[DefLhs])
     
     None
   }
@@ -75,9 +77,27 @@ object FumurtTypeChecker
     None
   }*/
   
-  def checkfunction(tree:List[Expression], leftside:DefLhs, libs:List[List[Definition]], basicFunctions:List[DefLhs], inScope:List[Definition]):Option[FumurtError]=
+  def checkexpression(tree:List[Expression], leftside:DefLhs, libs:List[List[Definition]], basicFunctions:List[DefLhs], inScope:List[DefLhs]):Option[FumurtError]=
   {
-    
+    if (!tree.isEmpty)
+    {
+      tree.head match
+      {
+        case Definition=>
+        {
+        
+        }
+        case Statement=>
+        {
+          //if return != Nothing, check that it is equal to the tree.head's return type
+          
+        }
+      }
+    }
+    else
+    {
+      None
+    }
   }
 }
 
