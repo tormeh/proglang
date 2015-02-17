@@ -17,7 +17,7 @@ object FumurtTypeChecker
     
     
     //all standard library functions available everywhere (maybe also actions). 
-    checkexpression(in, DefLhs(UnsafeActionT(), IdT(""), None, TypeT("Nothing")), List(List():List[Definition]), basics, List():List[DefLhs])
+    checkexpression(in, DefLhs(UnsafeActionT(), IdT(""), None, TypeT("Nothing")), List(List():List[Definition]), basics, List():List[DefLhs], List():List[FumurtErrors])
     
     None
   }
@@ -78,31 +78,53 @@ object FumurtTypeChecker
     }
     
     //searchForDefinition
-<<<<<<< HEAD
-=======
     None
   }*/
   
-  def checkexpression(tree:List[Expression], leftside:DefLhs, libs:List[List[Definition]], basicFunctions:List[DefLhs], inScope:List[DefLhs]):Option[FumurtError]=
+  def checkexpression(tree:List[Expression], leftside:DefLhs, libs:List[List[Definition]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):List[FumurtError]=
   {
     if (!tree.isEmpty)
     {
       tree.head match
       {
-        case Definition=>
+        case Definition(leftside, rightside)=>
         {
-        
+          val localscope = indexlefts(rightside.expressions)
         }
-        case Statement=>
+        case x:Statement=>
         {
           //if return != Nothing, check that it is equal to the tree.head's return type
-          
+          x match
+          {
+            case b:BasicValueStatement=>
+            {
+            }
+            case IdentifierStatement(name)=>
+            {}
+            case FunctionCallStatement()=>
+            {}
+          }
         }
       }
     }
     else
     {
       None
+    }
+  }
+  
+  def indexlefts(in:List[Expression]):List[DefLhs]=
+  {
+    in.head match
+    {
+      case Definition(leftside, _)=>
+      {
+        leftside +: indexlefts(in.tail)
+      }
+      case Statement()=>
+      {
+        indexlefts(in.tail)
+      }
     }
   }
 }
