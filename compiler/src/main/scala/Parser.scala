@@ -40,12 +40,12 @@ object FumurtParser extends Parsers //with PackratParsers
   
   def progParser: Parser[List[Definition]] = (paddedDefParser.+) <~ eofParser
   def paddedDefParser:Parser[Definition] = {println("paddeddefparser"); newlineParser.* ~> defParser <~ newlineParser.* }
-  def defParser: Parser[Definition] = {println("defparser");  (deflhsParser <~ equalParser ~ newlineParser.*) ~ defrhsParser ^^ {x=>Definition(x._1,x._2)} }
+  def defParser: Parser[Definition] = {println("defparser");  positioned((deflhsParser <~ equalParser ~ newlineParser.*) ~ defrhsParser ^^ {x=>Definition(x._1,x._2)}) }
   def deflhsParser: Parser[DefLhs] = {println("deflhsparser");  (defdescriptionParser ~ idParser ~ argsParser ~ (colonParser ~> typeParser)) ^^ {x=>DefLhs(x._1._1._1, x._1._1._2, x._1._2, x._2)} }
   def argsParser: Parser[Option[Arguments]] = {println("argsparser"); openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ subsequentArgsParser.*) <~ closeParenthesisParser ^^{x=>Some(Arguments( (Argument(x._1._1, x._1._2) +: x._2).sortWith((left,right)=>left.id.value<right.id.value) ))} | emptyParser ^^ {x=>None} }
   def subsequentArgsParser: Parser[Argument] = {println("args2parserparser");  commaParser ~> (idParser <~ colonParser) ~ typeParser ^^{x=>Argument(x._1, x._2)} }
   def defrhsParser: Parser[DefRhs] = {println("-defrhsparser"); (openCurlyBracketParser ~> expressionParser.+) <~ newlineParser.* ~ closeCurlyBracketParser ^^{x=>DefRhs(x)} }
-  def expressionParser: Parser[Expression] = {println("expressionparser"); newlineParser.+ ~> (defParser | statementParser) }
+  def expressionParser: Parser[Expression] = {println("expressionparser"); newlineParser.+ ~> positioned(defParser | statementParser) }
   def statementParser: Parser[Statement] = {println("statementparser"); functionCallParser | basicStatementParser  | identifierStatementParser }
   def callargsParser: Parser[Either[Callarg,NamedCallargs]] = {println("callargsparser"); openParenthesisParser ~> (namedcallargsParser | callargParser) <~ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCallargs=>Right(x)}} }
   def callargParser: Parser[Callarg] = {println("callargparser"); functionCallParser | identifierStatementParser | basicStatementParser }
@@ -83,13 +83,13 @@ object FumurtParser extends Parsers //with PackratParsers
                                                                                                 case DoubleT(value) => DoubleStatement(value)
                                                                                                 case TrueT() => TrueStatement()
                                                                                                 case FalseT() => FalseStatement()})
-  def typeParser:Parser[TypeT] = accept("expected type. Types are written with a leading capital letter", {case TypeT(value) => TypeT(value)})
-  def intParser:Parser[Elem] = accept("integer", {case IntegerT(value) => IntegerT(value)})
-  def doubleParser:Parser[Elem] = accept("double", {case DoubleT(value) => DoubleT(value)})
-  def defdescriptionParser: Parser[DefDescriptionT] = {println("defdescriptionParser"); accept("expected function, action, unsafe action or program", {case FunctionT() => FunctionT()
-                                                                                                case ActionT() => ActionT()
-                                                                                                case UnsafeActionT() => UnsafeActionT()
-                                                                                                case ProgramT() => ProgramT()}) }
+  def typeParser:Parser[TypeT] = accept("expected type. Types are written with a leading capital letter", {case x:TypeT => x})
+  def intParser:Parser[Elem] = accept("integer", {case x:IntegerT => x})
+  def doubleParser:Parser[Elem] = accept("double", {case x:DoubleT => x})
+  def defdescriptionParser: Parser[DefDescriptionT] = {println("defdescriptionParser"); accept("expected function, action, unsafe action or program", {case x:FunctionT => x
+                                                                                                case x:ActionT => x
+                                                                                                case x:UnsafeActionT => x
+                                                                                                case x:ProgramT => x}) }
   
   
   
@@ -107,7 +107,7 @@ object FumurtParser extends Parsers //with PackratParsers
 }
 
 class AstNode()
-class Expression()
+class Expression() extends Positional
 trait Callarg
 trait Statement extends Expression
 trait BasicValueStatement extends Statement with Callarg

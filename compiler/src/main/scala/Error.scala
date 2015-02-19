@@ -11,4 +11,11 @@ case object Global extends Position
 }
 case class Source(val line:Int, val column:Int, val lineContents:String) extends Position
 
-case class FumurtError(val position:Position, val message:String, val lineContents:String)
+case class FumurtError(val position:Position, val message:String)
+{
+  def toString
+  {
+    println(message)
+    println(position.toString)
+  }
+}

@@ -44,7 +44,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
   def programStrParser: Parser[ProgramT] = positioned( new Regex("program ") ^^ {x => println("scanned program "+x.toString);ProgramT()} )
   def functionParser: Parser[FunctionT] = positioned( new Regex("function ") ^^ {x => println("scanned function "+x.toString);FunctionT()} )
   def unsafeActionParser: Parser[UnsafeActionT] = positioned( new Regex("unsafe action ") ^^ {x => println("scanned unsafe action "+x.toString);UnsafeActionT()} )
-  def valueParser: Parser[ValueT] = positioned( new Regex("value ") ^^ {x => println("scanned unsafe value "+x.toString);UnsafeActionT()} )
+  def valueParser: Parser[ValueT] = positioned( new Regex("value ") ^^ {x => println("scanned unsafe value "+x.toString);ValueT()} )
   def actionParser: Parser[ActionT] = positioned( new Regex("action ") ^^ {x => println("scanned action "+x.toString);ActionT()} )
   def trueParser: Parser[TrueT] = positioned( new Regex("true") ^^ {x => println("scanned true "+x.toString);TrueT()} )
   def falseParser: Parser[FalseT] = positioned( new Regex("false") ^^ {x => println("scanned false "+x.toString);FalseT()} )

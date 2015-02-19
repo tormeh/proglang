@@ -1,5 +1,6 @@
 package fumurtCompiler
 
+
 object FumurtTypeChecker
 {
   def check(in:List[Definition]):Option[List[FumurtError]] =
@@ -17,12 +18,105 @@ object FumurtTypeChecker
     
     
     //all standard library functions available everywhere (maybe also actions). 
-    checkexpression(in, DefLhs(UnsafeActionT(), IdT(""), None, TypeT("Nothing")), List(List():List[Definition]), basics, List():List[DefLhs], List():List[FumurtErrors])
+    //checkexpression(in, DefLhs(UnsafeActionT(), IdT(""), None, TypeT("Nothing")), List(List():List[Definition]), basics, List():List[DefLhs], List():List[FumurtErrors])
     
     None
   }
   
-  /*def makeDefinitionList(in:List[Expression], scopePath:List[String]):List[DefinitionC] =
+  
+  
+  def checkexpression(tree:List[Expression], leftside:DefLhs, libs:List[List[Definition]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):Option[List[FumurtError]]=
+  {
+    if (!tree.isEmpty)
+    {
+      tree.head match
+      {
+        case Definition(leftside, rightside)=>
+        {
+          val localscope = indexlefts(rightside.expressions)
+        }
+        case x:Statement=>
+        {
+          //if return != Nothing, check that it is equal to the tree.head's return type
+          x match
+          {
+            case b:BasicValueStatement=>
+            {
+              b match
+              {
+                case c:StringStatement => {if (leftside.returntype.value != "String") Some(List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was String"))) else None}
+                case c:IntegerStatement => {if (leftside.returntype.value != "Integer") Some(List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Integer"))) else None}
+                case c:DoubleStatement => {if (leftside.returntype.value != "Double") Some(List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Double"))) else None}
+                case c:TrueStatement => {if (leftside.returntype.value != "Boolean") Some(List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Boolean"))) else None}
+                case c:FalseStatement => {if (leftside.returntype.value != "Boolean") Some(List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Boolean"))) else None}
+              }
+            }
+            case b:IdentifierStatement=>
+            {
+              inScope.find(x => (x.id.value==b.value)) match
+              {
+                case Some(foundvalue) =>
+                {
+                  if(leftside.returntype.value != foundvalue.returntype.value)
+                  {
+                    Some(List(FumurtError(b.pos, "Return type should be "+leftside.returntype.value)))
+                  }
+                  else
+                  {
+                    None
+                  }
+                }
+                case None => Some(List(FumurtError(b.pos, "Value out of scope or nonexistent")))
+              }
+            }
+            case FunctionCallStatement()=>
+            {
+              
+            }
+          }
+        }
+      }
+    }
+    else
+    {
+      None
+    }
+  }
+  
+  def indexlefts(in:List[Expression]):List[DefLhs]=
+  {
+    in.head match
+    {
+      case Definition(leftside, _)=>
+      {
+        leftside +: indexlefts(in.tail)
+      }
+      case _:Statement=>
+      {
+        indexlefts(in.tail)
+      }
+    }
+  }
+}
+
+class DefinitionC(val location:List[String], val outType:String, val inTypes:Option[List[ArgumentC]], typee:DefinitionType)
+case class ArgumentC(name:String, typee:String) 
+
+class DefinitionType()
+
+case class FunctionType() extends DefinitionType
+case class ActionType() extends DefinitionType
+case class UnsafeActionType() extends DefinitionType
+case class ValueType() extends DefinitionType
+
+
+
+
+
+
+
+
+/*def makeDefinitionList(in:List[Expression], scopePath:List[String]):List[DefinitionC] =
   {
     in.head match
     {
@@ -80,61 +174,3 @@ object FumurtTypeChecker
     //searchForDefinition
     None
   }*/
-  
-  def checkexpression(tree:List[Expression], leftside:DefLhs, libs:List[List[Definition]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):List[FumurtError]=
-  {
-    if (!tree.isEmpty)
-    {
-      tree.head match
-      {
-        case Definition(leftside, rightside)=>
-        {
-          val localscope = indexlefts(rightside.expressions)
-        }
-        case x:Statement=>
-        {
-          //if return != Nothing, check that it is equal to the tree.head's return type
-          x match
-          {
-            case b:BasicValueStatement=>
-            {
-            }
-            case IdentifierStatement(name)=>
-            {}
-            case FunctionCallStatement()=>
-            {}
-          }
-        }
-      }
-    }
-    else
-    {
-      None
-    }
-  }
-  
-  def indexlefts(in:List[Expression]):List[DefLhs]=
-  {
-    in.head match
-    {
-      case Definition(leftside, _)=>
-      {
-        leftside +: indexlefts(in.tail)
-      }
-      case Statement()=>
-      {
-        indexlefts(in.tail)
-      }
-    }
-  }
-}
-
-class DefinitionC(val location:List[String], val outType:String, val inTypes:Option[List[ArgumentC]], typee:DefinitionType)
-case class ArgumentC(name:String, typee:String) 
-
-class DefinitionType()
-
-case class FunctionType() extends DefinitionType
-case class ActionType() extends DefinitionType
-case class UnsafeActionType() extends DefinitionType
-case class ValueType() extends DefinitionType
