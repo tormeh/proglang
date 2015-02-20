@@ -53,7 +53,7 @@ object FumurtTypeChecker
             }
             case b:IdentifierStatement=>
             {
-              inScope.find(x => (x.id.value==b.value)) match
+              inScope.find(x => (x.id.value==b.value)) /*what about arguments and basic functions?*/ match
               {
                 case Some(foundvalue) =>
                 {
@@ -69,9 +69,9 @@ object FumurtTypeChecker
                 case None => Some(List(FumurtError(b.pos, "Value out of scope or nonexistent")))
               }
             }
-            case FunctionCallStatement()=>
+            case y:FunctionCallStatement=>
             {
-              
+              inscope.find()
             }
           }
         }
@@ -96,6 +96,13 @@ object FumurtTypeChecker
         indexlefts(in.tail)
       }
     }
+  }
+  
+  def findinscope(arguments:Option[Arguments], inscope:List[DefLhs], basicfunctions:List[DefLhs], searchFor:String):Either[TypeT, String]=
+  {
+    val argsres = arguments match{ case Some(args)=>args.args.filter(x=>x.id.value==searschFor); case None=>List():List[DefLhs]}
+    val inscoperes = inscope.filter(x=>x.id.value==searchFor)
+    val basicfunctionres = basicfunctions.filter(x=>x.id.value==searchFor)
   }
 }
 

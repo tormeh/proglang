@@ -16,7 +16,7 @@
 [0m[[0minfo[0m] [0mCompiling 2 Scala sources to /home/tormod/Documents/skole/spring2015/proglang/compiler/target/scala-2.11/classes...[0m
 [0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.5[0m
 [0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.5[0m
-[0m[[0mdebug[0m] [0mRunning cached compiler bed9c25, interfacing (CompilerInterface) with Scala compiler version 2.11.5[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 63aa6494, interfacing (CompilerInterface) with Scala compiler version 2.11.5[0m
 [0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
 [0m[[0mdebug[0m] [0m	-feature[0m
 [0m[[0mdebug[0m] [0m	-optimize[0m
@@ -31,14 +31,17 @@
 [0m[[31merror[0m] [0m required: Option[List[fumurtCompiler.FumurtError]][0m
 [0m[[31merror[0m] [0m        }[0m
 [0m[[31merror[0m] [0m        ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala:72: wrong number of arguments for pattern fumurtCompiler.FunctionCallStatement(functionidentifier: String,args: Either[fumurtCompiler.Callarg,fumurtCompiler.NamedCallargs])[0m
-[0m[[31merror[0m] [0m            case FunctionCallStatement()=>[0m
-[0m[[31merror[0m] [0m                                      ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala:73: type mismatch;[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala:74: not found: value inscope[0m
+[0m[[31merror[0m] [0m              inscope.find()[0m
+[0m[[31merror[0m] [0m              ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala:103: not found: value searschFor[0m
+[0m[[31merror[0m] [0m    val argsres = arguments match{ case Some(args)=>args.args.filter(x=>x.id.value==searschFor); case None=>List():List[DefLhs]}[0m
+[0m[[31merror[0m] [0m                                                                                    ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala:105: type mismatch;[0m
 [0m[[31merror[0m] [0m found   : Unit[0m
-[0m[[31merror[0m] [0m required: Option[List[fumurtCompiler.FumurtError]][0m
-[0m[[31merror[0m] [0m            {}[0m
-[0m[[31merror[0m] [0m            ^[0m
-[0m[[31merror[0m] [0mthree errors found[0m
+[0m[[31merror[0m] [0m required: Option[List[fumurtCompiler.DefLhs]][0m
+[0m[[31merror[0m] [0m  }[0m
+[0m[[31merror[0m] [0m  ^[0m
+[0m[[31merror[0m] [0mfour errors found[0m
 [0m[[0mdebug[0m] [0mCompilation failed (CompilerInterface)[0m
 [0m[[31merror[0m] [0m(compile:[31mcompile[0m) Compilation failed[0m
