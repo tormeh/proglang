@@ -1,18 +1,17 @@
-Prog ::= Def EOF | Def newlines Prog
-Definition ::= DefLhs "=" optionalnewlines DefRhs
-DefLhs ::= Defdescription _id_args
-args ::= "("_id_":"_type_ args2")" | e
-args2 ::= "," _id_":"_type_ args2 | e
-DefDescription ::= "program" | "action" | "unsafe action" | "function" | "value"
-DefRhs ::= _{_ expressions _}_ | Statement newlines
-expressions ::= Def | Statement | Def newlines expressions | Statement newlines expressions | e
-Statement ::= basictype | _id_callargs
-callargs ::= "("_id_")" | "("Statement")" | "("callargs2")" | e
-callargs2 ::= _id_"="_id_"," _id_"="_id_ callargs3
-callargs3 ::= ","id"="id | ","id"="id callargs3 | e
-basictype ::= "true" | "false" | integerobject | doubleobject | stringobject
-optionalnewlines ::= e | newline | newline newlines
-newlines ::= newline | newline newlines
+PROG ::= (newline* DEF newline*)+
+DEF ::= DEFLHS = newline* DEFRHS
+DEFLHS ::= DEFDESCRIPTION ID ARGS : TYPE
+ARGS ::= ( ID : TYPE SUBARGS )
+SUBARGS ::= , ID : TYPE
+DEFRHS ::= { EXPRESSION+ newline* }
+EXPRESSION ::= newline+ DEF | newline+ STATEMENT
+STATEMENT ::= FUNCTIONCALL | BASICSTATEMENT | IDENTIFIERSTATEMNT
+CALLARGS ::= ( NAMEDCALLARGS ) | ( CALLARG )
+CALLARG ::= FUNCTIONCALL | IDENTIFIERSTATEMENT | BASICSTATEMENT
+NAMEDCALLARGS ::= NAMEDCALLARG SUBCALLARGS+
+SUBCALLARGS ::= , NAMEDCALLARG
+NAMEDCALLARG ::= ID = CALLARG
+FUNCTIONCALL ID CALLARGS
 
 where id and type are some names
 newline is \n
