@@ -16,7 +16,7 @@
 [0m[[0minfo[0m] [0mCompiling 2 Scala sources to /home/tormod/Documents/skole/spring2015/proglang/compiler/target/scala-2.11/classes...[0m
 [0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.5[0m
 [0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.5[0m
-[0m[[0mdebug[0m] [0mRunning cached compiler 63aa6494, interfacing (CompilerInterface) with Scala compiler version 2.11.5[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 62132fa0, interfacing (CompilerInterface) with Scala compiler version 2.11.5[0m
 [0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
 [0m[[0mdebug[0m] [0m	-feature[0m
 [0m[[0mdebug[0m] [0m	-optimize[0m
@@ -37,9 +37,9 @@
 [0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala:103: not found: value searschFor[0m
 [0m[[31merror[0m] [0m    val argsres = arguments match{ case Some(args)=>args.args.filter(x=>x.id.value==searschFor); case None=>List():List[DefLhs]}[0m
 [0m[[31merror[0m] [0m                                                                                    ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala:105: type mismatch;[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala:106: type mismatch;[0m
 [0m[[31merror[0m] [0m found   : Unit[0m
-[0m[[31merror[0m] [0m required: Option[List[fumurtCompiler.DefLhs]][0m
+[0m[[31merror[0m] [0m required: Either[fumurtCompiler.TypeT,String][0m
 [0m[[31merror[0m] [0m  }[0m
 [0m[[31merror[0m] [0m  ^[0m
 [0m[[31merror[0m] [0mfour errors found[0m

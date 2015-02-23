@@ -1,3 +1,5 @@
+syntax: + is one or more repetitions, * is zero or more repetitions, | is or, everything not in all-caps are terminal symbols, ::= separates the two sides of the production rule
+
 PROG ::= (newline* DEF newline*)+
 DEF ::= DEFLHS = newline* DEFRHS
 DEFLHS ::= DEFDESCRIPTION ID ARGS : TYPE
@@ -11,28 +13,36 @@ CALLARG ::= FUNCTIONCALL | IDENTIFIERSTATEMENT | BASICSTATEMENT
 NAMEDCALLARGS ::= NAMEDCALLARG SUBCALLARGS+
 SUBCALLARGS ::= , NAMEDCALLARG
 NAMEDCALLARG ::= ID = CALLARG
-FUNCTIONCALL ID CALLARGS
+FUNCTIONCALL ::= ID CALLARGS
+DEFDESCRIPTION ::= program | action | unsafe action | function | value | synchronized variable | channel
+ 
+ID is an alphanumeric string with a non-capital first letter
+TYPE is an alphanumeric string with a capital first letter
+BASICSTATEMENT is either string, integer, float or boolean
+IDENTIFIERSTATEMENT is a string used to identify something
 
 where id and type are some names
 newline is \n
-e is the empty token
-
-
-
-keywords
-  seconds
-  milliseconds
-  nanoseconds
-  true
-  false
 
 basic functions:
-  +
-  -
-  *
-  /
+  multiply
+  divide
+  pluss
+  minus
   print
-  diverse mattestuff
-  after
   every
   between
+
+Intention
+Fumurt is a language built with the intention that the programmer shall never be surprised. It assumes that the programmers are only able to completely understand their code on, at maximum, the level of a parser. And then only the code they can see right in the moment. Therefore Fumurt strives to imbue its syntax with as much meaning as possible and to concentrate declaration of concurrent code in one place (parallel but not concurrent code not affected). Language design inherently necessitates compromise and Fumurt compromises minimally on readability and predictability, sacrificing instead keyboard typing and rapid iteration. It favors predictability over flexibility and explicitness over terseness. It is not a Lisp, in other words.
+In naming this is accomplished through a manner similar to Hungarian notation, an undervalued idea. This applies to any types of definitions that might have unexpected behavior. Functions with raw memory access have names prefixed with "unsafeAction". Functions with side effects have names prefixed with "action". Synchronized (STM) variables are prefixed with "synchronized" and communication channels with "channel".
+If a function has more than one argument, the arguments have to be labeled with the same label as it is internally in the function. This idea comes from Python, where it is optional. Internally, Fumurt orders arguments alphabetically.
+
+
+the typechecker shall:
+ensure that in a function call, no two arguments have the same name
+ensure that a value or function is never defined twice in the same scope
+ensure that any statement that has a return type other than Nothing has the same return type as the containing function's return type
+ensure that a reference to a value is written below the definition of the value
+ 
+
