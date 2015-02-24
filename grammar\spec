@@ -44,5 +44,6 @@ ensure that in a function call, no two arguments have the same name
 ensure that a value or function is never defined twice in the same scope
 ensure that any statement that has a return type other than Nothing has the same return type as the containing function's return type
 ensure that a reference to a value is written below the definition of the value
+ensure that defdescriptions and prefixes are correct
  
 
