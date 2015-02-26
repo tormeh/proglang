@@ -23,9 +23,26 @@ object FumurtTypeChecker
     None
   }
   
+  def checktop(in:List[Definition], basicfunctions:List[DefLhs], basicFunctions:List[DefLhs]):Option[List[FumurtError]]=
+  {
+    val topdefs = indexlefts(in)
+    val program = topdefs.filter(is program)
+    val implicitargs = topdefs.filter(not program)
+    checkprogram(program, implicitargs, basicFunctions)
+    checkexpression(in.filter(not program))
+  }
   
+  def checkprogram(program:Definition, topleveldefs:List[Definition], basicFunctions:List[DefLhs]):Option[List[FumurtError]]=
+  {
+    
+  }
   
-  def checkexpression(tree:List[Expression], leftside:DefLhs, arguments:Option[List[DefLhs]] libs:List[List[Definition]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):Option[List[FumurtError]]=
+  def checkprogramcontents(exps:List[Expression]):Option[List[FumurtError]]=
+  {
+    
+  }
+  
+  def checkexpression(tree:List[Expression], leftside:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):Option[List[FumurtError]]=
   {
     if (!tree.isEmpty)
     {
@@ -121,6 +138,11 @@ object FumurtTypeChecker
     {
       Left("error in search for "+searchFor)
     }
+  }
+  
+  def indexargumentlefts(argumentspassed:Option[List[Arguments]], argumentleftsgiven:Option[List[DefLhs]], leftsincallingdefinition:List[DefLhs], basicfunctions:List[DefLhs])
+  {
+    
   }
 }
 
