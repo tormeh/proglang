@@ -29,20 +29,28 @@ basic functions:
   divide
   pluss
   minus
-  print
+  println
+  readln
   every
   between
+  if
 
 Intention
 Fumurt is a language built with the intention that the programmer shall never be surprised. It assumes that the programmers are only able to completely understand their code on, at maximum, the level of a parser. And then only the code they can see right in the moment. Therefore Fumurt strives to imbue its syntax with as much meaning as possible and to concentrate declaration of concurrent code in one place (parallel but not concurrent code not affected). Language design inherently necessitates compromise and Fumurt compromises minimally on readability and predictability, sacrificing instead keyboard typing and rapid iteration. It favors predictability over flexibility and explicitness over terseness. It is not a Lisp, in other words.
 In naming this is accomplished through a manner similar to Hungarian notation, an undervalued idea. This applies to any types of definitions that might have unexpected behavior. Functions with raw memory access have names prefixed with "unsafeAction". Functions with side effects have names prefixed with "action". Synchronized (STM) variables are prefixed with "synchronized" and communication channels with "channel".
 If a function has more than one argument, the arguments have to be labeled with the same label as it is internally in the function. This idea comes from Python, where it is optional. Internally, Fumurt orders arguments alphabetically.
+Fumurt has values, which declaration should be ordered so that that no value depends on a value below it, the way God intended.
 
 
 the typechecker shall:
 ensure that in a function call, no two arguments have the same name
-ensure that a value or function is never defined twice in the same scope
-ensure that any statement that has a return type other than Nothing has the same return type as the containing function's return type
+ensure that a value or function is never defined twice in the same definition or at the top of the tree
+ensure that any statement that has a return type other than Nothing has the same return type as the containing definition's return type
 ensure that a reference to a value is written below the definition of the value
+ensure that for an if statement, the if argument/statement has type boolean, and the then and else statements have the same return type, which is the if statement's return type
+ensure that in the Program definition, there are only statements of type between and every
+ensure that the scope of a definition is the standard library, the definition's arguments and the definitions inside the definition, with the exception of Program which takes as implicit arguments all definitions at its level.
+ensure that any object of a reference exists and is unambiguous in the scope of that reference
+
  
 

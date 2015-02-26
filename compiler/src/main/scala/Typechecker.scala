@@ -18,14 +18,14 @@ object FumurtTypeChecker
     
     
     //all standard library functions available everywhere (maybe also actions). 
-    //checkexpression(in, DefLhs(UnsafeActionT(), IdT(""), None, TypeT("Nothing")), List(List():List[Definition]), basics, List():List[DefLhs], List():List[FumurtErrors])
+    //checkexpression(in, DefLhs(UnsafeActionT(), IdT(""), None, TypeT("Nothing")), None, List(List():List[Definition]), basics, List():List[DefLhs], List():List[FumurtErrors])
     
     None
   }
   
   
   
-  def checkexpression(tree:List[Expression], leftside:DefLhs, libs:List[List[Definition]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):Option[List[FumurtError]]=
+  def checkexpression(tree:List[Expression], leftside:DefLhs, arguments:Option[List[DefLhs]] libs:List[List[Definition]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):Option[List[FumurtError]]=
   {
     if (!tree.isEmpty)
     {
@@ -98,11 +98,29 @@ object FumurtTypeChecker
     }
   }
   
-  def findinscope(arguments:Option[Arguments], inscope:List[DefLhs], basicfunctions:List[DefLhs], searchFor:String):Either[TypeT, String]=
+  def findinscope(arguments:Option[List[DefLhs]], inscope:List[DefLhs], basicfunctions:List[DefLhs], searchFor:String):Either[TypeT, String]=
   {
     val argsres = arguments match{ case Some(args)=>args.args.filter(x=>x.id.value==searschFor); case None=>List():List[DefLhs]}
     val inscoperes = inscope.filter(x=>x.id.value==searchFor)
     val basicfunctionres = basicfunctions.filter(x=>x.id.value==searchFor)
+    val res = argsres ++ inscoperes ++ basicfunctionres
+    
+    if(res.length == 1)
+    {
+      Right(TypeT(res.head))
+    }
+    else if(res.length>1)
+    {
+      Left("Ambiguous reference to "+searchFor)
+    }
+    else if(res.length == 0)
+    {
+      Left(searchFor+" not found")
+    }
+    else
+    {
+      Left("error in search for "+searchFor)
+    }
   }
 }
 
