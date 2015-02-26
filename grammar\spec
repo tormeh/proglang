@@ -51,6 +51,5 @@ ensure that for an if statement, the if argument/statement has type boolean, and
 ensure that in the Program definition, there are only statements of type between and every
 ensure that the scope of a definition is the standard library, the definition's arguments and the definitions inside the definition, with the exception of Program which takes as implicit arguments all definitions at its level.
 ensure that any object of a reference exists and is unambiguous in the scope of that reference
-
  
 
