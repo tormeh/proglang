@@ -31,16 +31,17 @@ basic functions:
   minus
   println
   readln
-  every
-  between
+  deadline
   if
 
 Intention
 Fumurt is a language built with the intention that the programmer shall never be surprised. It assumes that the programmers are only able to completely understand their code on, at maximum, the level of a parser. And then only the code they can see right in the moment. Therefore Fumurt strives to imbue its syntax with as much meaning as possible and to concentrate declaration of concurrent code in one place (parallel but not concurrent code not affected). Language design inherently necessitates compromise and Fumurt compromises minimally on readability and predictability, sacrificing instead keyboard typing and rapid iteration. It favors predictability over flexibility and explicitness over terseness. It is not a Lisp, in other words.
-In naming this is accomplished through a manner similar to Hungarian notation, an undervalued idea. This applies to any types of definitions that might have unexpected behavior. Functions with raw memory access have names prefixed with "unsafeAction". Functions with side effects have names prefixed with "action". Synchronized (STM) variables are prefixed with "synchronized" and communication channels with "channel".
 If a function has more than one argument, the arguments have to be labeled with the same label as it is internally in the function. This idea comes from Python, where it is optional. Internally, Fumurt orders arguments alphabetically.
 Fumurt has values, which declaration should be ordered so that that no value depends on a value below it, the way God intended.
 Fumurt shall be deterministic in scheduling
+In naming predictability is accomplished through a manner similar to Hungarian notation, an undervalued idea. This applies to any types of definitions that might have unexpected behavior. Functions with side effects have names prefixed with "action". Synchronized variables are prefixed with "synchronized". Functions prefixed with "thread" have special privileges and restrictions. They can accept synchronized variables as arguments and can and must be launched as independent threads from the program statement and can otherwise only be called by themselves. Actions cannot be called in parallel, as that would create unpredictable IO.
+When a thread function calls itself (ie. tail recurses) or attempts any kind of IO that returns a value it will await a synchronization pause. During a synchronization pause its writes to synchronized variables will be published, its local copies of synchronized variables will be updated and its queued IO actions will take place.
+Only one handle on a synchronized variable has write rights, the rest can only read a copy updated on synchronization pause
 
 
 the typechecker shall:
