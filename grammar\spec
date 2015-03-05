@@ -41,7 +41,8 @@ Fumurt has values, which declaration should be ordered so that that no value dep
 Fumurt shall be deterministic in scheduling
 In naming predictability is accomplished through a manner similar to Hungarian notation, an undervalued idea. This applies to any types of definitions that might have unexpected behavior. Functions with side effects have names prefixed with "action". Synchronized variables are prefixed with "synchronized". Functions prefixed with "thread" have special privileges and restrictions. They can accept synchronized variables as arguments and can and must be launched as independent threads from the program statement and can otherwise only be called by themselves. Actions cannot be called in parallel, as that would create unpredictable IO.
 When a thread function calls itself (ie. tail recurses) or attempts any kind of IO that returns a value it will await a synchronization pause. During a synchronization pause its writes to synchronized variables will be published, its local copies of synchronized variables will be updated and its queued IO actions will take place.
-Only one handle on a synchronized variable has write rights, the rest can only read a copy updated on synchronization pause
+Only one handle on a synchronized variable has write rights, the rest can only read a copy updated on synchronization pause.
+That a thread is paused waiting for par-statement completion does not make it ready for synchrnoization. All processing must be stopped before a synchronization, as anything else would create unpredictable timing of synchronization pauses.
 
 
 the typechecker shall:
