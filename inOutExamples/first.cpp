@@ -65,7 +65,7 @@ static void threadPrintWorld(std::list<std::string>* println, int syncd)
   std::cout << "world call\n";
   println->push_back(" world\n");
   std::cout << "world rendezvousCounter(a): " << rendezvousCounter.load() << "\n";
-  waitForRendezvous("hello");
+  waitForRendezvous("world");
   threadPrintWorld(println, syncd);
 }
 

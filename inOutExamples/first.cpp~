@@ -101,7 +101,7 @@ int main()
         rendezvousCounter.store(0);
         std::cout << "main  notifying all\n";
         std::lock_guard<std::mutex> lk(rendezvousSyncMutex);
-        cv.notify_one();
+        cv.notify_all();
       }
       std::this_thread::sleep_for(sec);
       std::cout << "main  notified all\n";
