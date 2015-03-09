@@ -38,7 +38,6 @@ thread threadPrintWorld(in:Integer):Nothing =
 #define NUMTOPTHREADS 2
 
 static std::atomic<int> rendezvousCounter;
-static std::atomic<int> atomictestCounter;
 static std::mutex rendezvousSyncMutex;
 static std::condition_variable cv;
 
@@ -70,7 +69,6 @@ static void threadPrintWorld(std::list<std::string>* println, int syncd, int it)
 
 int main()
 {
-  //std::cout << "Hello World!\n";
   rendezvousCounter.store(0);
   int synchronizedNumber = 0;
   std::list<std::string> out1;

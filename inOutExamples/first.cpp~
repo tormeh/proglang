@@ -23,7 +23,7 @@ thread threadPrintWorld(in:Integer):Nothing =
 
 
 
-///////////////////////compile with:    clang++ -O3 -std=c++11 -Weverything -lpthread first.cpp && ./a.out && rm a.out
+///////////////////////compile with:    clang++ -O3 -std=c++11 -Weverything -pthread first.cpp && ./a.out && rm a.out
 /////////////////////////////////or:    g++ -O3 -std=c++11 -Wall -pthread first.cpp && ./a.out && rm a.out
 
 

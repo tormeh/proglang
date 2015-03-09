@@ -95,7 +95,6 @@ static void threadPrintWorld(int syncd)
 
 int main()
 {
-  //std::cout << "Hello World!\n";
   rendezvousCounter.store(0);
   int synchronizedNumber = 0;
   std::thread t1 (threadPrintHello, synchronizedNumber);
