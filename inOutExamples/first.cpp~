@@ -23,7 +23,8 @@ thread threadPrintWorld(in:Integer):Nothing =
 
 
 
-///////////////////////compile with:    clang++ -std=c++11 -Weverything -lpthread first.cpp && ./a.out && rm a.out
+///////////////////////compile with:    clang++ -O3 -std=c++11 -Weverything -lpthread first.cpp && ./a.out && rm a.out
+/////////////////////////////////or:    g++ -O3 -std=c++11 -Wall -pthread first.cpp && ./a.out && rm a.out
 
 
 #include <iostream>
@@ -45,28 +46,25 @@ static void waitForRendezvous(std::string name)
 {
   std::unique_lock<std::mutex> lk(rendezvousSyncMutex);
   ++rendezvousCounter;
-  std::cout << name << " rendezvousCounter(b): " << rendezvousCounter.load() << "\n";
-  std::cout << name << " entering wait\n";
   cv.wait(lk);
-  std::cout << name << " released from wait\n";
 }
 
-static void threadPrintHello(std::list<std::string>* println, int syncd)
+static void threadPrintHello(std::list<std::string>* println, int syncd, int it)
 {
-  std::cout << "hello call\n";
-  println->push_back("Hello");
-  std::cout << "hello rendezvousCounter(a): " << rendezvousCounter.load() << "\n";
-  waitForRendezvous("hello");
-  threadPrintHello(println, syncd);
+  while(true)
+  {
+    println->push_back("Hello");
+    waitForRendezvous("hello");
+  }
 }
 
-static void threadPrintWorld(std::list<std::string>* println, int syncd)
+static void threadPrintWorld(std::list<std::string>* println, int syncd, int it)
 {
-  std::cout << "world call\n";
-  println->push_back(" world\n");
-  std::cout << "world rendezvousCounter(a): " << rendezvousCounter.load() << "\n";
-  waitForRendezvous("hello");
-  threadPrintWorld(println, syncd);
+  while(true)
+  {
+    println->push_back(" world\n");
+    waitForRendezvous("world");
+  }
 }
 
 
@@ -77,16 +75,12 @@ int main()
   int synchronizedNumber = 0;
   std::list<std::string> out1;
   std::list<std::string> out2;
-  std::thread t1 (threadPrintHello, &out1, synchronizedNumber);
-  std::thread t2 (threadPrintWorld, &out2, synchronizedNumber);
+  std::thread t1 (threadPrintHello, &out1, synchronizedNumber, 0);
+  std::thread t2 (threadPrintWorld, &out2, synchronizedNumber, 0);
   while(true)
   {
-    std::chrono::seconds sec(1);
-    std::this_thread::sleep_for(sec);
-    std::cout << "main  rendezvousCounter: " << rendezvousCounter.load() << "\n";
     if(rendezvousCounter.load() >= NUMTOPTHREADS)
     {
-      std::cout << "main  out1, out2 is size " << out1.size() << "," << out2.size() << "\n";
       while(!out1.empty())
       {
         std::cout << out1.front();
@@ -99,15 +93,10 @@ int main()
       }
       {
         rendezvousCounter.store(0);
-        std::cout << "main  notifying all\n";
         std::lock_guard<std::mutex> lk(rendezvousSyncMutex);
         cv.notify_all();
       }
-      std::this_thread::sleep_for(sec);
-      std::cout << "main  notified all\n";
     }
     
   }
-  //t1.join();
-  //t2.join();
 }
