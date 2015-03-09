@@ -27,8 +27,8 @@ thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
 
 
 
-///////////////////////compile with:    clang++ -O3 -std=c++11 -Weverything -pthread first.cpp && ./a.out && rm a.out
-/////////////////////////////////or:    g++ -O3 -std=c++11 -Wall -pthread first.cpp && ./a.out && rm a.out
+///////////////////////compile with:    clang++ -O3 -std=c++11 -Weverything -pthread dualprintlnwithsync.cpp && ./a.out && rm a.out
+/////////////////////////////////or:    g++ -O3 -std=c++11 -Wall -pthread dualprintlnwithsync.cpp && ./a.out && rm a.out
 
 
 #include <iostream>
@@ -44,8 +44,8 @@ thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
 static std::atomic<int> rendezvousCounter;
 static std::mutex rendezvousSyncMutex;
 static std::condition_variable cv;
-static std::list<std::string> println1;
-static std::list<std::string> println2;
+static std::list<std::string> print1;
+static std::list<std::string> print2;
 static int synchronizedNumber = 0;
 static int writeSynchronizedNumber = 0;
 
@@ -59,15 +59,15 @@ static void waitForRendezvous(std::string name)
   }
   else if (rendezvousCounter.load() == NUMTOPTHREADS)
   {
-    while(!println1.empty())
+    while(!print1.empty())
     {
-      std::cout << println1.front();
-      println1.pop_front();
+      std::cout << print1.front();
+      print1.pop_front();
     }
-    while(!println2.empty())
+    while(!print2.empty())
     {
-      std::cout << println2.front();
-      println2.pop_front();
+      std::cout << print2.front();
+      print2.pop_front();
     }
     synchronizedNumber = writeSynchronizedNumber;
     {
@@ -86,8 +86,8 @@ static void waitForRendezvous(std::string name)
 {
   while(true)
   {
-    println1.push_back(std::to_string(writeSynchronizedNumber));
-    println1.push_back(" Hello ");
+    print1.push_back(std::to_string(writeSynchronizedNumber));
+    print1.push_back(" Hello ");
     writeSynchronizedNumber = writeSynchronizedNumber + 1;
     waitForRendezvous("hello");
   }
@@ -97,9 +97,9 @@ static void waitForRendezvous(std::string name)
 {
   while(true)
   {
-    println2.push_back("world ");
-    println2.push_back(std::to_string(synchronizedNumber));
-    println2.push_back("\n");
+    print2.push_back("world ");
+    print2.push_back(std::to_string(synchronizedNumber));
+    print2.push_back("\n");
     waitForRendezvous("world");
   }
 }

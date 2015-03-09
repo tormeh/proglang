@@ -8,13 +8,13 @@ program p:Nothing =
   
 thread threadPrintHello():Nothing =
 {
-  println("hello ")
+  print("hello ")
   threadPrintHello()
 }
 
 thread threadPrintWorld():Nothing =
 {
-  println("world")
+  print("world")
   threadPrintWorld()
 }
 
@@ -22,8 +22,8 @@ thread threadPrintWorld():Nothing =
 
 
 
-///////////////////////compile with:    clang++ -O3 -std=c++11 -Weverything -pthread first.cpp && ./a.out && rm a.out
-/////////////////////////////////or:    g++ -O3 -std=c++11 -Wall -pthread first.cpp && ./a.out && rm a.out
+///////////////////////compile with:    clang++ -O3 -std=c++11 -Weverything -pthread dualprintln.cpp && ./a.out && rm a.out
+/////////////////////////////////or:    g++ -O3 -std=c++11 -Wall -pthread dualprintln.cpp && ./a.out && rm a.out
 
 
 #include <iostream>
@@ -39,8 +39,8 @@ thread threadPrintWorld():Nothing =
 static std::atomic<int> rendezvousCounter;
 static std::mutex rendezvousSyncMutex;
 static std::condition_variable cv;
-static std::list<std::string> println1;
-static std::list<std::string> println2;
+static std::list<std::string> print1;
+static std::list<std::string> print2;
 
 static void waitForRendezvous(std::string name)
 {
@@ -52,15 +52,15 @@ static void waitForRendezvous(std::string name)
   }
   else if (rendezvousCounter.load() == NUMTOPTHREADS)
   {
-    while(!println1.empty())
+    while(!print1.empty())
     {
-      std::cout << println1.front();
-      println1.pop_front();
+      std::cout << print1.front();
+      print1.pop_front();
     }
-    while(!println2.empty())
+    while(!print2.empty())
     {
-      std::cout << println2.front();
-      println2.pop_front();
+      std::cout << print2.front();
+      print2.pop_front();
     }
     {
       rendezvousCounter.store(0);
@@ -74,20 +74,20 @@ static void waitForRendezvous(std::string name)
   }
 }
 
-static void threadPrintHello(int syncd)
+[[noreturn]] static void threadPrintHello()
 {
   while(true)
   {
-    println1.push_back("Hello");
+    print1.push_back("Hello");
     waitForRendezvous("hello");
   }
 }
 
-static void threadPrintWorld(int syncd)
+[[noreturn]] static void threadPrintWorld()
 {
   while(true)
   {
-    println2.push_back(" world\n");
+    print2.push_back(" world\n");
     waitForRendezvous("world");
   }
 }
@@ -96,9 +96,8 @@ static void threadPrintWorld(int syncd)
 int main()
 {
   rendezvousCounter.store(0);
-  int synchronizedNumber = 0;
-  std::thread t1 (threadPrintHello, synchronizedNumber);
-  std::thread t2 (threadPrintWorld, synchronizedNumber);
+  std::thread t1 (threadPrintHello);
+  std::thread t2 (threadPrintWorld);
   while(true)
   {
     std::this_thread::sleep_for(std::chrono::seconds(1));
