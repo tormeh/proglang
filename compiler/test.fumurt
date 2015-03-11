@@ -1,26 +1,22 @@
 program p:Nothing =
 {
-  between(start=millisecond(10), end=millisecond(20), action=actionPrintWorld)
-  between(start=millisecond(0), end=millisecond(10), action=actionPrintHello)
-  between(start=millisecond(20), end=millisecond(30), action=actionPrintNum)
+  synchronized variable synchronizedNumber(threadPrintHello):Integer = {0}
+  threadPrintHello(synchronizedNumber)
+  threadPrintWorld(synchronizedNumber)
+}
+  
+thread threadPrintHello(synchronizedNumber:Integer):Nothing =
+{
+  println(synchronizedNumber)
+  println(" Hello ")
+  mutate(variable=synchronizedNumber, newValue=plus(left=synchronizedNumber, right=1))
+  threadPrintHello()
 }
 
-action actionPrintHello:Nothing =
+thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
 {
-  println("hello")
-}
-
-action actionPrintWorld:Nothing =
-{
-  println("world")
-}
-
-action actionPrintNum:Nothing =
-{
-  println(string(square(2)))
-}
-
-function square(x:Integer):Integer =
-{
-  multiply(left=x,right=x)
+  println("world ")
+  println(synchronizedNumber)
+  println("\n")
+  threadPrintWorld()
 }
