@@ -91,10 +91,7 @@ object FumurtParser extends Parsers //with PackratParsers
   def typeParser:Parser[TypeT] = accept("expected type. Types are written with a leading capital letter", {case x:TypeT => x})
   def intParser:Parser[Elem] = accept("integer", {case x:IntegerT => x})
   def doubleParser:Parser[Elem] = accept("double", {case x:DoubleT => x})
-  def defdescriptionParser: Parser[DefDescriptionT] = {println("defdescriptionParser"); accept("expected function, action, unsafe action or program", {case x:FunctionT => x
-                                                                                                case x:ActionT => x
-                                                                                                case x:UnsafeActionT => x
-                                                                                                case x:ProgramT => x}) }
+  def defdescriptionParser: Parser[DefDescriptionT] = {println("defdescriptionParser"); accept("expected function, action, unsafe action or program", {case x:DefDescriptionT => x}) }
   
   
   
