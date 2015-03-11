@@ -13,9 +13,8 @@ case class Source(val line:Int, val column:Int, val lineContents:String) extends
 
 case class FumurtError(val position:Position, val message:String)
 {
-  def toString
+  override def toString:String=
   {
-    println(message)
-    println(position.toString)
+    message + "\n" + position.toString
   }
 }
