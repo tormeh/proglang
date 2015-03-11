@@ -8,7 +8,7 @@ object FumurtTypeChecker
     val providedTypes = List("Integer", "Double", "Boolean", "String", "Nothing")
     val println = DefLhs(ActionT(), IdT("actionPrintln"), Some(Arguments(List(Argument(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
     val basicsides = List(println)
-    val multiply = DefLhs(FunctionT, IdT("multiply"), Some(Arguments(List(Argument(IdT("left"),TypeT("Integer")), Argument(IdT("Right"), TypeT("Integer"))))), )
+    //val multiply = DefLhs(FunctionT, IdT("multiply"), Some(Arguments(List(Argument(IdT("left"),TypeT("Integer")), Argument(IdT("Right"), TypeT("Integer"))))), )
     val sum = DefLhs
     val divide = DefLhs
     val subtract = DefLhs
@@ -25,7 +25,7 @@ object FumurtTypeChecker
     //all standard library functions available everywhere (maybe also actions). 
     //checkexpression(in, DefLhs(UnsafeActionT(), IdT(""), None, TypeT("Nothing")), None, List(List():List[Definition]), basics, List():List[DefLhs], List():List[FumurtErrors])
     
-    val errors = checktop(in, basicfunctions)
+    val errors = List() //checktop(in, basicfunctions)
     
     if (errors.isEmpty)
     {
@@ -37,7 +37,7 @@ object FumurtTypeChecker
     }
   }
   
-  def checktop(in:List[Definition], basicFunctions:List[DefLhs]): List[FumurtError]=
+  /*def checktop(in:List[Definition], basicFunctions:List[DefLhs]): List[FumurtError]=
   {
     val topdefs = indexlefts(in)
     val program = topdefs.filter(is program)
@@ -61,10 +61,10 @@ object FumurtTypeChecker
     {
       tree.head match
       {
-        case x:Definition(leftside, rightside)=>
+        case x:Definition=>
         {
-          val localscope = indexlefts(rightside.expressions)
-          currentErrors :+ checkdefinition(x, leftside, arguments, basicFunctions, inscope, currentErrors) 
+          val localscope = indexlefts(x.rightside.expressions)
+          currentErrors :+ checkdefinition(x, x.leftside, arguments, basicFunctions, inscope, currentErrors) 
         }
         case x:Statement => currentErrors :+ checkstatement(x, leftside, arguments, basicFunctions, inScope, currentErrors)
       }
@@ -168,7 +168,7 @@ object FumurtTypeChecker
   def indexargumentlefts(argumentspassed:Option[List[Arguments]], argumentleftsgiven:Option[List[DefLhs]], leftsincallingdefinition:List[DefLhs], basicfunctions:List[DefLhs])
   {
     
-  }
+  }*/
 }
 
 class DefinitionC(val location:List[String], val outType:String, val inTypes:Option[List[ArgumentC]], typee:DefinitionType)
