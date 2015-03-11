@@ -44,8 +44,13 @@ object FumurtParser extends Parsers //with PackratParsers
   def deflhsParser: Parser[DefLhs] = {println("deflhsparser");  (defdescriptionParser ~ idParser ~ argsParser ~ (colonParser ~> typeParser)) ^^ {x=>DefLhs(x._1._1._1, x._1._1._2, x._1._2, x._2)} }
   def argsParser: Parser[Option[Arguments]] = {println("argsparser"); openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ subsequentArgsParser.*) <~ closeParenthesisParser ^^{x=>Some(Arguments( (Argument(x._1._1, x._1._2) +: x._2).sortWith((left,right)=>left.id.value<right.id.value) ))} | emptyParser ^^ {x=>None} }
   def subsequentArgsParser: Parser[Argument] = {println("args2parserparser");  commaParser ~> (idParser <~ colonParser) ~ typeParser ^^{x=>Argument(x._1, x._2)} }
+  
+  def defrhsParser: Parser[DefRhs] = {println("-defrhsparser"); (openCurlyBracketParser ~ newlineParser.* ~> expressionParser ~ (newlineParser.+ ~> expressionParser).*) <~ newlineParser.* ~ closeCurlyBracketParser ^^{x=>DefRhs(x._1 +: x._2)} }
+  def expressionParser: Parser[Expression] = {println("expressionparser"); positioned(defParser | statementParser) }
+  /*
   def defrhsParser: Parser[DefRhs] = {println("-defrhsparser"); (openCurlyBracketParser ~> expressionParser.+) <~ newlineParser.* ~ closeCurlyBracketParser ^^{x=>DefRhs(x)} }
   def expressionParser: Parser[Expression] = {println("expressionparser"); newlineParser.+ ~> positioned(defParser | statementParser) }
+  */
   def statementParser: Parser[Statement] = {println("statementparser"); functionCallParser | basicStatementParser  | identifierStatementParser }
   def callargsParser: Parser[Either[Callarg,NamedCallargs]] = {println("callargsparser"); openParenthesisParser ~> (namedcallargsParser | callargParser) <~ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCallargs=>Right(x)}} }
   def callargParser: Parser[Callarg] = {println("callargparser"); functionCallParser | identifierStatementParser | basicStatementParser }
