@@ -43,7 +43,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
   def spaceParser:Parser[SpaceT] = positioned( new Regex(""" """) ^^ {x => println("scanned space");SpaceT()} )
   def programStrParser: Parser[ProgramT] = positioned( new Regex("program ") ^^ {x => println("scanned program "+x.toString);ProgramT()} )
   def functionParser: Parser[FunctionT] = positioned( new Regex("function ") ^^ {x => println("scanned function "+x.toString);FunctionT()} )
-  def unsafeActionParser: Parser[UnsafeActionT] = positioned( new Regex("unsafe action ") ^^ {x => println("scanned unsafe action "+x.toString);UnsafeActionT()} )
+  def threadParser: Parser[ThreadT] = positioned( new Regex("thread ") ^^ {x => println("scanned thread "+x.toString);ThreadT()} )
   def synchronizedVariableParser: Parser[SynchronizedVariableT] = positioned(new Regex("synchronized variable ") ^^ {x => println("scanned synchronized variable "+x.toString); SynchronizedVariableT()})
   def valueParser: Parser[ValueT] = positioned( new Regex("value ") ^^ {x => println("scanned unsafe value "+x.toString);ValueT()} )
   def actionParser: Parser[ActionT] = positioned( new Regex("action ") ^^ {x => println("scanned action "+x.toString);ActionT()} )
@@ -70,7 +70,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
     (
       spaceParser               |
       programStrParser          |
-      unsafeActionParser        |
+      threadParser        |
       actionParser              |
       synchronizedVariableParser  |
       functionParser            |
@@ -107,7 +107,7 @@ case class TrueT() extends BasicValueT {override def toString = "true"}
 case class FalseT() extends BasicValueT {override def toString = "false"}
 case class ProgramT() extends DefDescriptionT {override def toString = "program"}
 case class ActionT() extends DefDescriptionT {override def toString = "action"}
-case class UnsafeActionT() extends DefDescriptionT {override def toString = "unsafe action"}
+case class ThreadT() extends DefDescriptionT {override def toString = "thread"}
 case class FunctionT() extends DefDescriptionT {override def toString = "function"}
 case class ValueT() extends DefDescriptionT {override def toString = "value"}
 case class SynchronizedVariableT() extends DefDescriptionT {override def toString = "synchronized variable"}
