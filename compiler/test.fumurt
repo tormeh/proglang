@@ -1,6 +1,14 @@
+thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
+{
+  println("world ")
+  println(synchronizedNumber)
+  println("\n")
+  threadPrintWorld()
+}
+
 program p:Nothing =
 {
-  synchronized variable synchronizedNumber(threadPrintHello):Integer = {0}
+  synchronized variable synchronizedNumber:Integer = {synchronized(variable=0, writer=threadPrintHello)}
   threadPrintHello(synchronizedNumber)
   threadPrintWorld(synchronizedNumber)
 }
@@ -13,10 +21,3 @@ thread threadPrintHello(synchronizedNumber:Integer):Nothing =
   threadPrintHello()
 }
 
-thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
-{
-  println("world ")
-  println(synchronizedNumber)
-  println("\n")
-  threadPrintWorld()
-}
