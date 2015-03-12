@@ -2,17 +2,9 @@
 
 program p:Nothing =
 {
-  synchronized variable synchronizedNumber(threadPrintHello):Integer = {0}
+  synchronized variable synchronizedNumber:Integer = {synchronized(variable=0, writer=threadPrintHello)}
   threadPrintHello(synchronizedNumber)
   threadPrintWorld(synchronizedNumber)
-}
-  
-thread threadPrintHello(synchronizedNumber:Integer):Nothing =
-{
-  println(synchronizedNumber)
-  println(" Hello ")
-  mutate(variable=synchronizedNumber, newValue=plus(left=synchronizedNumber, right=1))
-  threadPrintHello()
 }
 
 thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
@@ -21,6 +13,14 @@ thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
   println(synchronizedNumber)
   println("\n")
   threadPrintWorld()
+}
+  
+thread threadPrintHello(synchronizedNumber:Integer):Nothing =
+{
+  println(synchronizedNumber)
+  println(" Hello ")
+  mutate(variable=synchronizedNumber, newValue=plus(left=synchronizedNumber, right=1))
+  threadPrintHello()
 }
 
 */
