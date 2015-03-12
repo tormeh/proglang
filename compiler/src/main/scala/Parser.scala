@@ -53,7 +53,7 @@ object FumurtParser extends Parsers //with PackratParsers
   */
   def statementParser: Parser[Statement] = {println("statementparser"); functionCallParser | basicStatementParser  | identifierStatementParser }
   def callargsParser: Parser[Either[Callarg,NamedCallargs]] = {println("callargsparser"); openParenthesisParser ~> (namedcallargsParser | callargParser) <~ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCallargs=>Right(x)}} }
-  def callargParser: Parser[Callarg] = {println("callargparser"); functionCallParser | identifierStatementParser | basicStatementParser }
+  def callargParser: Parser[Callarg] = {println("callargparser"); functionCallParser | identifierStatementParser | basicStatementParser | success(NoArgs()) }
   def namedcallargsParser: Parser[NamedCallargs] = {println("namedcallargsparser"); namedcallargParser ~ subsequentnamedcallargsParser.+ ^^ {x => NamedCallargs((x._1 +: x._2).sortWith((left,right)=>left.id.value<right.id.value))} }
   def subsequentnamedcallargsParser: Parser[NamedCallarg] = {println("subsequentnamedcallargsParser"); commaParser ~> namedcallargParser }
   def namedcallargParser:Parser[NamedCallarg] = {println("namedcallargparser"); (idParser <~ equalParser) ~ callargParser ^^ {x=>NamedCallarg(x._1, x._2)} }
@@ -76,7 +76,7 @@ object FumurtParser extends Parsers //with PackratParsers
   def closeCurlyBracketParser:Parser[Elem] = accept(CloseCurlyBracketT())
   def programStrParser:Parser[Elem] = accept(ProgramT())
   def actionParser:Parser[Elem] = accept(ActionT())
-  def unsafeactionParser:Parser[Elem] = accept(UnsafeActionT())
+  def threadParser:Parser[Elem] = accept(ThreadT())
   def functionParser:Parser[DefDescription] = accept("function", {case FunctionT() => DefDescription(FunctionT())})
   def eofParser:Parser[Elem] = accept(EofT())
   def idParser:Parser[IdT] = accept("identifier", {case IdT(value) => {println("idparser accepted "+value);IdT(value)}})
@@ -91,7 +91,7 @@ object FumurtParser extends Parsers //with PackratParsers
   def typeParser:Parser[TypeT] = accept("expected type. Types are written with a leading capital letter", {case x:TypeT => x})
   def intParser:Parser[Elem] = accept("integer", {case x:IntegerT => x})
   def doubleParser:Parser[Elem] = accept("double", {case x:DoubleT => x})
-  def defdescriptionParser: Parser[DefDescriptionT] = {println("defdescriptionParser"); accept("expected function, action, unsafe action or program", {case x:DefDescriptionT => x}) }
+  def defdescriptionParser: Parser[DefDescriptionT] = {println("defdescriptionParser"); accept("expected function, action, thread or program", {case x:DefDescriptionT => x}) }
   
   
   
@@ -125,6 +125,7 @@ case class Empty();
 case class DefDescription(val value:Token)
 case class NamedCallarg(id:IdT, argument:Callarg) extends Callarg
 case class NamedCallargs(val value:List[NamedCallarg])
+case class NoArgs() extends Callarg
 
 case class StringStatement(val value:String) extends BasicValueStatement
 case class IntegerStatement(val value:Int) extends BasicValueStatement
