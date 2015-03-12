@@ -58,7 +58,22 @@ object Main
         FumurtParser.parse(tokens) match
         {
           case Left(error) => println("Error in parser: " + error.toString)
-          case Right(ast) => println("Success in parser: " + ast.toString) 
+          case Right(ast) => 
+          {
+            println("Success in parser: " + ast.toString)
+            FumurtTypeChecker.check(ast) match
+            {
+              case Some(errors) => 
+              {
+                errors.map(x=>println(x))
+              }
+              case None => 
+              {
+                println("\nNo errors in checker")
+                println("\ncode generated: \n" + FumurtCodeGenerator.generate(ast))
+              }
+            }
+          }
         }
       }
     }

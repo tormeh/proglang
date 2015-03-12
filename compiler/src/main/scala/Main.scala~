@@ -54,11 +54,26 @@ object Main
       case Left(error) => println("Error in scanner: " + error.toString)
       case Right(tokens) => 
       {
-        println("successful scan. Tokens: "+tokens.toString)
+        println("successful scan. Tokens: "+tokens.toString+"\n")
         FumurtParser.parse(tokens) match
         {
           case Left(error) => println("Error in parser: " + error.toString)
-          case Right(ast) => println("Success in parser: " + ast.toString) 
+          case Right(ast) => 
+          {
+            println("Success in parser: " + ast.toString)
+            FumurtTypeChecker.check(ast) match
+            {
+              case Some(errors) => 
+              {
+                errors.map(x=>println(x))
+              }
+              case None => 
+              {
+                println("No errors in checker")
+                println("\ncode generated: \n" + FumurtCodeGenerator.generate(ast))
+              }
+            }
+          }
         }
       }
     }
