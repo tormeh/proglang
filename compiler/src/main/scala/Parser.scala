@@ -31,7 +31,7 @@ object FumurtParser extends Parsers //with PackratParsers
       {
         val ast = res.get
         println("\n")
-        println(ast.toString+"\n")
+        //println(ast.toString+"\n")
         Right(ast)
       }
     }
