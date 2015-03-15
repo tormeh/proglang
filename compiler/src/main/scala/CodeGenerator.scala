@@ -8,8 +8,10 @@ object FumurtCodeGenerator
     val includestatement = "#include <iostream>\n#include <thread>\n#include <string>\n#include <atomic>\n#include <condition_variable>\n#include <list>\n#include <chrono>\n\n\n"
     val topthreads = getthreads(ast)
     val numtopthreads = topthreads.length
+    val synchronizationGlobalVars = "static std::atomic<int> rendezvousCounter;\nstatic std::mutex rendezvousSyncMutex;\nstatic std::condition_variable cv;"
+    val main = getmain(topthreads)
     
-    includestatement + "#define NUMTOPTHREADS " + numtopthreads.toString
+    includestatement + "#define NUMTOPTHREADS " + numtopthreads.toString + "\n" + synchronizationGlobalVars + "\n\n" + main
   }
   
   def getthreads(ast:List[Definition]):List[FunctionCallStatement]=
@@ -26,5 +28,17 @@ object FumurtCodeGenerator
         })
       }
     }
+  }
+  
+  def getmain(topthreads:List[FunctionCallStatement]):String =
+  {
+    var threadsStart = ""
+    
+    for(i<-topthreads)
+    {
+      threadsStart = threadsStart + "\n" + "std::thread t1 (" + i.functionidentifier + ");"
+    }
+    
+    "int main()\n{\nrendezvousCounter.store(0);" + threadsStart + "\n}"
   }
 }
