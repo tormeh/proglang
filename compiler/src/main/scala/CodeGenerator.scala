@@ -13,9 +13,43 @@ object FumurtCodeGenerator
     val synchvars = getsynchronizedvariables(ast)
     val syncfunc = getsynchonizerfunction(synchvars)
     val synchvardeclarations = getGlobalSynchVariableDeclarations(synchvars)
-    val printdecs = getprintlistdeclarations(numtopthreads)
+    val printdecs = getprintlistdeclarations(topthreads)
+    val topthreaddeclarations = gettopthreaddeclarations(ast)
     
-    includestatement + "#define NUMTOPTHREADS " + numtopthreads.toString + "\n" + synchvardeclarations + printdecs + "\n" + synchronizationGlobalVars + syncfunc + "\n\n" + main
+    includestatement + "#define NUMTOPTHREADS " + numtopthreads.toString + "\n" + synchvardeclarations + printdecs + "\n" + synchronizationGlobalVars + syncfunc + "\n\n" + topthreaddeclarations + "\n" + main
+  }
+  
+  def gettopthreaddeclarations(ast:List[Definition]):String =
+  {
+    val strings = ast.filter(x => (x.leftside.description match {case ThreadT() => true; case _=> false})).map(x=>
+    {   
+        val (tailrecursestart, tailrecurseend) = x.rightside.expressions.last match
+        {
+          case FunctionCallStatement(functionidentifier, args) =>
+          {
+            if(functionidentifier == x.leftside.id.value)
+            {
+              //tail recursion! Woo!
+              ("While(true)\n{\n","\n}")
+            }
+            else {println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()}
+          }
+          case _=> ("","")
+        }
+        x.rightside.expressions.map(
+        x=> x match
+        {
+          case 
+        }
+        )
+    })
+    
+    var string=""
+    for(i<-strings)
+    {
+      string+=i
+    }
+    string
   }
   
   def gettopthreadstatements(ast:List[Definition]):List[FunctionCallStatement]=
@@ -34,10 +68,11 @@ object FumurtCodeGenerator
     }
   }
   
-  def getprintlistdeclarations(num:Int):String=
+  def getprintlistdeclarations(topthreads:List[FunctionCallStatement]):String=
   {
+    val topthreadnames = topthreads.map(x=>x.functionidentifier)
     var out = ""
-    for(i<-0 until num)
+    for(i<-topthreadnames)
     {
       out += "\nstatic std::list<std::string> print"+i+";"
     }
@@ -47,12 +82,10 @@ object FumurtCodeGenerator
   def getmain(topthreads:List[FunctionCallStatement]):String =
   {
     var threadsStart = ""
-    var counter = 0
     
     for(i<-topthreads)
     {
-      threadsStart = threadsStart + "\n" + "std::thread t" + counter + " (" + i.functionidentifier + ");"
-      counter+=1
+      threadsStart = threadsStart + "\n" + "std::thread t" + i.functionidentifier + " (" + i.functionidentifier + ");"
     }
     
     "int main()\n{\nrendezvousCounter.store(0);" + threadsStart + "\nwhile(true)\n{\nstd::this_thread::sleep_for(std::chrono::seconds(1));\n}" + "\n}"
