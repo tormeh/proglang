@@ -13,8 +13,9 @@ object FumurtCodeGenerator
     val synchvars = getsynchronizedvariables(ast)
     val syncfunc = getsynchonizerfunction(synchvars)
     val synchvardeclarations = getGlobalSynchVariableDeclarations(synchvars)
+    val printdecs = getprintlistdeclarations(numtopthreads)
     
-    includestatement + "#define NUMTOPTHREADS " + numtopthreads.toString + "\n" + synchvardeclarations + "\n" + synchronizationGlobalVars + syncfunc + "\n\n" + main
+    includestatement + "#define NUMTOPTHREADS " + numtopthreads.toString + "\n" + synchvardeclarations + printdecs + "\n" + synchronizationGlobalVars + syncfunc + "\n\n" + main
   }
   
   def gettopthreadstatements(ast:List[Definition]):List[FunctionCallStatement]=
@@ -31,6 +32,16 @@ object FumurtCodeGenerator
         })
       }
     }
+  }
+  
+  def getprintlistdeclarations(num:Int):String=
+  {
+    var out = ""
+    for(i<-0 until num)
+    {
+      out += "\nstatic std::list<std::string> print"+i+";"
+    }
+    out
   }
   
   def getmain(topthreads:List[FunctionCallStatement]):String =
@@ -113,7 +124,8 @@ object FumurtCodeGenerator
       }
       if (fumurttype == "Integer") 
       {
-        synchdeclares += "\nstatic int " + i.leftside.id.value + " = " + initialValue      //TODO
+        synchdeclares += "\nstatic int " + i.leftside.id.value + " = " + initialValue
+        synchdeclares += "\nstatic int write" + i.leftside.id.value.capitalize + " = " + initialValue
       }
     }
     synchdeclares
