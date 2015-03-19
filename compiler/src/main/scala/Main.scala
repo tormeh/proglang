@@ -70,7 +70,11 @@ object Main
               case None => 
               {
                 println("\nNo errors in checker")
-                println("\ncode generated: \n" + FumurtCodeGenerator.generate(ast))
+                val generatedcode = FumurtCodeGenerator.generate(ast)
+                println("\ncode generated: \n" + generatedcode)
+                import java.nio.file.{Paths, Files}
+                import java.nio.charset.StandardCharsets
+                Files.write(Paths.get("./generated.cpp"), generatedcode.getBytes(StandardCharsets.UTF_8)) 
               }
             }
           }
