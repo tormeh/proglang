@@ -123,7 +123,7 @@ case class Argument(val id:IdT, val typestr:TypeT)
 case class DefRhs(val expressions:List[Expression] )
 case class Empty();
 case class DefDescription(val value:Token)
-case class NamedCallarg(id:IdT, argument:Callarg) extends Callarg
+case class NamedCallarg(id:IdT, argument:Callarg) //extends Callarg
 case class NamedCallargs(val value:List[NamedCallarg])
 case class NoArgs() extends Callarg
 
