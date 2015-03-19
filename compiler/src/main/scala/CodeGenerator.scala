@@ -11,7 +11,7 @@ object FumurtCodeGenerator
     val synchronizationGlobalVars = "static std::atomic<int> rendezvousCounter;\nstatic std::mutex rendezvousSyncMutex;\nstatic std::condition_variable cv;"
     val main = getmain(topthreads)
     val synchvars = getsynchronizedvariables(ast)
-    val syncfunc = getsynchonizerfunction(synchvars)
+    val syncfunc = getsynchronizerfunction(synchvars)
     val synchvardeclarations = getGlobalSynchVariableDeclarations(synchvars)
     val printdecs = getprintlistdeclarations(topthreads)
     val topthreaddeclarations = gettopthreaddeclarations(ast)
@@ -23,7 +23,9 @@ object FumurtCodeGenerator
   {
     val strings = ast.filter(x => (x.leftside.description match {case ThreadT() => true; case _=> false})).map(x=>
     {   
-        val (tailrecursestart, tailrecurseend) = x.rightside.expressions.last match
+        val functionstart = "[[noreturn]] static void " + x.leftside.id.value + "()\n{"
+        val functionend = "\n}\n"
+        val (tailrecursestart, tailrecurseend) = ("While(true)\n{", "\n}") /*x.rightside.expressions.last match
         {
           case FunctionCallStatement(functionidentifier, args) =>
           {
@@ -35,14 +37,22 @@ object FumurtCodeGenerator
             else {println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()}
           }
           case _=> ("","")
-        }
-        x.rightside.expressions.map(
-        x=> x match
-        {
-          case 
-        }
-        )
-    })
+        }*/
+        val generals = x.rightside.expressions.map(
+          y=> y match
+          {
+            //case FunctionCallStatement("println", args) => "print" + x.leftside.id.value + ".push_back(" + args match{case Left(Callarg) =>; case Right(_)=>"not implemented"} + ");"
+            //case FunctionCallStatement("println", Left(StringStatement(value))) => "print" + x.leftside.id.value + ".push_back(" + value + ");"
+            //case FunctionCallStatement("println", Left(IdentifierStatement(value))) => "print" + x.leftside.id.value + ".push_back(" + value + ");"
+            //case FunctionCallStatement("mutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),IdentifierStatement(newval)), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) => vari + "=" + newval + ";"
+            case FunctionCallStatement(x.leftside.id.value, args) => "continue;"
+            case z:FunctionCallStatement => functioncalltranslator(z, x.leftside.id.value) + ";"
+            //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
+          }
+        ).foldLeft("")((x,y)=>x+"\n  "+y)
+        functionstart + tailrecursestart + generals + tailrecurseend + functionend
+    }
+    )
     
     var string=""
     for(i<-strings)
@@ -50,7 +60,26 @@ object FumurtCodeGenerator
       string+=i
     }
     string
+    
   }
+  
+  def functioncalltranslator(call:FunctionCallStatement, callingthread:String):String =
+  {
+    call match
+    {
+      case FunctionCallStatement("println", Left(StringStatement(value))) => "print" + callingthread + ".push_back(" + value + ")"
+      case FunctionCallStatement("println", Left(IdentifierStatement(value))) => "print" + callingthread + ".push_back(" + value + ")"
+      case FunctionCallStatement("mutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),IdentifierStatement(newval)), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) => vari + " = " + newval
+      case FunctionCallStatement("mutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),x:FunctionCallStatement), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) =>
+      {
+        vari + " = " + functioncalltranslator(x, callingthread)
+      }
+      case FunctionCallStatement("plus", Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IdentifierStatement(right)))))) => left + " + " + right
+      case FunctionCallStatement("plus", Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IntegerStatement(right)))))) => left + " + " + right
+      case _=> "not implemented"
+    }
+  }
+  
   
   def gettopthreadstatements(ast:List[Definition]):List[FunctionCallStatement]=
   {
@@ -91,7 +120,7 @@ object FumurtCodeGenerator
     "int main()\n{\nrendezvousCounter.store(0);" + threadsStart + "\nwhile(true)\n{\nstd::this_thread::sleep_for(std::chrono::seconds(1));\n}" + "\n}"
   }
   
-  def getsynchonizerfunction(synchvariables:List[Definition]):String=
+  def getsynchronizerfunction(synchvariables:List[Definition]):String=
   {
     var synchvariablestrings = ""
     
@@ -155,10 +184,10 @@ object FumurtCodeGenerator
         }
         case _=> println(i.rightside.expressions(0).toString); println("Error in getGlobalSynchVariableDeclarations. Should be caught by checker."); scala.sys.exit()
       }
-      if (fumurttype == "Integer") 
+      if (fumurttype == "Integer")
       {
-        synchdeclares += "\nstatic int " + i.leftside.id.value + " = " + initialValue
-        synchdeclares += "\nstatic int write" + i.leftside.id.value.capitalize + " = " + initialValue
+        synchdeclares += "\nstatic int " + i.leftside.id.value + " = " + initialValue + ";"
+        synchdeclares += "\nstatic int write" + i.leftside.id.value.capitalize + " = " + initialValue + ";"
       }
     }
     synchdeclares
