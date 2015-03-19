@@ -11,7 +11,7 @@ object FumurtCodeGenerator
     val synchronizationGlobalVars = "static std::atomic<int> rendezvousCounter;\nstatic std::mutex rendezvousSyncMutex;\nstatic std::condition_variable cv;"
     val main = getmain(topthreads)
     val synchvars = getsynchronizedvariables(ast)
-    val syncfunc = getsynchronizerfunction(synchvars)
+    val syncfunc = getsynchronizerfunction(synchvars, topthreads)
     val synchvardeclarations = getGlobalSynchVariableDeclarations(synchvars)
     val printdecs = getprintlistdeclarations(topthreads)
     val topthreaddeclarations = gettopthreaddeclarations(ast)
@@ -25,7 +25,7 @@ object FumurtCodeGenerator
     {   
         val functionstart = "[[noreturn]] static void " + x.leftside.id.value + "()\n{"
         val functionend = "\n}\n"
-        val (tailrecursestart, tailrecurseend) = ("While(true)\n{", "\n}") /*x.rightside.expressions.last match
+        val (tailrecursestart, tailrecurseend) = ("while(true)\n{", "\n}") /*x.rightside.expressions.last match
         {
           case FunctionCallStatement(functionidentifier, args) =>
           {
@@ -45,7 +45,7 @@ object FumurtCodeGenerator
             //case FunctionCallStatement("println", Left(StringStatement(value))) => "print" + x.leftside.id.value + ".push_back(" + value + ");"
             //case FunctionCallStatement("println", Left(IdentifierStatement(value))) => "print" + x.leftside.id.value + ".push_back(" + value + ");"
             //case FunctionCallStatement("mutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),IdentifierStatement(newval)), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) => vari + "=" + newval + ";"
-            case FunctionCallStatement(x.leftside.id.value, args) => "continue;"
+            case FunctionCallStatement(x.leftside.id.value, args) => "waitForRendezvous(\""+x.leftside.id.value+"\");\n  continue;"
             case z:FunctionCallStatement => functioncalltranslator(z, x.leftside.id.value) + ";"
             //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
           }
@@ -68,11 +68,11 @@ object FumurtCodeGenerator
     call match
     {
       case FunctionCallStatement("println", Left(StringStatement(value))) => "print" + callingthread + ".push_back(" + value + ")"
-      case FunctionCallStatement("println", Left(IdentifierStatement(value))) => "print" + callingthread + ".push_back(" + value + ")"
+      case FunctionCallStatement("println", Left(IdentifierStatement(value))) => "print" + callingthread + ".push_back(std::to_string(" + value + "))"
       case FunctionCallStatement("mutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),IdentifierStatement(newval)), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) => vari + " = " + newval
       case FunctionCallStatement("mutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),x:FunctionCallStatement), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) =>
       {
-        vari + " = " + functioncalltranslator(x, callingthread)
+        "write" + vari.capitalize + " = " + functioncalltranslator(x, callingthread)
       }
       case FunctionCallStatement("plus", Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IdentifierStatement(right)))))) => left + " + " + right
       case FunctionCallStatement("plus", Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IntegerStatement(right)))))) => left + " + " + right
@@ -120,7 +120,7 @@ object FumurtCodeGenerator
     "int main()\n{\nrendezvousCounter.store(0);" + threadsStart + "\nwhile(true)\n{\nstd::this_thread::sleep_for(std::chrono::seconds(1));\n}" + "\n}"
   }
   
-  def getsynchronizerfunction(synchvariables:List[Definition]):String=
+  def getsynchronizerfunction(synchvariables:List[Definition], topthreads:List[FunctionCallStatement]):String=
   {
     var synchvariablestrings = ""
     
@@ -128,10 +128,16 @@ object FumurtCodeGenerator
     {
       val name = i.leftside.id.value
       synchvariablestrings += name + " = write" + name.capitalize + ";\n"
-      
     }
     
-    """static void waitForRendezvous(std::string name)
+    var printstatements = ""
+    for(i<-topthreads)
+    {
+      var currentprintqueuename = "print" + i.functionidentifier
+      printstatements += "while(!"+currentprintqueuename+".empty()){\nstd::cout << "+currentprintqueuename+".front();\n"+currentprintqueuename+".pop_front();\n}\n"
+    }
+    
+    ("""static void waitForRendezvous(std::string name)
 {
   std::unique_lock<std::mutex> lk(rendezvousSyncMutex);
   ++rendezvousCounter;
@@ -141,17 +147,8 @@ object FumurtCodeGenerator
   }
   else if (rendezvousCounter.load() == NUMTOPTHREADS)
   {
-    while(!print1.empty())
-    {
-      std::cout << print1.front();
-      print1.pop_front();
-    }
-    while(!print2.empty())
-    {
-      std::cout << print2.front();
-      print2.pop_front();
-    }
-    """ + synchvariablestrings + """
+    """
+     + printstatements + synchvariablestrings + """
     {
       rendezvousCounter.store(0);
       cv.notify_all();
@@ -162,7 +159,7 @@ object FumurtCodeGenerator
     std::cout << "error in wait for " << name << ". Rendezvouscounter out of bounds. RedezvousCounter = " << rendezvousCounter.load() << "\n";
     exit(0);
   }
-}"""
+}""")
   }
   
   def getGlobalSynchVariableDeclarations(synchvariables:List[Definition]):String=
