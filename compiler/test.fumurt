@@ -3,21 +3,27 @@ program p:Nothing =
   synchronized variable synchronizedNumber:Integer = {synchronized(variable=0, writer=threadPrintHello)}
   threadPrintHello(synchronizedNumber)
   threadPrintWorld(synchronizedNumber)
+  threadPrintLol()
 }
 
 thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
 {
-  println("world ")
-  println(synchronizedNumber)
-  println("\n")
+  print("world ")
+  print(synchronizedNumber)
+  print("\n")
   threadPrintWorld()
 }
   
 thread threadPrintHello(synchronizedNumber:Integer):Nothing =
 {
-  println(synchronizedNumber)
-  println(" Hello ")
+  print(synchronizedNumber)
+  print(" Hello ")
   mutate(variable=synchronizedNumber, newValue=plus(left=synchronizedNumber, right=1))
   threadPrintHello()
 }
 
+thread threadPrintLol:Nothing =
+{
+  print(" LOL ")
+  threadPrintLol()
+}

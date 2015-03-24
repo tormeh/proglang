@@ -67,8 +67,8 @@ object FumurtCodeGenerator
   {
     call match
     {
-      case FunctionCallStatement("println", Left(StringStatement(value))) => "print" + callingthread + ".push_back(" + value + ")"
-      case FunctionCallStatement("println", Left(IdentifierStatement(value))) => "print" + callingthread + ".push_back(std::to_string(" + value + "))"
+      case FunctionCallStatement("print", Left(StringStatement(value))) => "print" + callingthread + ".push_back(" + value + ")"
+      case FunctionCallStatement("print", Left(IdentifierStatement(value))) => "print" + callingthread + ".push_back(std::to_string(" + value + "))"
       case FunctionCallStatement("mutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),IdentifierStatement(newval)), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) => vari + " = " + newval
       case FunctionCallStatement("mutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),x:FunctionCallStatement), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) =>
       {
