@@ -74,7 +74,13 @@ object Main
                 println("\ncode generated: \n" + generatedcode)
                 import java.nio.file.{Paths, Files}
                 import java.nio.charset.StandardCharsets
-                Files.write(Paths.get("./generated.cpp"), generatedcode.getBytes(StandardCharsets.UTF_8)) 
+                val outname = "generated.cpp"
+                Files.write(Paths.get("./"+outname), generatedcode.getBytes(StandardCharsets.UTF_8))
+                val options = " -pthread -std=c++11"
+                println("\n\n===Starting Clang cpp compilation===")
+                println("options = " + options)
+                import scala.sys.process._
+                ("clang " + outname + options).!
               }
             }
           }
