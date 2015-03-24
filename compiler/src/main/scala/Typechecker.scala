@@ -6,26 +6,19 @@ object FumurtTypeChecker
   def check(in:List[Definition]):Option[List[FumurtError]] =
   {
     val providedTypes = List("Integer", "Double", "Boolean", "String", "Nothing")
-    val println = DefLhs(ActionT(), IdT("actionPrintln"), Some(Arguments(List(Argument(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
-    val basicsides = List(println)
+    val print = DefLhs(ActionT(), IdT("actionPrintln"), Some(Arguments(List(Argument(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
     //val multiply = DefLhs(FunctionT, IdT("multiply"), Some(Arguments(List(Argument(IdT("left"),TypeT("Integer")), Argument(IdT("Right"), TypeT("Integer"))))), )
     val sum = DefLhs
     val divide = DefLhs
     val subtract = DefLhs
     val fumurtif = DefLhs
-    //val basics = List(multiply, sum, divide, subtract)
-    
-    
-    //step 1: make list of object/function/action definitions and their scope/location
-    //step 2: check that all statements and definitions uses definitions that are in scope. Also that actions are not called from functions.
-    //step 3: check that all definitions have a left part that matches their right part
-    //step 4: check that all returning statements have type corresponding to the definition they belong to
+    val basics = List(multiply, plus, divide, minus, mutate, print)
     
     
     //all standard library functions available everywhere (maybe also actions). 
     //checkexpression(in, DefLhs(UnsafeActionT(), IdT(""), None, TypeT("Nothing")), None, List(List():List[Definition]), basics, List():List[DefLhs], List():List[FumurtErrors])
     
-    val errors = List() //checktop(in, basicfunctions)
+    val errors = checktop(in, basicfunctions)
     
     if (errors.isEmpty)
     {
@@ -37,7 +30,7 @@ object FumurtTypeChecker
     }
   }
   
-  /*def checktop(in:List[Definition], basicFunctions:List[DefLhs]): List[FumurtError]=
+  def checktop(in:List[Definition], basicFunctions:List[DefLhs]): List[FumurtError]=
   {
     val topdefs = indexlefts(in)
     val program = topdefs.filter(is program)
@@ -77,41 +70,74 @@ object FumurtTypeChecker
   
   def checkstatement(tocheck:Statement, leftside:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]): List[FumurtError]=
   {
-    tocheck match
+    currentErrors ++ tocheck match
     {
       case b:BasicValueStatement=>
       {
         b match
         {
-          case c:StringStatement => {if (leftside.returntype.value != "String") Some(List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was String"))) else None}
-          case c:IntegerStatement => {if (leftside.returntype.value != "Integer") Some(List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Integer"))) else None}
-          case c:DoubleStatement => {if (leftside.returntype.value != "Double") Some(List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Double"))) else None}
-          case c:TrueStatement => {if (leftside.returntype.value != "Boolean") Some(List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Boolean"))) else None}
-          case c:FalseStatement => {if (leftside.returntype.value != "Boolean") Some(List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Boolean"))) else None}
+          case c:StringStatement => {if (leftside.returntype.value != "String") List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was String")) else List()}
+          case c:IntegerStatement => {if (leftside.returntype.value != "Integer") List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Integer")) else List()}
+          case c:DoubleStatement => {if (leftside.returntype.value != "Double") List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Double")) else List()}
+          case c:TrueStatement => {if (leftside.returntype.value != "Boolean") List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Boolean")) else List()}
+          case c:FalseStatement => {if (leftside.returntype.value != "Boolean") List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Boolean")) else List()}
         }
       }
       case b:IdentifierStatement=>
       {
-        inScope.find(x => (x.id.value==b.value)) /*what about arguments and basic functions?*/ match
+        val hit = findinscope(same name as b)
+        hit match
         {
-          case Some(foundvalue) =>
+          case Left(string) => List(FumurtError(b.pos, string))
+          case Right(deflhs) => 
           {
-            if(leftside.returntype.value != foundvalue.returntype.value)
+            if(leftside.returntype.value != deflhs.returntype.value)
             {
-              Some(List(FumurtError(b.pos, "Return type should be "+leftside.returntype.value)))
+              List(FumurtError(b.pos, "expected: " +leftside.returntype.value+ ". Got: " +deflhs.returntype.value))
             }
             else
             {
-              None
+              List()
             }
           }
-          case None => Some(List(FumurtError(b.pos, "Value out of scope or nonexistent")))
         }
       }
       case y:FunctionCallStatement=>
       {
-        inscope.find()
+        val hit = findinscope(same name as y)
+        val argumenterrors = y.args match 
+        {
+          case Left(NoArgs) => hit.args match
+          {
+            case None => List()
+            case Some(_) => List(FumurtError(y.pos, "expected arguments, but none were given")) 
+          }
+          case Left(barg:BasicValueStatement) => checkCallarg(hit.returnType, barg)
+          case Right(NamedCallargs(value)) => 
+          {
+            val uniquenesserror = if(!value.groupBy(x=>x.id.value).filter((x,y)=>y.length>1).isEmpty) //ensure uniqueness of arguments
+            {
+              List(FumurtError(y.pos, "two or more arguments were given with the same name"))
+            }
+            else {List()}
+          }
+        }
       }
+    }
+  }
+  
+  checkCallarg(expectedType:TypeT, arg:Callarg, leftside:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):List(FumurtError) = 
+  {
+    arg match
+    {
+      case c:StringStatement => {if (leftside.returntype.value != "String") List(FumurtError(c.pos, "Argument type should be "+leftside.returntype.value+"\nArgument type was String")) else List()}
+      case c:IntegerStatement => {if (leftside.returntype.value != "Integer") List(FumurtError(c.pos, "Argument type should be "+leftside.returntype.value+"\nArgument type was Integer")) else List()}
+      case c:DoubleStatement => {if (leftside.returntype.value != "Double") List(FumurtError(c.pos, "Argument type should be "+leftside.returntype.value+"\nArgument type was Double")) else List()}
+      case c:TrueStatement => {if (leftside.returntype.value != "Boolean") List(FumurtError(c.pos, "Argument type should be "+leftside.returntype.value+"\nArgument type was Boolean")) else List()}
+      case c:FalseStatement => {if (leftside.returntype.value != "Boolean") List(FumurtError(c.pos, "Argument type should be "+leftside.returntype.value+"\nArgument type was Boolean")) else List()}
+      case c:NoArgs
+      case c:IdentifierStatement
+      case c:FunctionCallStatement
     }
   }
   
@@ -140,7 +166,7 @@ object FumurtTypeChecker
     }
   }
   
-  def findinscope(arguments:Option[List[DefLhs]], inscope:List[DefLhs], basicfunctions:List[DefLhs], searchFor:String):Either[DefLhs, String]=
+  def findinscope(arguments:Option[List[DefLhs]], inscope:List[DefLhs], basicfunctions:List[DefLhs], searchFor:String):Either[String, DefLhs]=
   {
     val argsres = arguments match{ case Some(args)=>args.args.filter(x=>x.id.value==searschFor); case None=>List():List[DefLhs]}
     val inscoperes = inscope.filter(x=>x.id.value==searchFor)
@@ -168,7 +194,7 @@ object FumurtTypeChecker
   def indexargumentlefts(argumentspassed:Option[List[Arguments]], argumentleftsgiven:Option[List[DefLhs]], leftsincallingdefinition:List[DefLhs], basicfunctions:List[DefLhs])
   {
     
-  }*/
+  }
 }
 
 class DefinitionC(val location:List[String], val outType:String, val inTypes:Option[List[ArgumentC]], typee:DefinitionType)
