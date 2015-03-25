@@ -68,9 +68,9 @@ object FumurtTypeChecker
     }
   }
   
-  def checkstatement(tocheck:Statement, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]): List[FumurtError]=
+  def checkstatement(tocheck:Statement, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs]): List[FumurtError]=
   {
-    currentErrors ++ tocheck match
+    tocheck match
     {
       case b:BasicValueStatement=> checkbasicvaluestatement(containingdefinition.returntype, b, "Return")
       case b:IdentifierStatement=>
@@ -91,6 +91,10 @@ object FumurtTypeChecker
             }
           }
         }
+      }
+      case y:FunctionCallStatement("if", args)=>
+      {
+        checkifcall(y)
       }
       case y:FunctionCallStatement=>
       {
@@ -114,6 +118,31 @@ object FumurtTypeChecker
         }
         else {List()}
         returnerror ++ argumenterrors
+      }
+    }
+  }
+  
+  def checkifcall(ifcall:FunctionCallstatement, expectedtype:TypeT):List[FumurtError] =
+  {
+    ifcall.args match
+    {
+      case Left(Callarg) => List(FumurtError(ifcall.pos, "Call to if needs three arguments"))
+      case Right(NamedCallArgs(arglist))=>
+      {
+        if (arglist.length != 3)
+        {
+          List(FumurtError(ifcall.pos, "Call to if needs three arguments"))
+        }
+        else
+        {
+          if(arglist(0).id != "condition"){List(FumurtError(ifcall.pos, "Call to if needs a condition argument"))} else {List()}
+          ++
+          if(arglist(1).id != "else"){List(FumurtError(ifcall.pos, "Call to if needs an else argument"))} else {List()}
+          ++
+          if(arglist(2).id != "then"){List(FumurtError(ifcall.pos, "Call to if needs a then argument"))} else {List()}
+          ++
+          arglist.foldLeft(List())((x,y)=>checkCallarg(x)++checkCallarg(y))
+        }
       }
     }
   }
@@ -204,13 +233,23 @@ object FumurtTypeChecker
   
   def checkdefinition(tocheck:Definition, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]): List[FumurtError]=
   {
-  
+    val errors = ListBuffer()
+    for(expression<-tocheck.rightside.expressions)
+    {
+      errors = errors ++ expression match
+      {
+        case a:Definition =>
+        {
+          checkdefinition(a, containingdefinition, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs])
+        }
+        case a:Statement =>
+        {
+          checkstatement(a, tocheck, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs])
+        }
+      }
+    }
   }
   
-  def checkif()
-  {
-  
-  }
   
   def indexlefts(in:List[Expression]):List[DefLhs]=
   {
