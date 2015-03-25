@@ -136,3 +136,5 @@ run helloworld2.fumurt
 last compile:run
 run helloworld2.fumurt
 run test.fumurt
+run helloworld2.fumurt
+run test.fumurt

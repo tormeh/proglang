@@ -33,12 +33,12 @@ object FumurtTypeChecker
   def checktop(in:List[Definition], basicFunctions:List[DefLhs]): List[FumurtError]=
   {
     val topdefs = indexlefts(in)
-    val program = topdefs.filter(is program)
-    val implicitargs = topdefs.filter(not program)
-    checkprogram(program, implicitargs, basicFunctions) ++ checkexpressions(in.filter(not program)) 
+    val program = topdefs.filter(x=>(x.leftside.description match {case ProgramT => true; case _=> false})
+    val implicitargs = indexlefts(topdefs.filter(x=>(x.leftside.description match {case ProgramT => false; case _=> true})))
+    checkprogram(program, implicitargs, basicFunctions) ++ checkexpressions(in.filter(x=>(x.leftside.description match {case ProgramT => false; case _=> true}))) 
   }
   
-  def checkprogram(program:Definition, topleveldefs:List[Definition], basicFunctions:List[DefLhs]): List[FumurtError]=
+  def checkprogram(program:Definition, topleveldefs:List[DefLhs], basicFunctions:List[DefLhs]): List[FumurtError]=
   {
     
   }
@@ -48,7 +48,7 @@ object FumurtTypeChecker
     
   }
   
-  def checkexpressions(tree:List[Expression], leftside:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):List[FumurtError]=
+  def checkexpressions(tree:List[Expression], containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):List[FumurtError]=
   {
     if (!tree.isEmpty)
     {
@@ -59,7 +59,7 @@ object FumurtTypeChecker
           val localscope = indexlefts(x.rightside.expressions)
           currentErrors :+ checkdefinition(x, x.leftside, arguments, basicFunctions, inscope, currentErrors) 
         }
-        case x:Statement => currentErrors :+ checkstatement(x, leftside, arguments, basicFunctions, inScope, currentErrors)
+        case x:Statement => currentErrors :+ checkstatement(x, containingdefinition, arguments, basicFunctions, inScope, currentErrors)
       }
     }
     else
@@ -68,21 +68,11 @@ object FumurtTypeChecker
     }
   }
   
-  def checkstatement(tocheck:Statement, leftside:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]): List[FumurtError]=
+  def checkstatement(tocheck:Statement, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]): List[FumurtError]=
   {
     currentErrors ++ tocheck match
     {
-      case b:BasicValueStatement=>
-      {
-        b match
-        {
-          case c:StringStatement => {if (leftside.returntype.value != "String") List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was String")) else List()}
-          case c:IntegerStatement => {if (leftside.returntype.value != "Integer") List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Integer")) else List()}
-          case c:DoubleStatement => {if (leftside.returntype.value != "Double") List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Double")) else List()}
-          case c:TrueStatement => {if (leftside.returntype.value != "Boolean") List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Boolean")) else List()}
-          case c:FalseStatement => {if (leftside.returntype.value != "Boolean") List(FumurtError(c.pos, "Return type should be "+leftside.returntype.value+"\nReturn type was Boolean")) else List()}
-        }
-      }
+      case b:BasicValueStatement=> checkbasicvaluestatement(containingdefinition.returntype, b, "Return")
       case b:IdentifierStatement=>
       {
         val statedvalue = findinscope(same name as b)
@@ -91,9 +81,9 @@ object FumurtTypeChecker
           case Left(string) => List(FumurtError(b.pos, string))
           case Right(deflhs) => 
           {
-            if(leftside.returntype.value != deflhs.returntype.value)
+            if(containingdefinition.returntype.value != deflhs.returntype.value)
             {
-              List(FumurtError(b.pos, "expected: " +leftside.returntype.value+ ". Got: " +deflhs.returntype.value))
+              List(FumurtError(b.pos, "expected: " +containingdefinition.returntype.value+ ". Got: " +deflhs.returntype.value))
             }
             else
             {
@@ -115,73 +105,65 @@ object FumurtTypeChecker
           case Left(callarg) => checkCallarg(calledfunction.)
           case Right(NamedCallargs(value)) => 
           {
-            calledfunction.args match
+            
+          }
+        }
+        val returnerror = if (containingdefinition.returntype != calledfunction.returntype)
+        {
+          List(FumurtError(y.pos, "Expected return type: "+containingdefinition.returntype+". Got: "+calledfunction.returntype))
+        }
+        else {List()}
+        returnerror ++ argumenterrors
+      }
+    }
+  }
+  
+  def checknamedcallargs(calledfunction:DefLhs, namedcallargs:List[NamedCallarg], containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):List[FumurtError] =
+  {
+    calledfunction.args match
+    {
+      case None => List(FumurtError("No arguments expected, but "+namedcallargs.length+" were given"))
+      case Some(defargs) => 
+      {
+        if (defargs.length != value.length) 
+        {
+          List(FumurtError(y.pos, "expected "+defargs.length+" arguments. Got "+value.length+" arguments"))
+        } 
+        else 
+        {
+          if(!value.groupBy(x=>x.id.value).filter((x,y)=>y.length>1).isEmpty) //ensure uniqueness of arguments
+          {
+            List(FumurtError(y.pos, "two or more arguments were given with the same name"))
+          }
+          else 
+          {
+            val individualargumenterrors = ListBuffer()
+            for(i<-0 until value.length)
             {
-              case None => List(FumurtError("No arguments expected, but some were given"))
-              case Some(defargs) => 
+              individualargumenterrors ++ if(value(i).id.value != defargs(i).id.value) 
               {
-                if (defargs.length != value.length) 
-                {
-                  List(FumurtError(y.pos, "expected "+defargs.length+" arguments. Got "+value.length+" arguments"))
-                } 
-                else 
-                {
-                  if(!value.groupBy(x=>x.id.value).filter((x,y)=>y.length>1).isEmpty) //ensure uniqueness of arguments
-                  {
-                    List(FumurtError(y.pos, "two or more arguments were given with the same name"))
-                  }
-                  else 
-                  {
-                    val individualargumenterrors = ListBuffer()
-                    if (quantityerror.isEmpty)
-                    {
-                      for(i<-0 until value.length)
-                      {
-                        individualargumenterrors ++ if(value(i).id.value != defargs(i).id.value) 
-                        {
-                          List(FumurtError(y.pos, "Wrong argument name. Argument in definition named "+defargs(i).id.value+". In calling named "+value(i).id.value ))
-                        } 
-                        else 
-                        {
-                          checkCallarg(defargs(i).typestr, value(i).argument, leftside, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError])
-                        }
-                      }
-                      individualargumenterrors.toList
-                    }
-                  }
-                }
+                List(FumurtError(y.pos, "Wrong argument name. Argument in definition named "+defargs(i).id.value+". In calling named "+value(i).id.value ))
+              } 
+              else 
+              {
+                checkCallarg(defargs(i).typestr, value(i).argument, containingdefinition, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError])
               }
             }
-            
-            
-            
-            
-            
+            individualargumenterrors.toList
           }
-          val returnerror = if (leftside.returntype != calledfunction.returntype)
-          {
-            List(FumurtError(y.pos, "Expected return type: "+leftside.returntype+". Got: "+calledfunction.returntype))
-          }
-          else {List()}
-          returnerror ++ argumenterrors
         }
       }
     }
   }
   
-  
-  checkCallarg(expectedtype:TypeT, arg:Callarg, leftside:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):List(FumurtError) = 
+  def checkCallarg(expectedtype:TypeT, arg:Callarg, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):List(FumurtError) = 
   {
     arg match
     {
-      case c:StringStatement => {if (expectedtype.value != "String") List(FumurtError(c.pos, "Argument type should be "+expectedtype.value+"\nArgument type was String")) else List()}
-      case c:IntegerStatement => {if (expectedtype.value != "Integer") List(FumurtError(c.pos, "Argument type should be "+expectedtype.value+"\nArgument type was Integer")) else List()}
-      case c:DoubleStatement => {if (expectedtype.value != "Double") List(FumurtError(c.pos, "Argument type should be "+expectedtype.value+"\nArgument type was Double")) else List()}
-      case c:TrueStatement => {if (expectedtype.value != "Boolean") List(FumurtError(c.pos, "Argument type should be "+expectedtype.value+"\nArgument type was Boolean")) else List()}
-      case c:FalseStatement => {if (expectedtype.value != "Boolean") List(FumurtError(c.pos, "Argument type should be "+expectedtype.value+"\nArgument type was Boolean")) else List()}
+      case c:BasicValueStatement=> checkbasicvaluestatement(containingdefinition.returntype, c, "Call argument")
       case c:NoArgs => calledfunction.args match
       {
-        println("NoArgs got checked by checkCallarg. This function is not supposed to be used that way"); scala.sys.exit()
+        println("NoArgs got checked by checkCallarg. This is better checked in checkstatement"); scala.sys.exit()
       }
       case c:IdentifierStatement => 
       {
@@ -192,11 +174,35 @@ object FumurtTypeChecker
         }
         else {List()}
       }
-      case c:FunctionCallStatement =>
+      case c:FunctionCallStatement => 
+      {
+        val functioncallarg = findinscope(same name as c)
+        //check that call end result is correct
+        val resulterrors = if(expectedtype.value != functioncallarg.returntype.value)
+        {
+          List(FumurtError(c.pos, "Expected function to return argument of type "+expectedtype.value+". Got "+functioncallarg.returntype.value))
+        }
+        else {List()}
+        //check that call itself is correct
+        val callerrors = checkstatement(c, containingdefinition, arguments, basicFunctions, inScope, currentErrors)
+        callerrors ++ resulterrors
+      }
     }
   }
   
-  def checkdefinition(tocheck:Definition, leftside:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]): List[FumurtError]=
+  def checkbasicvaluestatement(expectedtype:TypeT, bascistatement:BasicStatement, role:String):List(FumurtError) =
+  {
+    basicstatement match
+    {
+      case c:StringStatement => {if (expectedtype.value != "String") List(FumurtError(c.pos, role+" type should be "+expectedtype.value+"\n"+role+" type was String")) else List()}
+      case c:IntegerStatement => {if (expectedtype.value != "Integer") List(FumurtError(c.pos, role+" type should be "+expectedtype.value+"\n"+role+" type was Integer")) else List()}
+      case c:DoubleStatement => {if (expectedtype.value != "Double") List(FumurtError(c.pos, role+" type should be "+expectedtype.value+"\n"+role+" type was Double")) else List()}
+      case c:TrueStatement => {if (expectedtype.value != "Boolean") List(FumurtError(c.pos, role+" type should be "+expectedtype.value+"\n"+role+" type was Boolean")) else List()}
+      case c:FalseStatement => {if (expectedtype.value != "Boolean") List(FumurtError(c.pos, role+" type should be "+expectedtype.value+"\n"+role+" type was Boolean")) else List()}
+    }
+  }
+  
+  def checkdefinition(tocheck:Definition, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]): List[FumurtError]=
   {
   
   }
@@ -246,10 +252,10 @@ object FumurtTypeChecker
     }
   }
   
-  def indexargumentlefts(argumentspassed:Option[List[Arguments]], argumentleftsgiven:Option[List[DefLhs]], leftsincallingdefinition:List[DefLhs], basicfunctions:List[DefLhs])
+  /*def indexargumentlefts(argumentspassed:Option[List[Arguments]], argumentleftsgiven:Option[List[DefLhs]], leftsincallingdefinition:List[DefLhs], basicfunctions:List[DefLhs])
   {
     
-  }
+  }*/
 }
 
 class DefinitionC(val location:List[String], val outType:String, val inTypes:Option[List[ArgumentC]], typee:DefinitionType)

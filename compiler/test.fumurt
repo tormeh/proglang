@@ -24,6 +24,11 @@ thread threadPrintHello(synchronizedNumber:Integer):Nothing =
 
 thread threadPrintLol:Nothing =
 {
-  print(" LOL ")
+  actionPrintLol()
   threadPrintLol()
+}
+
+action actionPrintLol:Nothing =
+{
+  print(" LOL ")
 }

@@ -69,8 +69,16 @@ object Main
               }
               case None => 
               {
-                println("No errors in checker")
-                println("\ncode generated: \n" + FumurtCodeGenerator.generate(ast))
+                println("\nNo errors in checker")
+                val generatedcode = FumurtCodeGenerator.generate(ast)
+                println("\ncode generated: \n" + generatedcode)
+                import java.nio.file.{Paths, Files}
+                import java.nio.charset.StandardCharsets
+                val outname = "generated.cpp"
+                Files.write(Paths.get("./"+outname), generatedcode.getBytes(StandardCharsets.UTF_8))
+                println("\n\n===Starting Clang cpp compilation===")
+                import scala.sys.process._
+                ("clang " + outname + " -pthread -std=c++11").!
               }
             }
           }
