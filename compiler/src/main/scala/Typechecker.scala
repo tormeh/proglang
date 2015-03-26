@@ -35,7 +35,7 @@ object FumurtTypeChecker
     val topdefs = indexlefts(in)
     val program = topdefs.filter(x=>(x.leftside.description match {case ProgramT => true; case _=> false})
     val implicitargs = indexlefts(topdefs.filter(x=>(x.leftside.description match {case ProgramT => false; case _=> true})))
-    checkprogram(program, implicitargs, basicFunctions) ++ checkexpressions(in.filter(x=>(x.leftside.description match {case ProgramT => false; case _=> true})), None, Some(implicitargs), basicFunctions) 
+    checkprogram(program, implicitargs, basicFunctions) ++ checkexpressions(in.filter(x=>(x.leftside.description match {case ProgramT => false; case _=> true})), None, Some(implicitargs), basicFunctions, 0) 
   }
   
   def checkprogram(program:Definition, topleveldefs:List[DefLhs], basicFunctions:List[DefLhs]): List[FumurtError]=
@@ -75,25 +75,42 @@ object FumurtTypeChecker
     unusedthreaderrors ++ unsuitabledefinitions.toList
   }
   
-  def checkexpressions(tree:List[Expression], containingdefinition:Option[DefLhs], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], depth:Int):List[FumurtError]=
+  def checkexpressions(tree:List[Expression], containingdefinition:Option[Definition], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError]=
   {
-    tree.foldLeft(List())((x,y)=>checkexpression(x)++checkexpression(y))
+    tree.foldLeft(List())((x,y)=>checkexpression(x, depth)++checkexpression(y))
   }
   
-  def checkexpression(tocheck:Expression, containingdefinition:Option[DefLhs], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], depth:Int):List[FumurtError] =
+  def checkexpression(tocheck:Expression, containingdefinition:Option[Definition], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] =
   {
     tocheck match
     {
       case x:Definition=>
       { 
-        //val localscope = indexlefts(x.rightside.expressions)
-        checkdefinition(x, x.leftside, arguments, basicFunctions, inscope, currentErrors) 
+        val localscope = containingdefinition match indexlefts(containingdefinition)
+        {
+          case None => List()
+          case Some(contdef) => indexlefts(containingdefinition.rightside.expressions)
+        }
+        val (newargs, argpropagationerrors) = x.leftside.args match
+        {
+          case None => (List(), List())
+          case Some(Arguments(args)) => 
+          {
+            val hits = args.flatmap(arg=>(arguments++inSameDefinition).find(y=>y.id.value==arg.id.value))
+            if (hits.length !=args.length)
+            {
+              (hits, List())
+            }
+            else {(hits, List(FumurtError(x.pos,"One or more arguments not found in local scope")))}
+          }
+        }
+        checkdefinition(x, x.leftside, newargs, basicFunctions) ++ argpropagationerrors
       }
-      case x:Statement => checkstatement(x, containingdefinition, arguments, basicFunctions, inScope, currentErrors)
+      case x:Statement => checkstatement(x, containingdefinition, arguments, basicFunctions, inSameDefinition, currentErrors)
     }
   }
   
-  def checkstatement(tocheck:Statement, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs]): List[FumurtError]=
+  def checkstatement(tocheck:Statement, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]): List[FumurtError]=
   {
     tocheck match
     {
@@ -119,7 +136,7 @@ object FumurtTypeChecker
       }
       case y:FunctionCallStatement("if", args)=>
       {
-        checkifcall(y)
+        checkifcall(y, containingdefinition.returnType)
       }
       case y:FunctionCallStatement=>
       {
@@ -172,7 +189,7 @@ object FumurtTypeChecker
     }
   }
   
-  def checknamedcallargs(calledfunction:DefLhs, namedcallargs:List[NamedCallarg], containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):List[FumurtError] =
+  def checknamedcallargs(calledfunction:DefLhs, namedcallargs:List[NamedCallarg], containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs], currentErrors:List[FumurtError]):List[FumurtError] =
   {
     calledfunction.args match
     {
@@ -200,7 +217,7 @@ object FumurtTypeChecker
               } 
               else 
               {
-                checkCallarg(defargs(i).typestr, value(i).argument, containingdefinition, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError])
+                checkCallarg(defargs(i).typestr, value(i).argument, containingdefinition, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs], currentErrors:List[FumurtError])
               }
             }
             individualargumenterrors.toList
@@ -210,7 +227,7 @@ object FumurtTypeChecker
     }
   }
   
-  def checkCallarg(expectedtype:TypeT, arg:Callarg, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):List(FumurtError) = 
+  def checkCallarg(expectedtype:TypeT, arg:Callarg, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs], currentErrors:List[FumurtError]):List(FumurtError) = 
   {
     arg match
     {
@@ -238,7 +255,7 @@ object FumurtTypeChecker
         }
         else {List()}
         //check that call itself is correct
-        val callerrors = checkstatement(c, containingdefinition, arguments, basicFunctions, inScope, currentErrors)
+        val callerrors = checkstatement(c, containingdefinition, arguments, basicFunctions, inSameDefinition, currentErrors)
         callerrors ++ resulterrors
       }
     }
@@ -256,23 +273,9 @@ object FumurtTypeChecker
     }
   }
   
-  def checkdefinition(tocheck:Definition, containingdefinition:Option[DefLhs], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs]): List[FumurtError]=
+  def checkdefinition(tocheck:Definition, containingdefinition:Option[DefLhs], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]): List[FumurtError]=
   {
-    val undererrors = ListBuffer()
-    for(expression<-tocheck.rightside.expressions)
-    {
-      undererrors = undererrors ++ expression match
-      {
-        case a:Definition =>
-        {
-          checkdefinition(a, containingdefinition, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs])
-        }
-        case a:Statement =>
-        {
-          checkstatement(a, tocheck, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs])
-        }
-      }
-    }
+    val undererrors = checkexpressions(tocheck.rightside.expressions)
     val nameerror = tocheck.leftside.description match
     {
       case ActionT() => if(!tocheck.leftside.id.value.beginsWith("action")){List(FumurtError(tocheck.pos, "Name of action is not prefixed with \"action\""))} else{List()}
