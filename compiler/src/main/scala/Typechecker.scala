@@ -275,7 +275,7 @@ object FumurtTypeChecker
   
   def checkdefinition(tocheck:Definition, containingdefinition:Option[DefLhs], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]): List[FumurtError]=
   {
-    val undererrors = checkexpressions(tocheck.rightside.expressions)
+    val undererrors = checkexpressions(tocheck.rightside.expressions, tocheck, )
     val nameerror = tocheck.leftside.description match
     {
       case ActionT() => if(!tocheck.leftside.id.value.beginsWith("action")){List(FumurtError(tocheck.pos, "Name of action is not prefixed with \"action\""))} else{List()}
