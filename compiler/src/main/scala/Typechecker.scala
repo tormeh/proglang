@@ -35,36 +35,61 @@ object FumurtTypeChecker
     val topdefs = indexlefts(in)
     val program = topdefs.filter(x=>(x.leftside.description match {case ProgramT => true; case _=> false})
     val implicitargs = indexlefts(topdefs.filter(x=>(x.leftside.description match {case ProgramT => false; case _=> true})))
-    checkprogram(program, implicitargs, basicFunctions) ++ checkexpressions(in.filter(x=>(x.leftside.description match {case ProgramT => false; case _=> true}))) 
+    checkprogram(program, implicitargs, basicFunctions) ++ checkexpressions(in.filter(x=>(x.leftside.description match {case ProgramT => false; case _=> true})), None, Some(implicitargs), basicFunctions) 
   }
   
   def checkprogram(program:Definition, topleveldefs:List[DefLhs], basicFunctions:List[DefLhs]): List[FumurtError]=
   {
-    
-  }
-  
-  def checkprogramcontents(exps:List[Expression]):Option[List[FumurtError]]=
-  {
-    
-  }
-  
-  def checkexpressions(tree:List[Expression], containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]):List[FumurtError]=
-  {
-    if (!tree.isEmpty)
+    def checkuseofthread(program, deflhs):List[FumurtError]=
     {
-      tree.head match
+      deflhs.description match
       {
-        case x:Definition=>
-        {
-          val localscope = indexlefts(x.rightside.expressions)
-          currentErrors :+ checkdefinition(x, x.leftside, arguments, basicFunctions, inscope, currentErrors) 
-        }
-        case x:Statement => currentErrors :+ checkstatement(x, containingdefinition, arguments, basicFunctions, inScope, currentErrors)
+        case ThreadT() => program.rightside.find(y=>y match{case FunctionCallStatement(x.id.value, _) => true; case _=>false}) 
+          match
+          { 
+            case Some(_)=> List(); 
+            case None=> List(FumurtError(x.pos, "thread "+x.id.value+" is declared but not used"))
+          }
+        case _=> None
       }
     }
-    else
+    val unusedthreaderrors:List[FumurtError] = topleveldefs.foldLeft((x,y)=>checkuseofthread(program,x)++checkuseofthread(program,y))
+    
+    val unsuitabledefinitions = ListBuffer()
+    for (i<-program.rightside.expressions)
     {
-      currentErrors
+      i match
+      {
+        case x:Definition => 
+        {
+          x.leftside.description match
+          {
+            case SynchronizedVariableT() => {}
+            case _=> {unsuitabledefinitions :+ List(FumurtError(x.pos,"Do not define functions, actions or unsynchronized values in Program"))}
+          }
+        }
+        case _=>{}
+      }
+    }
+    
+    unusedthreaderrors ++ unsuitabledefinitions.toList
+  }
+  
+  def checkexpressions(tree:List[Expression], containingdefinition:Option[DefLhs], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], depth:Int):List[FumurtError]=
+  {
+    tree.foldLeft(List())((x,y)=>checkexpression(x)++checkexpression(y))
+  }
+  
+  def checkexpression(tocheck:Expression, containingdefinition:Option[DefLhs], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], depth:Int):List[FumurtError] =
+  {
+    tocheck match
+    {
+      case x:Definition=>
+      { 
+        //val localscope = indexlefts(x.rightside.expressions)
+        checkdefinition(x, x.leftside, arguments, basicFunctions, inscope, currentErrors) 
+      }
+      case x:Statement => checkstatement(x, containingdefinition, arguments, basicFunctions, inScope, currentErrors)
     }
   }
   
@@ -231,12 +256,12 @@ object FumurtTypeChecker
     }
   }
   
-  def checkdefinition(tocheck:Definition, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs], currentErrors:List[FumurtError]): List[FumurtError]=
+  def checkdefinition(tocheck:Definition, containingdefinition:Option[DefLhs], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inScope:List[DefLhs]): List[FumurtError]=
   {
-    val errors = ListBuffer()
+    val undererrors = ListBuffer()
     for(expression<-tocheck.rightside.expressions)
     {
-      errors = errors ++ expression match
+      undererrors = undererrors ++ expression match
       {
         case a:Definition =>
         {
@@ -248,6 +273,25 @@ object FumurtTypeChecker
         }
       }
     }
+    val nameerror = tocheck.leftside.description match
+    {
+      case ActionT() => if(!tocheck.leftside.id.value.beginsWith("action")){List(FumurtError(tocheck.pos, "Name of action is not prefixed with \"action\""))} else{List()}
+      case ThreadT() => if(!tocheck.leftside.id.value.beginsWith("thread")){List(FumurtError(tocheck.pos, "Name of thread is not prefixed with \"thread\""))} else{List()}
+      case FunctionT() => List()
+      case ValueY() => List()
+      case ProgramT() => println("Program got checked by checkdefinition. This is better checked in checkprogram"); scala.sys.exit()
+    }
+    val peermissionerror = tocheck.leftside.description match
+    {
+      case ActionT() => containingdefinition match{ case } List(FumurtError(tocheck.pos, "actions cannot be defined in values or functions"))
+      case ThreadT() => containingdefinition match{ case None => List(); case Some(_)=>List(FumurtError(tocheck.pos, "threads must be defined on top"))}
+      case FunctionT() => containingdefinition match{ case Some(ValueT) => List(FumurtError(tocheck.pos, "functions cannot be defined in values")); case _=> List()}
+      case SynchronizedVariableT() => List(FumurtError(tocheck.pos, "synchronized variables must be defined in Program definition"))
+      case ValueT() => List()
+      case ProgramT() => println("Program got checked by checkdefinition. This is better checked in checkprogram"); scala.sys.exit()
+    }
+    
+    undererrors.toList ++ nameerror ++ permissionerror
   }
   
   
