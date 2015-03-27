@@ -16,7 +16,7 @@
 [0m[[0minfo[0m] [0mCompiling 1 Scala source to /home/tormod/Documents/skole/spring2015/master/proglang/compiler/target/scala-2.11/classes...[0m
 [0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.6[0m
 [0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.6[0m
-[0m[[0mdebug[0m] [0mRunning cached compiler 5fba394, interfacing (CompilerInterface) with Scala compiler version 2.11.6[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 77c6fce6, interfacing (CompilerInterface) with Scala compiler version 2.11.6[0m
 [0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
 [0m[[0mdebug[0m] [0m	-feature[0m
 [0m[[0mdebug[0m] [0m	-optimize[0m
@@ -26,48 +26,240 @@
 [0m[[0mdebug[0m] [0m	/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rhino.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jfr.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/classes:/home/tormod/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.6.jar[0m
 [0m[[0mdebug[0m] [0m	-classpath[0m
 [0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/master/proglang/compiler/target/scala-2.11/classes:/home/tormod/Documents/skole/spring2015/master/proglang/compiler/lib/machine_2.10-0.1.0 .jar:/home/tormod/.ivy2/cache/org.specs2/specs2_2.11/jars/specs2_2.11-2.3.12.jar:/home/tormod/.ivy2/cache/org.scala-lang/scala-compiler/jars/scala-compiler-2.11.0.jar:/home/tormod/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.11.0.jar:/home/tormod/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/bundles/scala-xml_2.11-1.0.1.jar:/home/tormod/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/bundles/scala-parser-combinators_2.11-1.0.3.jar:/home/tormod/.ivy2/cache/org.pegdown/pegdown/jars/pegdown-1.2.1.jar:/home/tormod/.ivy2/cache/org.parboiled/parboiled-java/jars/parboiled-java-1.1.4.jar:/home/tormod/.ivy2/cache/org.parboiled/parboiled-core/jars/parboiled-core-1.1.4.jar:/home/tormod/.ivy2/cache/org.ow2.asm/asm/jars/asm-4.1.jar:/home/tormod/.ivy2/cache/org.ow2.asm/asm-tree/jars/asm-tree-4.1.jar:/home/tormod/.ivy2/cache/org.ow2.asm/asm-analysis/jars/asm-analysis-4.1.jar:/home/tormod/.ivy2/cache/org.ow2.asm/asm-util/jars/asm-util-4.1.jar:/home/tormod/.ivy2/cache/org.scalaz/scalaz-core_2.11/bundles/scalaz-core_2.11-7.0.6.jar:/home/tormod/.ivy2/cache/org.scalaz/scalaz-concurrent_2.11/bundles/scalaz-concurrent_2.11-7.0.6.jar:/home/tormod/.ivy2/cache/org.scalaz/scalaz-effect_2.11/bundles/scalaz-effect_2.11-7.0.6.jar:/home/tormod/.ivy2/cache/org.scalacheck/scalacheck_2.11/jars/scalacheck_2.11-1.11.3.jar:/home/tormod/.ivy2/cache/org.scala-sbt/test-interface/jars/test-interface-1.0.jar:/home/tormod/.ivy2/cache/org.hamcrest/hamcrest-core/jars/hamcrest-core-1.3.jar:/home/tormod/.ivy2/cache/org.mockito/mockito-core/jars/mockito-core-1.9.5.jar:/home/tormod/.ivy2/cache/org.objenesis/objenesis/jars/objenesis-1.0.jar:/home/tormod/.ivy2/cache/junit/junit/jars/junit-4.11.jar:/home/tormod/.ivy2/cache/org.specs2/classycle/jars/classycle-1.4.3.jar[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:37: ')' expected but 'val' found.[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:12: too many arguments for method apply: (args: List[fumurtCompiler.Argument])fumurtCompiler.Arguments in object Arguments[0m
+[0m[[31merror[0m] [0m    val divide = DefLhs(FunctionT(), IdT("actionPrintln"), Some(Arguments(Argument(IdT("left"), TypeT("Integer")), Argument(IdT("right"), TypeT("Integer")))), TypeT("Integer"))[0m
+[0m[[31merror[0m] [0m                                                                         ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:14: not found: value mutate[0m
+[0m[[31merror[0m] [0m    val basicfunctions = List(multiply, plus, divide, minus, mutate, print)[0m
+[0m[[31merror[0m] [0m                                                             ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:35: value leftside is not a member of fumurtCompiler.DefLhs[0m
+[0m[[31merror[0m] [0m    val program = topdefs.filter(x=>(x.leftside.description match {case ProgramT => true; case _=> false}))[0m
+[0m[[31merror[0m] [0m                                       ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:36: value leftside is not a member of fumurtCompiler.DefLhs[0m
 [0m[[31merror[0m] [0m    val implicitargs = indexlefts(topdefs.filter(x=>(x.leftside.description match {case ProgramT => false; case _=> true})))[0m
-[0m[[31merror[0m] [0m    ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:43: ':' expected but ',' found.[0m
-[0m[[31merror[0m] [0m    def checkuseofthread(program, deflhs):List[FumurtError]=[0m
+[0m[[31merror[0m] [0m                                                       ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:37: pattern type is incompatible with expected type;[0m
+[0m[[31merror[0m] [0m found   : fumurtCompiler.ProgramT.type[0m
+[0m[[31merror[0m] [0m required: fumurtCompiler.DefDescriptionT[0m
+[0m[[31merror[0m] [0mNote: if you intended to match against the class, try `case ProgramT()`[0m
+[0m[[31merror[0m] [0m    checkprogram(program, implicitargs, basicFunctions) ++ checkexpressions(in.filter(x=>(x.leftside.description match {case ProgramT => false; case _=> true})), None, Some(implicitargs), basicFunctions, 0) [0m
+[0m[[31merror[0m] [0m                                                                                                                             ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:37: type mismatch;[0m
+[0m[[31merror[0m] [0m found   : Int(0)[0m
+[0m[[31merror[0m] [0m required: List[fumurtCompiler.DefLhs][0m
+[0m[[31merror[0m] [0m    checkprogram(program, implicitargs, basicFunctions) ++ checkexpressions(in.filter(x=>(x.leftside.description match {case ProgramT => false; case _=> true})), None, Some(implicitargs), basicFunctions, 0) [0m
+[0m[[31merror[0m] [0m                                                                                                                                                                                                            ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:46: value find is not a member of fumurtCompiler.DefRhs[0m
+[0m[[31merror[0m] [0m        case ThreadT() => program.rightside.find(y=>y match{case FunctionCallStatement(x.id.value, _) => true; case _=>false}) [0m
+[0m[[31merror[0m] [0m                                            ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:46: not found: value x[0m
+[0m[[31merror[0m] [0m        case ThreadT() => program.rightside.find(y=>y match{case FunctionCallStatement(x.id.value, _) => true; case _=>false}) [0m
+[0m[[31merror[0m] [0m                                                                                       ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:50: not found: value x[0m
+[0m[[31merror[0m] [0m            case None=> List(FumurtError(x.pos, "thread "+x.id.value+" is declared but not used"))[0m
+[0m[[31merror[0m] [0m                                         ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:50: not found: value x[0m
+[0m[[31merror[0m] [0m            case None=> List(FumurtError(x.pos, "thread "+x.id.value+" is declared but not used"))[0m
+[0m[[31merror[0m] [0m                                                          ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:52: type mismatch;[0m
+[0m[[31merror[0m] [0m found   : None.type[0m
+[0m[[31merror[0m] [0m required: List[fumurtCompiler.FumurtError][0m
+[0m[[31merror[0m] [0m        case _=> None[0m
+[0m[[31merror[0m] [0m                 ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:55: missing parameter type[0m
+[0m[[31merror[0m] [0m    val unusedthreaderrors:List[FumurtError] = topleveldefs.foldLeft((x,y)=>checkuseofthread(program,x)++checkuseofthread(program,y))[0m
+[0m[[31merror[0m] [0m                                                                      ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:55: missing parameter type[0m
+[0m[[31merror[0m] [0m    val unusedthreaderrors:List[FumurtError] = topleveldefs.foldLeft((x,y)=>checkuseofthread(program,x)++checkuseofthread(program,y))[0m
+[0m[[31merror[0m] [0m                                                                        ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:55: missing arguments for method foldLeft in trait LinearSeqOptimized;[0m
+[0m[[31merror[0m] [0mfollow this method with `_' if you want to treat it as a partially applied function[0m
+[0m[[31merror[0m] [0m    val unusedthreaderrors:List[FumurtError] = topleveldefs.foldLeft((x,y)=>checkuseofthread(program,x)++checkuseofthread(program,y))[0m
+[0m[[31merror[0m] [0m                                                                    ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:57: not found: value ListBuffer[0m
+[0m[[31merror[0m] [0m    val unsuitabledefinitions = ListBuffer()[0m
 [0m[[31merror[0m] [0m                                ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:76: identifier expected but '}' found.[0m
-[0m[[31merror[0m] [0m  }[0m
-[0m[[31merror[0m] [0m  ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:89: '{' expected but identifier found.[0m
-[0m[[31merror[0m] [0m        val localscope = containingdefinition match indexlefts(containingdefinition)[0m
-[0m[[31merror[0m] [0m                                                    ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:137: '=>' expected but '(' found.[0m
-[0m[[31merror[0m] [0m      case y:FunctionCallStatement("if", args)=>[0m
-[0m[[31merror[0m] [0m                                  ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:151: identifier expected but ')' found.[0m
-[0m[[31merror[0m] [0m          case Left(callarg) => checkCallarg(calledfunction.)[0m
-[0m[[31merror[0m] [0m                                                            ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:214: illegal start of simple expression[0m
-[0m[[31merror[0m] [0m              individualargumenterrors ++ if(value(i).id.value != defargs(i).id.value) [0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:79: not enough arguments for method checkexpression: (tocheck: fumurtCompiler.Expression, containingdefinition: Option[fumurtCompiler.Definition], arguments: Option[List[fumurtCompiler.DefLhs]], basicFunctions: List[fumurtCompiler.DefLhs], inSameDefinition: List[fumurtCompiler.DefLhs])List[fumurtCompiler.FumurtError].[0m
+[0m[[31merror[0m] [0mUnspecified value parameters arguments, basicFunctions, inSameDefinition.[0m
+[0m[[31merror[0m] [0m    tree.foldLeft(List())((x,y)=>checkexpression(x, depth)++checkexpression(y))[0m
+[0m[[31merror[0m] [0m                                                ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:79: not enough arguments for method checkexpression: (tocheck: fumurtCompiler.Expression, containingdefinition: Option[fumurtCompiler.Definition], arguments: Option[List[fumurtCompiler.DefLhs]], basicFunctions: List[fumurtCompiler.DefLhs], inSameDefinition: List[fumurtCompiler.DefLhs])List[fumurtCompiler.FumurtError].[0m
+[0m[[31merror[0m] [0mUnspecified value parameters containingdefinition, arguments, basicFunctions, ...[0m
+[0m[[31merror[0m] [0m    tree.foldLeft(List())((x,y)=>checkexpression(x, depth)++checkexpression(y))[0m
+[0m[[31merror[0m] [0m                                                                           ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:91: value rightside is not a member of Option[fumurtCompiler.Definition][0m
+[0m[[31merror[0m] [0m          case Some(contdef) => indexlefts(containingdefinition.rightside.expressions)[0m
+[0m[[31merror[0m] [0m                                                                ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:98: value flatmap is not a member of List[fumurtCompiler.Argument][0m
+[0m[[31merror[0m] [0m            val hits = args.flatmap(arg=>(arguments++inSameDefinition).find(y=>y.id.value==arg.id.value))[0m
+[0m[[31merror[0m] [0m                            ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:98: value id is not a member of Product with java.io.Serializable[0m
+[0m[[31merror[0m] [0m            val hits = args.flatmap(arg=>(arguments++inSameDefinition).find(y=>y.id.value==arg.id.value))[0m
+[0m[[31merror[0m] [0m                                                                                 ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:106: type mismatch;[0m
+[0m[[31merror[0m] [0m found   : fumurtCompiler.DefLhs[0m
+[0m[[31merror[0m] [0m required: Option[fumurtCompiler.DefLhs][0m
+[0m[[31merror[0m] [0m        checkdefinition(x, x.leftside, newargs, basicFunctions) ++ argpropagationerrors[0m
+[0m[[31merror[0m] [0m                             ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:106: type mismatch;[0m
+[0m[[31merror[0m] [0m found   : List[Nothing][0m
+[0m[[31merror[0m] [0m required: Option[List[fumurtCompiler.DefLhs]][0m
+[0m[[31merror[0m] [0m        checkdefinition(x, x.leftside, newargs, basicFunctions) ++ argpropagationerrors[0m
+[0m[[31merror[0m] [0m                                       ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:108: too many arguments for method checkstatement: (tocheck: fumurtCompiler.Statement, containingdefinition: fumurtCompiler.DefLhs, arguments: Option[List[fumurtCompiler.DefLhs]], basicFunctions: List[fumurtCompiler.DefLhs], inSameDefinition: List[fumurtCompiler.DefLhs])List[fumurtCompiler.FumurtError][0m
+[0m[[31merror[0m] [0m      case x:Statement => checkstatement(x, containingdefinition, arguments, basicFunctions, inSameDefinition, currentErrors)[0m
+[0m[[31merror[0m] [0m                                        ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:267: not found: type BasicStatement[0m
+[0m[[31merror[0m] [0m  def checkbasicvaluestatement(expectedtype:TypeT, bascistatement:BasicStatement, role:String):List[FumurtError] =[0m
+[0m[[31merror[0m] [0m                                                                  ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:119: not enough arguments for method findinscope: (arguments: Option[List[fumurtCompiler.DefLhs]], inscope: List[fumurtCompiler.DefLhs], basicfunctions: List[fumurtCompiler.DefLhs], searchFor: String)Either[String,fumurtCompiler.DefLhs].[0m
+[0m[[31merror[0m] [0mUnspecified value parameters inscope, basicfunctions, searchFor.[0m
+[0m[[31merror[0m] [0m        val statedvalue = findinscope(same name as b)[0m
+[0m[[31merror[0m] [0m                                     ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:122: type mismatch;[0m
+[0m[[31merror[0m] [0m found   : Any[0m
+[0m[[31merror[0m] [0m required: String[0m
+[0m[[31merror[0m] [0m          case Left(string) => List(FumurtError(b.pos, string))[0m
+[0m[[31merror[0m] [0m                                                       ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:125: value returntype is not a member of Any[0m
+[0m[[31merror[0m] [0m            if(containingdefinition.returntype.value != deflhs.returntype.value)[0m
+[0m[[31merror[0m] [0m                                                               ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:127: value returntype is not a member of Any[0m
+[0m[[31merror[0m] [0m              List(FumurtError(b.pos, "expected: " +containingdefinition.returntype.value+ ". Got: " +deflhs.returntype.value))[0m
+[0m[[31merror[0m] [0m                                                                                                             ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:169: not found: type FunctionCallstatement[0m
+[0m[[31merror[0m] [0m  def checkifcall(ifcall:FunctionCallstatement, expectedtype:TypeT):List[FumurtError] =[0m
+[0m[[31merror[0m] [0m                         ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:140: value returnType is not a member of fumurtCompiler.DefLhs[0m
+[0m[[31merror[0m] [0m          checkifcall(y, containingdefinition.returnType)[0m
+[0m[[31merror[0m] [0m                                              ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:144: not enough arguments for method findinscope: (arguments: Option[List[fumurtCompiler.DefLhs]], inscope: List[fumurtCompiler.DefLhs], basicfunctions: List[fumurtCompiler.DefLhs], searchFor: String)Either[String,fumurtCompiler.DefLhs].[0m
+[0m[[31merror[0m] [0mUnspecified value parameters inscope, basicfunctions, searchFor.[0m
+[0m[[31merror[0m] [0m          val calledfunction = findinscope(same name as y)[0m
 [0m[[31merror[0m] [0m                                          ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:218: ';' expected but 'else' found.[0m
-[0m[[31merror[0m] [0m              else [0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:147: pattern type is incompatible with expected type;[0m
+[0m[[31merror[0m] [0m found   : fumurtCompiler.NoArgs.type[0m
+[0m[[31merror[0m] [0m required: fumurtCompiler.Callarg[0m
+[0m[[31merror[0m] [0mNote: if you intended to match against the class, try `case NoArgs()`[0m
+[0m[[31merror[0m] [0m            case Left(NoArgs) => calledfunction.args match[0m
+[0m[[31merror[0m] [0m                      ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:152: not enough arguments for method checkCallarg: (expectedtype: fumurtCompiler.TypeT, arg: fumurtCompiler.Callarg, containingdefinition: fumurtCompiler.DefLhs, arguments: Option[List[fumurtCompiler.DefLhs]], basicFunctions: List[fumurtCompiler.DefLhs], inSameDefinition: List[fumurtCompiler.DefLhs])List[fumurtCompiler.FumurtError].[0m
+[0m[[31merror[0m] [0mUnspecified value parameters arg, containingdefinition, arguments, ...[0m
+[0m[[31merror[0m] [0m            case Left(callarg) => checkCallarg(calledfunction)[0m
+[0m[[31merror[0m] [0m                                              ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:163: type mismatch;[0m
+[0m[[31merror[0m] [0m found   : Any[0m
+[0m[[31merror[0m] [0m required: scala.collection.GenTraversableOnce[?][0m
+[0m[[31merror[0m] [0m          returnerror ++ argumenterrors[0m
+[0m[[31merror[0m] [0m                         ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:173: not found: value Callarg[0m
+[0m[[31merror[0m] [0m      case Left(Callarg) => List(FumurtError(ifcall.pos, "Call to if needs three arguments"))[0m
+[0m[[31merror[0m] [0m                ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:174: not found: value NamedCallArgs[0m
+[0m[[31merror[0m] [0m      case Right(NamedCallArgs(arglist))=>[0m
+[0m[[31merror[0m] [0m                 ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:183: not found: value ++[0m
+[0m[[31merror[0m] [0m          ++[0m
+[0m[[31merror[0m] [0m          ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:185: not found: value ++[0m
+[0m[[31merror[0m] [0m          ++[0m
+[0m[[31merror[0m] [0m          ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:187: not found: value ++[0m
+[0m[[31merror[0m] [0m          ++[0m
+[0m[[31merror[0m] [0m          ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:198: not enough arguments for method apply: (position: scala.util.parsing.input.Position, message: String)fumurtCompiler.FumurtError in object FumurtError.[0m
+[0m[[31merror[0m] [0mUnspecified value parameter message.[0m
+[0m[[31merror[0m] [0m      case None => List(FumurtError("No arguments expected, but "+namedcallargs.length+" were given"))[0m
+[0m[[31merror[0m] [0m                                   ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:201: value length is not a member of fumurtCompiler.Arguments[0m
+[0m[[31merror[0m] [0m        if (defargs.length != value.length) [0m
+[0m[[31merror[0m] [0m                    ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:201: not found: value value[0m
+[0m[[31merror[0m] [0m        if (defargs.length != value.length) [0m
+[0m[[31merror[0m] [0m                              ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:203: not found: value y[0m
+[0m[[31merror[0m] [0m          List(FumurtError(y.pos, "expected "+defargs.length+" arguments. Got "+value.length+" arguments"))[0m
+[0m[[31merror[0m] [0m                           ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:203: value length is not a member of fumurtCompiler.Arguments[0m
+[0m[[31merror[0m] [0m          List(FumurtError(y.pos, "expected "+defargs.length+" arguments. Got "+value.length+" arguments"))[0m
+[0m[[31merror[0m] [0m                                                      ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:203: not found: value value[0m
+[0m[[31merror[0m] [0m          List(FumurtError(y.pos, "expected "+defargs.length+" arguments. Got "+value.length+" arguments"))[0m
+[0m[[31merror[0m] [0m                                                                                ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:207: not found: value value[0m
+[0m[[31merror[0m] [0m          if(!value.groupBy(x=>x.id.value).filter((x,y)=>y.length>1).isEmpty) //ensure uniqueness of arguments[0m
 [0m[[31merror[0m] [0m              ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:230: '=' expected but '(' found.[0m
-[0m[[31merror[0m] [0m  def checkCallarg(expectedtype:TypeT, arg:Callarg, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs], currentErrors:List[FumurtError]):List(FumurtError) = [0m
-[0m[[31merror[0m] [0m                                                                                                                                                                                                                  ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:264: illegal start of simple expression[0m
-[0m[[31merror[0m] [0m  def checkbasicvaluestatement(expectedtype:TypeT, bascistatement:BasicStatement, role:String):List(FumurtError) =[0m
-[0m[[31merror[0m] [0m^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:264: '=' expected but '(' found.[0m
-[0m[[31merror[0m] [0m  def checkbasicvaluestatement(expectedtype:TypeT, bascistatement:BasicStatement, role:String):List(FumurtError) =[0m
-[0m[[31merror[0m] [0m                                                                                                   ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:276: illegal start of simple expression[0m
-[0m[[31merror[0m] [0m  def checkdefinition(tocheck:Definition, containingdefinition:Option[DefLhs], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]): List[FumurtError]=[0m
-[0m[[31merror[0m] [0m^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:289: illegal start of simple pattern[0m
-[0m[[31merror[0m] [0m      case ActionT() => containingdefinition match{ case } List(FumurtError(tocheck.pos, "actions cannot be defined in values or functions"))[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:209: not found: value y[0m
+[0m[[31merror[0m] [0m            List(FumurtError(y.pos, "two or more arguments were given with the same name"))[0m
+[0m[[31merror[0m] [0m                             ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:213: not found: value ListBuffer[0m
+[0m[[31merror[0m] [0m            val individualargumenterrors = ListBuffer()[0m
+[0m[[31merror[0m] [0m                                           ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:214: not found: value value[0m
+[0m[[31merror[0m] [0m            for(i<-0 until value.length)[0m
+[0m[[31merror[0m] [0m                           ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:244: not enough arguments for method findinscope: (arguments: Option[List[fumurtCompiler.DefLhs]], inscope: List[fumurtCompiler.DefLhs], basicfunctions: List[fumurtCompiler.DefLhs], searchFor: String)Either[String,fumurtCompiler.DefLhs].[0m
+[0m[[31merror[0m] [0mUnspecified value parameters inscope, basicfunctions, searchFor.[0m
+[0m[[31merror[0m] [0m        val thingdef = findinscope(same name as c)[0m
+[0m[[31merror[0m] [0m                                  ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:253: not enough arguments for method findinscope: (arguments: Option[List[fumurtCompiler.DefLhs]], inscope: List[fumurtCompiler.DefLhs], basicfunctions: List[fumurtCompiler.DefLhs], searchFor: String)Either[String,fumurtCompiler.DefLhs].[0m
+[0m[[31merror[0m] [0mUnspecified value parameters inscope, basicfunctions, searchFor.[0m
+[0m[[31merror[0m] [0m        val functioncallarg = findinscope(same name as c)[0m
+[0m[[31merror[0m] [0m                                         ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:261: too many arguments for method checkstatement: (tocheck: fumurtCompiler.Statement, containingdefinition: fumurtCompiler.DefLhs, arguments: Option[List[fumurtCompiler.DefLhs]], basicFunctions: List[fumurtCompiler.DefLhs], inSameDefinition: List[fumurtCompiler.DefLhs])List[fumurtCompiler.FumurtError][0m
+[0m[[31merror[0m] [0m        val callerrors = checkstatement(c, containingdefinition, arguments, basicFunctions, inSameDefinition, currentErrors)[0m
+[0m[[31merror[0m] [0m                                       ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:269: not found: value basicstatement[0m
+[0m[[31merror[0m] [0m    basicstatement match[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:281: not enough arguments for method checkexpressions: (tree: List[fumurtCompiler.Expression], containingdefinition: Option[fumurtCompiler.Definition], arguments: Option[List[fumurtCompiler.DefLhs]], basicFunctions: List[fumurtCompiler.DefLhs], inSameDefinition: List[fumurtCompiler.DefLhs])List[fumurtCompiler.FumurtError].[0m
+[0m[[31merror[0m] [0mUnspecified value parameters arguments, basicFunctions, inSameDefinition.[0m
+[0m[[31merror[0m] [0m    val undererrors = checkexpressions(tocheck.rightside.expressions, tocheck )[0m
+[0m[[31merror[0m] [0m                                      ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:284: value beginsWith is not a member of String[0m
+[0m[[31merror[0m] [0m      case ActionT() => if(!tocheck.leftside.id.value.beginsWith("action")){List(FumurtError(tocheck.pos, "Name of action is not prefixed with \"action\""))} else{List()}[0m
+[0m[[31merror[0m] [0m                                                      ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:285: value beginsWith is not a member of String[0m
+[0m[[31merror[0m] [0m      case ThreadT() => if(!tocheck.leftside.id.value.beginsWith("thread")){List(FumurtError(tocheck.pos, "Name of thread is not prefixed with \"thread\""))} else{List()}[0m
+[0m[[31merror[0m] [0m                                                      ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:287: not found: value ValueY[0m
+[0m[[31merror[0m] [0m      case ValueY() => List()[0m
+[0m[[31merror[0m] [0m           ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:295: wrong number of arguments for pattern fumurtCompiler.DefLhs(description: fumurtCompiler.DefDescriptionT,id: fumurtCompiler.IdT,args: Option[fumurtCompiler.Arguments],returntype: fumurtCompiler.TypeT)[0m
+[0m[[31merror[0m] [0m        case Some(DefLhs(ValueT(),_))=> List(FumurtError(tocheck.pos, "actions cannot be defined in values"))[0m
+[0m[[31merror[0m] [0m                        ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:296: wrong number of arguments for pattern fumurtCompiler.DefLhs(description: fumurtCompiler.DefDescriptionT,id: fumurtCompiler.IdT,args: Option[fumurtCompiler.Arguments],returntype: fumurtCompiler.TypeT)[0m
+[0m[[31merror[0m] [0m        case Some(DefLhs(FunctionT(),_))=> List(FumurtError(tocheck.pos, "actions cannot be defined in  functions"))[0m
+[0m[[31merror[0m] [0m                        ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:299: pattern type is incompatible with expected type;[0m
+[0m[[31merror[0m] [0m found   : fumurtCompiler.ValueT.type[0m
+[0m[[31merror[0m] [0m required: fumurtCompiler.DefLhs[0m
+[0m[[31merror[0m] [0mNote: if you intended to match against the class, try `case _: ValueT`[0m
+[0m[[31merror[0m] [0m      case FunctionT() => containingdefinition match{ case Some(ValueT) => List(FumurtError(tocheck.pos, "functions cannot be defined in values")); case _=> List()}[0m
+[0m[[31merror[0m] [0m                                                                ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:326: value args is not a member of List[fumurtCompiler.DefLhs][0m
+[0m[[31merror[0m] [0m    val argsres = arguments match{ case Some(args)=>args.args.filter(x=>x.id.value==searschFor); case None=>List():List[DefLhs]}[0m
 [0m[[31merror[0m] [0m                                                         ^[0m
-[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:289: ';' expected but identifier found.[0m
-[0m[[31merror[0m] [0m      case ActionT() => containingdefinition match{ case } List(FumurtError(tocheck.pos, "actions cannot be defined in values or functions"))[0m
-[0m[[31merror[0m] [0m                                                           ^[0m
-[0m[[31merror[0m] [0m14 errors found[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:119: postfix operator b should be enabled[0m
+[0m[[31merror[0m] [0mby making the implicit value scala.language.postfixOps visible.[0m
+[0m[[31merror[0m] [0mThis can be achieved by adding the import clause 'import scala.language.postfixOps'[0m
+[0m[[31merror[0m] [0mor by setting the compiler option -language:postfixOps.[0m
+[0m[[31merror[0m] [0mSee the Scala docs for value scala.language.postfixOps for a discussion[0m
+[0m[[31merror[0m] [0mwhy the feature should be explicitly enabled.[0m
+[0m[[31merror[0m] [0m        val statedvalue = findinscope(same name as b)[0m
+[0m[[31merror[0m] [0m                                                   ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:144: postfix operator y should be enabled[0m
+[0m[[31merror[0m] [0mby making the implicit value scala.language.postfixOps visible.[0m
+[0m[[31merror[0m] [0m          val calledfunction = findinscope(same name as y)[0m
+[0m[[31merror[0m] [0m                                                        ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:244: postfix operator c should be enabled[0m
+[0m[[31merror[0m] [0mby making the implicit value scala.language.postfixOps visible.[0m
+[0m[[31merror[0m] [0m        val thingdef = findinscope(same name as c)[0m
+[0m[[31merror[0m] [0m                                                ^[0m
+[0m[[31merror[0m] [0m/home/tormod/Documents/skole/spring2015/master/proglang/compiler/src/main/scala/Typechecker.scala:253: postfix operator c should be enabled[0m
+[0m[[31merror[0m] [0mby making the implicit value scala.language.postfixOps visible.[0m
+[0m[[31merror[0m] [0m        val functioncallarg = findinscope(same name as c)[0m
+[0m[[31merror[0m] [0m                                                       ^[0m
+[0m[[31merror[0m] [0m65 errors found[0m
 [0m[[0mdebug[0m] [0mCompilation failed (CompilerInterface)[0m
 [0m[[31merror[0m] [0m(compile:[31mcompile[0m) Compilation failed[0m

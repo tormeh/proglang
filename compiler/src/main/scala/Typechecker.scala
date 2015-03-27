@@ -7,12 +7,11 @@ object FumurtTypeChecker
   {
     val providedTypes = List("Integer", "Double", "Boolean", "String", "Nothing")
     val print = DefLhs(ActionT(), IdT("actionPrintln"), Some(Arguments(List(Argument(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
-    //val multiply = DefLhs(FunctionT, IdT("multiply"), Some(Arguments(List(Argument(IdT("left"),TypeT("Integer")), Argument(IdT("Right"), TypeT("Integer"))))), )
-    val sum = DefLhs
-    val divide = DefLhs
-    val subtract = DefLhs
-    val fumurtif = DefLhs
-    val basics = List(multiply, plus, divide, minus, mutate, print)
+    val multiply = DefLhs(FunctionT(), IdT("multiply"), Some(Arguments(List(Argument(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
+    val plus = DefLhs(FunctionT(), IdT("plus"), Some(Arguments(List(Argument(IdT("left"), TypeT("Integer")), Argument(IdT("right"), TypeT("Integer"))))), TypeT("Integer"))
+    val divide = DefLhs(FunctionT(), IdT("actionPrintln"), Some(Arguments(Argument(IdT("left"), TypeT("Integer")), Argument(IdT("right"), TypeT("Integer")))), TypeT("Integer"))
+    val minus = DefLhs(FunctionT(), IdT("minus"), Some(Arguments(List(Argument(IdT("left"), TypeT("Integer")), Argument(IdT("right"), TypeT("Integer"))))), TypeT("Integer"))
+    val basicfunctions = List(multiply, plus, divide, minus, mutate, print)
     
     
     //all standard library functions available everywhere (maybe also actions). 
@@ -33,14 +32,14 @@ object FumurtTypeChecker
   def checktop(in:List[Definition], basicFunctions:List[DefLhs]): List[FumurtError]=
   {
     val topdefs = indexlefts(in)
-    val program = topdefs.filter(x=>(x.leftside.description match {case ProgramT => true; case _=> false})
+    val program = topdefs.filter(x=>(x.leftside.description match {case ProgramT => true; case _=> false}))
     val implicitargs = indexlefts(topdefs.filter(x=>(x.leftside.description match {case ProgramT => false; case _=> true})))
     checkprogram(program, implicitargs, basicFunctions) ++ checkexpressions(in.filter(x=>(x.leftside.description match {case ProgramT => false; case _=> true})), None, Some(implicitargs), basicFunctions, 0) 
   }
   
   def checkprogram(program:Definition, topleveldefs:List[DefLhs], basicFunctions:List[DefLhs]): List[FumurtError]=
   {
-    def checkuseofthread(program, deflhs):List[FumurtError]=
+    def checkuseofthread(program:Definition, deflhs:DefLhs):List[FumurtError]=
     {
       deflhs.description match
       {
@@ -86,7 +85,7 @@ object FumurtTypeChecker
     {
       case x:Definition=>
       { 
-        val localscope = containingdefinition match indexlefts(containingdefinition)
+        val localscope = containingdefinition match
         {
           case None => List()
           case Some(contdef) => indexlefts(containingdefinition.rightside.expressions)
@@ -134,32 +133,35 @@ object FumurtTypeChecker
           }
         }
       }
-      case y:FunctionCallStatement("if", args)=>
-      {
-        checkifcall(y, containingdefinition.returnType)
-      }
       case y:FunctionCallStatement=>
       {
-        val calledfunction = findinscope(same name as y)
-        val argumenterrors = y.args match 
+        if (y.functionidentifier=="if")
         {
-          case Left(NoArgs) => calledfunction.args match
-          {
-            case None => List()
-            case Some(_) => List(FumurtError(y.pos, "expected arguments, but none were given")) 
-          }
-          case Left(callarg) => checkCallarg(calledfunction.)
-          case Right(NamedCallargs(value)) => 
-          {
-            
-          }
+          checkifcall(y, containingdefinition.returnType)
         }
-        val returnerror = if (containingdefinition.returntype != calledfunction.returntype)
+        else
         {
-          List(FumurtError(y.pos, "Expected return type: "+containingdefinition.returntype+". Got: "+calledfunction.returntype))
+          val calledfunction = findinscope(same name as y)
+          val argumenterrors = y.args match 
+          {
+            case Left(NoArgs) => calledfunction.args match
+            {
+              case None => List()
+              case Some(_) => List(FumurtError(y.pos, "expected arguments, but none were given")) 
+            }
+            case Left(callarg) => checkCallarg(calledfunction)
+            case Right(NamedCallargs(value)) => 
+            {
+              
+            }
+          }
+          val returnerror = if (containingdefinition.returntype != calledfunction.returntype)
+          {
+            List(FumurtError(y.pos, "Expected return type: "+containingdefinition.returntype+". Got: "+calledfunction.returntype))
+          }
+          else {List()}
+          returnerror ++ argumenterrors
         }
-        else {List()}
-        returnerror ++ argumenterrors
       }
     }
   }
@@ -211,14 +213,15 @@ object FumurtTypeChecker
             val individualargumenterrors = ListBuffer()
             for(i<-0 until value.length)
             {
-              individualargumenterrors ++ if(value(i).id.value != defargs(i).id.value) 
-              {
-                List(FumurtError(y.pos, "Wrong argument name. Argument in definition named "+defargs(i).id.value+". In calling named "+value(i).id.value ))
-              } 
-              else 
-              {
-                checkCallarg(defargs(i).typestr, value(i).argument, containingdefinition, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs], currentErrors:List[FumurtError])
-              }
+              individualargumenterrors ++ (if(value(i).id.value != defargs(i).id.value) 
+                {
+                  List(FumurtError(y.pos, "Wrong argument name. Argument in definition named "+defargs(i).id.value+". In calling named "+value(i).id.value ))
+                }
+                else 
+                {
+                  checkCallarg(defargs(i).typestr, value(i).argument, containingdefinition, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs], currentErrors:List[FumurtError])
+                }
+              )
             }
             individualargumenterrors.toList
           }
@@ -227,12 +230,12 @@ object FumurtTypeChecker
     }
   }
   
-  def checkCallarg(expectedtype:TypeT, arg:Callarg, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs], currentErrors:List[FumurtError]):List(FumurtError) = 
+  def checkCallarg(expectedtype:TypeT, arg:Callarg, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] = 
   {
     arg match
     {
       case c:BasicValueStatement=> checkbasicvaluestatement(containingdefinition.returntype, c, "Call argument")
-      case c:NoArgs => calledfunction.args match
+      case c:NoArgs => 
       {
         println("NoArgs got checked by checkCallarg. This is better checked in checkstatement"); scala.sys.exit()
       }
@@ -261,7 +264,7 @@ object FumurtTypeChecker
     }
   }
   
-  def checkbasicvaluestatement(expectedtype:TypeT, bascistatement:BasicStatement, role:String):List(FumurtError) =
+  def checkbasicvaluestatement(expectedtype:TypeT, bascistatement:BasicStatement, role:String):List[FumurtError] =
   {
     basicstatement match
     {
@@ -275,7 +278,7 @@ object FumurtTypeChecker
   
   def checkdefinition(tocheck:Definition, containingdefinition:Option[DefLhs], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]): List[FumurtError]=
   {
-    val undererrors = checkexpressions(tocheck.rightside.expressions, tocheck, )
+    val undererrors = checkexpressions(tocheck.rightside.expressions, tocheck )
     val nameerror = tocheck.leftside.description match
     {
       case ActionT() => if(!tocheck.leftside.id.value.beginsWith("action")){List(FumurtError(tocheck.pos, "Name of action is not prefixed with \"action\""))} else{List()}
@@ -286,7 +289,12 @@ object FumurtTypeChecker
     }
     val peermissionerror = tocheck.leftside.description match
     {
-      case ActionT() => containingdefinition match{ case } List(FumurtError(tocheck.pos, "actions cannot be defined in values or functions"))
+      case ActionT() => containingdefinition match
+      { 
+        case None=>List()
+        case Some(DefLhs(ValueT(),_))=> List(FumurtError(tocheck.pos, "actions cannot be defined in values"))
+        case Some(DefLhs(FunctionT(),_))=> List(FumurtError(tocheck.pos, "actions cannot be defined in  functions"))
+      }
       case ThreadT() => containingdefinition match{ case None => List(); case Some(_)=>List(FumurtError(tocheck.pos, "threads must be defined on top"))}
       case FunctionT() => containingdefinition match{ case Some(ValueT) => List(FumurtError(tocheck.pos, "functions cannot be defined in values")); case _=> List()}
       case SynchronizedVariableT() => List(FumurtError(tocheck.pos, "synchronized variables must be defined in Program definition"))
