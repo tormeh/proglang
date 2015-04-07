@@ -76,7 +76,7 @@ object Main
                 import java.nio.charset.StandardCharsets
                 val outname = "generated.cpp"
                 Files.write(Paths.get("./"+outname), generatedcode.getBytes(StandardCharsets.UTF_8))
-                val options = " -pthread -std=c++11"
+                val options = " -pthread -std=c++11 -O3"
                 println("\n\n===Starting Clang cpp compilation===")
                 println("options = " + options)
                 import scala.sys.process._
