@@ -206,7 +206,7 @@ object FumurtTypeChecker
           ( if(arglist(0).id != "condition"){List(FumurtError(ifcall.pos, "Call to if needs a condition argument"))} else {List()} )++
           ( if(arglist(1).id != "else"){List(FumurtError(ifcall.pos, "Call to if needs an else argument"))} else {List()} )++
           ( if(arglist(2).id != "then"){List(FumurtError(ifcall.pos, "Call to if needs a then argument"))} else {List()} )++
-          checkCallarg(TypeT("Boolean"), arglist(0), containingdefinition, arguments, basicFunctions, inSameDefinition)++
+          checkCallarg(TypeT("Boolean"), arglist(0).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)++
         }
       }
     }
