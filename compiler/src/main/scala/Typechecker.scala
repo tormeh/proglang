@@ -154,7 +154,7 @@ object FumurtTypeChecker
       {
         if (y.functionidentifier=="if")
         {
-          checkifcall(y, containingdefinition.returntype)
+          checkifcall(y, containingdefinition.returntype, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
         else
         {
@@ -190,7 +190,7 @@ object FumurtTypeChecker
     }
   }
   
-  def checkifcall(ifcall:FunctionCallStatement, expectedtype:TypeT):List[FumurtError] =
+  def checkifcall(ifcall:FunctionCallStatement, expectedtype:TypeT, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] =
   {
     ifcall.args match
     {
@@ -206,7 +206,7 @@ object FumurtTypeChecker
           ( if(arglist(0).id != "condition"){List(FumurtError(ifcall.pos, "Call to if needs a condition argument"))} else {List()} )++
           ( if(arglist(1).id != "else"){List(FumurtError(ifcall.pos, "Call to if needs an else argument"))} else {List()} )++
           ( if(arglist(2).id != "then"){List(FumurtError(ifcall.pos, "Call to if needs a then argument"))} else {List()} )++
-          checkCallarg(TypeT("Boolean"), arglist(0).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)++
+          checkCallarg(TypeT("Boolean"), arglist(0).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
       }
     }
@@ -216,27 +216,27 @@ object FumurtTypeChecker
   {
     calledfunction.args match
     {
-      case None => List(FumurtError("No arguments expected, but "+namedcallargs.length+" were given"))
-      case Some(defargs) => 
+      case None => List(FumurtError(namedcallargs(0).id.pos, "No arguments expected, but "+namedcallargs.length+" were given"))
+      case Some(Arguments(defargs)) => 
       {
-        if (defargs.length != value.length) 
+        if (defargs.length != namedcallargs.length) 
         {
-          List(FumurtError(y.pos, "expected "+defargs.length+" arguments. Got "+value.length+" arguments"))
+          List(FumurtError(namedcallargs(0).id.pos, "expected "+defargs.length+" arguments. Got "+namedcallargs.length+" arguments"))
         } 
         else 
         {
-          if(!value.groupBy(x=>x.id.value).filter((x,y)=>y.length>1).isEmpty) //ensure uniqueness of arguments
+          if(!namedcallargs.groupBy(x=>x.id.value).filter(y=>y._2.length>1).isEmpty) //ensure uniqueness of arguments
           {
-            List(FumurtError(y.pos, "two or more arguments were given with the same name"))
+            List(FumurtError(namedcallargs(0).id.pos, "two or more arguments were given with the same name"))
           }
           else 
           {
             val individualargumenterrors = ListBuffer()
-            for(i<-0 until value.length)
+            for(i<-0 until namedcallargs.length)
             {
-              individualargumenterrors ++ (if(value(i).id.value != defargs(i).id.value) 
+              individualargumenterrors ++ (if(namedcallargs(i).id.value != defargs(i).id.value) 
                 {
-                  List(FumurtError(y.pos, "Wrong argument name. Argument in definition named "+defargs(i).id.value+". In calling named "+value(i).id.value ))
+                  List(FumurtError(namedcallargs(i).id.pos, "Wrong argument name. Argument in definition named "+defargs(i).id.value+". In calling named "+value(i).id.value ))
                 }
                 else 
                 {
