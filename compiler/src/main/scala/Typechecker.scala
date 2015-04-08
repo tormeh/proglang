@@ -35,12 +35,14 @@ object FumurtTypeChecker
     val topdefs = indexlefts(in)
     val programs = in.filter(x=>(x.leftside.description match {case ProgramT() => true; case _=> false}))
     val implicitargs = topdefs.filter(x=>(x.description match {case ProgramT() => false; case _=> true}))
+    println("\nimplicitargs is: "+implicitargs)
     val programerrors = if(programs.length==1)
     {
       checkprogram(programs(0), implicitargs, basicFunctions)
     }
     else {List(FumurtError(Global, "There must be exactly one program definition. "+programs.length+" program definitions detected"))}
-    val othererrors = checkexpressions(in.filter(x=>(x.leftside.description match {case ProgramT() => false; case _=> true})), None, Some(implicitargs), basicFunctions) 
+    val nonProgramDefs = in.filter(x=>(x.leftside.description match {case ProgramT() => false; case _=> true}))
+    val othererrors = checkexpressions(nonProgramDefs, None, Some(implicitargs), basicFunctions) 
     
      programerrors++othererrors 
   }
@@ -116,7 +118,7 @@ object FumurtTypeChecker
             else {(hits, List(FumurtError(x.pos,"One or more arguments not found in local scope")))}
           }
         }
-        checkdefinition(x, Some(x.leftside), Some(newargs), basicFunctions) ++ argpropagationerrors
+        checkdefinition(x, containingdefinition.map(x=>x.leftside), Some(newargs), basicFunctions) ++ argpropagationerrors
       }
       case x:Statement => containingdefinition match
       {
@@ -136,7 +138,7 @@ object FumurtTypeChecker
         val statedvalue = findinscope(arguments, inSameDefinition, basicFunctions, b.value)
         statedvalue match
         {
-          case Left(string) => List(FumurtError(b.pos, "in checkstatement"+string))
+          case Left(string) => List(FumurtError(b.pos, "in checkstatement "+string))
           case Right(deflhs) => 
           {
             if(containingdefinition.returntype.value != deflhs.returntype.value)
@@ -160,7 +162,7 @@ object FumurtTypeChecker
         {
           findinscope(arguments, inSameDefinition, basicFunctions, y.functionidentifier) match
           {
-            case Left(string) => List(FumurtError(y.pos, string))
+            case Left(string) => List(FumurtError(y.pos, "in checkstatement_2 "+string))
             case Right(calledfunction) => 
             {
               val argumenterrors:List[FumurtError] = y.args match 
@@ -339,7 +341,7 @@ object FumurtTypeChecker
         case Some(DefLhs(FunctionT(),_,_,_))=> List(FumurtError(tocheck.pos, "actions cannot be defined in  functions"))
         case Some(something) => List()
       }
-      case ThreadT() => containingdefinition match{ case None => List(); case Some(_)=>List(FumurtError(tocheck.pos, "threads must be defined on top"))}
+      case ThreadT() => containingdefinition match{ case None => List(); case Some(_)=>List(FumurtError(tocheck.pos, "threads must be defined on top "+containingdefinition))}
       case FunctionT() => containingdefinition match{ case Some(DefLhs(ValueT(),_,_,_)) => List(FumurtError(tocheck.pos, "functions cannot be defined in values")); case _=> List()}
       case SynchronizedVariableT() => List(FumurtError(tocheck.pos, "synchronized variables must be defined in Program definition"))
       case ValueT() => List()
@@ -391,7 +393,7 @@ object FumurtTypeChecker
     }
     else if(res.length == 0)
     {
-      Left(searchFor+" not found")
+      Left(searchFor+" not found" +" arguments is: "+arguments)
     }
     else
     {
