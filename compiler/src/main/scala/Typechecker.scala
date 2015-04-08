@@ -344,7 +344,13 @@ object FumurtTypeChecker
   
   def indexlefts(in:List[Expression]):List[DefLhs]=
   {
-    in.head match
+    in.foldLeft(List():List[DefLhs]) ((list,y)=> y match
+      { 
+        case Definition(leftside, _)=>list :+ leftside; 
+        case _:Statement=> list
+      }
+    )
+    /*in.head match
     {
       case Definition(leftside, _)=>
       {
@@ -354,7 +360,7 @@ object FumurtTypeChecker
       {
         indexlefts(in.tail)
       }
-    }
+    }*/
   }
   
   def findinscope(arguments:Option[List[DefLhs]], inSameDefinition:List[DefLhs], basicfunctions:List[DefLhs], searchFor:String):Either[String, DefLhs]=
