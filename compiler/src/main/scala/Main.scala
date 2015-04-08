@@ -16,7 +16,7 @@ object Main
   def main(args: Array[String]) :Unit ={
     if(args.length <1)
     {
-        println("no file found\n")
+        println("no file found in arguments\n")
     }
     else
     {
@@ -34,7 +34,7 @@ object Main
       }
       else
       {
-        println("no file found\n")
+        println("too many arguments\n")
       }
     }
   }

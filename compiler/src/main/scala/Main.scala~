@@ -16,7 +16,7 @@ object Main
   def main(args: Array[String]) :Unit ={
     if(args.length <1)
     {
-        println("no file found\n")
+        println("no file found in arguments\n")
     }
     else
     {
@@ -34,7 +34,7 @@ object Main
       }
       else
       {
-        println("no file found\n")
+        println("too many arguments\n")
       }
     }
   }
@@ -65,7 +65,7 @@ object Main
             {
               case Some(errors) => 
               {
-                errors.map(x=>println(x))
+                errors.map(x=>println(x.longString))
               }
               case None => 
               {
@@ -74,13 +74,14 @@ object Main
                 println("\ncode generated: \n" + generatedcode)
                 import java.nio.file.{Paths, Files}
                 import java.nio.charset.StandardCharsets
-                val outname = "generated.cpp"
+                val outname = "generated"
+                val fileending = ".cpp"
                 Files.write(Paths.get("./"+outname), generatedcode.getBytes(StandardCharsets.UTF_8))
-                val options = " -pthread -std=c++11"
+                val options = " -pthread -std=c++11 -O3"
                 println("\n\n===Starting Clang cpp compilation===")
                 println("options = " + options)
                 import scala.sys.process._
-                ("clang " + outname + options).!
+                ("clang " + outname + fileending + options + " -o " + outname).!
               }
             }
           }

@@ -15,6 +15,6 @@ case class FumurtError(val position:Position, val message:String)
 {
   override def toString:String=
   {
-    message + "\n" + position.toString
+    position.toString + ": " + message + "\n" + position.longString + "\n"
   }
 }
