@@ -203,9 +203,9 @@ object FumurtTypeChecker
         }
         else
         {
-          ( if(arglist(0).id != "condition"){List(FumurtError(ifcall.pos, "Call to if needs a condition argument"))} else {List()} )++
-          ( if(arglist(1).id != "else"){List(FumurtError(ifcall.pos, "Call to if needs an else argument"))} else {List()} )++
-          ( if(arglist(2).id != "then"){List(FumurtError(ifcall.pos, "Call to if needs a then argument"))} else {List()} )++
+          ( if(arglist(0).id.value != "condition"){List(FumurtError(ifcall.pos, "Call to if needs a condition argument"))} else {List()} )++
+          ( if(arglist(1).id.value != "else"){List(FumurtError(ifcall.pos, "Call to if needs an else argument"))} else {List()} )++
+          ( if(arglist(2).id.value != "then"){List(FumurtError(ifcall.pos, "Call to if needs a then argument"))} else {List()} )++
           checkCallarg(TypeT("Boolean"), arglist(0).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
       }
@@ -313,7 +313,7 @@ object FumurtTypeChecker
   
   def checkdefinition(tocheck:Definition, containingdefinition:Option[DefLhs], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]): List[FumurtError]=
   {
-    val undererrors = checkexpressions(tocheck.rightside.expressions, Some(tocheck), tocheck.leftside/*or something*/, basicFunctions)
+    val undererrors = checkexpressions(tocheck.rightside.expressions, Some(tocheck), arguments, basicFunctions)
     val nameerror = tocheck.leftside.description match
     {
       case ActionT() => if(!tocheck.leftside.id.value.startsWith("action")){List(FumurtError(tocheck.pos, "Name of action is not prefixed with \"action\""))} else{List()}
@@ -322,16 +322,17 @@ object FumurtTypeChecker
       case ValueT() => List()
       case ProgramT() => println("Program got checked by checkdefinition. This is better checked in checkprogram"); scala.sys.exit()
     }
-    val peermissionerror = tocheck.leftside.description match
+    val permissionerror = tocheck.leftside.description match
     {
       case ActionT() => containingdefinition match
       { 
         case None=>List()
         case Some(DefLhs(ValueT(),_,_,_))=> List(FumurtError(tocheck.pos, "actions cannot be defined in values"))
         case Some(DefLhs(FunctionT(),_,_,_))=> List(FumurtError(tocheck.pos, "actions cannot be defined in  functions"))
+        case Some(something) => List()
       }
       case ThreadT() => containingdefinition match{ case None => List(); case Some(_)=>List(FumurtError(tocheck.pos, "threads must be defined on top"))}
-      case FunctionT() => containingdefinition match{ case Some(ValueT) => List(FumurtError(tocheck.pos, "functions cannot be defined in values")); case _=> List()}
+      case FunctionT() => containingdefinition match{ case Some(DefLhs(ValueT(),_,_,_)) => List(FumurtError(tocheck.pos, "functions cannot be defined in values")); case _=> List()}
       case SynchronizedVariableT() => List(FumurtError(tocheck.pos, "synchronized variables must be defined in Program definition"))
       case ValueT() => List()
       case ProgramT() => println("Program got checked by checkdefinition. This is better checked in checkprogram"); scala.sys.exit()
@@ -358,7 +359,7 @@ object FumurtTypeChecker
   
   def findinscope(arguments:Option[List[DefLhs]], inSameDefinition:List[DefLhs], basicfunctions:List[DefLhs], searchFor:String):Either[String, DefLhs]=
   {
-    val argsres = arguments match{ case Some(args)=>args.args.filter(x=>x.id.value==searschFor); case None=>List():List[DefLhs]}
+    val argsres = arguments match{ case Some(args)=>args.filter(y=>y.id.value==searchFor); case None=>List():List[DefLhs]}
     val inscoperes = inSameDefinition.filter(x=>x.id.value==searchFor)
     val basicfunctionres = basicfunctions.filter(x=>x.id.value==searchFor)
     val res = argsres ++ inscoperes ++ basicfunctionres
