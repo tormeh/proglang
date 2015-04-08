@@ -83,11 +83,12 @@ object FumurtParser extends Parsers //with PackratParsers
   def trueParser:Parser[Elem] = accept(TrueT())
   def falseParser:Parser[Elem] = accept(FalseT())
   def identifierStatementParser:Parser[IdentifierStatement] ={println("identifierstatementparser"); accept("identifier", {case IdT(str)=>{println("identifierstatementparser accepted "+str) ;IdentifierStatement(str)}}) }
-  def basicStatementParser:Parser[BasicValueStatement] = accept("expected string, integer, boolean or float", {case StringT(value) => StringStatement(value); 
+  def basicStatementParser:Parser[BasicValueStatement] = positioned(accept("expected string, integer, boolean or float", {case StringT(value) => StringStatement(value); 
                                                                                                 case IntegerT(value)=> IntegerStatement(value)
                                                                                                 case DoubleT(value) => DoubleStatement(value)
                                                                                                 case TrueT() => TrueStatement()
-                                                                                                case FalseT() => FalseStatement()})
+                                                                                                case FalseT() => FalseStatement()}
+                                                                                                ))
   def typeParser:Parser[TypeT] = accept("expected type. Types are written with a leading capital letter", {case x:TypeT => x})
   def intParser:Parser[Elem] = accept("integer", {case x:IntegerT => x})
   def doubleParser:Parser[Elem] = accept("double", {case x:DoubleT => x})

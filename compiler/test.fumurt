@@ -8,16 +8,16 @@ program p:Nothing =
 
 thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
 {
-  print("world ")
-  print(synchronizedNumber)
-  print("\n")
+  actionPrint("world ")
+  actionPrint(synchronizedNumber)
+  actionPrint("\n")
   threadPrintWorld()
 }
   
 thread threadPrintHello(synchronizedNumber:Integer):Nothing =
 {
-  print(synchronizedNumber)
-  print(" Hello ")
+  actionPrint(synchronizedNumber)
+  actionPrint(" Hello ")
   mutate(variable=synchronizedNumber, newValue=plus(left=synchronizedNumber, right=1))
   threadPrintHello()
 }
@@ -30,5 +30,5 @@ thread threadPrintLol:Nothing =
 
 action actionPrintLol:Nothing =
 {
-  print(" LOL ")
+  actionPrint(" LOL ")
 }
