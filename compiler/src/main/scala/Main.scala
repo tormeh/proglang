@@ -66,6 +66,7 @@ object Main
               case Some(errors) => 
               {
                 errors.map(x=>println(x))
+                println(errors.length+" errors found")
               }
               case None => 
               {
