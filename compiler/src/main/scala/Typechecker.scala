@@ -136,7 +136,7 @@ object FumurtTypeChecker
       case b:BasicValueStatement=> checkbasicvaluestatement(containingdefinition.returntype, b, "Return")
       case b:IdentifierStatement=>
       {
-        val statedvalue = findinscope(arguments, inSameDefinition, basicFunctions, b.value)
+        val statedvalue = findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), b.value)
         statedvalue match
         {
           case Left(string) => List(FumurtError(b.pos, "in checkstatement "+string))
@@ -161,7 +161,7 @@ object FumurtTypeChecker
         }
         else
         {
-          findinscope(arguments, inSameDefinition, basicFunctions, y.functionidentifier) match
+          findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), y.functionidentifier) match
           {
             case Left(string) => List(FumurtError(y.pos, "in checkstatement_2 "+string))
             case Right(calledfunction) => 
@@ -273,7 +273,7 @@ object FumurtTypeChecker
       }
       case c:IdentifierStatement => 
       {
-        findinscope(arguments, inSameDefinition, basicFunctions, c.value) match
+        findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), c.value) match
         {
           case Left(str) => List(FumurtError(c.pos, "in checkcallarg "+str))
           case Right(thingdef) =>
@@ -289,7 +289,7 @@ object FumurtTypeChecker
       }
       case c:FunctionCallStatement => 
       {
-        val resulterrors = findinscope(arguments, inSameDefinition, basicFunctions, c.functionidentifier) match
+        val resulterrors = findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), c.functionidentifier) match
         {
           case Left(str) => List(FumurtError(c.pos, "in checkcallarg_2 "+str))
           case Right(functioncallarg) =>
@@ -374,7 +374,7 @@ object FumurtTypeChecker
     }*/
   }
   
-  def findinscope(arguments:Option[List[DefLhs]], inSameDefinition:List[DefLhs], basicfunctions:List[DefLhs], searchFor:String):Either[String, DefLhs]=
+  def findinscope(arguments:Option[List[DefLhs]], inSameDefinition:List[DefLhs], basicfunctions:List[DefLhs], enclosingDefinition:Option[DefLhs], searchFor:String):Either[String, DefLhs]=
   {
     val argsres = arguments match{ case Some(args)=>args.filter(y=>y.id.value==searchFor); case None=>List():List[DefLhs]}
     val inscoperes = inSameDefinition.filter(x=>x.id.value==searchFor)
@@ -382,7 +382,14 @@ object FumurtTypeChecker
     //println(basicfunctions)
     //println()
     val basicfunctionres = basicfunctions.filter(x=>x.id.value==searchFor)
-    val res = argsres ++ inscoperes ++ basicfunctionres
+    
+    val enclosingres = enclosingDefinition match
+    {
+      case None => List()
+      case Some(deff) => if (deff.id.value == searchFor) {List(deff)} else {List()}
+    }
+    
+    val res = argsres ++ inscoperes ++ basicfunctionres ++ enclosingres
     
     if(res.length == 1)
     {
