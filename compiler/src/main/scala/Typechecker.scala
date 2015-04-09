@@ -41,6 +41,8 @@ object FumurtTypeChecker
       checkprogram(programs(0), implicitargs, basicFunctions)
     }
     else {List(FumurtError(Global, "There must be exactly one program definition. "+programs.length+" program definitions detected"))}
+    val program = programs(0)
+    val synchronizedvars = program.rightside.expressions.filter(x=> x match {case Definition(DefLhs(SynchronizedVariableT(),_,_,_),_)=>true; case _=>false}):List[Definition]
     val nonProgramDefs = in.filter(x=>(x.leftside.description match {case ProgramT() => false; case _=> true}))
     val othererrors = checkexpressions(nonProgramDefs, None, Some(implicitargs), basicFunctions) 
     
@@ -87,12 +89,13 @@ object FumurtTypeChecker
   def checkexpressions(tree:List[Expression], containingdefinition:Option[Definition], containingdefinitionarguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]):List[FumurtError]=
   {
     val insamedefinition = indexlefts(tree)
+    println("\nin checkexpressions:   insamedefinition is "+insamedefinition+" containingdefinition is "+containingdefinition)
     tree.foldLeft(List():List[FumurtError])((x,y)=>x++checkexpression(y, containingdefinition, containingdefinitionarguments, basicFunctions, insamedefinition))
   }
   
   def checkexpression(tocheck:Expression, containingdefinition:Option[Definition], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] =
   {
-    println("\ntocheck: "+tocheck+"containingdefinition: "+containingdefinition+" arguments: "+arguments)
+    println("\nIn checkexpression:   tocheck: "+tocheck+"containingdefinition: "+containingdefinition+" arguments: "+arguments)
     tocheck match
     {
       case x:Definition=>
@@ -102,6 +105,7 @@ object FumurtTypeChecker
           case None => List()
           case Some(contdef) => indexlefts(contdef.rightside.expressions)
         }
+        //bugs here:
         val (newargs, argpropagationerrors) = x.leftside.args match
         {
           case None => (List(), List())
@@ -112,7 +116,7 @@ object FumurtTypeChecker
               case Some(contargs) => args.flatMap(arg=>(contargs++inSameDefinition).find(y=>y.id.value==arg.id.value))
               case None => args.flatMap(arg=>inSameDefinition.find(y=>y.id.value==arg.id.value))
             }
-            if (hits.length !=args.length)
+            if (hits.length ==args.length)      //used to be !=. Don't know why. bug?
             {
               (hits, List())
             }
@@ -131,6 +135,7 @@ object FumurtTypeChecker
   
   def checkstatement(tocheck:Statement, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]): List[FumurtError]=
   {
+    println("\nIn checkstatement:   tocheck: "+tocheck+"containingdefinition: "+containingdefinition+" arguments: "+arguments)
     tocheck match
     {
       case b:BasicValueStatement=> checkbasicvaluestatement(containingdefinition.returntype, b, "Return")
@@ -324,6 +329,7 @@ object FumurtTypeChecker
   
   def checkdefinition(tocheck:Definition, containingdefinition:Option[DefLhs], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]): List[FumurtError]=
   {
+    println("\nIn checkdefinition:   tocheck: "+tocheck+"containingdefinition: "+containingdefinition+" arguments: "+arguments)
     val undererrors = checkexpressions(tocheck.rightside.expressions, Some(tocheck), arguments, basicFunctions)
     val nameerror = tocheck.leftside.description match
     {

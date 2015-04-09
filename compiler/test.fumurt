@@ -11,7 +11,7 @@ thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
   actionPrint("world ")
   actionPrint(synchronizedNumber)
   actionPrint("\n")
-  threadPrintWorld()
+  threadPrintWorld(synchronizedNumber)
 }
   
 thread threadPrintHello(synchronizedNumber:Integer):Nothing =
@@ -19,16 +19,11 @@ thread threadPrintHello(synchronizedNumber:Integer):Nothing =
   actionPrint(synchronizedNumber)
   actionPrint(" Hello ")
   mutate(variable=synchronizedNumber, newValue=plus(left=synchronizedNumber, right=1))
-  threadPrintHello()
+  threadPrintHello(synchronizedNumber)
 }
 
 thread threadPrintLol:Nothing =
 {
-  actionPrintLol()
+  actionPrint("  LOL   ")
   threadPrintLol()
-}
-
-action actionPrintLol:Nothing =
-{
-  actionPrint(" LOL ")
 }
