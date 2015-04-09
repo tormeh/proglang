@@ -92,6 +92,7 @@ object FumurtTypeChecker
   
   def checkexpression(tocheck:Expression, containingdefinition:Option[Definition], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] =
   {
+    println("\ntocheck: "+tocheck+"containingdefinition: "+containingdefinition+" arguments: "+arguments)
     tocheck match
     {
       case x:Definition=>

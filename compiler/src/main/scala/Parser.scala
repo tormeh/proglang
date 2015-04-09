@@ -53,7 +53,7 @@ object FumurtParser extends Parsers //with PackratParsers
   */
   def statementParser: Parser[Statement] = {println("statementparser"); functionCallParser | basicStatementParser  | identifierStatementParser }
   def callargsParser: Parser[Either[Callarg,NamedCallargs]] = {println("callargsparser"); openParenthesisParser ~> (namedcallargsParser | callargParser) <~ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCallargs=>Right(x)}} }
-  def callargParser: Parser[Callarg] = {println("callargparser"); functionCallParser | identifierStatementParser | basicStatementParser | success(NoArgs()) }
+  def callargParser: Parser[Callarg] = {println("callargparser"); positioned(functionCallParser | identifierStatementParser | basicStatementParser | success(NoArgs())) }
   def namedcallargsParser: Parser[NamedCallargs] = {println("namedcallargsparser"); namedcallargParser ~ subsequentnamedcallargsParser.+ ^^ {x => NamedCallargs((x._1 +: x._2).sortWith((left,right)=>left.id.value<right.id.value))} }
   def subsequentnamedcallargsParser: Parser[NamedCallarg] = {println("subsequentnamedcallargsParser"); commaParser ~> namedcallargParser }
   def namedcallargParser:Parser[NamedCallarg] = {println("namedcallargparser"); (idParser <~ equalParser) ~ callargParser ^^ {x=>NamedCallarg(x._1, x._2)} }
@@ -83,12 +83,12 @@ object FumurtParser extends Parsers //with PackratParsers
   def trueParser:Parser[Elem] = accept(TrueT())
   def falseParser:Parser[Elem] = accept(FalseT())
   def identifierStatementParser:Parser[IdentifierStatement] ={println("identifierstatementparser"); accept("identifier", {case IdT(str)=>{println("identifierstatementparser accepted "+str) ;IdentifierStatement(str)}}) }
-  def basicStatementParser:Parser[BasicValueStatement] = positioned(accept("expected string, integer, boolean or float", {case StringT(value) => StringStatement(value); 
+  def basicStatementParser:Parser[BasicValueStatement] = accept("expected string, integer, boolean or float", {case StringT(value) => StringStatement(value); 
                                                                                                 case IntegerT(value)=> IntegerStatement(value)
                                                                                                 case DoubleT(value) => DoubleStatement(value)
                                                                                                 case TrueT() => TrueStatement()
                                                                                                 case FalseT() => FalseStatement()}
-                                                                                                ))
+                                                                                                )
   def typeParser:Parser[TypeT] = accept("expected type. Types are written with a leading capital letter", {case x:TypeT => x})
   def intParser:Parser[Elem] = accept("integer", {case x:IntegerT => x})
   def doubleParser:Parser[Elem] = accept("double", {case x:DoubleT => x})
@@ -111,7 +111,7 @@ object FumurtParser extends Parsers //with PackratParsers
 
 class AstNode()
 class Expression() extends Positional
-trait Callarg
+trait Callarg extends Positional
 trait Statement extends Expression
 trait BasicValueStatement extends Statement with Callarg
 
