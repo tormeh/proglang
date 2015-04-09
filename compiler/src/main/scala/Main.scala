@@ -66,7 +66,20 @@ object Main
               case Some(errors) => 
               {
                 errors.map(x=>println(x))
-                println(errors.length+" errors found")
+                val errornum:String = errors.length match
+                {
+                  case 1 => "one"
+                  case 2 => "two"
+                  case 3 => "three"
+                  case 4 => "four"
+                  case 5 => "five"
+                  case 6 => "six"
+                  case 7 => "seven"
+                  case 8 => "eight"
+                  case 9 => "nine"
+                  case x => x.toString
+                }
+                println(errornum.capitalize+" errors found")
               }
               case None => 
               {
