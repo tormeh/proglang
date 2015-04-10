@@ -90,12 +90,14 @@ object Main
                 import java.nio.charset.StandardCharsets
                 val outname = "generated"
                 val fileending = ".cpp"
-                Files.write(Paths.get("./"+outname), generatedcode.getBytes(StandardCharsets.UTF_8))
+                Files.write(Paths.get("./"+outname+fileending), generatedcode.getBytes(StandardCharsets.UTF_8))
                 val options = " -pthread -std=c++11 -O3"
                 println("\n\n===Starting Clang cpp compilation===")
-                println("options = " + options)
+                //println("options = " + options)
                 import scala.sys.process._
-                ("clang " + outname + fileending + options + " -o " + outname).!
+                val command = "clang++ " + outname + fileending + options + " -o " + outname
+                println(command)
+                (command).!
               }
             }
           }
