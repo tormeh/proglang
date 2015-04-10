@@ -35,16 +35,22 @@ object FumurtTypeChecker
     val topdefs = indexlefts(in)
     val programs = in.filter(x=>(x.leftside.description match {case ProgramT() => true; case _=> false}))
     val implicitargs = topdefs.filter(x=>(x.description match {case ProgramT() => false; case _=> true}))
-    println("\nimplicitargs is: "+implicitargs)
+    //println("\nimplicitargs is: "+implicitargs)
     val programerrors = if(programs.length==1)
     {
       checkprogram(programs(0), implicitargs, basicFunctions)
     }
     else {List(FumurtError(Global, "There must be exactly one program definition. "+programs.length+" program definitions detected"))}
     val program = programs(0)
-    val synchronizedvars = program.rightside.expressions.filter(x=> x match {case Definition(DefLhs(SynchronizedVariableT(),_,_,_),_)=>true; case _=>false}):List[Definition]
+    //val synchronizedvars = program.rightside.expressions.filter(x=> x match {case Definition(DefLhs(SynchronizedVariableT(),_,_,_),_)=>true; case _=>false}):List[Definition]
+    val synchronizedvars = program.rightside.expressions.flatMap(x=> x match 
+      {
+        case deff:Definition=>if(deff.leftside.description==SynchronizedVariableT()) {Some(deff.leftside)} else {None}; 
+        case _=>None
+      }
+    ):List[DefLhs]
     val nonProgramDefs = in.filter(x=>(x.leftside.description match {case ProgramT() => false; case _=> true}))
-    val othererrors = checkexpressions(nonProgramDefs, None, Some(implicitargs), basicFunctions) 
+    val othererrors = checkexpressions(nonProgramDefs, None, Some(implicitargs++synchronizedvars), basicFunctions) 
     
      programerrors++othererrors 
   }
@@ -89,13 +95,13 @@ object FumurtTypeChecker
   def checkexpressions(tree:List[Expression], containingdefinition:Option[Definition], containingdefinitionarguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]):List[FumurtError]=
   {
     val insamedefinition = indexlefts(tree)
-    println("\nin checkexpressions:   insamedefinition is "+insamedefinition+" containingdefinition is "+containingdefinition)
+    //println("\nin checkexpressions:   insamedefinition is "+insamedefinition+" containingdefinition is "+containingdefinition)
     tree.foldLeft(List():List[FumurtError])((x,y)=>x++checkexpression(y, containingdefinition, containingdefinitionarguments, basicFunctions, insamedefinition))
   }
   
   def checkexpression(tocheck:Expression, containingdefinition:Option[Definition], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] =
   {
-    println("\nIn checkexpression:   tocheck: "+tocheck+"containingdefinition: "+containingdefinition+" arguments: "+arguments)
+    //println("\nIn checkexpression:   tocheck: "+tocheck+"containingdefinition: "+containingdefinition+" arguments: "+arguments)
     tocheck match
     {
       case x:Definition=>
@@ -135,7 +141,7 @@ object FumurtTypeChecker
   
   def checkstatement(tocheck:Statement, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]): List[FumurtError]=
   {
-    println("\nIn checkstatement:   tocheck: "+tocheck+"containingdefinition: "+containingdefinition+" arguments: "+arguments)
+    //println("\nIn checkstatement:   tocheck: "+tocheck+"containingdefinition: "+containingdefinition+" arguments: "+arguments)
     tocheck match
     {
       case b:BasicValueStatement=> checkbasicvaluestatement(containingdefinition.returntype, b, "Return")
@@ -329,7 +335,7 @@ object FumurtTypeChecker
   
   def checkdefinition(tocheck:Definition, containingdefinition:Option[DefLhs], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]): List[FumurtError]=
   {
-    println("\nIn checkdefinition:   tocheck: "+tocheck+"containingdefinition: "+containingdefinition+" arguments: "+arguments)
+    //println("\nIn checkdefinition:   tocheck: "+tocheck+"containingdefinition: "+containingdefinition+" arguments: "+arguments)
     val undererrors = checkexpressions(tocheck.rightside.expressions, Some(tocheck), arguments, basicFunctions)
     val nameerror = tocheck.leftside.description match
     {
