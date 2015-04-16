@@ -7,7 +7,7 @@ version := "0.1.0"
 
 scalaVersion := "2.11.6"
 
-scalacOptions ++= Seq("-feature", "-optimize", "-Xlint", "-Xfatal-warnings")
+scalacOptions ++= Seq("-feature", "-optimize", "-Xlint", "-Xfatal-warnings", "-deprecation")
 
 libraryDependencies ++= Seq("org.specs2"  %% "specs2"  % "2.3.12"  withSources(), "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3")
 	//"org.specs2" %% "specs2" % "2.3.12" % "test")
