@@ -13,7 +13,7 @@ object FumurtTypeChecker
     val minus = DefLhs(FunctionT(), IdT("minus"), Some(Arguments(List(Argument(IdT("left"), TypeT("Integer")), Argument(IdT("right"), TypeT("Integer"))))), TypeT("Integer"))
     val mutate = DefLhs(FunctionT(), IdT("actionMutate"), Some(Arguments(List(Argument(IdT("variable"), TypeT("Integer")), Argument(IdT("newValue"), TypeT("Integer"))))), TypeT("Nothing"))
     val integerToString = DefLhs(ActionT(), IdT("integerToString"), Some(Arguments(List(Argument(IdT("int"), TypeT("Integer"))))), TypeT("String"))
-    val basicfunctions = List(multiply, plus, divide, minus, mutate, print, integerToString)
+    val basicfunctions = List(mutate, print) //List(multiply, plus, divide, minus, mutate, print, integerToString)
     
     
     //all standard library functions available everywhere (maybe also actions). 
@@ -135,17 +135,17 @@ object FumurtTypeChecker
       case x:Statement => containingdefinition match
       {
         case None => List(FumurtError(x.pos, "Statements must be enclosed in either Program or another definition"))
-        case Some(contdef) => checkstatement(x, contdef.leftside, arguments, basicFunctions, inSameDefinition, true)
+        case Some(contdef) => checkstatement(x, contdef.leftside, arguments, basicFunctions, inSameDefinition, contdef.leftside.returntype)
       }
     }
   }
   
-  def checkstatement(tocheck:Statement, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs], isOuterStatement:Boolean): List[FumurtError]=
+  def checkstatement(tocheck:Statement, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs], expectedreturn:TypeT): List[FumurtError]=
   {
     //println("\nIn checkstatement:   tocheck: "+tocheck+"containingdefinition: "+containingdefinition+" arguments: "+arguments)
     tocheck match
     {
-      case b:BasicValueStatement=> checkbasicvaluestatement(containingdefinition.returntype, b, "Return")
+      case b:BasicValueStatement=> checkbasicvaluestatement(expectedreturn, b, "Return")
       case b:IdentifierStatement=>
       {
         val statedvalue = findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), b.value)
@@ -156,7 +156,7 @@ object FumurtTypeChecker
           {
             if(containingdefinition.returntype.value != deflhs.returntype.value)
             {
-              List(FumurtError(b.pos, "expected: " +containingdefinition.returntype.value+ ". Got: " +deflhs.returntype.value))
+              List(FumurtError(b.pos, "expected: " +expectedreturn.value+ ". Got: " +deflhs.returntype.value))
             }
             else
             {
@@ -169,27 +169,27 @@ object FumurtTypeChecker
       {
         if (y.functionidentifier=="if")
         {
-          checkifcall(y, containingdefinition.returntype, containingdefinition, arguments, basicFunctions, inSameDefinition)
+          checkifcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
         else if (y.functionidentifier=="plus")
         {
-          checkbasicmathcall(y, containingdefinition.returntype, containingdefinition, arguments, basicFunctions, inSameDefinition)
+          checkbasicmathcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
         else if (y.functionidentifier=="minus")
         {
-          checkbasicmathcall(y, containingdefinition.returntype, containingdefinition, arguments, basicFunctions, inSameDefinition)
+          checkbasicmathcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
         else if (y.functionidentifier=="multiply")
         {
-          checkbasicmathcall(y, containingdefinition.returntype, containingdefinition, arguments, basicFunctions, inSameDefinition)
+          checkbasicmathcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
         else if (y.functionidentifier=="divide")
         {
-          checkbasicmathcall(y, containingdefinition.returntype, containingdefinition, arguments, basicFunctions, inSameDefinition)
+          checkbasicmathcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
         else if (y.functionidentifier=="toString")
         {
-          checktostringcall(y, containingdefinition.returntype, containingdefinition, arguments, basicFunctions, inSameDefinition)
+          checktostringcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
         else
         {
@@ -219,9 +219,9 @@ object FumurtTypeChecker
                   checknamedcallargs(calledfunction, value, containingdefinition, arguments, basicFunctions, inSameDefinition)
                 }
               } 
-              val returnerror:List[FumurtError] = if (isOuterStatement && containingdefinition.returntype != calledfunction.returntype)
+              val returnerror:List[FumurtError] = if (expectedreturn != calledfunction.returntype)
               {
-                List(FumurtError(y.pos, "Expected return type: "+containingdefinition.returntype+". Got "+calledfunction.returntype+". containingdefinition is"+containingdefinition))
+                List(FumurtError(y.pos, "Expected return type: "+expectedreturn+". Got "+calledfunction.returntype+". containingdefinition is"+containingdefinition))
               }
               else {List()}
               returnerror ++ argumenterrors
@@ -380,7 +380,7 @@ object FumurtTypeChecker
       }
       case c:FunctionCallStatement => 
       {
-        val resulterrors = findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), c.functionidentifier) match
+        /*val resulterrors = findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), c.functionidentifier) match
         {
           case Left(str) => List(FumurtError(c.pos, "in checkcallarg_2 "+str))
           case Right(functioncallarg) =>
@@ -391,12 +391,12 @@ object FumurtTypeChecker
             }
             else {List()}
           }
-        }
+        }*/
         //check that call end result is correct
         
         //check that call itself is correct
-        val callerrors = checkstatement(c, containingdefinition, arguments, basicFunctions, inSameDefinition, false)
-        callerrors ++ resulterrors
+        val callerrors = checkstatement(c, containingdefinition, arguments, basicFunctions, inSameDefinition, expectedtype)
+        callerrors //++ resulterrors
       }
     }
   }

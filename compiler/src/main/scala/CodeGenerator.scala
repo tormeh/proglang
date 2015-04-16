@@ -70,8 +70,8 @@ object FumurtCodeGenerator
       case FunctionCallStatement("actionPrint", Left(StringStatement(value))) => "print" + callingthread + ".push_back(" + value + ")"
       case FunctionCallStatement("actionPrint", Left(IdentifierStatement(value))) => "print" + callingthread + ".push_back(std::to_string(" + value + "))"
       case FunctionCallStatement("actionPrint", Left(x:FunctionCallStatement)) => "print" + callingthread + ".push_back(" + functioncalltranslator(x,callingthread) + ")"
-      case FunctionCallStatement("integerToString", Left(x:FunctionCallStatement)) => "std::to_string(" + functioncalltranslator(x,callingthread) + ")"
-      case FunctionCallStatement("integerToString", Left(IdentifierStatement(value))) => "std::to_string(" + value + ")"
+      case FunctionCallStatement("toString", Left(x:FunctionCallStatement)) => "std::to_string(" + functioncalltranslator(x,callingthread) + ")"
+      case FunctionCallStatement("toString", Left(IdentifierStatement(value))) => "std::to_string(" + value + ")"
       case FunctionCallStatement("actionMutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),IdentifierStatement(newval)), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) => vari + " = " + newval
       case FunctionCallStatement("actionMutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),x:FunctionCallStatement), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) =>
       {

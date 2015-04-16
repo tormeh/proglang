@@ -9,14 +9,14 @@ program p:Nothing =
 thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
 {
   actionPrint("world ")
-  actionPrint(integerToString(synchronizedNumber))
+  actionPrint(toString(synchronizedNumber))
   actionPrint("\n")
   threadPrintWorld(synchronizedNumber)
 }
   
 thread threadPrintHello(synchronizedNumber:Integer):Nothing =
 {
-  actionPrint(integerToString(synchronizedNumber))
+  actionPrint(toString(synchronizedNumber))
   actionPrint(" Hello ")
   actionMutate(variable=synchronizedNumber, newValue=plus(left=synchronizedNumber, right=1))
   threadPrintHello(synchronizedNumber)
