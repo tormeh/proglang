@@ -80,8 +80,8 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
       closeParenthesisParser    |
       openCurlyBracketParser    |
       closeCurlyBracketParser   |
-      intParser                 |
       doubleParser              |
+      intParser                 |
       equalParser               |
       colonParser               |
       commaParser               |
