@@ -171,6 +171,26 @@ object FumurtTypeChecker
         {
           checkifcall(y, containingdefinition.returntype, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
+        else if (y.functionidentifier=="plus")
+        {
+          checkbasicmathcall(y, containingdefinition.returntype, containingdefinition, arguments, basicFunctions, inSameDefinition)
+        }
+        else if (y.functionidentifier=="minus")
+        {
+          checkbasicmathcall(y, containingdefinition.returntype, containingdefinition, arguments, basicFunctions, inSameDefinition)
+        }
+        else if (y.functionidentifier=="multiply")
+        {
+          checkbasicmathcall(y, containingdefinition.returntype, containingdefinition, arguments, basicFunctions, inSameDefinition)
+        }
+        else if (y.functionidentifier=="divide")
+        {
+          checkbasicmathcall(y, containingdefinition.returntype, containingdefinition, arguments, basicFunctions, inSameDefinition)
+        }
+        else if (y.functionidentifier=="toString")
+        {
+          checktostringcall(y, containingdefinition.returntype, containingdefinition, arguments, basicFunctions, inSameDefinition)
+        }
         else
         {
           findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), y.functionidentifier) match
@@ -229,9 +249,68 @@ object FumurtTypeChecker
           ( if(arglist(0).id.value != "condition"){List(FumurtError(ifcall.pos, "Call to if needs a condition argument"))} else {List()} )++
           ( if(arglist(1).id.value != "else"){List(FumurtError(ifcall.pos, "Call to if needs an else argument"))} else {List()} )++
           ( if(arglist(2).id.value != "then"){List(FumurtError(ifcall.pos, "Call to if needs a then argument"))} else {List()} )++
-          checkCallarg(TypeT("Boolean"), arglist(0).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)
+          checkCallarg(TypeT("Boolean"), arglist(0).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)++
+          (checkCallarg(expectedtype, arglist(1).argument, containingdefinition, arguments, basicFunctions, inSameDefinition))++
+          (checkCallarg(expectedtype, arglist(2).argument, containingdefinition, arguments, basicFunctions, inSameDefinition))
         }
       }
+    }
+  }
+  
+  def checkbasicmathcall(call:FunctionCallStatement, expectedtype:TypeT, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] =
+  {
+    call.args match
+    {
+      case Left(callarg) => List(FumurtError(call.pos, "Call to "+call.functionidentifier+" needs two arguments"))
+      case Right(NamedCallargs(arglist))=>
+      {
+        if (arglist.length != 2)
+        {
+          List(FumurtError(call.pos, "Call to "+call.functionidentifier+" needs two arguments"))
+        }
+        else
+        {
+          val leftinterrors = checkCallarg(TypeT("Integer"), arglist(0).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)
+          val rightinterrors = checkCallarg(TypeT("Integer"), arglist(1).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)
+          val leftdoubleerrors = checkCallarg(TypeT("Double"), arglist(0).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)
+          val rightdoubleerrors = checkCallarg(TypeT("Double"), arglist(1).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)
+          val (lefterrors, leftdouble) = if (leftinterrors.length < leftdoubleerrors.length){(leftinterrors,false)} else {(leftdoubleerrors,true)}
+          val (righterrors, rightdouble) = if (rightinterrors.length < rightdoubleerrors.length){(rightinterrors,false)} else {(rightdoubleerrors,true)}
+          val returnsdouble = leftdouble || rightdouble
+          ( if(arglist(0).id.value != "left"){List(FumurtError(call.pos, "Call to "+call.functionidentifier+" needs a left argument"))} else {List()} )++
+          ( if(arglist(1).id.value != "right"){List(FumurtError(call.pos, "Call to "+call.functionidentifier+" needs a right argument"))} else {List()} )++
+          ( lefterrors )++
+          ( righterrors )++
+          ( expectedtype match
+            {
+              case TypeT("Double")=>List(); 
+              case TypeT("Integer")=>if(returnsdouble){List(FumurtError(call.pos, "This call to "+call.functionidentifier+" returns a Double not an Integer"))}else{List()} 
+              case TypeT(str)=>
+              {
+                if(returnsdouble){List(FumurtError(call.pos, "This call to "+call.functionidentifier+" returns a Double not "+str))}
+                else{List(FumurtError(call.pos, "This call to "+call.functionidentifier+" returns an Integer not "+str))}
+              }
+            }
+          
+          )
+        }
+      }
+    }
+  }
+  
+  def checktostringcall(call:FunctionCallStatement, expectedtype:TypeT, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] =
+  {
+    call.args match
+    {
+      case Left(callarg) => 
+      {
+        val integererrors = checkCallarg(TypeT("Integer"), callarg, containingdefinition, arguments, basicFunctions, inSameDefinition)
+        val doubleerrors = checkCallarg(TypeT("Double"), callarg, containingdefinition, arguments, basicFunctions, inSameDefinition)
+        val argumenterrors = if(integererrors.length < doubleerrors.length){integererrors} else{doubleerrors}
+        val outerrors = expectedtype match{ case TypeT("String")=>List(); case TypeT(str)=>List(FumurtError(call.pos, "toString returns String not "+str))}
+        argumenterrors++outerrors
+      }
+      case Right(NamedCallargs(arglist))=>List(FumurtError(call.pos, "Call to toString needs one arguments"))
     }
   }
   
