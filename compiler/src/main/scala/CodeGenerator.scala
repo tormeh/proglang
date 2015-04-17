@@ -65,6 +65,9 @@ object FumurtCodeGenerator
   
   def functioncalltranslator(call:FunctionCallStatement, callingthread:String):String =
   {
+    println("in functioncalltranslator. call is "+call)
+    if(call.functionidentifier=="plus"){println("found")}
+    
     call match
     {
       case FunctionCallStatement("actionPrint", Left(StringStatement(value))) => "print" + callingthread + ".push_back(" + value + ")"
@@ -77,12 +80,39 @@ object FumurtCodeGenerator
       {
         "write" + vari.capitalize + " = " + functioncalltranslator(x, callingthread)
       }
-      case FunctionCallStatement("plus", Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IdentifierStatement(right)))))) => left + " + " + right
-      case FunctionCallStatement("plus", Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IntegerStatement(right)))))) => left + " + " + right
+      case FunctionCallStatement("plus",_) => basicmathcalltranslator(call, callingthread)
+      case FunctionCallStatement("minus",_) => basicmathcalltranslator(call, callingthread)
+      case FunctionCallStatement("multiply",_) => basicmathcalltranslator(call, callingthread)
+      case FunctionCallStatement("divide",_) => basicmathcalltranslator(call, callingthread)
       case _=> "not implemented"
     }
   }
   
+  def basicmathcalltranslator(call:FunctionCallStatement, callingthread:String):String=
+  {
+    val operator = if(call.functionidentifier=="plus"){" + "}else if(call.functionidentifier=="minus"){" - "}else if(call.functionidentifier=="multiply"){" * "}else if(call.functionidentifier=="minus"){" / "}
+    call match
+    {
+      case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IdentifierStatement(right)))))) => left + operator + right
+      case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IntegerStatement(right)))))) => left + operator + right
+      case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),DoubleStatement(right)))))) => left + operator + right
+      case FunctionCallStatement(_, Right(NamedCallargs(callargs))) =>
+      {
+        val argstr = callargs.map(arg=>
+          {
+            arg match
+            {
+              case NamedCallarg(_,IdentifierStatement(value))=>value
+              case NamedCallarg(_,IntegerStatement(value))=>value.toString
+              case NamedCallarg(_,DoubleStatement(value))=>value.toString
+              case NamedCallarg(_,f:FunctionCallStatement)=>functioncalltranslator(f, callingthread)
+            }
+          }
+        ):List[String]
+        argstr(0) + operator + argstr(1)
+      } 
+    }
+  }
   
   def gettopthreadstatements(ast:List[Definition]):List[FunctionCallStatement]=
   {
@@ -178,6 +208,7 @@ object FumurtCodeGenerator
           case Right(namedcallargs) => namedcallargs.value(0).argument match
           {
             case IntegerStatement(value) => value
+            //case DoubleStatement(value) => value
             case _=> println("Error in getGlobalSynchVariableDeclarations. Should be caught by checker."); scala.sys.exit()
           }
           case _=> println("Error in getGlobalSynchVariableDeclarations. Should be caught by checker."); scala.sys.exit()
