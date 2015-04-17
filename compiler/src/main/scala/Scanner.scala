@@ -53,7 +53,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
   def closeParenthesisParser: Parser[CloseParenthesisT] = positioned( new Regex("""\)""") ^^ {x => println("scanned ) "+x.toString);CloseParenthesisT()} )
   def openCurlyBracketParser: Parser[OpenCurlyBracketT] = positioned( new Regex("""\{""") ^^ {x => println("scanned { "+x.toString);OpenCurlyBracketT()} )
   def closeCurlyBracketParser: Parser[CloseCurlyBracketT] = positioned( new Regex("""\}""") ^^ {x => println("scanned } "+x.toString);;CloseCurlyBracketT()} )
-  def doubleParser: Parser[DoubleT] = positioned( new Regex("""[-+]?[0-9]*\.?[0-9]+""") ^^ {x => println("scanned double "+x.toString);DoubleT(x.toDouble)} )
+  def doubleParser: Parser[DoubleT] = positioned( new Regex("""[-+]?[0-9]*\.[0-9]+""") ^^ {x => println("scanned double "+x.toString);DoubleT(x.toDouble)} )
   def intParser: Parser[IntegerT] = positioned( new Regex("""(0|[1-9]\d*)""") ^^ {x => println("scanned integer "+x.toString);IntegerT(x.toInt)} )
   def equalParser: Parser[EqualT] = positioned( new Regex("=") ^^ {x => println("scanned = "+x.toString);EqualT()} )
   def colonParser: Parser[ColonT] = positioned( new Regex(":") ^^ {x => println("scanned : "+x.toString);ColonT()} )
