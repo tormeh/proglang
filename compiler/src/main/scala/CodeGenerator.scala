@@ -65,8 +65,8 @@ object FumurtCodeGenerator
   
   def functioncalltranslator(call:FunctionCallStatement, callingthread:String):String =
   {
-    println("in functioncalltranslator. call is "+call)
-    if(call.functionidentifier=="plus"){println("found")}
+    //println("in functioncalltranslator. call is "+call)
+    //if(call.functionidentifier=="plus"){println("found")}
     
     call match
     {
@@ -93,9 +93,9 @@ object FumurtCodeGenerator
     val operator = if(call.functionidentifier=="plus"){" + "}else if(call.functionidentifier=="minus"){" - "}else if(call.functionidentifier=="multiply"){" * "}else if(call.functionidentifier=="minus"){" / "}
     call match
     {
-      case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IdentifierStatement(right)))))) => left + operator + right
-      case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IntegerStatement(right)))))) => left + operator + right
-      case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),DoubleStatement(right)))))) => left + operator + right
+      //case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IdentifierStatement(right)))))) => left + operator + right
+      //case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IntegerStatement(right)))))) => left + operator + right
+      //case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),DoubleStatement(right)))))) => left + operator + right
       case FunctionCallStatement(_, Right(NamedCallargs(callargs))) =>
       {
         val argstr = callargs.map(arg=>
@@ -109,7 +109,7 @@ object FumurtCodeGenerator
             }
           }
         ):List[String]
-        argstr(0) + operator + argstr(1)
+        "(" + argstr(0) + operator + argstr(1) + ")"
       } 
     }
   }

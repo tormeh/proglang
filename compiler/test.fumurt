@@ -18,7 +18,7 @@ thread threadPrintHello(synchronizedNumber:Integer):Nothing =
 {
   actionPrint(toString(synchronizedNumber))
   actionPrint(" Hello ")
-  actionMutate(variable=synchronizedNumber, newValue=plus(left=synchronizedNumber, right=1.0))
+  actionMutate(variable=synchronizedNumber, newValue=plus(left=synchronizedNumber, right=1))
   threadPrintHello(synchronizedNumber)
 }
 

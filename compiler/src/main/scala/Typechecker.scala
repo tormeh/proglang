@@ -11,7 +11,7 @@ object FumurtTypeChecker
     val plus = DefLhs(FunctionT(), IdT("plus"), Some(Arguments(List(Argument(IdT("left"), TypeT("Integer")), Argument(IdT("right"), TypeT("Integer"))))), TypeT("Integer"))
     val divide = DefLhs(FunctionT(), IdT("actionPrintln"), Some(Arguments(List(Argument(IdT("left"), TypeT("Integer")), Argument(IdT("right"), TypeT("Integer"))))), TypeT("Integer"))
     val minus = DefLhs(FunctionT(), IdT("minus"), Some(Arguments(List(Argument(IdT("left"), TypeT("Integer")), Argument(IdT("right"), TypeT("Integer"))))), TypeT("Integer"))
-    val mutate = DefLhs(FunctionT(), IdT("actionMutate"), Some(Arguments(List(Argument(IdT("variable"), TypeT("Integer")), Argument(IdT("newValue"), TypeT("Integer"))))), TypeT("Nothing"))
+    val mutate = DefLhs(FunctionT(), IdT("actionMutate"), Some(Arguments(List(Argument(IdT("newValue"), TypeT("Integer")), Argument(IdT("variable"), TypeT("Integer"))))), TypeT("Nothing"))
     val integerToString = DefLhs(ActionT(), IdT("integerToString"), Some(Arguments(List(Argument(IdT("int"), TypeT("Integer"))))), TypeT("String"))
     val basicfunctions = List(mutate, print) //List(multiply, plus, divide, minus, mutate, print, integerToString)
     
@@ -19,6 +19,7 @@ object FumurtTypeChecker
     //all standard library functions available everywhere (maybe also actions). 
     //checkexpression(in, DefLhs(UnsafeActionT(), IdT(""), None, TypeT("Nothing")), None, List(List():List[Definition]), basics, List():List[DefLhs], List():List[FumurtErrors])
     
+    println()
     val errors = checktop(in, basicfunctions)
     println()
     if (errors.isEmpty)
@@ -167,12 +168,14 @@ object FumurtTypeChecker
       }
       case y:FunctionCallStatement=>
       {
+        //println("found "+y)
         if (y.functionidentifier=="if")
         {
           checkifcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
         else if (y.functionidentifier=="plus")
         {
+          
           checkbasicmathcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
         else if (y.functionidentifier=="minus")
@@ -216,6 +219,7 @@ object FumurtTypeChecker
                 }
                 case Right(NamedCallargs(value)) => 
                 {
+                  //println("checking namedcallargs "+value)
                   checknamedcallargs(calledfunction, value, containingdefinition, arguments, basicFunctions, inSameDefinition)
                 }
               } 
@@ -259,6 +263,7 @@ object FumurtTypeChecker
   
   def checkbasicmathcall(call:FunctionCallStatement, expectedtype:TypeT, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] =
   {
+    //println("in checkbasicmathcall. Call is "+call)
     call.args match
     {
       case Left(callarg) => List(FumurtError(call.pos, "Call to "+call.functionidentifier+" needs two arguments"))
@@ -291,7 +296,6 @@ object FumurtTypeChecker
                 else{List(FumurtError(call.pos, "This call to "+call.functionidentifier+" returns an Integer not "+str))}
               }
             }
-          
           )
         }
       }
@@ -333,11 +337,12 @@ object FumurtTypeChecker
           }
           else 
           {
-            val individualargumenterrors = ListBuffer()
+            val individualargumenterrors = ListBuffer():ListBuffer[FumurtError]
             for(i<-0 until namedcallargs.length)
             {
-              individualargumenterrors ++ (if(namedcallargs(i).id.value != defargs(i).id.value) 
+              individualargumenterrors ++= (if(namedcallargs(i).id.value != defargs(i).id.value) 
                 {
+                  //println("FOUND INCORRECT NAMES")
                   List(FumurtError(namedcallargs(i).id.pos, "Wrong argument name. Argument in definition named "+defargs(i).id.value+". In calling named "+namedcallargs(i).id.value ))
                 }
                 else 
@@ -346,6 +351,8 @@ object FumurtTypeChecker
                 }
               )
             }
+            
+            //println("individualargumenterrors.toList: "+individualargumenterrors.toList)
             individualargumenterrors.toList
           }
         }
@@ -355,6 +362,7 @@ object FumurtTypeChecker
   
   def checkCallarg(expectedtype:TypeT, arg:Callarg, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] = 
   {
+    //println("in checkCallarg. arg is "+arg)
     arg match
     {
       case c:BasicValueStatement=> checkbasicvaluestatement(expectedtype, c, "Call argument")

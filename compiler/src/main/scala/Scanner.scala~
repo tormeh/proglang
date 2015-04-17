@@ -70,7 +70,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
     (
       spaceParser               |
       programStrParser          |
-      unsafeActionParser        |
+      threadParser        |
       actionParser              |
       synchronizedVariableParser  |
       functionParser            |
@@ -80,8 +80,8 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
       closeParenthesisParser    |
       openCurlyBracketParser    |
       closeCurlyBracketParser   |
-      intParser                 |
       doubleParser              |
+      intParser                 |
       equalParser               |
       colonParser               |
       commaParser               |
