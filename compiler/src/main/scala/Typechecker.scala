@@ -72,26 +72,32 @@ object FumurtTypeChecker
         case _=> List()
       }
     }
-    val unusedthreaderrors:List[FumurtError] = topleveldefs.foldLeft(List():List[FumurtError])((x:List[FumurtError],y:DefLhs)=>x++checkuseofthread(program,y)):List[FumurtError]
+    val unusedthreaderrors:List[FumurtError] = topleveldefs.foldLeft(List():List[FumurtError])((x:List[FumurtError],y:DefLhs)=>
+      x++checkuseofthread(program,y)
+    ):List[FumurtError]
     
-    val unsuitabledefinitions = ListBuffer()
-    for (i<-program.rightside.expressions)
-    {
-      i match
+    val unsuitableexpressions = program.rightside.expressions.foldLeft(List():List[FumurtError])((x,y)=>
+      y match
       {
-        case x:Definition => 
+        case z:Definition=>
         {
-          x.leftside.description match
+          z.leftside.description match
           {
-            case SynchronizedVariableT() => {}
-            case _=> {unsuitabledefinitions :+ List(FumurtError(x.pos,"Do not define functions, actions or unsynchronized values in Program"))}
+            case SynchronizedVariableT() => x
+            case _=> x++List(FumurtError(z.pos,"Do not define functions, actions or unsynchronized values in Program"))
           }
         }
-        case _=>{}
+        case z:FunctionCallStatement=>
+        {
+          if(z.functionidentifier.startsWith("thread")){x} else{x++List(FumurtError(z.pos, "Only threads can be called in Program"))}
+        }
+        case z:Expression=>x++List(FumurtError(z.pos, "Only definitions and thread start statements allowed in Program"))
       }
-    }
+    )
+    //println(program.rightside.expressions)
+    //println("unsuit "+(unusedthreaderrors ++ unsuitabledefinitions.toList))
     
-    unusedthreaderrors ++ unsuitabledefinitions.toList
+    (unusedthreaderrors ++ unsuitableexpressions.toList):List[FumurtError]
   }
   
   def checkexpressions(tree:List[Expression], containingdefinition:Option[Definition], containingdefinitionarguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]):List[FumurtError]=
