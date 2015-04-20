@@ -507,7 +507,7 @@ object FumurtTypeChecker
     }
     else if(res.length == 0)
     {
-      Left(searchFor+" not found" +" arguments is: "+arguments)
+      Left(searchFor+" not found" +" arguments is: "+arguments+". insamedefinition is "+inSameDefinition)
     }
     else
     {

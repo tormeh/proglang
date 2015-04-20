@@ -40,8 +40,8 @@ object FumurtParser extends Parsers //with PackratParsers
   
   def progParser: Parser[List[Definition]] = (paddedDefParser.+) <~ eofParser
   def paddedDefParser:Parser[Definition] = {println("paddeddefparser"); newlineParser.* ~> defParser <~ newlineParser.* }
-  def defParser: Parser[Definition] = {println("defparser");  positioned((deflhsParser <~ equalParser ~ newlineParser.*) ~! defrhsParser ^^ {x=>Definition(x._1,x._2)}) }
-  def deflhsParser: Parser[DefLhs] = {println("deflhsparser");  (defdescriptionParser ~ idParser ~ argsParser ~ (colonParser ~> typeParser)) ^^ {x=>DefLhs(x._1._1._1, x._1._1._2, x._1._2, x._2)} }
+  def defParser: Parser[Definition] = {println("defparser");  positioned((deflhsParser <~ equalParser ~! newlineParser.*) ~! defrhsParser ^^ {x=>Definition(x._1,x._2)}) }
+  def deflhsParser: Parser[DefLhs] = {println("deflhsparser");  (defdescriptionParser ~ idParser ~ argsParser ~! (colonParser ~> typeParser)) ^^ {x=>DefLhs(x._1._1._1, x._1._1._2, x._1._2, x._2)} }
   def argsParser: Parser[Option[Arguments]] = {println("argsparser"); openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ subsequentArgsParser.*) <~ closeParenthesisParser ^^{x=>Some(Arguments( (Argument(x._1._1, x._1._2) +: x._2).sortWith((left,right)=>left.id.value<right.id.value) ))} | emptyParser ^^ {x=>None} }
   def subsequentArgsParser: Parser[Argument] = {println("args2parserparser");  commaParser ~> (idParser <~ colonParser) ~ typeParser ^^{x=>Argument(x._1, x._2)} }
   
