@@ -13,7 +13,7 @@ object FumurtTypeChecker
     val minus = DefLhs(FunctionT(), IdT("minus"), Some(Arguments(List(Argument(IdT("left"), TypeT("Integer")), Argument(IdT("right"), TypeT("Integer"))))), TypeT("Integer"))
     val mutate = DefLhs(FunctionT(), IdT("actionMutate"), Some(Arguments(List(Argument(IdT("newValue"), TypeT("Integer")), Argument(IdT("variable"), TypeT("Integer"))))), TypeT("Nothing"))
     val integerToString = DefLhs(ActionT(), IdT("integerToString"), Some(Arguments(List(Argument(IdT("int"), TypeT("Integer"))))), TypeT("String"))
-    val basicfunctions = List(mutate, print) //List(multiply, plus, divide, minus, mutate, print, integerToString)
+    val basicfunctions = List(print) //List(multiply, plus, divide, minus, mutate, print, integerToString)
     
     
     //all standard library functions available everywhere (maybe also actions). 
@@ -179,26 +179,17 @@ object FumurtTypeChecker
         {
           checkifcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
-        else if (y.functionidentifier=="plus")
-        {
-          
-          checkbasicmathcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
-        }
-        else if (y.functionidentifier=="minus")
-        {
-          checkbasicmathcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
-        }
-        else if (y.functionidentifier=="multiply")
-        {
-          checkbasicmathcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
-        }
-        else if (y.functionidentifier=="divide")
+        else if (y.functionidentifier=="plus" || y.functionidentifier=="minus" || y.functionidentifier=="multiply" || y.functionidentifier=="divide")
         {
           checkbasicmathcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
         else if (y.functionidentifier=="toString")
         {
           checktostringcall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
+        }
+        else if (y.functionidentifier=="actionMutate")
+        {
+          checkmutatecall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
         else
         {
@@ -263,6 +254,37 @@ object FumurtTypeChecker
           (checkCallarg(expectedtype, arglist(1).argument, containingdefinition, arguments, basicFunctions, inSameDefinition))++
           (checkCallarg(expectedtype, arglist(2).argument, containingdefinition, arguments, basicFunctions, inSameDefinition))
         }
+      }
+    }
+  }
+  
+  def checkmutatecall(call:FunctionCallStatement, expectedtype:TypeT, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] =
+  {
+    //println("mutate call "+call)
+    call.args match
+    {
+      case Left=>List(FumurtError(call.pos, "call to mutate requires both a variable, and a new value to assign to that variable"))
+      case Right(NamedCallargs(List(value:NamedCallarg, variable:NamedCallarg)))=>
+      {
+        val firstnameerror = if(value.id.value != "newValue"){List(FumurtError(call.pos, "call to mutate requires argument \"newValue\""))} else{List()}
+        val lastnameerror = if(variable.id.value != "variable"){List(FumurtError(call.pos, "call to mutate requires argument \"variable\""))} else{List()}
+        val variabletypeerror = variable.argument match
+        {
+          case z:IdentifierStatement=>
+          {
+            findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), z.value) match
+            {
+              case Left(str) => List(FumurtError(z.pos, str))
+              case Right(defl)=>
+              {
+                checkCallarg(defl.returntype, value.argument, containingdefinition, arguments, basicFunctions, inSameDefinition)
+              }
+            }
+          }
+          case z:Expression=>List(FumurtError(call.pos, "variable argument must be an identifier"))
+        }
+        
+        firstnameerror++lastnameerror++variabletypeerror
       }
     }
   }
