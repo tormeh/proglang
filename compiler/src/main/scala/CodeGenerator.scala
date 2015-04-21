@@ -21,8 +21,8 @@ object FumurtCodeGenerator
   
   def gettopthreaddeclarations(ast:List[Definition]):String =
   {
-    val strings = ast.filter(x => (x.leftside.description match {case ThreadT() => true; case _=> false})).map(x=>
-    {   
+    ast.filter(x => (x.leftside.description match {case ThreadT() => true; case _=> false})).map(x=>
+      {   
         val functionstart = "[[noreturn]] static void " + x.leftside.id.value + "()\n{"
         val functionend = "\n}\n"
         val (tailrecursestart, tailrecurseend) = ("while(true)\n{", "\n}") /*x.rightside.expressions.last match
@@ -38,29 +38,38 @@ object FumurtCodeGenerator
           }
           case _=> ("","")
         }*/
-        val generals = x.rightside.expressions.map(
+        val generals = x.rightside.expressions.flatMap(
           y=> y match
           {
             //case FunctionCallStatement("println", args) => "print" + x.leftside.id.value + ".push_back(" + args match{case Left(Callarg) =>; case Right(_)=>"not implemented"} + ");"
             //case FunctionCallStatement("println", Left(StringStatement(value))) => "print" + x.leftside.id.value + ".push_back(" + value + ");"
             //case FunctionCallStatement("println", Left(IdentifierStatement(value))) => "print" + x.leftside.id.value + ".push_back(" + value + ");"
             //case FunctionCallStatement("mutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),IdentifierStatement(newval)), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) => vari + "=" + newval + ";"
-            case FunctionCallStatement(x.leftside.id.value, args) => "waitForRendezvous(\""+x.leftside.id.value+"\");\n  continue;"
-            case z:FunctionCallStatement => functioncalltranslator(z, x.leftside.id.value) + ";"
+            case Definition(leftside, rightside)=>None
+            case FunctionCallStatement(x.leftside.id.value, args) => Some("waitForRendezvous(\""+x.leftside.id.value+"\");\n  continue;")
+            case z:FunctionCallStatement => Some(functioncalltranslator(z, x.leftside.id.value) + ";")
             //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
           }
         ).foldLeft("")((x,y)=>x+"\n  "+y)
         functionstart + tailrecursestart + generals + tailrecurseend + functionend
-    }
+      }
+    ).foldLeft("")((x,y)=>x+y)
+    
+  }
+  
+  def getFunctionDeclarations(ast:List[Expression]):(String,String) =
+  {
+    ast.flatMap(x => x match
+      {
+        case z:Expression=>None
+        case Definition(DefLhs(ThreadT(),_,_,_),DefRhs(expressions))=>Some(getFunctionDeclarations(expressions))
+        case Definition(DefLhs(FunctionT(),_,_,_),_)=>None //TODO
+        case Definition(DefLhs(ActionT(),_,_,_),_)=>Some()
+      }
+    ).map(x=>x.foldLeft("")((x,y)=>
+        x+"\n  "+y
+      )
     )
-    
-    var string=""
-    for(i<-strings)
-    {
-      string+=i
-    }
-    string
-    
   }
   
   def functioncalltranslator(call:FunctionCallStatement, callingthread:String):String =
