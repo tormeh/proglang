@@ -57,19 +57,53 @@ object FumurtCodeGenerator
     
   }
   
-  def getFunctionDeclarations(ast:List[Expression]):(String,String) =
+  def getFunctionDeclarations(ast:List[Expression], hierarchy:String):(String,String) =
   {
     ast.flatMap(x => x match
       {
-        case z:Expression=>None
-        case Definition(DefLhs(ThreadT(),_,_,_),DefRhs(expressions))=>Some(getFunctionDeclarations(expressions))
+        case z:Statement=>None
+        case Definition(DefLhs(ThreadT(),id,_,_),DefRhs(expressions))=>Some(getFunctionDeclarations(expressions, hierarchy+id.value))
         case Definition(DefLhs(FunctionT(),_,_,_),_)=>None //TODO
-        case Definition(DefLhs(ActionT(),_,_,_),_)=>Some()
+        case Definition(DefLhs(ActionT(),id,args,returntype),DefRhs(expressions))=>
+        {
+          val signature = getFunctionSignature(id, args, returntype, hierarchy)
+          Some((signature, signature+"\n{"+  +"}\n"))
+        }
       }
-    ).map(x=>x.foldLeft("")((x,y)=>
-        x+"\n  "+y
+    ).foldLeft(("",""))((x,y)=>
+        (x._1+y._1+";\n", x._2+"\n  "+y._2)
       )
-    )
+  }
+  
+  def getFunctionSignature(id:IdT, optargs:Option[Arguments], returntype:TypeT, hierarchy:String):String =
+  {
+    def argtranslator(arg:Argument):String=
+    {
+      typetranslator(arg.typestr)+" "+arg.id.value
+    }
+    val argsString = optargs match
+    {
+      case None=>""
+      case Some(Arguments(List(arg)))=>argtranslator(arg)
+      case Some(Arguments(args))=>argtranslator(args.head) + args.tail.foldLeft("")((x,y)=>
+        x+", "+argtranslator(y)
+      )
+      
+    }
+  
+    typetranslator(returntype)+" "+id.value+"$"+hierarchy+"("+argsString+")"
+  }
+  
+  def typetranslator(in:TypeT):String =
+  {
+    in.value match
+    {
+      case "Integer"=>"int"
+      case "Double"=>"double"
+      case "String"=>"std::string"
+      case "Nothing"=>"void"
+      case _=>"wrong wrong"
+    }
   }
   
   def functioncalltranslator(call:FunctionCallStatement, callingthread:String):String =
