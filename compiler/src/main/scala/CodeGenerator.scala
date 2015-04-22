@@ -15,8 +15,9 @@ object FumurtCodeGenerator
     val synchvardeclarations = getGlobalSynchVariableDeclarations(synchvars)
     val printdecs = getprintlistdeclarations(topthreads)
     val topthreaddeclarations = gettopthreaddeclarations(ast)
+    val (funSignatures, funDeclarations) = getFunctionDeclarations(ast, "")
     
-    includestatement + "#define NUMTOPTHREADS " + numtopthreads.toString + "\n" + synchvardeclarations + printdecs + "\n" + synchronizationGlobalVars + syncfunc + "\n\n" + topthreaddeclarations + "\n" + main
+    includestatement + "#define NUMTOPTHREADS "+ funSignatures + numtopthreads.toString + "\n" + synchvardeclarations + printdecs + "\n" + synchronizationGlobalVars + syncfunc + "\n\n" + topthreaddeclarations + "\n"+ funDeclarations + main
   }
   
   def gettopthreaddeclarations(ast:List[Definition]):String =
@@ -71,10 +72,13 @@ object FumurtCodeGenerator
             y=>y match
             {
               case Definition(leftside, rightside)=>None
+              case z:FunctionCallStatement => Some(functioncalltranslator(z, id.value) + ";")
             }
           )
-          Some((signature, signature+"\n{"+ generals +"}\n"))
+          val (furtherSignatures, furtherFunBodies) = getFunctionDeclarations(expressions, hierarchy+id.value)
+          Some((signature+"\n"+furtherSignatures, signature+"\n{"+ generals +"}\n"+furtherFunBodies))
         }
+        case _=>None
       }
     ).foldLeft(("",""))((x,y)=>
         (x._1+y._1+";\n", x._2+"\n  "+y._2)
