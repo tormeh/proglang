@@ -15,9 +15,12 @@ object FumurtCodeGenerator
     val synchvardeclarations = getGlobalSynchVariableDeclarations(synchvars)
     val printdecs = getprintlistdeclarations(topthreads)
     val topthreaddeclarations = gettopthreaddeclarations(ast)
-    val (funSignatures, funDeclarations) = getFunctionDeclarations(ast, "")
+    val (funSignatures, funDeclarations) = getFunctionDeclarations(ast, topthreads)
+    val topThreadNumMacroln = "#define NUMTOPTHREADS " + numtopthreads.toString + "\n"
     
-    includestatement + "#define NUMTOPTHREADS "+ funSignatures + numtopthreads.toString + "\n" + synchvardeclarations + printdecs + "\n" + synchronizationGlobalVars + syncfunc + "\n\n" + topthreaddeclarations + "\n"+ funDeclarations + main
+    println(funSignatures)
+    
+    includestatement + topThreadNumMacroln + funSignatures + synchvardeclarations + printdecs + "\n" + synchronizationGlobalVars + syncfunc + "\n\n" + topthreaddeclarations + "\n"+ funDeclarations + "\n\n" + main
   }
   
   def gettopthreaddeclarations(ast:List[Definition]):String =
@@ -58,31 +61,84 @@ object FumurtCodeGenerator
     
   }
   
-  def getFunctionDeclarations(ast:List[Expression], hierarchy:String):(String,String) =
+  def getFunctionDeclarations(ast:List[Expression], topthreadcalls:List[FunctionCallStatement]):(String,String) =
+  {
+    //val topthreaddefs = ast.filter(x=>x match{case Definition(DefLhs(ThreadT(),_,_,_),_)=>true; case _=>false})
+    val (topActionSignatures, topActionBodies) = topthreadcalls.map(threadcall=>
+      threadcall.args match
+      {
+        case Left(IdentifierStatement(argname))=>
+        {
+          val action = ast.filter(x=>x match{case Definition(DefLhs(ActionT(),IdT(thisargname),_,_),_)=>if(argname==thisargname){true}else{false}; case _=>false})
+          getDeclarations(action, threadcall.functionidentifier, threadcall.functionidentifier, ActionT())
+        }
+        case Left(_)=>("","")
+        case Right(NamedCallargs(namedargs))=>
+        {
+          val actions = namedargs.flatMap(x=>
+            x match
+            {
+              case NamedCallarg(_,IdentifierStatement(argname))=>
+              {
+                ast.find(y=>y match{case Definition(DefLhs(ActionT(),IdT(thisargname),_,_),_)=>if(argname==thisargname){true}else{false}; case _=>false}) match
+                {
+                  case None=>None
+                  case Some(z)=>Some(z)
+                }
+              }
+              case _=>None
+            }
+          )
+          getDeclarations(actions, threadcall.functionidentifier, threadcall.functionidentifier, ActionT())
+        }
+      }
+    ).foldLeft(("",""))((x,y)=>(x._1+y._1, x._2+y._2)) :(String,String)
+    
+    val (topFunctionSignatures, topFunctionBodies) = getDeclarations(ast, "", "", FunctionT()):(String,String)
+    val (threadInternalSignatures, threadInternalBodies) = ast.flatMap(x=>x match
+      {
+        case Definition(DefLhs(ThreadT(),id,_,_),DefRhs(expressions))=>
+        {
+          val acts = getDeclarations(expressions, id.value, id.value, ActionT()):(String,String)
+          val funs = getDeclarations(expressions, id.value, id.value, FunctionT()):(String,String)
+          Some((acts._1+funs._1, acts._2+funs._2))
+        }
+        
+        case _=>None
+      }
+    ).foldLeft(("",""))((x,y)=>(x._1+y._1, x._2+y._2)) :(String,String)
+    (topActionSignatures+topFunctionSignatures+threadInternalSignatures, topActionBodies+topFunctionBodies+threadInternalBodies)
+  }
+  
+  def getDeclarations(ast:List[Expression], hierarchy:String, callingthread:String, defdesc:DefDescriptionT):(String,String) =
   {
     ast.flatMap(x => x match
       {
         case z:Statement=>None
-        case Definition(DefLhs(ThreadT(),id,_,_),DefRhs(expressions))=>Some(getFunctionDeclarations(expressions, hierarchy+id.value))
-        case Definition(DefLhs(FunctionT(),_,_,_),_)=>None //TODO
-        case Definition(DefLhs(ActionT(),id,args,returntype),DefRhs(expressions))=>
+        //case Definition(DefLhs(ThreadT(),id,_,_),DefRhs(expressions))=>Some(getFunctionDeclarations(expressions, hierarchy+id.value))
+        case Definition(DefLhs(thisdefdesc,id,args,returntype),DefRhs(expressions))=>
         {
-          val signature = getFunctionSignature(id, args, returntype, hierarchy)
-          val generals = expressions.flatMap(
-            y=>y match
-            {
-              case Definition(leftside, rightside)=>None
-              case z:FunctionCallStatement => Some(functioncalltranslator(z, id.value) + ";")
-            }
-          )
-          val (furtherSignatures, furtherFunBodies) = getFunctionDeclarations(expressions, hierarchy+id.value)
-          Some((signature+"\n"+furtherSignatures, signature+"\n{"+ generals +"}\n"+furtherFunBodies))
+         //if(thisdefdesc.toString!=defdesc.toString){None}
+          if(thisdefdesc.toString==defdesc.toString)
+          {
+            val signature = getFunctionSignature(id, args, returntype, hierarchy)
+            val generals = expressions.flatMap(
+              y=>y match
+              {
+                case Definition(leftside, rightside)=>None
+                case z:FunctionCallStatement => Some(functioncalltranslator(z, callingthread) + ";") //id.value is not calling thread
+                //TODO: Add support for returning stuff
+              }
+            ).foldLeft("")((x,y)=>x+"\n  "+y)
+            val (furtherFunSignatures, furtherFunBodies) = getDeclarations(expressions, hierarchy+id.value, callingthread, FunctionT())
+            val (furtherActSignatures, furtherActBodies) = getDeclarations(expressions, hierarchy+id.value, callingthread, ActionT())
+            Some((signature+";\n"+furtherFunSignatures+furtherActSignatures, signature+"\n{"+ generals +"\n}\n"+furtherFunBodies+furtherActBodies))
+          }
+          else{None}
         }
         case _=>None
       }
-    ).foldLeft(("",""))((x,y)=>
-        (x._1+y._1+";\n", x._2+"\n  "+y._2)
-      )
+    ).foldLeft(("",""))((x,y)=>(if(y._1!=""){x._1+y._1}else{x._1},       x._2+"\n  "+y._2))
   }
   
   def getFunctionSignature(id:IdT, optargs:Option[Arguments], returntype:TypeT, hierarchy:String):String =
