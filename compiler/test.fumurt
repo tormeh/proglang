@@ -36,5 +36,10 @@ thread threadPrintLol(actionPrintFoo:Inclusion):Nothing =
 
 action actionPrintFoo:Nothing =
 {
+  action actionPrintFooo:Nothing =
+  {
+    actionPrint("  FOOO  ")
+  }
   actionPrint("  FOO   ")
+  actionPrintFooo()
 }

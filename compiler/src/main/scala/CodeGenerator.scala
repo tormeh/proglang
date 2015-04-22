@@ -67,7 +67,13 @@ object FumurtCodeGenerator
         case Definition(DefLhs(ActionT(),id,args,returntype),DefRhs(expressions))=>
         {
           val signature = getFunctionSignature(id, args, returntype, hierarchy)
-          Some((signature, signature+"\n{"+  +"}\n"))
+          val generals = expressions.flatMap(
+            y=>y match
+            {
+              case Definition(leftside, rightside)=>None
+            }
+          )
+          Some((signature, signature+"\n{"+ generals +"}\n"))
         }
       }
     ).foldLeft(("",""))((x,y)=>
@@ -86,7 +92,7 @@ object FumurtCodeGenerator
       case None=>""
       case Some(Arguments(List(arg)))=>argtranslator(arg)
       case Some(Arguments(args))=>argtranslator(args.head) + args.tail.foldLeft("")((x,y)=>
-        x+", "+argtranslator(y)
+        if(y.typestr.value!="Inclusion"){x+", "+argtranslator(y)} else{x}
       )
       
     }
@@ -102,7 +108,8 @@ object FumurtCodeGenerator
       case "Double"=>"double"
       case "String"=>"std::string"
       case "Nothing"=>"void"
-      case _=>"wrong wrong"
+      case "Inclusion"=>"shouldn't be here"
+      case _=>"not implemented"
     }
   }
   
