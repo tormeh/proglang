@@ -25,6 +25,8 @@ object FumurtCodeGenerator
   
   def gettopthreaddeclarations(ast:List[Definition]):String =
   {
+    val topactfuns = ast.filter(x => (x.leftside.description match {case ActionT() => true; case FunctionT()=>true; case _=> false}))
+    
     ast.filter(x => (x.leftside.description match {case ThreadT() => true; case _=> false})).map(x=>
       {   
         val functionstart = "[[noreturn]] static void " + x.leftside.id.value + "()\n{"
@@ -42,6 +44,20 @@ object FumurtCodeGenerator
           }
           case _=> ("","")
         }*/
+        val inclusions = x.leftside.args match
+        {
+          case None=>List()
+          case Some(Arguments(args))=>args.flatMap(y=>
+          if(y.typestr.value=="Inclusion")
+          {
+            topactfuns.find(z=>if(z.leftside.id.value==y.id.value){true}else{false})
+          }
+          else
+          {
+            None
+          }
+          )
+        }
         val generals = x.rightside.expressions.flatMap(
           y=> y match
           {
@@ -51,7 +67,17 @@ object FumurtCodeGenerator
             //case FunctionCallStatement("mutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),IdentifierStatement(newval)), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) => vari + "=" + newval + ";"
             case Definition(leftside, rightside)=>None
             case FunctionCallStatement(x.leftside.id.value, args) => Some("waitForRendezvous(\""+x.leftside.id.value+"\");\n  continue;")
-            case z:FunctionCallStatement => Some(functioncalltranslator(z, x.leftside.id.value) + ";")
+            case z:FunctionCallStatement => 
+            {
+              val fundef = inclusions.find(v=>if(z.functionidentifier==v.leftside.id.value){true}else{false})
+              val suffix = fundef match
+              {
+                case None=>""
+                case Some(Definition(DefLhs(ActionT(),_,_,_),_))=>x.leftside.id.value
+                case Some(Definition(DefLhs(FunctionT(),_,_,_),_))=>""
+              }
+              Some(functioncalltranslator(z, x.leftside.id.value, suffix, fundef) + ";")
+            }
             //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
           }
         ).foldLeft("")((x,y)=>x+"\n  "+y)
@@ -63,6 +89,37 @@ object FumurtCodeGenerator
   
   def getFunctionDeclarations(ast:List[Expression], topthreadcalls:List[FunctionCallStatement]):(String,String) =
   {
+      def getDeclarations(ast:List[Expression], hierarchy:String, callingthread:String, defdesc:DefDescriptionT):(String,String) =
+      {
+        ast.flatMap(x => x match
+          {
+            case z:Statement=>None
+            //case Definition(DefLhs(ThreadT(),id,_,_),DefRhs(expressions))=>Some(getFunctionDeclarations(expressions, hierarchy+id.value))
+            case Definition(DefLhs(thisdefdesc,id,args,returntype),DefRhs(expressions))=>
+            {
+            //if(thisdefdesc.toString!=defdesc.toString){None}
+              if(thisdefdesc.toString==defdesc.toString)
+              {
+                val signature = getFunctionSignature(id, args, returntype, hierarchy)
+                val generals = expressions.flatMap(
+                  y=>y match
+                  {
+                    case Definition(leftside, rightside)=>None
+                    case z:FunctionCallStatement => Some(functioncalltranslator(z, callingthread) + ";") //id.value is not calling thread
+                    //TODO: Add support for returning stuff
+                  }
+                ).foldLeft("")((x,y)=>x+"\n  "+y)
+                val (furtherFunSignatures, furtherFunBodies) = getDeclarations(expressions, hierarchy+id.value, callingthread, FunctionT())
+                val (furtherActSignatures, furtherActBodies) = getDeclarations(expressions, hierarchy+id.value, callingthread, ActionT())
+                Some((signature+";\n"+furtherFunSignatures+furtherActSignatures, signature+"\n{"+ generals +"\n}\n"+furtherFunBodies+furtherActBodies))
+              }
+              else{None}
+            }
+            case _=>None
+          }
+        ).foldLeft(("",""))((x,y)=>(if(y._1!=""){x._1+y._1}else{x._1},       x._2+"\n  "+y._2))
+      }
+  
     //val topthreaddefs = ast.filter(x=>x match{case Definition(DefLhs(ThreadT(),_,_,_),_)=>true; case _=>false})
     val (topActionSignatures, topActionBodies) = topthreadcalls.map(threadcall=>
       threadcall.args match
@@ -110,36 +167,7 @@ object FumurtCodeGenerator
     (topActionSignatures+topFunctionSignatures+threadInternalSignatures, topActionBodies+topFunctionBodies+threadInternalBodies)
   }
   
-  def getDeclarations(ast:List[Expression], hierarchy:String, callingthread:String, defdesc:DefDescriptionT):(String,String) =
-  {
-    ast.flatMap(x => x match
-      {
-        case z:Statement=>None
-        //case Definition(DefLhs(ThreadT(),id,_,_),DefRhs(expressions))=>Some(getFunctionDeclarations(expressions, hierarchy+id.value))
-        case Definition(DefLhs(thisdefdesc,id,args,returntype),DefRhs(expressions))=>
-        {
-         //if(thisdefdesc.toString!=defdesc.toString){None}
-          if(thisdefdesc.toString==defdesc.toString)
-          {
-            val signature = getFunctionSignature(id, args, returntype, hierarchy)
-            val generals = expressions.flatMap(
-              y=>y match
-              {
-                case Definition(leftside, rightside)=>None
-                case z:FunctionCallStatement => Some(functioncalltranslator(z, callingthread) + ";") //id.value is not calling thread
-                //TODO: Add support for returning stuff
-              }
-            ).foldLeft("")((x,y)=>x+"\n  "+y)
-            val (furtherFunSignatures, furtherFunBodies) = getDeclarations(expressions, hierarchy+id.value, callingthread, FunctionT())
-            val (furtherActSignatures, furtherActBodies) = getDeclarations(expressions, hierarchy+id.value, callingthread, ActionT())
-            Some((signature+";\n"+furtherFunSignatures+furtherActSignatures, signature+"\n{"+ generals +"\n}\n"+furtherFunBodies+furtherActBodies))
-          }
-          else{None}
-        }
-        case _=>None
-      }
-    ).foldLeft(("",""))((x,y)=>(if(y._1!=""){x._1+y._1}else{x._1},       x._2+"\n  "+y._2))
-  }
+  
   
   def getFunctionSignature(id:IdT, optargs:Option[Arguments], returntype:TypeT, hierarchy:String):String =
   {
@@ -173,7 +201,7 @@ object FumurtCodeGenerator
     }
   }
   
-  def functioncalltranslator(call:FunctionCallStatement, callingthread:String):String =
+  def functioncalltranslator(call:FunctionCallStatement, callingthread:String, suffix:String, funcdef:Option[Definition]):String =
   {
     //println("in functioncalltranslator. call is "+call)
     //if(call.functionidentifier=="plus"){println("found")}
@@ -194,6 +222,15 @@ object FumurtCodeGenerator
       case FunctionCallStatement("minus",_) => basicmathcalltranslator(call, callingthread)
       case FunctionCallStatement("multiply",_) => basicmathcalltranslator(call, callingthread)
       case FunctionCallStatement("divide",_) => basicmathcalltranslator(call, callingthread)
+      case FunctionCallStatement(funcid,args) => funcdef match
+      {
+        case None=>"everything's wrong"
+        case Some(sfuncdef)=>
+        {
+          
+          funcid+"$"+suffix+"("+  +")"
+        }
+      }
       case _=> "not implemented"
     }
   }

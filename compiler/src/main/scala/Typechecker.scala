@@ -405,7 +405,10 @@ object FumurtTypeChecker
           case Left(str) => List(FumurtError(c.pos, "in checkcallarg "+str))
           case Right(thingdef) =>
           {
-            if(expectedtype.value == "Inclusion"){List()}
+            if(expectedtype.value == "Inclusion")
+            {
+              List() //TODO: Ensure that left name of inclusion is same as right name
+            }
             else if(expectedtype.value != thingdef.returntype.value)
             {
               List(FumurtError(c.pos, "Expected type "+expectedtype.value+". Got "+thingdef.returntype.value))
