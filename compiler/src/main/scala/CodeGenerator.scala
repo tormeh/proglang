@@ -226,7 +226,7 @@ object FumurtCodeGenerator
         case Definition(DefLhs(FunctionT(),id,args,returntype),DefRhs(expressions)) => 
         {
           val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls, hierarchy+id.value)
-          Some(aDefinition(aDefLhs(FunctionT(),id,IdT(hierarchy+"$"+id.value),args,returntype),aDefRhs(aexps)))
+          Some(aDefinition(aDefLhs(FunctionT(),id,IdT(id.value+"$"+hierarchy),args,returntype),aDefRhs(aexps)))
         }
         case Definition(DefLhs(ProgramT(),_,_,_),_) => None //we don't really care about it...
         case Definition(DefLhs(ActionT(),id,args,returntype),DefRhs(expressions)) => 
@@ -238,7 +238,7 @@ object FumurtCodeGenerator
           else
           {
             val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls, hierarchy+id.value)
-            Some(aDefinition(aDefLhs(FunctionT(),id,IdT(hierarchy+"$"+id.value),args,returntype),aDefRhs(aexps)))
+            Some(aDefinition(aDefLhs(FunctionT(),id,IdT(id.value+"$"+hierarchy),args,returntype),aDefRhs(aexps)))
           }
         }
         case FunctionCallStatement(fid,args)=>
