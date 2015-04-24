@@ -292,6 +292,15 @@ object FumurtCodeGenerator
           
         }
         case z:aFunctionCallStatement=>None
+        case aDefinition(aDefLhs(ActionT(),id,cppid,args,returntype),aDefRhs(expressions))=>
+        {
+          val signature = getFunctionSignature(cppid, args, returntype)
+          Some(("",""))
+        }
+        case aDefinition(aDefLhs(FunctionT(),id,cppid,args,returntype),aDefRhs(expressions))=>
+        {
+          Some(("",""))
+        }
       }
     ):List[(String,String)]
     list.foldLeft(("",""))((x,y)=>(x._1+"\n"+y._1,x._2+"\n"+y._2))
@@ -380,7 +389,7 @@ object FumurtCodeGenerator
   
   
   
-  def getFunctionSignature(id:IdT, optargs:Option[Arguments], returntype:TypeT, hierarchy:String):String =
+  def getFunctionSignature(cppid:IdT, optargs:Option[Arguments], returntype:TypeT):String =
   {
     def argtranslator(arg:Argument):String=
     {
@@ -396,7 +405,7 @@ object FumurtCodeGenerator
       
     }
   
-    typetranslator(returntype)+" "+id.value+"$"+hierarchy+"("+argsString+")"
+    typetranslator(returntype)+" "+cppid+"("+argsString+")"
   }
   
   def typetranslator(in:TypeT):String =
