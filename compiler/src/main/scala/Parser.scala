@@ -113,7 +113,7 @@ class AstNode()
 class Expression() extends Positional
 trait Callarg extends Positional
 trait Statement extends Expression
-trait BasicValueStatement extends Statement with Callarg with aCallarg
+trait BasicValueStatement extends Statement with Callarg with aCallarg with aStatement
 
 case class Definition(val leftside:DefLhs, val rightside:DefRhs) extends Expression
 case class DefLhs(val description:DefDescriptionT, val id:IdT, val args:Option[Arguments], val returntype:TypeT)
@@ -133,7 +133,7 @@ case class IntegerStatement(val value:Int) extends BasicValueStatement
 case class DoubleStatement(val value:Double) extends BasicValueStatement
 case class TrueStatement() extends BasicValueStatement
 case class FalseStatement() extends BasicValueStatement
-case class IdentifierStatement(val value:String) extends Statement with Callarg with aCallarg
+case class IdentifierStatement(val value:String) extends Statement with Callarg with aCallarg with aStatement
 case class FunctionCallStatement(val functionidentifier:String, val args:Either[Callarg,NamedCallargs]) extends Statement with Callarg
 
 
