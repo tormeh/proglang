@@ -140,3 +140,7 @@ run helloworld2.fumurt
 run test.fumurt
 quit
 run test.fumurt
+clean
+run test.fumurt
+clean
+run test.fumurt

@@ -7,6 +7,7 @@ object FumurtCodeGenerator
   {
     val includestatement = "#include <iostream>\n#include <thread>\n#include <string>\n#include <atomic>\n#include <condition_variable>\n#include <list>\n#include <chrono>\n\n\n"
     val topthreads = gettopthreadstatements(ast)
+    val atree = getAnnotatedTree(ast, topthreads)
     val numtopthreads = topthreads.length
     val synchronizationGlobalVars = "static std::atomic<int> rendezvousCounter;\nstatic std::mutex rendezvousSyncMutex;\nstatic std::condition_variable cv;"
     val main = getmain(topthreads)
@@ -58,6 +59,28 @@ object FumurtCodeGenerator
           }
           )
         }
+        def getGenericFunctionCall(thread:Definition, inclusions:List[Definition], functionid:String, arguments:Either[Callarg,NamedCallargs]):String =
+        {
+          val fundef = inclusions.find(v=>if(functionid==v.leftside.id.value){true}else{false})
+          val suffix:String = fundef match
+          {
+            case None=>thread.leftside.id.value
+            case Some(Definition(DefLhs(ActionT(),_,_,_),_))=>thread.leftside.id.value
+            case Some(Definition(DefLhs(FunctionT(),_,_,_),_))=>""
+            case Some(_)=>"bug bug bug"
+          }
+          val argstr = arguments match
+          {
+            case Left(callarg)=>callargTranslator(callarg, getGenericFunctionCall(thread, inclusions,_:String,_:Either[Callarg,NamedCallargs]))
+            case Right(NamedCallargs(args)) =>
+            {
+              val first = callargTranslator(args.head.argument, getGenericFunctionCall(thread, inclusions,_:String,_:Either[Callarg,NamedCallargs]))
+              val subsequent = args.foldLeft("")((x,y)=>x+", "+callargTranslator(y.argument, getGenericFunctionCall(thread, inclusions,_:String,_:Either[Callarg,NamedCallargs])))
+              first+subsequent
+            }
+          }
+          functionid+"$"+suffix+"("+argstr+")"
+        }
         val generals = x.rightside.expressions.flatMap(
           y=> y match
           {
@@ -67,23 +90,151 @@ object FumurtCodeGenerator
             //case FunctionCallStatement("mutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),IdentifierStatement(newval)), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) => vari + "=" + newval + ";"
             case Definition(leftside, rightside)=>None
             case FunctionCallStatement(x.leftside.id.value, args) => Some("waitForRendezvous(\""+x.leftside.id.value+"\");\n  continue;")
-            case z:FunctionCallStatement => 
-            {
-              val fundef = inclusions.find(v=>if(z.functionidentifier==v.leftside.id.value){true}else{false})
-              val suffix = fundef match
-              {
-                case None=>""
-                case Some(Definition(DefLhs(ActionT(),_,_,_),_))=>x.leftside.id.value
-                case Some(Definition(DefLhs(FunctionT(),_,_,_),_))=>""
-              }
-              Some(functioncalltranslator(z, x.leftside.id.value, suffix, fundef) + ";")
-            }
+            case z:FunctionCallStatement => Some(functioncalltranslator(z, x.leftside.id.value, getGenericFunctionCall(x,inclusions,_:String,_:Either[Callarg,NamedCallargs])) + ";")
             //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
           }
         ).foldLeft("")((x,y)=>x+"\n  "+y)
         functionstart + tailrecursestart + generals + tailrecurseend + functionend
       }
     ).foldLeft("")((x,y)=>x+y)
+    
+  }
+  
+  def getAnnotatedTree(ast:List[Expression], topthreadcalls:List[FunctionCallStatement]):List[aExpression] = 
+  {
+    val treeWithAnnotatedDefinitions = getAnnotatedTreeInternal(ast,topthreadcalls,"")
+    getCallsAnnotatedTreeInternal(treeWithAnnotatedDefinitions, List())
+  }
+  
+  def getCallsAnnotatedTreeInternal(ast:List[aExpression], arguments:List[aDefLhs], containingDefinition:Option[aDefinition]):List[aExpression] =
+  {
+    val inSameDefinition = indexlefts(ast)
+  
+    ast.flatMap(node=>node match
+      {
+        case aDefinition(aDefLhs(desc,id,cppid,args,returntype),aDefRhs(expressions))=>
+        {
+          val herearguments = 
+          {
+            args match
+            {
+              case
+            }
+          }
+          val aexps = getCallsAnnotatedTreeInternal(expressions,herearguments,parallel)
+          Some(aDefinition(aDefLhs(desc,id,cppid,args,returntype),aDefRhs(aexps)))
+        }
+        case aFunctionCallStatement(fid,cppfid,args)=>
+        {
+          if(fid=="actionPrint" || fid=="actionMutate" || fid=="plus" || fid=="minus" || fid=="multiply" || fid=="divide")
+          {
+            Some(aFunctionCallStatement(fid,fid,args))
+          }
+          else
+          {
+            val ldeff = findinscope(arguments, inSamedefinition, containingDefinition, fid)
+            Some(aFunctionCallStatement(fid,ldeff.cppid.value,args))
+          }
+        }
+      }
+    )
+  }
+  
+  def indexlefts(in:List[aExpression]):List[aDefLhs]=
+  {
+    in.foldLeft(List():List[aDefLhs]) ((list,y)=> y match
+      { 
+        case aDefinition(leftside, _)=>list :+ leftside; 
+        case _=> list
+      }
+    )
+  }
+  
+  def findinscope(arguments:Option[List[aDefLhs]], inSameDefinition:List[aDefLhs], enclosingDefinition:Option[aDefLhs], searchFor:String):aDefLhs=
+  {
+    val argsres = arguments match{ case Some(args)=>args.filter(y=>y.id.value==searchFor); case None=>List():List[DefLhs]}
+    val inscoperes = inSameDefinition.filter(x=>x.id.value==searchFor)
+    val basicfunctionres = basicfunctions.filter(x=>x.id.value==searchFor)
+    
+    val enclosingres = enclosingDefinition match
+    {
+      case None => List()
+      case Some(deff) => if (deff.id.value == searchFor) {List(deff)} else {List()}
+    }
+    
+    val res = argsres ++ inscoperes ++ basicfunctionres ++ enclosingres
+    
+    res.head
+  }
+  
+  def getAnnotatedTreeInternal(ast:List[Expression], topthreadcalls:List[FunctionCallStatement], hierarchy:String):List[aExpression] =
+  {
+    val topactions:List[aExpression] = 
+    {
+      if(hierarchy=="")
+      {
+        val mess = topthreadcalls.map(threadcall=>threadcall.args match
+          {
+            case Left(IdentifierStatement(argname))=>
+            {
+              val deff = ast.filter(x=>x match{case Definition(DefLhs(ActionT(),IdT(thisargname),_,_),_)=>argname==thisargname; case _=>false})
+              getAnnotatedTreeInternal(deff,List(), threadcall.functionidentifier):List[aExpression]
+            }
+            case Left(_)=> List():List[aExpression]
+            case Right(NamedCallargs(namedargs))=>
+            {
+              val deffs = namedargs.flatMap(namedarg=>
+                namedarg match
+                {
+                  case NamedCallarg(_,IdentifierStatement(argname))=>
+                  {
+                    ast.find(y=>y match{case Definition(DefLhs(ActionT(),IdT(thisargname),_,_),_)=>argname==thisargname; case _=>false})
+                  }
+                  case _=>None
+                }
+              )
+              getAnnotatedTreeInternal(deffs,List(), threadcall.functionidentifier):List[aExpression]
+            }
+          }
+        ):List[List[aExpression]]
+        
+        mess.foldLeft(List():List[aExpression])((x,y)=>x++y):List[aExpression]
+      }
+      else
+      {
+        List()
+      }
+    }
+    val rest = ast.flatMap(x=>x match
+      {
+        case Definition(DefLhs(ThreadT(),id,args,returntype),DefRhs(expressions)) => 
+        {
+          val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls.filter(x=>x.functionidentifier==id.value), id.value)
+          Some(aDefinition(aDefLhs(ThreadT(),id,id,args,returntype),aDefRhs(aexps)))
+        }
+        
+        case Definition(DefLhs(FunctionT(),id,args,returntype),DefRhs(expressions)) => 
+        {
+          val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls, hierarchy+id.value)
+          Some(aDefinition(aDefLhs(FunctionT(),id,IdT(hierarchy+"$"+id.value),args,returntype),aDefRhs(aexps)))
+        }
+        case Definition(DefLhs(ProgramT(),_,_,_),_) => None //we don't really care about it...
+        case Definition(DefLhs(ActionT(),id,args,returntype),DefRhs(expressions)) => 
+        {
+          if(hierarchy=="")
+          {
+            None
+          }
+          else
+          {
+            val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls, hierarchy+id.value)
+            Some(aDefinition(aDefLhs(FunctionT(),id,IdT(hierarchy+"$"+id.value),args,returntype),aDefRhs(aexps)))
+          }
+        }
+        case FunctionCallStatement(fid,args)=>aFunctionCallStatement(fid,"not filled out",args)
+      }
+    ):List[aExpression]
+    rest++topactions
     
   }
   
@@ -101,11 +252,12 @@ object FumurtCodeGenerator
               if(thisdefdesc.toString==defdesc.toString)
               {
                 val signature = getFunctionSignature(id, args, returntype, hierarchy)
+                
                 val generals = expressions.flatMap(
                   y=>y match
                   {
                     case Definition(leftside, rightside)=>None
-                    case z:FunctionCallStatement => Some(functioncalltranslator(z, callingthread) + ";") //id.value is not calling thread
+                    case z:FunctionCallStatement => Some(functioncalltranslator(z, callingthread, ((l:String,r:Either[Callarg,NamedCallargs])=>"not implemented")) + ";") //TODO
                     //TODO: Add support for returning stuff
                   }
                 ).foldLeft("")((x,y)=>x+"\n  "+y)
@@ -197,11 +349,27 @@ object FumurtCodeGenerator
       case "String"=>"std::string"
       case "Nothing"=>"void"
       case "Inclusion"=>"shouldn't be here"
+      case "Boolean"=>"bool"
       case _=>"not implemented"
     }
   }
   
-  def functioncalltranslator(call:FunctionCallStatement, callingthread:String, suffix:String, funcdef:Option[Definition]):String =
+  def callargTranslator(callarg:Callarg, getCall:((String,Either[Callarg,NamedCallargs])=>String)):String =
+  {
+    callarg match
+    {
+      case StringStatement(value)=>value
+      case IntegerStatement(value)=>value.toString
+      case DoubleStatement(value)=>value.toString
+      case TrueStatement()=>"true"
+      case FalseStatement()=>"false"
+      case IdentifierStatement(value)=>value
+      case FunctionCallStatement(funcid, args)=>getCall(funcid, args)
+      case NoArgs()=>""
+    }
+  }
+  
+  def functioncalltranslator(call:FunctionCallStatement, callingthread:String, getCall:((String,Either[Callarg,NamedCallargs])=>String)):String =
   {
     //println("in functioncalltranslator. call is "+call)
     //if(call.functionidentifier=="plus"){println("found")}
@@ -210,32 +378,24 @@ object FumurtCodeGenerator
     {
       case FunctionCallStatement("actionPrint", Left(StringStatement(value))) => "print" + callingthread + ".push_back(" + value + ")"
       case FunctionCallStatement("actionPrint", Left(IdentifierStatement(value))) => "print" + callingthread + ".push_back(std::to_string(" + value + "))"
-      case FunctionCallStatement("actionPrint", Left(x:FunctionCallStatement)) => "print" + callingthread + ".push_back(" + functioncalltranslator(x,callingthread) + ")"
-      case FunctionCallStatement("toString", Left(x:FunctionCallStatement)) => "std::to_string(" + functioncalltranslator(x,callingthread) + ")"
+      case FunctionCallStatement("actionPrint", Left(x:FunctionCallStatement)) => "print" + callingthread + ".push_back(" + functioncalltranslator(x,callingthread,getCall) + ")"
+      case FunctionCallStatement("toString", Left(x:FunctionCallStatement)) => "std::to_string(" + functioncalltranslator(x,callingthread,getCall) + ")"
       case FunctionCallStatement("toString", Left(IdentifierStatement(value))) => "std::to_string(" + value + ")"
       case FunctionCallStatement("actionMutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),IdentifierStatement(newval)), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) => vari + " = " + newval
       case FunctionCallStatement("actionMutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),x:FunctionCallStatement), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) =>
       {
-        "write" + vari.capitalize + " = " + functioncalltranslator(x, callingthread)
+        "write" + vari.capitalize + " = " + functioncalltranslator(x, callingthread,getCall)
       }
-      case FunctionCallStatement("plus",_) => basicmathcalltranslator(call, callingthread)
-      case FunctionCallStatement("minus",_) => basicmathcalltranslator(call, callingthread)
-      case FunctionCallStatement("multiply",_) => basicmathcalltranslator(call, callingthread)
-      case FunctionCallStatement("divide",_) => basicmathcalltranslator(call, callingthread)
-      case FunctionCallStatement(funcid,args) => funcdef match
-      {
-        case None=>"everything's wrong"
-        case Some(sfuncdef)=>
-        {
-          
-          funcid+"$"+suffix+"("+  +")"
-        }
-      }
+      case FunctionCallStatement("plus",_) => basicmathcalltranslator(call, callingthread, getCall:((String,Either[Callarg,NamedCallargs])=>String))
+      case FunctionCallStatement("minus",_) => basicmathcalltranslator(call, callingthread, getCall:((String,Either[Callarg,NamedCallargs])=>String))
+      case FunctionCallStatement("multiply",_) => basicmathcalltranslator(call, callingthread, getCall:((String,Either[Callarg,NamedCallargs])=>String))
+      case FunctionCallStatement("divide",_) => basicmathcalltranslator(call, callingthread, getCall:((String,Either[Callarg,NamedCallargs])=>String))
+      case FunctionCallStatement(funcid,args) => getCall(funcid,args)
       case _=> "not implemented"
     }
   }
   
-  def basicmathcalltranslator(call:FunctionCallStatement, callingthread:String):String=
+  def basicmathcalltranslator(call:FunctionCallStatement, callingthread:String, getCall:((String,Either[Callarg,NamedCallargs])=>String)):String=
   {
     val operator = if(call.functionidentifier=="plus"){" + "}else if(call.functionidentifier=="minus"){" - "}else if(call.functionidentifier=="multiply"){" * "}else if(call.functionidentifier=="minus"){" / "}
     call match
@@ -252,7 +412,7 @@ object FumurtCodeGenerator
               case NamedCallarg(_,IdentifierStatement(value))=>value
               case NamedCallarg(_,IntegerStatement(value))=>value.toString
               case NamedCallarg(_,DoubleStatement(value))=>value.toString
-              case NamedCallarg(_,f:FunctionCallStatement)=>functioncalltranslator(f, callingthread)
+              case NamedCallarg(_,f:FunctionCallStatement)=>functioncalltranslator(f, callingthread, getCall)
             }
           }
         ):List[String]
@@ -260,6 +420,7 @@ object FumurtCodeGenerator
       } 
     }
   }
+  
   
   def gettopthreadstatements(ast:List[Definition]):List[FunctionCallStatement]=
   {
@@ -388,3 +549,31 @@ object FumurtCodeGenerator
   }
   
 }
+
+
+
+
+
+
+class aExpression()
+trait aCallarg extends Callarg
+
+case class aDefinition(val leftside:aDefLhs, val rightside:aDefRhs) extends aExpression
+case class aDefLhs(val description:DefDescriptionT, val id:IdT, val cppid:IdT, val args:Option[Arguments], val returntype:TypeT)
+//case class Arguments(val args:List[Argument])
+//case class Argument(val id:IdT, val typestr:TypeT)
+case class aDefRhs(val expressions:List[aExpression] )
+case class aNamedCallarg(id:IdT, argument:aCallarg) //extends Callarg
+case class aNamedCallargs(val value:List[aNamedCallarg])
+
+case class aFunctionCallStatement(val functionidentifier:String, val cppfunctionidentifier:String, val args:Either[aCallarg,aNamedCallargs]) extends Statement with aCallarg
+
+
+
+
+
+
+
+
+
+
