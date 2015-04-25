@@ -269,6 +269,24 @@ object FumurtCodeGenerator
   
   def getFunctionDeclarations(ast:List[aExpression]):(String,String) =
   {
+    def actfunrecursivetranslate(cppid:IdT, callingthread:String, args:Option[Arguments], returntype:TypeT, expressions:List[aExpression]) =
+    {
+      val signature = getFunctionSignature(cppid, args, returntype)
+      val functionstart = signature+"\n{"
+      val functionend = "\n}\n"
+      val generals = expressions.flatMap(
+        y=> y match
+        {
+          case aDefinition(leftside, rightside)=>None
+          case z:aFunctionCallStatement => Some(functioncalltranslator(z, callingthread) + ";")
+          //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
+        }
+      ).foldLeft("")((x,y)=>x+"\n  "+y)
+      val underfunctions = getFunctionDeclarations(expressions)
+      val body = functionstart+generals+functionend
+      //Some((signature+";",body))
+      Some((signature+";"+underfunctions._1, body+underfunctions._2))
+    }
     val list = ast.flatMap(node=>node match
       {
         case aDefinition(aDefLhs(ThreadT(),id,cppid,_,_,_),aDefRhs(expressions))=>
@@ -292,42 +310,8 @@ object FumurtCodeGenerator
           
         }
         case z:aFunctionCallStatement=>None
-        case aDefinition(aDefLhs(ActionT(),id,cppid,callingthread,args,returntype),aDefRhs(expressions))=>
-        {
-          val signature = getFunctionSignature(cppid, args, returntype)
-          val functionstart = signature+"\n{"
-          val functionend = "\n}\n"
-          val generals = expressions.flatMap(
-            y=> y match
-            {
-              case aDefinition(leftside, rightside)=>None
-              case z:aFunctionCallStatement => Some(functioncalltranslator(z, callingthread) + ";")
-              //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
-            }
-          ).foldLeft("")((x,y)=>x+"\n  "+y)
-          val underfunctions = getFunctionDeclarations(expressions)
-          val body = functionstart+generals+functionend
-          //Some((signature+";",body))
-          Some((signature+";"+underfunctions._1, body+underfunctions._2))
-        }
-        case aDefinition(aDefLhs(FunctionT(),id,cppid,_,args,returntype),aDefRhs(expressions))=>
-        {
-          val signature = getFunctionSignature(cppid, args, returntype)
-          val functionstart = signature+"\n{"
-          val functionend = "\n}\n"
-          val generals = expressions.flatMap(
-            y=> y match
-            {
-              case aDefinition(leftside, rightside)=>None
-              case z:aFunctionCallStatement => Some(functioncalltranslator(z, "shouldn't be relevant") + ";")
-              //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
-            }
-          ).foldLeft("")((x,y)=>x+"\n  "+y)
-          val underfunctions = getFunctionDeclarations(expressions)
-          val body = functionstart+generals+functionend
-          //Some((signature+";",body))
-          Some((signature+";"+underfunctions._1, body+underfunctions._2))
-        }
+        case aDefinition(aDefLhs(ActionT(),id,cppid,callingthread,args,returntype),aDefRhs(expressions))=>actfunrecursivetranslate(cppid, callingthread, args, returntype, expressions)
+        case aDefinition(aDefLhs(FunctionT(),id,cppid,callingthread,args,returntype),aDefRhs(expressions))=>actfunrecursivetranslate(cppid, callingthread, args, returntype, expressions)
       }
     ):List[(String,String)]
     list.foldLeft(("",""))((x,y)=>(x._1+"\n"+y._1,x._2+"\n"+y._2))
