@@ -20,9 +20,9 @@ object FumurtCodeGenerator
     val (funSignatures, funDeclarations) = getFunctionDeclarations(atree)
     val topThreadNumMacroln = "#define NUMTOPTHREADS " + numtopthreads.toString + "\n"
     
-    println(funSignatures)
+    //println(funSignatures)
     
-    includestatement + topThreadNumMacroln + funSignatures + synchvardeclarations + printdecs + "\n" + synchronizationGlobalVars + syncfunc + "\n\n" /*+ topthreaddeclarations*/ + "\n"+ funDeclarations + "\n\n" + main
+    includestatement + topThreadNumMacroln + funSignatures + "\n" + synchvardeclarations + printdecs + "\n" + synchronizationGlobalVars + syncfunc + "\n\n" /*+ topthreaddeclarations*/ + "\n"+ funDeclarations + "\n\n" + main
   }
   
   /*def gettopthreaddeclarations(ast:List[Definition]):String =
@@ -103,7 +103,7 @@ object FumurtCodeGenerator
   
   def getAnnotatedTree(ast:List[Expression], topthreadcalls:List[FunctionCallStatement]):List[aExpression] = 
   {
-    val treeWithAnnotatedDefinitions = getAnnotatedTreeInternal(ast,topthreadcalls,"")
+    val treeWithAnnotatedDefinitions = getAnnotatedTreeInternal(ast,topthreadcalls,"", None)
     getCallsAnnotatedTreeInternal(treeWithAnnotatedDefinitions, List(), None)
   }
   
@@ -113,7 +113,7 @@ object FumurtCodeGenerator
   
     ast.flatMap(node=>node match
       {
-        case deff @ aDefinition(aDefLhs(desc,id,cppid,args,returntype),aDefRhs(expressions))=>
+        case deff @ aDefinition(aDefLhs(desc,id,cppid,callingthread,args,returntype),aDefRhs(expressions))=>
         {
           val argumentsToDef = args match
           {
@@ -132,7 +132,7 @@ object FumurtCodeGenerator
           }
           //println("\n{deff: "+deff+"\nargumentsToDef: "+argumentsToDef+"\nargs: "+args+"\n\nast: "+ast+"\n\narguments: "+arguments+"}\n\n\n")
           val aexpressions = getCallsAnnotatedTreeInternal(expressions,argumentsToDef,Some(deff))
-          Some(aDefinition(aDefLhs(desc,id,cppid,args,returntype),aDefRhs(aexpressions)))
+          Some(aDefinition(aDefLhs(desc,id,cppid,callingthread,args,returntype),aDefRhs(aexpressions)))
         }
         case aFunctionCallStatement(fid,cppfid,args)=>
         {
@@ -177,7 +177,7 @@ object FumurtCodeGenerator
     res.head
   }
   
-  def getAnnotatedTreeInternal(ast:List[Expression], topthreadcalls:List[FunctionCallStatement], hierarchy:String):List[aExpression] =
+  def getAnnotatedTreeInternal(ast:List[Expression], topthreadcalls:List[FunctionCallStatement], hierarchy:String, callingthread:Option[String]):List[aExpression] =
   {
     val topactions:List[aExpression] = 
     {
@@ -188,7 +188,7 @@ object FumurtCodeGenerator
             case Left(IdentifierStatement(argname))=>
             {
               val deff = ast.filter(x=>x match{case Definition(DefLhs(ActionT(),IdT(thisargname),_,_),_)=>argname==thisargname; case _=>false})
-              getAnnotatedTreeInternal(deff,List(), threadcall.functionidentifier):List[aExpression]
+              getAnnotatedTreeInternal(deff,List(), threadcall.functionidentifier, Some(threadcall.functionidentifier)):List[aExpression]
             }
             case Left(_)=> List():List[aExpression]
             case Right(NamedCallargs(namedargs))=>
@@ -203,7 +203,7 @@ object FumurtCodeGenerator
                   case _=>None
                 }
               )
-              getAnnotatedTreeInternal(deffs,List(), threadcall.functionidentifier):List[aExpression]
+              getAnnotatedTreeInternal(deffs,List(), threadcall.functionidentifier, Some(threadcall.functionidentifier)):List[aExpression]
             }
           }
         ):List[List[aExpression]]
@@ -219,14 +219,14 @@ object FumurtCodeGenerator
       {
         case Definition(DefLhs(ThreadT(),id,args,returntype),DefRhs(expressions)) => 
         {
-          val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls.filter(x=>x.functionidentifier==id.value), id.value)
-          Some(aDefinition(aDefLhs(ThreadT(),id,id,args,returntype),aDefRhs(aexps)))
+          val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls.filter(x=>x.functionidentifier==id.value), id.value, Some(id.value))
+          Some(aDefinition(aDefLhs(ThreadT(),id,id,id.value,args,returntype),aDefRhs(aexps)))
         }
         
         case Definition(DefLhs(FunctionT(),id,args,returntype),DefRhs(expressions)) => 
         {
-          val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls, hierarchy+id.value)
-          Some(aDefinition(aDefLhs(FunctionT(),id,IdT(id.value+"$"+hierarchy),args,returntype),aDefRhs(aexps)))
+          val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls, hierarchy+id.value, callingthread)
+          Some(aDefinition(aDefLhs(FunctionT(),id,IdT(id.value+"$"+hierarchy),"shouldn't matter",args,returntype),aDefRhs(aexps)))
         }
         case Definition(DefLhs(ProgramT(),_,_,_),_) => None //we don't really care about it...
         case Definition(DefLhs(ActionT(),id,args,returntype),DefRhs(expressions)) => 
@@ -237,8 +237,8 @@ object FumurtCodeGenerator
           }
           else
           {
-            val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls, hierarchy+id.value)
-            Some(aDefinition(aDefLhs(FunctionT(),id,IdT(id.value+"$"+hierarchy),args,returntype),aDefRhs(aexps)))
+            val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls, hierarchy+id.value, callingthread)
+            Some(aDefinition(aDefLhs(ActionT(),id,IdT(id.value+"$"+hierarchy),callingthread match{case Some(z)=>z; case None=>"not found"},args,returntype),aDefRhs(aexps)))
           }
         }
         case FunctionCallStatement(fid,args)=>
@@ -271,7 +271,7 @@ object FumurtCodeGenerator
   {
     val list = ast.flatMap(node=>node match
       {
-        case aDefinition(aDefLhs(ThreadT(),id,cppid,_,_),aDefRhs(expressions))=>
+        case aDefinition(aDefLhs(ThreadT(),id,cppid,_,_,_),aDefRhs(expressions))=>
         {
           val signature = "[[noreturn]] static void "+cppid.value+"()"
           val functionstart = signature+"\n{"
@@ -281,7 +281,7 @@ object FumurtCodeGenerator
             y=> y match
             {
               case aDefinition(leftside, rightside)=>None
-              case aFunctionCallStatement(id.value,_, args) => Some("waitForRendezvous(\""+cppid+"\");\n  continue;")
+              case aFunctionCallStatement(id.value,_, args) => Some("waitForRendezvous(\""+cppid.value+"\");\n  continue;")
               case z:aFunctionCallStatement => Some(functioncalltranslator(z, id.value) + ";")
               //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
             }
@@ -292,14 +292,41 @@ object FumurtCodeGenerator
           
         }
         case z:aFunctionCallStatement=>None
-        case aDefinition(aDefLhs(ActionT(),id,cppid,args,returntype),aDefRhs(expressions))=>
+        case aDefinition(aDefLhs(ActionT(),id,cppid,callingthread,args,returntype),aDefRhs(expressions))=>
         {
           val signature = getFunctionSignature(cppid, args, returntype)
-          Some(("",""))
+          val functionstart = signature+"\n{"
+          val functionend = "\n}\n"
+          val generals = expressions.flatMap(
+            y=> y match
+            {
+              case aDefinition(leftside, rightside)=>None
+              case z:aFunctionCallStatement => Some(functioncalltranslator(z, callingthread) + ";")
+              //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
+            }
+          ).foldLeft("")((x,y)=>x+"\n  "+y)
+          val underfunctions = getFunctionDeclarations(expressions)
+          val body = functionstart+generals+functionend
+          //Some((signature+";",body))
+          Some((signature+";"+underfunctions._1, body+underfunctions._2))
         }
-        case aDefinition(aDefLhs(FunctionT(),id,cppid,args,returntype),aDefRhs(expressions))=>
+        case aDefinition(aDefLhs(FunctionT(),id,cppid,_,args,returntype),aDefRhs(expressions))=>
         {
-          Some(("",""))
+          val signature = getFunctionSignature(cppid, args, returntype)
+          val functionstart = signature+"\n{"
+          val functionend = "\n}\n"
+          val generals = expressions.flatMap(
+            y=> y match
+            {
+              case aDefinition(leftside, rightside)=>None
+              case z:aFunctionCallStatement => Some(functioncalltranslator(z, "shouldn't be relevant") + ";")
+              //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
+            }
+          ).foldLeft("")((x,y)=>x+"\n  "+y)
+          val underfunctions = getFunctionDeclarations(expressions)
+          val body = functionstart+generals+functionend
+          //Some((signature+";",body))
+          Some((signature+";"+underfunctions._1, body+underfunctions._2))
         }
       }
     ):List[(String,String)]
@@ -405,7 +432,7 @@ object FumurtCodeGenerator
       
     }
   
-    typetranslator(returntype)+" "+cppid+"("+argsString+")"
+    typetranslator(returntype)+" "+cppid.value+"("+argsString+")"
   }
   
   def typetranslator(in:TypeT):String =
@@ -711,7 +738,7 @@ trait aCallarg extends Callarg with aStatement
 trait aStatement extends aExpression
 
 case class aDefinition(val leftside:aDefLhs, val rightside:aDefRhs) extends aExpression
-case class aDefLhs(val description:DefDescriptionT, val id:IdT, val cppid:IdT, val args:Option[Arguments], val returntype:TypeT)
+case class aDefLhs(val description:DefDescriptionT, val id:IdT, val cppid:IdT, val callingthread:String, val args:Option[Arguments], val returntype:TypeT)
 //case class Arguments(val args:List[Argument])
 //case class Argument(val id:IdT, val typestr:TypeT)
 case class aDefRhs(val expressions:List[aExpression] )
