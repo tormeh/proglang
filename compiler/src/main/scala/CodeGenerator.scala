@@ -273,7 +273,8 @@ object FumurtCodeGenerator
       {
         case aDefinition(aDefLhs(ThreadT(),id,cppid,_,_),aDefRhs(expressions))=>
         {
-          val functionstart = "[[noreturn]] static void " + cppid + "()\n{"
+          val signature = "[[noreturn]] static void "+cppid.value+"()"
+          val functionstart = signature+"\n{"
           val functionend = "\n}\n"
           val (tailrecursestart, tailrecurseend) = ("while(true)\n{", "\n}")
           val generals = expressions.flatMap(
@@ -286,9 +287,8 @@ object FumurtCodeGenerator
             }
           ).foldLeft("")((x,y)=>x+"\n  "+y)
           val underfunctions = getFunctionDeclarations(expressions)
-          val signature = "static void "+cppid+"();\n"
           val body = functionstart+tailrecursestart+generals+tailrecurseend+functionend
-          Some((signature+underfunctions._1, body+underfunctions._2))
+          Some((signature+";"+underfunctions._1, body+underfunctions._2))
           
         }
         case z:aFunctionCallStatement=>None
