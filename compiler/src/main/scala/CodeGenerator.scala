@@ -335,6 +335,15 @@ object FumurtCodeGenerator
       case aFunctionCallStatement("minus",_,_,_) => basicmathcalltranslator(call, callingthread)
       case aFunctionCallStatement("multiply",_,_,_) => basicmathcalltranslator(call, callingthread)
       case aFunctionCallStatement("divide",_,_,_) => basicmathcalltranslator(call, callingthread)
+      case aFunctionCallStatement("if",_, Right(aNamedCallargs(List(aNamedCallarg(IdT("condition"),condstat), aNamedCallarg(IdT("else"),elsestat), aNamedCallarg(IdT("then"),thenstat)))),_) => 
+      {
+        condstat match
+        {
+          case TrueStatement()=>
+          case FalseStatement()=>
+        }
+        "if("+"){"+"}else{"+"}"
+      }
       case aFunctionCallStatement(funcid,cppfuncid,args,_) =>
       {
         val argstr = args match
