@@ -59,16 +59,20 @@ object FumurtCodeGenerator
           val aexpressions = getCallsAnnotatedTreeInternal(expressions,argumentsToDef,Some(deff))
           Some(aDefinition(aDefLhs(desc,id,cppid,callingthread,args,returntype),aDefRhs(aexpressions)))
         }
-        case aFunctionCallStatement(fid,cppfid,args)=>
+        case aFunctionCallStatement(fid,_,args,_)=>
         {
-          if(fid=="actionPrint" || fid=="actionMutate" || fid=="plus" || fid=="minus" || fid=="multiply" || fid=="divide")
+          if(fid=="actionPrint" || fid=="actionMutate")
           {
-            Some(aFunctionCallStatement(fid,fid,args))
+            Some(aFunctionCallStatement(fid,fid,args,"Nothing"))
+          }
+          else if(fid=="plus" || fid=="minus" || fid=="multiply" || fid=="divide")
+          {
+            Some(aFunctionCallStatement(fid,fid,args,"Number")) //TODO: Find actual type like in typechecker. As it is, it only matters if it is Nothing or not.
           }
           else
           {
             val ldeff = findinscope(Some(arguments), inSameDefinition, containingDefinition.map(x=>x.leftside), fid)
-            Some(aFunctionCallStatement(fid,ldeff.cppid.value,args))
+            Some(aFunctionCallStatement(fid,ldeff.cppid.value,args,ldeff.returntype.value))
           }
         }
       }
@@ -180,7 +184,7 @@ object FumurtCodeGenerator
                   case Left(arg)=>Left(annotateCallarg(arg))
                   case Right(NamedCallargs(arglist))=>Right(aNamedCallargs(arglist.map(x=>aNamedCallarg(x.id,annotateCallarg(x.argument)) )))
                 }
-                aFunctionCallStatement(fid,"not filled out",newargs)
+                aFunctionCallStatement(fid,"not filled out",newargs,"not filled out")
               }
             }
           }
@@ -203,7 +207,18 @@ object FumurtCodeGenerator
         y=> y match
         {
           case aDefinition(leftside, rightside)=>None
-          case z:aFunctionCallStatement => Some(functioncalltranslator(z, callingthread) + ";")
+          case z:aFunctionCallStatement =>
+          {
+            if(z.returntype!="Nothing")
+            {
+              Some("return "+functioncalltranslator(z, callingthread) + "; //returntype: "+z.returntype)
+            }
+            else
+            {
+              Some(functioncalltranslator(z, callingthread) + ";")
+            }
+            
+          }
           case IdentifierStatement(value) => Some("return "+value+";")
           case StringStatement(value) => Some("return "+value+";")
           case IntegerStatement(value) => Some("return "+value.toString+";")
@@ -230,7 +245,7 @@ object FumurtCodeGenerator
             y=> y match
             {
               case aDefinition(leftside, rightside)=>None
-              case aFunctionCallStatement(id.value,_, args) => Some("waitForRendezvous(\""+cppid.value+"\");\n  continue;")
+              case aFunctionCallStatement(id.value,_, args,_) => Some("waitForRendezvous(\""+cppid.value+"\");\n  continue;")
               case z:aFunctionCallStatement => Some(functioncalltranslator(z, id.value) + ";")
               //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
             }
@@ -306,21 +321,21 @@ object FumurtCodeGenerator
     
     call match
     {
-      case aFunctionCallStatement("actionPrint",_, Left(StringStatement(value))) => "print" + callingthread + ".push_back(" + value + ")"
-      case aFunctionCallStatement("actionPrint",_, Left(IdentifierStatement(value))) => "print" + callingthread + ".push_back(std::to_string(" + value + "))"
-      case aFunctionCallStatement("actionPrint",_, Left(x:aFunctionCallStatement)) => "print" + callingthread + ".push_back(" + functioncalltranslator(x,callingthread) + ")"
-      case aFunctionCallStatement("toString",_, Left(x:aFunctionCallStatement)) => "std::to_string(" + functioncalltranslator(x,callingthread) + ")"
-      case aFunctionCallStatement("toString",_, Left(IdentifierStatement(value))) => "std::to_string(" + value + ")"
-      case aFunctionCallStatement("actionMutate",_, Right(aNamedCallargs(List(aNamedCallarg(IdT("newValue"),IdentifierStatement(newval)), aNamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) => vari + " = " + newval
-      case aFunctionCallStatement("actionMutate",_, Right(aNamedCallargs(List(aNamedCallarg(IdT("newValue"),x:aFunctionCallStatement), aNamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) =>
+      case aFunctionCallStatement("actionPrint",_, Left(StringStatement(value)),_) => "print" + callingthread + ".push_back(" + value + ")"
+      case aFunctionCallStatement("actionPrint",_, Left(IdentifierStatement(value)),_) => "print" + callingthread + ".push_back(std::to_string(" + value + "))"
+      case aFunctionCallStatement("actionPrint",_, Left(x:aFunctionCallStatement),_) => "print" + callingthread + ".push_back(" + functioncalltranslator(x,callingthread) + ")"
+      case aFunctionCallStatement("toString",_, Left(x:aFunctionCallStatement),_) => "std::to_string(" + functioncalltranslator(x,callingthread) + ")"
+      case aFunctionCallStatement("toString",_, Left(IdentifierStatement(value)),_) => "std::to_string(" + value + ")"
+      case aFunctionCallStatement("actionMutate",_, Right(aNamedCallargs(List(aNamedCallarg(IdT("newValue"),IdentifierStatement(newval)), aNamedCallarg(IdT("variable"),IdentifierStatement(vari))))),_) => vari + " = " + newval
+      case aFunctionCallStatement("actionMutate",_, Right(aNamedCallargs(List(aNamedCallarg(IdT("newValue"),x:aFunctionCallStatement), aNamedCallarg(IdT("variable"),IdentifierStatement(vari))))),_) =>
       {
         "write" + vari.capitalize + " = " + functioncalltranslator(x, callingthread)
       }
-      case aFunctionCallStatement("plus",_,_) => basicmathcalltranslator(call, callingthread)
-      case aFunctionCallStatement("minus",_,_) => basicmathcalltranslator(call, callingthread)
-      case aFunctionCallStatement("multiply",_,_) => basicmathcalltranslator(call, callingthread)
-      case aFunctionCallStatement("divide",_,_) => basicmathcalltranslator(call, callingthread)
-      case aFunctionCallStatement(funcid,cppfuncid,args) =>
+      case aFunctionCallStatement("plus",_,_,_) => basicmathcalltranslator(call, callingthread)
+      case aFunctionCallStatement("minus",_,_,_) => basicmathcalltranslator(call, callingthread)
+      case aFunctionCallStatement("multiply",_,_,_) => basicmathcalltranslator(call, callingthread)
+      case aFunctionCallStatement("divide",_,_,_) => basicmathcalltranslator(call, callingthread)
+      case aFunctionCallStatement(funcid,cppfuncid,args,_) =>
       {
         val argstr = args match
           {
@@ -346,7 +361,7 @@ object FumurtCodeGenerator
       //case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IdentifierStatement(right)))))) => left + operator + right
       //case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IntegerStatement(right)))))) => left + operator + right
       //case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),DoubleStatement(right)))))) => left + operator + right
-      case aFunctionCallStatement(_,_, Right(aNamedCallargs(callargs))) =>
+      case aFunctionCallStatement(_,_, Right(aNamedCallargs(callargs)),_) =>
       {
         val argstr = callargs.map(arg=>
           {
@@ -511,7 +526,7 @@ case class aDefRhs(val expressions:List[aExpression] )
 case class aNamedCallarg(id:IdT, argument:aCallarg) //extends Callarg
 case class aNamedCallargs(val value:List[aNamedCallarg])
 
-case class aFunctionCallStatement(val functionidentifier:String, val cppfunctionidentifier:String, val args:Either[aCallarg,aNamedCallargs]) extends aStatement with aCallarg
+case class aFunctionCallStatement(val functionidentifier:String, val cppfunctionidentifier:String, val args:Either[aCallarg,aNamedCallargs], val returntype:String) extends aStatement with aCallarg
 
 
 
