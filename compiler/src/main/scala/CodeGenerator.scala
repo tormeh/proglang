@@ -341,8 +341,11 @@ object FumurtCodeGenerator
         {
           case TrueStatement()=>
           case FalseStatement()=>
+          case _=> 
+          {
+            "if("+"){"+"}else{"+"}"
+          }
         }
-        "if("+"){"+"}else{"+"}"
       }
       case aFunctionCallStatement(funcid,cppfuncid,args,_) =>
       {
