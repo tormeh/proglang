@@ -204,6 +204,12 @@ object FumurtCodeGenerator
         {
           case aDefinition(leftside, rightside)=>None
           case z:aFunctionCallStatement => Some(functioncalltranslator(z, callingthread) + ";")
+          case IdentifierStatement(value) => Some("return "+value+";")
+          case StringStatement(value) => Some("return "+value+";")
+          case IntegerStatement(value) => Some("return "+value.toString+";")
+          case DoubleStatement(value) => Some("return "+value.toString+";")
+          case TrueStatement() => Some("return true;")
+          case FalseStatement() => Some("return false;")
           //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
         }
       ).foldLeft("")((x,y)=>x+"\n  "+y)
