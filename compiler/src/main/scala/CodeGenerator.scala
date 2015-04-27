@@ -25,81 +25,6 @@ object FumurtCodeGenerator
     includestatement + topThreadNumMacroln + funSignatures + "\n" + synchvardeclarations + printdecs + "\n" + synchronizationGlobalVars + syncfunc + "\n\n" /*+ topthreaddeclarations*/ + "\n"+ funDeclarations + "\n\n" + main
   }
   
-  /*def gettopthreaddeclarations(ast:List[Definition]):String =
-  {
-    val topactfuns = ast.filter(x => (x.leftside.description match {case ActionT() => true; case FunctionT()=>true; case _=> false}))
-    
-    ast.filter(x => (x.leftside.description match {case ThreadT() => true; case _=> false})).map(x=>
-      {   
-        val functionstart = "[[noreturn]] static void " + x.leftside.id.value + "()\n{"
-        val functionend = "\n}\n"
-        val (tailrecursestart, tailrecurseend) = ("while(true)\n{", "\n}") /*x.rightside.expressions.last match
-        {
-          case FunctionCallStatement(functionidentifier, args) =>
-          {
-            if(functionidentifier == x.leftside.id.value)
-            {
-              //tail recursion! Woo!
-              ("While(true)\n{\n","\n}")
-            }
-            else {println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()}
-          }
-          case _=> ("","")
-        }*/
-        val inclusions = x.leftside.args match
-        {
-          case None=>List()
-          case Some(Arguments(args))=>args.flatMap(y=>
-          if(y.typestr.value=="Inclusion")
-          {
-            topactfuns.find(z=>if(z.leftside.id.value==y.id.value){true}else{false})
-          }
-          else
-          {
-            None
-          }
-          )
-        }
-        def getGenericFunctionCall(thread:Definition, inclusions:List[Definition], functionid:String, arguments:Either[Callarg,NamedCallargs]):String =
-        {
-          val fundef = inclusions.find(v=>if(functionid==v.leftside.id.value){true}else{false})
-          val suffix:String = fundef match
-          {
-            case None=>thread.leftside.id.value
-            case Some(Definition(DefLhs(ActionT(),_,_,_),_))=>thread.leftside.id.value
-            case Some(Definition(DefLhs(FunctionT(),_,_,_),_))=>""
-            case Some(_)=>"bug bug bug"
-          }
-          val argstr = arguments match
-          {
-            case Left(callarg)=>callargTranslator(callarg, getGenericFunctionCall(thread, inclusions,_:String,_:Either[Callarg,NamedCallargs]))
-            case Right(NamedCallargs(args)) =>
-            {
-              val first = callargTranslator(args.head.argument, getGenericFunctionCall(thread, inclusions,_:String,_:Either[Callarg,NamedCallargs]))
-              val subsequent = args.foldLeft("")((x,y)=>x+", "+callargTranslator(y.argument, getGenericFunctionCall(thread, inclusions,_:String,_:Either[Callarg,NamedCallargs])))
-              first+subsequent
-            }
-          }
-          functionid+"$"+suffix+"("+argstr+")"
-        }
-        val generals = x.rightside.expressions.flatMap(
-          y=> y match
-          {
-            //case FunctionCallStatement("println", args) => "print" + x.leftside.id.value + ".push_back(" + args match{case Left(Callarg) =>; case Right(_)=>"not implemented"} + ");"
-            //case FunctionCallStatement("println", Left(StringStatement(value))) => "print" + x.leftside.id.value + ".push_back(" + value + ");"
-            //case FunctionCallStatement("println", Left(IdentifierStatement(value))) => "print" + x.leftside.id.value + ".push_back(" + value + ");"
-            //case FunctionCallStatement("mutate", Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),IdentifierStatement(newval)), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) => vari + "=" + newval + ";"
-            case Definition(leftside, rightside)=>None
-            case FunctionCallStatement(x.leftside.id.value, args) => Some("waitForRendezvous(\""+x.leftside.id.value+"\");\n  continue;")
-            case z:FunctionCallStatement => Some(functioncalltranslator(z, x.leftside.id.value, getGenericFunctionCall(x,inclusions,_:String,_:Either[Callarg,NamedCallargs])) + ";")
-            //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
-          }
-        ).foldLeft("")((x,y)=>x+"\n  "+y)
-        functionstart + tailrecursestart + generals + tailrecurseend + functionend
-      }
-    ).foldLeft("")((x,y)=>x+y)
-    
-  }*/
   
   def getAnnotatedTree(ast:List[Expression], topthreadcalls:List[FunctionCallStatement]):List[aExpression] = 
   {
@@ -317,86 +242,6 @@ object FumurtCodeGenerator
     list.foldLeft(("",""))((x,y)=>(x._1+"\n"+y._1,x._2+"\n"+y._2))
   }
   
-  /*def getFunctionDeclarations(ast:List[Expression], topthreadcalls:List[FunctionCallStatement]):(String,String) =
-  {
-      def getDeclarations(ast:List[Expression], hierarchy:String, callingthread:String, defdesc:DefDescriptionT):(String,String) =
-      {
-        ast.flatMap(x => x match
-          {
-            case z:Statement=>None
-            //case Definition(DefLhs(ThreadT(),id,_,_),DefRhs(expressions))=>Some(getFunctionDeclarations(expressions, hierarchy+id.value))
-            case Definition(DefLhs(thisdefdesc,id,args,returntype),DefRhs(expressions))=>
-            {
-            //if(thisdefdesc.toString!=defdesc.toString){None}
-              if(thisdefdesc.toString==defdesc.toString)
-              {
-                val signature = getFunctionSignature(id, args, returntype, hierarchy)
-                
-                val generals = expressions.flatMap(
-                  y=>y match
-                  {
-                    case Definition(leftside, rightside)=>None
-                    case z:FunctionCallStatement => Some(functioncalltranslator(z, callingthread, ((l:String,r:Either[Callarg,NamedCallargs])=>"not implemented")) + ";") //TODO
-                    //TODO: Add support for returning stuff
-                  }
-                ).foldLeft("")((x,y)=>x+"\n  "+y)
-                val (furtherFunSignatures, furtherFunBodies) = getDeclarations(expressions, hierarchy+id.value, callingthread, FunctionT())
-                val (furtherActSignatures, furtherActBodies) = getDeclarations(expressions, hierarchy+id.value, callingthread, ActionT())
-                Some((signature+";\n"+furtherFunSignatures+furtherActSignatures, signature+"\n{"+ generals +"\n}\n"+furtherFunBodies+furtherActBodies))
-              }
-              else{None}
-            }
-            case _=>None
-          }
-        ).foldLeft(("",""))((x,y)=>(if(y._1!=""){x._1+y._1}else{x._1},       x._2+"\n  "+y._2))
-      }
-  
-    //val topthreaddefs = ast.filter(x=>x match{case Definition(DefLhs(ThreadT(),_,_,_),_)=>true; case _=>false})
-    val (topActionSignatures, topActionBodies) = topthreadcalls.map(threadcall=>
-      threadcall.args match
-      {
-        case Left(IdentifierStatement(argname))=>
-        {
-          val action = ast.filter(x=>x match{case Definition(DefLhs(ActionT(),IdT(thisargname),_,_),_)=>if(argname==thisargname){true}else{false}; case _=>false})
-          getDeclarations(action, threadcall.functionidentifier, threadcall.functionidentifier, ActionT())
-        }
-        case Left(_)=>("","")
-        case Right(NamedCallargs(namedargs))=>
-        {
-          val actions = namedargs.flatMap(x=>
-            x match
-            {
-              case NamedCallarg(_,IdentifierStatement(argname))=>
-              {
-                ast.find(y=>y match{case Definition(DefLhs(ActionT(),IdT(thisargname),_,_),_)=>if(argname==thisargname){true}else{false}; case _=>false}) match
-                {
-                  case None=>None
-                  case Some(z)=>Some(z)
-                }
-              }
-              case _=>None
-            }
-          )
-          getDeclarations(actions, threadcall.functionidentifier, threadcall.functionidentifier, ActionT())
-        }
-      }
-    ).foldLeft(("",""))((x,y)=>(x._1+y._1, x._2+y._2)) :(String,String)
-    
-    val (topFunctionSignatures, topFunctionBodies) = getDeclarations(ast, "", "", FunctionT()):(String,String)
-    val (threadInternalSignatures, threadInternalBodies) = ast.flatMap(x=>x match
-      {
-        case Definition(DefLhs(ThreadT(),id,_,_),DefRhs(expressions))=>
-        {
-          val acts = getDeclarations(expressions, id.value, id.value, ActionT()):(String,String)
-          val funs = getDeclarations(expressions, id.value, id.value, FunctionT()):(String,String)
-          Some((acts._1+funs._1, acts._2+funs._2))
-        }
-        
-        case _=>None
-      }
-    ).foldLeft(("",""))((x,y)=>(x._1+y._1, x._2+y._2)) :(String,String)
-    (topActionSignatures+topFunctionSignatures+threadInternalSignatures, topActionBodies+topFunctionBodies+threadInternalBodies)
-  }*/
   
   
   
@@ -447,22 +292,6 @@ object FumurtCodeGenerator
       case NoArgs()=>""
     }
   }
-  /*
-  def callargTranslator(callarg:Callarg, getCall:((String,Either[Callarg,NamedCallargs])=>String)):String =
-  {
-    callarg match
-    {
-      case StringStatement(value)=>value
-      case IntegerStatement(value)=>value.toString
-      case DoubleStatement(value)=>value.toString
-      case TrueStatement()=>"true"
-      case FalseStatement()=>"false"
-      case IdentifierStatement(value)=>value
-      case FunctionCallStatement(funcid, args)=>getCall(funcid, args)
-      case NoArgs()=>""
-    }
-  }
-  */
   
   def functioncalltranslator(call:aFunctionCallStatement, callingthread:String):String =
   {
@@ -529,59 +358,6 @@ object FumurtCodeGenerator
     }
   }
   
-  /*
-  def functioncalltranslator(call:aFunctionCallStatement, callingthread:String, getCall:((String,Either[Callarg,NamedCallargs])=>String)):String =
-  {
-    //println("in functioncalltranslator. call is "+call)
-    //if(call.functionidentifier=="plus"){println("found")}
-    
-    call match
-    {
-      case aFunctionCallStatement("actionPrint",_, Left(StringStatement(value))) => "print" + callingthread + ".push_back(" + value + ")"
-      case aFunctionCallStatement("actionPrint",_, Left(IdentifierStatement(value))) => "print" + callingthread + ".push_back(std::to_string(" + value + "))"
-      case aFunctionCallStatement("actionPrint",_, Left(x:FunctionCallStatement)) => "print" + callingthread + ".push_back(" + functioncalltranslator(x,callingthread,getCall) + ")"
-      case aFunctionCallStatement("toString",_, Left(x:FunctionCallStatement)) => "std::to_string(" + functioncalltranslator(x,callingthread,getCall) + ")"
-      case aFunctionCallStatement("toString",_, Left(IdentifierStatement(value))) => "std::to_string(" + value + ")"
-      case aFunctionCallStatement("actionMutate",_, Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),IdentifierStatement(newval)), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) => vari + " = " + newval
-      case aFunctionCallStatement("actionMutate",_, Right(NamedCallargs(List(NamedCallarg(IdT("newValue"),x:FunctionCallStatement), NamedCallarg(IdT("variable"),IdentifierStatement(vari)))))) =>
-      {
-        "write" + vari.capitalize + " = " + functioncalltranslator(x, callingthread,getCall)
-      }
-      case FunctionCallStatement("plus",_,_) => basicmathcalltranslator(call, callingthread, getCall:((String,Either[Callarg,NamedCallargs])=>String))
-      case FunctionCallStatement("minus",_,_) => basicmathcalltranslator(call, callingthread, getCall:((String,Either[Callarg,NamedCallargs])=>String))
-      case FunctionCallStatement("multiply",_,_) => basicmathcalltranslator(call, callingthread, getCall:((String,Either[Callarg,NamedCallargs])=>String))
-      case FunctionCallStatement("divide",_,_) => basicmathcalltranslator(call, callingthread, getCall:((String,Either[Callarg,NamedCallargs])=>String))
-      case FunctionCallStatement(funcid,args) => getCall(funcid,args)
-      case _=> "not implemented"
-    }
-  }
-  
-  def basicmathcalltranslator(call:aFunctionCallStatement, callingthread:String, getCall:((String,Either[Callarg,NamedCallargs])=>String)):String=
-  {
-    val operator = if(call.functionidentifier=="plus"){" + "}else if(call.functionidentifier=="minus"){" - "}else if(call.functionidentifier=="multiply"){" * "}else if(call.functionidentifier=="minus"){" / "}
-    call match
-    {
-      //case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IdentifierStatement(right)))))) => left + operator + right
-      //case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IntegerStatement(right)))))) => left + operator + right
-      //case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),DoubleStatement(right)))))) => left + operator + right
-      case aFunctionCallStatement(_,_, Right(NamedCallargs(callargs))) =>
-      {
-        val argstr = callargs.map(arg=>
-          {
-            arg match
-            {
-              case aNamedCallarg(_,IdentifierStatement(value))=>value
-              case aNamedCallarg(_,IntegerStatement(value))=>value.toString
-              case aNamedCallarg(_,DoubleStatement(value))=>value.toString
-              case aNamedCallarg(_,f:FunctionCallStatement)=>functioncalltranslator(f, callingthread, getCall)
-            }
-          }
-        ):List[String]
-        "(" + argstr(0) + operator + argstr(1) + ")"
-      } 
-    }
-  }
-  */
   
   
   def gettopthreadstatements(ast:List[Definition]):List[FunctionCallStatement]=
