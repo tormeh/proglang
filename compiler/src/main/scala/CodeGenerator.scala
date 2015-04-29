@@ -60,63 +60,7 @@ object FumurtCodeGenerator
           val aexpressions = getCallsAnnotatedTreeInternal(expressions,argumentsToDef,Some(deff))
           Some(aDefinition(aDefLhs(desc,id,cppid,callingthread,args,returntype),aDefRhs(aexpressions)))
         }
-        case call @ aFunctionCallStatement(fid,_,args,_)=>
-        {
-          
-          Some(annotateFunctionCall(call, arguments, inSameDefinition, containingDefinition))
-          /*if(fid=="actionPrint")
-          {
-            //val ldeff = aDefLhs(ActionT(), IdT("actionPrint"), Some(Arguments(List(Argument(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
-            Some(aFunctionCallStatement(fid,fid,args,"Nothing"))
-          }
-          else if(fid=="actionMutate")
-          {
-            Some(aFunctionCallStatement(fid,fid,args,"Nothing"))
-          }
-          else if(fid=="plus" || fid=="minus" || fid=="multiply" || fid=="divide")
-          {
-            Some(aFunctionCallStatement(fid,fid,args,"Number")) //TODO: Find actual type like in typechecker. As it is, it only matters if it is Nothing or not.
-          }
-          else
-          {
-            def removeInclusions(args:Either[aCallarg,aNamedCallargs], ldeffargs:Option[Arguments]):Either[aCallarg,aNamedCallargs] = args match
-            {
-              case Left(callarg)=>
-              {
-                ldeffargs match
-                {
-                  case Some(Arguments(defargs))=>if(defargs.head.typestr.value=="Inclusion"){Left(NoArgs())}else{args}
-                  case None=>Left(NoArgs())
-                  //case _=>Left(NoArgs())
-                }
-              }
-              case Right(aNamedCallargs(namedcallargs))=>
-              {
-                ldeffargs match
-                {
-                  case Some(Arguments(defargs))=>
-                  {
-                    val mnewargs = ListBuffer():ListBuffer[aNamedCallarg]
-                    for(i<-0 until defargs.length)
-                    {
-                      if(defargs(i).typestr.value!="Inclusion")
-                      {
-                        mnewargs += namedcallargs(i)
-                      }
-                    }
-                    Right(aNamedCallargs(mnewargs.toList))
-                  }
-                  case None=>println("in getCallsAnnotatedTreeInternal");scala.sys.exit();Left(NoArgs())
-                  //case _=>Left(NoArgs())
-                }
-              }
-            }
-            val ldeff = findinscope(Some(arguments), inSameDefinition, containingDefinition.map(x=>x.leftside), fid)
-            val newargs = removeInclusions(args, ldeff.args)
-            println("ldeff.cppid.value: "+ldeff.cppid.value)
-            Some(aFunctionCallStatement(fid,ldeff.cppid.value,newargs,ldeff.returntype.value))
-          }*/
-        }
+        case call @ aFunctionCallStatement(fid,_,args,_)=>Some(annotateFunctionCall(call, arguments, inSameDefinition, containingDefinition))
         case z:IdentifierStatement=>Some(z)
         case z:BasicValueStatement=>Some(z)
       }
@@ -127,74 +71,84 @@ object FumurtCodeGenerator
   {
     
     def annotateCallargs(args:Either[aCallarg,aNamedCallargs], arguments:List[aDefLhs], inSameDefinition:List[aDefLhs], containingDefinition:Option[aDefinition]):Either[aCallarg,aNamedCallargs] =
+    {
+      args match
+      {
+        case Left(callarg)=>callarg match
+        {
+          case z:aFunctionCallStatement=>Left(annotateFunctionCall(z, arguments, inSameDefinition, containingDefinition))
+          case z:aStatement=>Left(z)
+        }
+        case Right(aNamedCallargs(callargs))=>Right(aNamedCallargs(callargs.map(namedcallarg=>namedcallarg.argument match
           {
-            args match
-            {
-              case Left(callarg)=>callarg match
-              {
-                case z:aFunctionCallStatement=>Left(annotateFunctionCall(z, arguments, inSameDefinition, containingDefinition))
-                case z:aStatement=>Left(z)
-              }
-              case Right(aNamedCallargs(callargs))=>Right(aNamedCallargs(callargs.map(namedcallarg=>namedcallarg.argument match
-                {
-                  case z:aFunctionCallStatement=>aNamedCallarg(namedcallarg.id, annotateFunctionCall(z, arguments, inSameDefinition, containingDefinition))
-                  case aCallarg=>namedcallarg:aNamedCallarg
-                }
-              )))
-            }
+            case z:aFunctionCallStatement=>aNamedCallarg(namedcallarg.id, annotateFunctionCall(z, arguments, inSameDefinition, containingDefinition))
+            case aCallarg=>namedcallarg:aNamedCallarg
           }
+        )))
+      }
+    }
     
     val fid = functioncall.functionidentifier
     val args = functioncall.args
     if(fid=="actionPrint" || fid=="toString" || fid=="actionMutate")
+    {
+      val newargs = annotateCallargs(args, arguments, inSameDefinition, containingDefinition)
+      aFunctionCallStatement(fid,fid,newargs,"Nothing")
+    }
+    else if(fid=="plus" || fid=="minus" || fid=="multiply" || fid=="divide")
+    {
+      val newargs = annotateCallargs(args, arguments, inSameDefinition, containingDefinition)
+      aFunctionCallStatement(fid,fid,newargs,"Number") //TODO: Find actual type like in typechecker. As it is, it only matters if it is Nothing or not.
+    }
+    else if(fid=="equal" || fid=="lessThan")
+    {
+      val newargs = annotateCallargs(args, arguments, inSameDefinition, containingDefinition)
+      aFunctionCallStatement(fid,fid,newargs,"Boolean")
+    }
+    else if(fid=="if")
+    {
+      val newargs = annotateCallargs(args, arguments, inSameDefinition, containingDefinition)
+      aFunctionCallStatement(fid,fid,newargs,"Something") //TODO: Find actual type like in typechecker. As it is, it only matters if it is Nothing or not.
+    }
+    else
+    {
+      def removeInclusions(args:Either[aCallarg,aNamedCallargs], ldeffargs:Option[Arguments]):Either[aCallarg,aNamedCallargs] = args match
+      {
+        case Left(callarg)=>
+        {
+          ldeffargs match
           {
-            val newargs = annotateCallargs(args, arguments, inSameDefinition, containingDefinition)
-            aFunctionCallStatement(fid,fid,newargs,"Nothing")
+            case Some(Arguments(defargs))=>if(defargs.head.typestr.value=="Inclusion"){Left(NoArgs())}else{args}
+            case None=>Left(NoArgs())
+            //case _=>Left(NoArgs())
           }
-          else if(fid=="plus" || fid=="minus" || fid=="multiply" || fid=="divide")
+        }
+        case Right(aNamedCallargs(namedcallargs))=>
+        {
+          ldeffargs match
           {
-            val newargs = annotateCallargs(args, arguments, inSameDefinition, containingDefinition)
-            aFunctionCallStatement(fid,fid,newargs,"Number") //TODO: Find actual type like in typechecker. As it is, it only matters if it is Nothing or not.
-          }
-          else
-          {
-            def removeInclusions(args:Either[aCallarg,aNamedCallargs], ldeffargs:Option[Arguments]):Either[aCallarg,aNamedCallargs] = args match
+            case Some(Arguments(defargs))=>
             {
-              case Left(callarg)=>
+              val mnewargs = ListBuffer():ListBuffer[aNamedCallarg]
+              for(i<-0 until defargs.length)
               {
-                ldeffargs match
+                if(defargs(i).typestr.value!="Inclusion")
                 {
-                  case Some(Arguments(defargs))=>if(defargs.head.typestr.value=="Inclusion"){Left(NoArgs())}else{args}
-                  case None=>Left(NoArgs())
-                  //case _=>Left(NoArgs())
+                  mnewargs += namedcallargs(i)
                 }
               }
-              case Right(aNamedCallargs(namedcallargs))=>
-              {
-                ldeffargs match
-                {
-                  case Some(Arguments(defargs))=>
-                  {
-                    val mnewargs = ListBuffer():ListBuffer[aNamedCallarg]
-                    for(i<-0 until defargs.length)
-                    {
-                      if(defargs(i).typestr.value!="Inclusion")
-                      {
-                        mnewargs += namedcallargs(i)
-                      }
-                    }
-                    Right(aNamedCallargs(mnewargs.toList))
-                  }
-                  case None=>println("in getCallsAnnotatedTreeInternal");scala.sys.exit();Left(NoArgs())
-                  //case _=>Left(NoArgs())
-                }
-              }
+              Right(aNamedCallargs(mnewargs.toList))
             }
-            val ldeff = findinscope(Some(arguments), inSameDefinition, containingDefinition.map(x=>x.leftside), fid)
-            val newargs = annotateCallargs(removeInclusions(args, ldeff.args), arguments, inSameDefinition, containingDefinition)
-            println("ldeff.cppid.value: "+ldeff.cppid.value)
-            aFunctionCallStatement(fid,ldeff.cppid.value,newargs,ldeff.returntype.value)
+            case None=>println("in getCallsAnnotatedTreeInternal");scala.sys.exit();Left(NoArgs())
+            //case _=>Left(NoArgs())
           }
+        }
+      }
+      val ldeff = findinscope(Some(arguments), inSameDefinition, containingDefinition.map(x=>x.leftside), fid)
+      val newargs = annotateCallargs(removeInclusions(args, ldeff.args), arguments, inSameDefinition, containingDefinition)
+      println("ldeff.cppid.value: "+ldeff.cppid.value)
+      aFunctionCallStatement(fid,ldeff.cppid.value,newargs,ldeff.returntype.value)
+    }
   }
   
   def indexlefts(in:List[aExpression]):List[aDefLhs]=
@@ -446,7 +400,7 @@ object FumurtCodeGenerator
   {
     //println("in functioncalltranslator. call is "+call)
     //if(call.functionidentifier=="plus"){println("found")}
-    
+    println("\n\n"+call)
     call match
     {
       case aFunctionCallStatement("actionPrint",_, Left(StringStatement(value)),_) => "print" + callingthread + ".push_back(" + value + ")"
@@ -454,6 +408,13 @@ object FumurtCodeGenerator
       case aFunctionCallStatement("actionPrint",_, Left(x:aFunctionCallStatement),_) => "print" + callingthread + ".push_back(" + functioncalltranslator(x,callingthread) + ")"
       case aFunctionCallStatement("toString",_, Left(x:aFunctionCallStatement),_) => "std::to_string(" + functioncalltranslator(x,callingthread) + ")"
       case aFunctionCallStatement("toString",_, Left(IdentifierStatement(value)),_) => "std::to_string(" + value + ")"
+      case aFunctionCallStatement("toString",_, Left(IntegerStatement(value)),_) => "std::to_string(" + value.toString + ")"
+      case aFunctionCallStatement("toString",_, Left(DoubleStatement(value)),_) => "std::to_string(" + value.toString + ")"
+      case aFunctionCallStatement("toString",_, Left(TrueStatement()),_) => "true"
+      case aFunctionCallStatement("toString",_, Left(FalseStatement()),_) => "false"
+      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),IntegerStatement(left)), aNamedCallarg(IdT("right"),IntegerStatement(right))))),_) => left.toString+" == "+right.toString
+      case aFunctionCallStatement("lessThan",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),IntegerStatement(left)), aNamedCallarg(IdT("right"),IntegerStatement(right))))),_) => left.toString+" < "+right.toString
+      TODO: add more types that the comparison functions can accept
       case aFunctionCallStatement("actionMutate",_, Right(aNamedCallargs(List(aNamedCallarg(IdT("newValue"),IdentifierStatement(newval)), aNamedCallarg(IdT("variable"),IdentifierStatement(vari))))),_) => vari + " = " + newval
       case aFunctionCallStatement("actionMutate",_, Right(aNamedCallargs(List(aNamedCallarg(IdT("newValue"),x:aFunctionCallStatement), aNamedCallarg(IdT("variable"),IdentifierStatement(vari))))),_) =>
       {

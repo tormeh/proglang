@@ -196,6 +196,7 @@ object FumurtTypeChecker
         {
           checkmutatecall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
+        TODO: add equal and lessThan
         else
         {
           findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), y.functionidentifier) match

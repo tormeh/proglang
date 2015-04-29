@@ -44,6 +44,8 @@ action actionPrintFoo(integerIdentity:Inclusion):Nothing =
   actionPrintFooo()
   actionPrint(toString(integerIdentity(5)))
   actionPrint("  ")
+  actionPrint(if(condition=equal(left=3, right=6), then=toString(6), else=toString(3)))
+  actionPrint("  ")
 }
 
 function integerIdentity(x:Integer):Integer =
