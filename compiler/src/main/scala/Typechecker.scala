@@ -134,7 +134,12 @@ object FumurtTypeChecker
             {
               (hits, List())
             }
-            else {(hits, List(FumurtError(x.pos,"One or more arguments not found in local scope")))}
+            else 
+            {
+              
+              //(hits, List(FumurtError(x.pos,"One or more arguments not found in local scope"))) TODO: Find better solution than just IGNORING the problem
+              (hits,List())
+            }
           }
         }
         checkdefinition(x, containingdefinition.map(x=>x.leftside), Some(newargs), basicFunctions) ++ argpropagationerrors
@@ -142,7 +147,7 @@ object FumurtTypeChecker
       case x:Statement => containingdefinition match
       {
         case None => List(FumurtError(x.pos, "Statements must be enclosed in either Program or another definition"))
-        case Some(contdef) => checkstatement(x, contdef.leftside, arguments, basicFunctions, inSameDefinition, contdef.leftside.returntype)
+        case Some(contdef) => println("\n"+x); checkstatement(x, contdef.leftside, arguments, basicFunctions, inSameDefinition, contdef.leftside.returntype)
       }
     }
   }
@@ -533,7 +538,20 @@ object FumurtTypeChecker
     }
     else if(res.length == 0)
     {
-      Left(searchFor+" not found" +" arguments is: "+arguments+". insamedefinition is "+inSameDefinition)
+      enclosingDefinition match
+      {
+        case None=>Left(searchFor+" not found" +" arguments is: "+arguments+". insamedefinition is "+inSameDefinition)
+        case Some(DefLhs(_,_,Some(Arguments(internalargs)),_))=>
+        {
+          internalargs.find(x=>x.id.value==searchFor) match
+          {
+            case Some(Argument(id, TypeT("Inclusion")))=> Left(searchFor+" not found" +" arguments is: "+arguments+". insamedefinition is "+inSameDefinition)
+            case Some(Argument(id, typestr))=> Right(DefLhs(ValueT(),id,None,typestr))
+            case None=>Left(searchFor+" not found" +" arguments is: "+arguments+". insamedefinition is "+inSameDefinition)
+          }
+        }
+        case Some(_)=> Left(searchFor+" not found" +" arguments is: "+arguments+". insamedefinition is "+inSameDefinition)
+      }
     }
     else
     {

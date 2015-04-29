@@ -3,7 +3,7 @@ program p:Nothing =
   synchronized variable synchronizedNumber:Integer = {synchronized(variable=0, writer=threadPrintHello)}
   threadPrintHello(synchronizedNumber)
   threadPrintWorld(synchronizedNumber)
-  threadPrintLol(actionPrintFoo)
+  threadPrintLol(actionPrintFoo=actionPrintFoo, integerIdentity=integerIdentity)
 }
 
 thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
@@ -22,7 +22,7 @@ thread threadPrintHello(synchronizedNumber:Integer):Nothing =
   threadPrintHello(synchronizedNumber)
 }
 
-thread threadPrintLol(actionPrintFoo:Inclusion):Nothing =
+thread threadPrintLol(actionPrintFoo:Inclusion, integerIdentity:Inclusion):Nothing =
 {
   action actionPrintLol:Nothing =
   {
@@ -30,11 +30,11 @@ thread threadPrintLol(actionPrintFoo:Inclusion):Nothing =
   }
 
   actionPrintLol()
-  actionPrintFoo()
-  threadPrintLol(actionPrintFoo)
+  actionPrintFoo(integerIdentity)
+  threadPrintLol(actionPrintFoo=actionPrintFoo, integerIdentity=integerIdentity)
 }
 
-action actionPrintFoo:Nothing =
+action actionPrintFoo(integerIdentity:Inclusion):Nothing =
 {
   action actionPrintFooo:Nothing =
   {
@@ -42,4 +42,11 @@ action actionPrintFoo:Nothing =
   }
   actionPrint("  FOO   ")
   actionPrintFooo()
+  actionPrint(toString(integerIdentity(5)))
+  actionPrint("  ")
+}
+
+function integerIdentity(x:Integer):Integer =
+{
+  x
 }
