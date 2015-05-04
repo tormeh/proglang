@@ -196,7 +196,22 @@ object FumurtTypeChecker
         {
           checkmutatecall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
-        TODO: add equal and lessThan
+        /*else if (y.functionidentifier=="equal")
+        {
+          val reterror = if(expectedreturn!=TypeT("Boolean")){List(FumurtError(ifcall.pos, "Call to equal always returns boolean, not "+expectedreturn.value))}else{List()}
+          val argerrors = y.args match
+          {
+            case Left(_)=>
+          }
+        }
+        else if (y.functionidentifier=="lessThan" || "biggerthan")
+        {
+          val reterror = if(expectedreturn!=TypeT("Boolean")){List(FumurtError(ifcall.pos, "Call to "+y.functionidentifier+" always returns boolean, not "+expectedreturn.value))}else{List()}
+        }
+        else if (y.functionidentifier=="not")
+        {
+          val reterror = if(expectedreturn!=TypeT("Boolean")){List(FumurtError(ifcall.pos, "Call to not always returns boolean, not "+expectedreturn.value))}else{List()}
+        }*/
         else
         {
           findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), y.functionidentifier) match

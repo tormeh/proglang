@@ -414,7 +414,7 @@ object FumurtCodeGenerator
       case aFunctionCallStatement("toString",_, Left(FalseStatement()),_) => "false"
       case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),IntegerStatement(left)), aNamedCallarg(IdT("right"),IntegerStatement(right))))),_) => left.toString+" == "+right.toString
       case aFunctionCallStatement("lessThan",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),IntegerStatement(left)), aNamedCallarg(IdT("right"),IntegerStatement(right))))),_) => left.toString+" < "+right.toString
-      TODO: add more types that the comparison functions can accept
+      //TODO: add more types that the comparison functions can accept
       case aFunctionCallStatement("actionMutate",_, Right(aNamedCallargs(List(aNamedCallarg(IdT("newValue"),IdentifierStatement(newval)), aNamedCallarg(IdT("variable"),IdentifierStatement(vari))))),_) => vari + " = " + newval
       case aFunctionCallStatement("actionMutate",_, Right(aNamedCallargs(List(aNamedCallarg(IdT("newValue"),x:aFunctionCallStatement), aNamedCallarg(IdT("variable"),IdentifierStatement(vari))))),_) =>
       {

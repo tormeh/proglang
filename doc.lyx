@@ -60,6 +60,10 @@
 
 \begin_body
 
+\begin_layout Title
+Fumurt: A programming language with deterministic threading
+\end_layout
+
 \begin_layout Author
 Tormod Gjeitnes Hellen
 \end_layout
@@ -69,36 +73,180 @@ http://www.cs.ucl.ac.uk/teaching_learning/msc_cgvi/projects/project_report_struc
 /
 \end_layout
 
-\begin_layout Title
-Title
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
 \end_layout
 
-\begin_layout Chapter*
+\begin_layout Chapter
 Introduction
 \end_layout
 
-\begin_layout Chapter*
+\begin_layout Standard
+
+\emph on
+First and foremost, you should write about the most interesting or important
+ parts of your project.
+ Devote most space and time to this.
+ For example:
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+What design choices did you have along the way, and why did you make the
+ choices you made? What was the most difficult part of the project? Why
+ was it difficult? How did you overcome the difficulties? Did you discover
+ anything novel? What did you learn?
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Set the scene and problem statement/specification.
+ Provide the motivation for reading this report.
+ Introduce the structure of report (what you will cover in which chapters).
+ 
+\end_layout
+
+\begin_layout Standard
+Fumurt
+\end_layout
+
+\begin_layout Chapter
 Background
 \end_layout
 
-\begin_layout Chapter*
+\begin_layout Standard
+
+\emph on
+You should provide enough background to the reader for them to understand
+ what the project is all about.
+ For example:
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+What the reader needs to know in order to understand the rest of the report.
+ Examiners like to know that you have done some background research and
+ that you know what else has been done in the field (where relevant).
+ Try to include some references.
+ Related work (if you know of any) What problem are you solving? Why are
+ you solving it? How does this relate to other work in this area? What work
+ does it build on?
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+For 'research-style' projects - ones in which a computational technique
+ (for example neural networks, genetic algorithms, finite element analysis,
+ ray tracing) is used to explore or extend the properties of a mathematical
+ model, or to make predictions of some kind - it may be a good idea to split
+ this chapter into two shorter ones, one covering the computational technique
+ itself and one the area of application.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+The Examiners are just as interested in the process you went through in
+ performing your project work as the results you finally produced.
+ So, make sure your reports concentrate on why you made the particular choices
+ and decisions that you did.
+ We are looking for reasoned arguments and for critical assessment.
+ This is especially so where design, implementation and engineering decisions
+ have been made not just on technical merit but under pressure of non-functional
+ requirements and external influences.
+\end_layout
+
+\begin_layout Chapter
 Analysis and Design
 \end_layout
 
-\begin_layout Chapter*
+\begin_layout Standard
+
+\emph on
+If your project involves designing a system, give a good high-level overview
+ of your design.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+In many projects, the initial design and the final design differ somewhat.
+ If the differences are interesting, write about them, and why the changes
+ were made.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+If your design was not implemented fully, describe which parts you did implement
+, and which you didn't.
+ If the reason you didn't implement everything is interesting (eg it turned
+ out to be difficult for unexpected reasons), write about it.
+\end_layout
+
+\begin_layout Chapter
 Implementation
 \end_layout
 
-\begin_layout Chapter*
+\begin_layout Standard
+
+\emph on
+Give code details (not a complete listing, but descriptions of key parts).
+ Discuss the most important/interesting aspects.
+ It probably won't be possible to discuss everything - give a rationale
+ for what you do discuss.
+\end_layout
+
+\begin_layout Chapter
 Testing
 \end_layout
 
-\begin_layout Chapter*
+\begin_layout Standard
+
+\emph on
+Test plan -- how the program/system was verified.
+ Put the actual test results in the Appendix.
+ This section is useful if your project is more on the software engineering
+ side than research focused.
+\end_layout
+
+\begin_layout Chapter
 Results
 \end_layout
 
-\begin_layout Chapter*
+\begin_layout Standard
+
+\emph on
+This covers different areas to the 'Testing' chapter, and is appropriate
+ for 'research style' projects.
+ For such projects this chapter should detail the types of experiments/simulatio
+ns that were carried out with the code written.
+ Why were certain experiments carried out but not others? What were the
+ important parameters in the simulation and how did they affect the results?
+ If there are very many graphs and tables associated with this chapter they
+ may be put in the Appendix, but it is generally better to keep these close
+ to the text they illustrate, as this is easier for the reader.
+\end_layout
+
+\begin_layout Chapter
 Conclusion, Evaluation and Further Work
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+What have you achieved? Give a critical appraisal (evaluation) of your own
+ work - how could the work be taken further (perhaps by another student
+ next year)?
 \end_layout
 
 \begin_layout Chapter
@@ -106,16 +254,54 @@ Conclusion, Evaluation and Further Work
 System manual
 \end_layout
 
+\begin_layout Standard
+
+\emph on
+This should include all the technical details (where is the code? what do
+ you type to compile it? etc) that would enable a student to continue your
+ project next year, to be able to amend your code and extend it.
+\end_layout
+
 \begin_layout Chapter
 User manual
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+This should give enough information for someone to use what you have designed
+ and implemented.
 \end_layout
 
 \begin_layout Chapter
 Test results
 \end_layout
 
+\begin_layout Standard
+
+\emph on
+If you have test results that add to the value of the report, but which
+ would not fit within the page limit of the main report, you can include
+ then as an appendix.
+ Don't add them just to pad the report though.
+\end_layout
+
 \begin_layout Chapter
 Code listing
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Your code should be well commented.
+ In order not to use up too many pages of your maximum 120 on code, you
+ may like to use the 'a2ps' Unix facility, which allows you to put two pages
+ of code onto one side of paper - see the Unix 'man' pages for details.
+ If you have a great deal of code, and including all of it would take you
+ over the page limit, you can make the rest available on a floppy disk or
+ CD-ROM.
+ You will need to bring in two copies of any disks or CDs you include when
+ you hand in your project report, one to go with each copy of your project.
 \end_layout
 
 \end_body
