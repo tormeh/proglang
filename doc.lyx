@@ -317,6 +317,23 @@ The goal of the programming language is to make a multithreaded program
  single thread can happen concurrently.
  All IO and inter-thread communication are required happen in a statically
  determined sequence.
+ One way to do this is to have the program have two alternating phases:
+\end_layout
+
+\begin_layout Itemize
+Computational phase: In which computations local to a thread are performed.
+\end_layout
+
+\begin_layout Itemize
+Communicative phase: In which IO is effected and shared variables are updated,
+ all in a single-threaded manner.
+\end_layout
+
+\begin_layout Standard
+In the computational phase, the order in which computations are performed
+ on the processor is irrelevant as nothing is shared between the thread
+ and the rest of the world.
+ In the communicative phase, however.........
 \end_layout
 
 \begin_layout Chapter
