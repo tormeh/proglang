@@ -1,0 +1,26 @@
+Introduction
+
+Background
+The subject matter of this report, Fumurt, draws inspiration from previous efforts in the field, like Esterel.
+
+It is commonly understood that writing software is hard. The development of programming languages is a response to this problem. The common pattern is that flexible features that are easily used to write code that is hard to reason about are replaced by, often several, less flexible features. After all, the less flexible a feature is, the more predictable its use is. Three examples:
+-goto replaced by sequence, selection and iteration [1]
+-pointers replaced by indexes and references
+-mutable variables replaced by immutable values
+Interestingly, one can observe that as each feature becomes easier to reason about, the total number of features increase. For example, to eliminate mutation, one needs to also eliminate iteration. One way to do this is by using recursion, which is a full replacement for iteration. But recursion, while allowing immutability, is often harder for humans to understand [citation needed]. To ameliorate this problem, a variety of machanisms have been implemented, for example map and fold, which performs common functions previously performed utilizing iteration. In this manner, the number of features often increase in the interest of analysability. Is this generally true? And if so, at what point does the drawbacks of increasing feature number outweigh the benefit of increased analyzability and predictability? Answering these questions is outside the scope of this report.
+Much progress has been made in making programs easier to understand and analyze in this fashion, yet there is always room for improvement. In later years, one feature in particular has risen to notability: Concurrency. In the past, concurrency has not been an issue for most programmers but as multi-processor (or multi-core) systems have gone mainstream, so has multithreaded programming[2]. 
+
+Analysis and Design
+
+Implementation
+
+Testing
+
+Results
+
+Conclusion, Evaluation and Further Work
+
+
+References
+1: Böhm et Jacopini, 1966
+2: Sutter, 2005
