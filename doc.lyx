@@ -165,6 +165,123 @@ The Examiners are just as interested in the process you went through in
  requirements and external influences.
 \end_layout
 
+\begin_layout Standard
+It is commonly understood that writing software is hard.
+ The development of programming languages is a response to this problem.
+ The common pattern is that flexible features that are easily used to write
+ code that is hard to reason about are replaced by, often several, less
+ flexible features.
+ After all, the less flexible a feature is, the more predictable its use
+ is.
+ Three examples: 
+\end_layout
+
+\begin_layout Itemize
+goto replaced by sequence, selection and iteration 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "structured proof"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+pointers replaced by indexes and references 
+\end_layout
+
+\begin_layout Itemize
+mutable variables replaced by immutable values 
+\end_layout
+
+\begin_layout Standard
+Interestingly, one can observe that as each feature becomes easier to reason
+ about, the total number of features increase.
+ For example, to eliminate mutation, one needs to also eliminate iteration.
+ One way to do this is by using recursion, which is a full replacement for
+ iteration.
+ But recursion, while allowing immutability, is often harder for humans
+ to understand [citation needed].
+ To ameliorate this problem, a variety of machanisms have been implemented,
+ for example map and fold, which performs common functions previously performed
+ utilizing iteration.
+ In this manner, the number of features often increase in the interest of
+ analysability.
+ Is this generally true? And if so, at what point does the drawbacks of
+ increasing feature number outweigh the benefit of increased analyzability
+ and predictability? Answering these questions is outside the scope of this
+ report.
+ Much progress has been made in making programs easier to understand and
+ analyze in this fashion, yet there is always room for improvement.
+ In later years, one feature in particular has risen to notability: Concurrency.
+ In the past, concurrency has not been an issue for most programmers but
+ as multi-processor (or multi-core) systems have gone mainstream, so has
+ multithreaded programming
+\begin_inset CommandInset citation
+LatexCommand cite
+key "free lunch over"
+
+\end_inset
+
+.
+ The problems inherent to concurrency can roughly be divided into two categories
+: Communication and scheduling; making sure the correct information is shared
+ between threads in a correct way and making sure tasks are done at correct
+ times, respectively[citation needed].
+ One possibility is to let the programmer deal with these problems in an
+ application-specific way.
+ This is notoriously error-prone, however.
+ Several abstractions have been deviced for dealing with the two concurrency
+ problems in a systematic manner, to the author's knowledge:
+\end_layout
+
+\begin_layout Itemize
+Actors [citation needed]
+\end_layout
+
+\begin_layout Itemize
+CSP [Hoare, citation needed]
+\end_layout
+
+\begin_layout Itemize
+Transactional memory[citation needed]
+\end_layout
+
+\begin_layout Itemize
+Synchronous programming
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Esterel"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Initially, the goal of this thesis was to create another alternative to
+ these, wherein the programmer would manually schedule the execution of
+ tasks at compile time.
+ Tasks would be allowed to write to special variables which would be used
+ in lieu of final ones if the task could not finish in the alloted time
+ frame.
+ This effort was abandoned because of the burden it would impose on the
+ programmer, the perceived difficulty of implementation and the unsatisfactory
+ failure modes.
+ Instead, it was decided that an approach belonging to the tradition of
+ synchronous programming would be preferable.
+ Given the importance of a familiar superficialities for language adoption
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Language adoption"
+
+\end_inset
+
+, it was decided that the language should have a familiar C/Algol-style
+ syntax, rather than invent or adopt something less common.
+\end_layout
+
 \begin_layout Chapter
 Analysis and Design
 \end_layout
@@ -191,6 +308,15 @@ If your design was not implemented fully, describe which parts you did implement
 , and which you didn't.
  If the reason you didn't implement everything is interesting (eg it turned
  out to be difficult for unexpected reasons), write about it.
+\end_layout
+
+\begin_layout Standard
+The goal of the programming language is to make a multithreaded program
+ behave as predictably as were it singlethreaded.
+ A corollary of this is that only changes of state that are visible to a
+ single thread can happen concurrently.
+ All IO and inter-thread communication are required happen in a statically
+ determined sequence.
 \end_layout
 
 \begin_layout Chapter
@@ -247,6 +373,50 @@ Conclusion, Evaluation and Further Work
 What have you achieved? Give a critical appraisal (evaluation) of your own
  work - how could the work be taken further (perhaps by another student
  next year)?
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "1"
+key "structured proof"
+
+\end_inset
+
+ Böhm et Jacopini, 1966
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "2"
+key "free lunch over"
+
+\end_inset
+
+ Sutter, 2005
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "3"
+key "Esterel"
+
+\end_inset
+
+Berry et Gonthier, 1992
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "4"
+key "Language adoption"
+
+\end_inset
+
+Meyerovich et Rabkin, 2013
 \end_layout
 
 \begin_layout Chapter
