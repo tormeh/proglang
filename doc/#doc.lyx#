@@ -333,7 +333,24 @@ Communicative phase: In which IO is effected and shared variables are updated,
 In the computational phase, the order in which computations are performed
  on the processor is irrelevant as nothing is shared between the thread
  and the rest of the world.
- In the communicative phase, however.........
+ Since the threads have no effect on each other or the outside world in
+ this phase, the only difference between concurrent execution and sequential
+ execution is speed.
+ In the communicative phase, however, execution has to be single threaded.
+ Using this scheme, the application appears to be single threaded both to
+ itself and to the rest of the world, all the while enabling separation
+ of concerns and better utilization of multi-core systems.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename architecture.eps
+	lyxscale 70
+	width 100text%
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Chapter
