@@ -237,11 +237,25 @@ key "free lunch over"
 \end_layout
 
 \begin_layout Itemize
-Actors [citation needed]
+Actors 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "actors"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-CSP [Hoare, citation needed]
+CSP 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "CSP"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -280,6 +294,60 @@ key "Language adoption"
 
 , it was decided that the language should have a familiar C/Algol-style
  syntax, rather than invent or adopt something less common.
+\end_layout
+
+\begin_layout Standard
+There are tradeoffs associated with chosing synchronous programming, but
+ they were determined to be preferable to the alternatives.
+ The main problems with synchronous programming are 
+\end_layout
+
+\begin_layout Enumerate
+Difficulty in scaling beyond one physical machine.
+ The cost of global synchronization grows with latency.
+\end_layout
+
+\begin_layout Enumerate
+Performance loss due to processing resources idling as the synchronicity
+ abstraction requires all operations to use the same amount of time.
+\end_layout
+
+\begin_layout Standard
+Synchronous programming therefore has substantial problems, yet for single-machi
+ne systems it presents a way to achieve multi-threaded performance and achitectu
+re but with single-threaded predictability and therefore debugability.
+ While the other abstractions place the responsibility for correct concurrent
+ behaviour on the programmer, synchronous programming takes care of that
+ and replaces it with the responsibility for performance, as the program
+ performs best if all threads has an equal amount of work.
+ Let us discuss the problems of the other abstractions
+\end_layout
+
+\begin_layout Itemize
+Actors assume infinite message queues, with the failure mode being a loss
+ of information.
+ In a producer-consumer relationship, producer actors can overwhelm consumer
+ actors.
+ Actors are designed to mimic distributed systems and create a unified abstracti
+on over these.
+ Distributed systems have to correctly handle hardware failures, so loss
+ of information is an acceptible failure mode for actors.
+ However, this makes actors unsuitable for real-time systems as recovering
+ from data loss and unpredictable memory usage are unacceptable tradeoffs.
+ Ordering of IO is alse unpredictable.
+\end_layout
+
+\begin_layout Itemize
+CSP systems use synchronous communication and therefore avoid the message
+ queue problem of actors entirely.
+ In exchange, they are open to deadlock, and the ordering of IO is unpredictable.
+ CSP therefore requires brute force search for deadlocks, and debugging
+ is harder than for single-threaded systems.
+ despite this, it is regarded as a solid choice for real time systems.
+\end_layout
+
+\begin_layout Itemize
+Transactional memory 
 \end_layout
 
 \begin_layout Chapter
@@ -340,11 +408,27 @@ In the computational phase, the order in which computations are performed
  Using this scheme, the application appears to be single threaded both to
  itself and to the rest of the world, all the while enabling separation
  of concerns and better utilization of multi-core systems.
+ The following figure illustrates the principle:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Graphics
 	filename architecture.eps
+	lyxscale 70
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In terms of the actual execution a more detailed figure is offered:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename archdetailed.eps
 	lyxscale 70
 	width 100text%
 
@@ -451,6 +535,28 @@ key "Language adoption"
 \end_inset
 
 Meyerovich et Rabkin, 2013
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "5"
+key "actors"
+
+\end_inset
+
+Hewitt, Bishop et Steiger, 1973
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "6"
+key "CSP"
+
+\end_inset
+
+Hoare, 1978
 \end_layout
 
 \begin_layout Chapter
