@@ -512,6 +512,27 @@ Syntax
 \begin_layout Standard
 Syntax is by definition somewhat arbitrary, but as Brainfuck demonstrates,
  some syntaxes are better than others.
+ We settled on the following goals:
+\end_layout
+
+\begin_layout Itemize
+Look modern and familiar.
+ This is supposed to make it easier to learn, as well as more appealing
+ to someone evaluating whether to learn it.
+\end_layout
+
+\begin_layout Itemize
+Be simple.
+ For easy of implementation.
+\end_layout
+
+\begin_layout Itemize
+Be predictable, and aid the programmer in the understanding of the program.
+\end_layout
+
+\begin_layout Standard
+Ours tries to look modern by separating expressions with line terminators
+ instead of semicolons
 \end_layout
 
 \begin_layout Chapter
