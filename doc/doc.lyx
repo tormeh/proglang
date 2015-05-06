@@ -3,6 +3,12 @@
 \begin_document
 \begin_header
 \textclass report
+\begin_preamble
+\lstset{
+numbers=left,
+breaklines=true,
+frame=single}
+\end_preamble
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -113,10 +119,6 @@ Set the scene and problem statement/specification.
  
 \end_layout
 
-\begin_layout Standard
-Fumurt
-\end_layout
-
 \begin_layout Chapter
 Background
 \end_layout
@@ -170,10 +172,10 @@ Acknowledgements
 \end_layout
 
 \begin_layout Standard
-The inner workings of the compiler are heavily influenced by a course I
- took on compilers at the Technische Universität Berlin under Peter Pepper
- and Judith Rohloff.
- While no code is reused, the structure is very similar.
+The inner workings of the compiler are heavily influenced by a course the
+ author took on compilers at the Technische Universität Berlin under Peter
+ Pepper and Judith Rohloff.
+ While no code is reused, the structure of the compiler is very similar.
 \end_layout
 
 \begin_layout Section
@@ -506,6 +508,27 @@ key "Hadoop at facebook"
 \end_layout
 
 \begin_layout Section
+Semantics
+\end_layout
+
+\begin_layout Subsection
+Why C++
+\end_layout
+
+\begin_layout Standard
+Lack of garbage collector, compiled binaries and a wide selection of compilation
+ targets.
+\end_layout
+
+\begin_layout Subsection
+Why Scala
+\end_layout
+
+\begin_layout Standard
+Through the 
+\end_layout
+
+\begin_layout Section
 Syntax
 \end_layout
 
@@ -523,16 +546,151 @@ Look modern and familiar.
 
 \begin_layout Itemize
 Be simple.
- For easy of implementation.
+ For ease of implementation.
 \end_layout
 
 \begin_layout Itemize
 Be predictable, and aid the programmer in the understanding of the program.
 \end_layout
 
+\begin_layout Subsection
+Modern and Familiar
+\end_layout
+
 \begin_layout Standard
-Ours tries to look modern by separating expressions with line terminators
- instead of semicolons
+Fumurt adopts several conventions from contemporary languages:
+\end_layout
+
+\begin_layout Itemize
+Separating expressions with line endings instead of special characters (for
+ example semicolon).
+\end_layout
+
+\begin_layout Itemize
+Employ 
+\begin_inset Quotes eld
+\end_inset
+
+instanceOfType:Type
+\begin_inset Quotes erd
+\end_inset
+
+ instead of 
+\begin_inset Quotes eld
+\end_inset
+
+Type instanceOfType
+\begin_inset Quotes erd
+\end_inset
+
+ when declaring the type of something.
+\end_layout
+
+\begin_layout Itemize
+We use 
+\begin_inset Quotes eld
+\end_inset
+
+=
+\begin_inset Quotes erd
+\end_inset
+
+ to perform definitions and mark the boundaries of blocks with brackets
+\end_layout
+
+\begin_layout Standard
+This results in syntax with a distinctly modern look:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function integerIdentity(x:Integer):Integer = {x}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+One might wish for brackets to be optional in such one-liners
+\end_layout
+
+\begin_layout Subsection
+Simple
+\end_layout
+
+\begin_layout Subsection
+Predictable and Helpful
+\end_layout
+
+\begin_layout Standard
+We observe that although modern languages and their type systems have made
+ the use of functions safe, the syntax of modern languages insufficiently
+ aid the programmer in understanding what a function does, as it is called:
+\end_layout
+
+\begin_layout Itemize
+Functions that perform IO or mutate shared variables are called actions
+ and their names must begin with 
+\begin_inset Quotes eld
+\end_inset
+
+action
+\begin_inset Quotes erd
+\end_inset
+
+, like so:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+action actionPrintFoo:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("  FOO   ")
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+Similarly for threads and synchronized variables.
+\end_layout
+
+\begin_layout Itemize
+Function arguments, if there are more than one, are distinguished not by
+ relative position, but by name (as is optionally available in Python).
+ Here we see a call to the if function and some calls to the toString function:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+if(condition=true, then=toString(1), else=toString(0))
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Chapter
@@ -565,7 +723,7 @@ Code generator
 \end_layout
 
 \begin_layout Subsection
-AST massager
+Annotator
 \end_layout
 
 \begin_layout Chapter
