@@ -439,6 +439,22 @@ In terms of the actual execution a more detailed figure is offered:
 
 \end_layout
 
+\begin_layout Standard
+Observe that in the computational stage we can make available parallel list
+ transformations like map and fold, without affecting the outward behaviour
+ of the system, except for performance:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename archdetailedwithmap.eps
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Chapter
 Implementation
 \end_layout

@@ -347,7 +347,9 @@ CSP systems use synchronous communication and therefore avoid the message
 \end_layout
 
 \begin_layout Itemize
-Transactional memory 
+Transactional memory, though it makes it look as if thread communication
+ is easy, has its own problems.
+ 
 \end_layout
 
 \begin_layout Chapter
@@ -434,6 +436,16 @@ In terms of the actual execution a more detailed figure is offered:
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Standard
+Observe that in the computational stage we can make available parallel list
+ transformations like map and fold, without affecting the outward behaviour
+ of the system, except for performance:
+\end_layout
+
+\begin_layout Standard
 
 \end_layout
 
