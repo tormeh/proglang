@@ -446,7 +446,19 @@ Observe that in the computational stage we can make available parallel list
 \end_layout
 
 \begin_layout Standard
+\begin_inset Graphics
+	filename archdetailedwithmap.eps
+	width 100text%
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Given that the map-and-fold pattern, commonly called mapReduce, is widely
+ applicative to many problems (indeed, it is intensely used in the Fumurt
+ compiler!) 
 \end_layout
 
 \begin_layout Chapter

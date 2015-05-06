@@ -455,6 +455,24 @@ Observe that in the computational stage we can make available parallel list
 
 \end_layout
 
+\begin_layout Standard
+Given that the map-and-fold pattern, commonly called mapReduce
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mapReduce"
+
+\end_inset
+
+, is widely applicative to many problems
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hadoop at facebook"
+
+\end_inset
+
+ (indeed, it is intensely used in the Fumurt compiler!) 
+\end_layout
+
 \begin_layout Chapter
 Implementation
 \end_layout
@@ -575,6 +593,29 @@ key "CSP"
 \end_inset
 
 Hoare, 1978
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "7"
+key "mapReduce"
+
+\end_inset
+
+Dean et Ghemawat, 2004
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "8"
+key "Hadoop at facebook"
+
+\end_inset
+
+Borthakur et al.
+ 2011
 \end_layout
 
 \begin_layout Chapter
