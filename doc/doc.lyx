@@ -176,6 +176,13 @@ The inner workings of the compiler are heavily influenced by a course the
  author took on compilers at the Technische Universität Berlin under Peter
  Pepper and Judith Rohloff.
  While no code is reused, the structure of the compiler is very similar.
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:TUB course"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -349,7 +356,7 @@ Transactional memory, though it makes it look as if thread communication
 \end_layout
 
 \begin_layout Section
-What The Student Learned
+What The Author Learned
 \end_layout
 
 \begin_layout Chapter
@@ -512,20 +519,91 @@ Semantics
 \end_layout
 
 \begin_layout Subsection
-Why C++
+Target Choice
 \end_layout
 
 \begin_layout Standard
-Lack of garbage collector, compiled binaries and a wide selection of compilation
- targets.
+For easy debugging and wide selection of binary targets we chose to first
+ compile to an intermediate language and then let an external compiler perform
+ the final transformation to binary form.
+ This is a well-trodden path
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Haskell-to-C"
+
+\end_inset
+
+, and C is often used.
+ Though many modern languages would be suitable for this, we had a wishlist
+ of features that determined which language to choose:
+\end_layout
+
+\begin_layout Enumerate
+No garbage collection or other other source of run-to-run variability.
+\end_layout
+
+\begin_layout Enumerate
+Wide selection of final targets, including embedded.
+\end_layout
+
+\begin_layout Enumerate
+Low overhead, whether in performance or memory.
+ 
+\end_layout
+
+\begin_layout Enumerate
+A solid set of features to make transformation into the language easier.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Mature standard that is unlikely to break backwards compatibility.
+\end_layout
+
+\begin_layout Standard
+C++ seems to satisfy all these criteria, and were therefore selected as
+ the intermediate language.
+ In particular, C has too few features, which means a transformation will
+ have to make more difficult transformations and/or we would need to manually
+ implement things like linked lists.
 \end_layout
 
 \begin_layout Subsection
-Why Scala
+Compiler language choice
 \end_layout
 
 \begin_layout Standard
-Through the 
+Scala was chosen as the implementation language for the compiler partly
+ because it's what the author used in the TU Berlin compiler bau course
+ (see 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:TUB course"
+
+\end_inset
+
+) and already had lots of experience in, but it also has some highly attractive
+ qualities for making a compiler:
+\end_layout
+
+\begin_layout Itemize
+A solid type checking which makes the code easier to work with, especially
+ when refactoring
+\end_layout
+
+\begin_layout Itemize
+A wide selection of functional abstractions, which allows compact code and
+ eliminates simple but irritating bugs as well as access to imperative construct
+s like loops etc.
+ when this is more convenient
+\end_layout
+
+\begin_layout Itemize
+A parser combinator library
+\end_layout
+
+\begin_layout Itemize
+Fast execution time
 \end_layout
 
 \begin_layout Section
@@ -856,6 +934,17 @@ key "Hadoop at facebook"
 
 Borthakur et al.
  2011
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "9"
+key "Haskell-to-C"
+
+\end_inset
+
+Hall, Hammond, Partain, Jones et Wadler, 1993
 \end_layout
 
 \begin_layout Chapter
