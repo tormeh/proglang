@@ -411,14 +411,24 @@ key "Language adoption"
 \end_layout
 
 \begin_layout Section
+Language Design Goals
+\end_layout
+
+\begin_layout Standard
+It is the goals of Fumurt to aid in producing correct programs suitable
+ for real-time applications in general, and such multithreaded programs
+ in particular.
+\end_layout
+
+\begin_layout Section
 Runtime Execution
 \end_layout
 
 \begin_layout Standard
 The goal of the programming language is to make a multithreaded program
- behave as predictably as were it singlethreaded.
- A corollary of this is that only changes of state that are visible to a
- single thread can happen concurrently.
+ behave as predictably as were it singlethreaded and, more generally, to
+ help create reliable applications A corollary of this is that only changes
+ of state that are visible to a single thread can happen concurrently.
  All IO and inter-thread communication are required happen in a statically
  determined sequence.
  One way to do this is to have the program have two alternating phases:
@@ -515,11 +525,7 @@ key "Hadoop at facebook"
 \end_layout
 
 \begin_layout Section
-Semantics
-\end_layout
-
-\begin_layout Subsection
-Target Choice
+Intermediat Target
 \end_layout
 
 \begin_layout Standard
@@ -568,8 +574,8 @@ C++ seems to satisfy all these criteria, and were therefore selected as
  implement things like linked lists.
 \end_layout
 
-\begin_layout Subsection
-Compiler language choice
+\begin_layout Section
+Compiler Implementation Language
 \end_layout
 
 \begin_layout Standard
@@ -599,6 +605,10 @@ s like loops etc.
 \end_layout
 
 \begin_layout Itemize
+A parser combinator library
+\end_layout
+
+\begin_layout Itemize
 Fast execution time
 \end_layout
 
@@ -616,6 +626,7 @@ Syntax is by definition somewhat arbitrary, but as Brainfuck demonstrates,
 Look modern and familiar.
  This is supposed to make it easier to learn, as well as more appealing
  to someone evaluating whether to learn it.
+ 
 \end_layout
 
 \begin_layout Itemize
@@ -692,7 +703,7 @@ function integerIdentity(x:Integer):Integer = {x}
 \end_layout
 
 \begin_layout Standard
-One might wish for brackets to be optional in such one-liners
+One might wish for brackets to be optional in such one-liners, though, 
 \end_layout
 
 \begin_layout Subsection
@@ -765,6 +776,30 @@ if(condition=true, then=toString(1), else=toString(0))
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Scope
+\end_layout
+
+\begin_layout Standard
+It is the goal of goal of this programming language to help the programmer
+ underst
+\end_layout
+
+\begin_layout Standard
+In keeping with our goal of being modern and familiar, we allow definitions
+ of functions inside other definitions of functions.
+ Recursive function definitions, that is.
+ This decision begets more decisions: 
+\end_layout
+
+\begin_layout Section
+Operators
+\end_layout
+
+\begin_layout Section
+Mutability, Or The Absence of Such
 \end_layout
 
 \begin_layout Chapter
