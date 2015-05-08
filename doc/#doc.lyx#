@@ -1039,7 +1039,10 @@ Loops
 Loops are familiar for many people, yet are usually not included in languages
  with only immutable values, because their utility is pretty limited.
  However, they are convenient and they are equivalent to tail-recursion.
- We decided to go for 
+ The major advantages of tail recursion over looping is that the assignment
+ and dependencies are explicit.
+ We decided we could make loops that are as safe as tail recursion while
+ being almost as friendly as loops:
 \end_layout
 
 \begin_layout Standard
@@ -1049,7 +1052,16 @@ status open
 
 \begin_layout Plain Layout
 
-loop()
+value y:Int = 5
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+value x:Int = loop(y=y,x=y)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1059,6 +1071,47 @@ loop()
 
 \begin_layout Plain Layout
 
+  if(
+\end_layout
+
+\begin_layout Plain Layout
+
+  condition=(y>0), 
+\end_layout
+
+\begin_layout Plain Layout
+
+  then=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+  x = x*y 
+\end_layout
+
+\begin_layout Plain Layout
+
+  y = y-1
+\end_layout
+
+\begin_layout Plain Layout
+
+  continue
+\end_layout
+
+\begin_layout Plain Layout
+
+  }, 
+\end_layout
+
+\begin_layout Plain Layout
+
+  else=break)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1073,6 +1126,82 @@ loop()
 
 \begin_layout Section
 Types
+\end_layout
+
+\begin_layout Standard
+Because we try to be familiar we want to provide types along with their
+ popular object oriented nomenclature.
+ So we have classes, just that they are immutable.
+ They are defined by their constructors:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+class intAndString(int:Integer, string:String)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+value x = intAndString(int=3, string="something")
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We do not have inheritance, because while inheritance means you get code
+ reuse, it also obscures the class that inherits.
+ When one class inherits from a hierarchy, one needs to understand not only
+ what's written about that class but also the entire hierarchy in order
+ to understand the end result.
+\end_layout
+
+\begin_layout Subsection
+Interfaces
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+interface intAndString(int:Int, string:String)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+class intAndStringAndBool(int:Integer, string:String, bool:Boolean)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+value x = intAndString(int=3, string="something")
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Chapter
