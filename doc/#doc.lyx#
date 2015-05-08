@@ -1024,11 +1024,51 @@ Mutability, Or The Absence of Such
 Mutable variables are a major source of bugs, and even experienced developers
  create bugs when a variable that would have held the correct information
  previously no longer holds that information.
- At the same time we need mutable values in some ways in order to  
+ At the same time we need mutable values in some ways in order to share
+ information across threads.
+ So we disallow mutable variables, except the synchronized variables that
+ are shared across threads.
+ 
 \end_layout
 
 \begin_layout Subsection
 Loops
+\end_layout
+
+\begin_layout Standard
+Loops are familiar for many people, yet are usually not included in languages
+ with only immutable values, because their utility is pretty limited.
+ However, they are convenient and they are equivalent to tail-recursion.
+ We decided to go for 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+loop()
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section

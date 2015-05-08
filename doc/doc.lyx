@@ -1035,6 +1035,75 @@ Mutable variables are a major source of bugs, and even experienced developers
 Loops
 \end_layout
 
+\begin_layout Standard
+Loops are familiar for many people, yet are usually not included in languages
+ with only immutable values, because their utility is pretty limited.
+ However, they are convenient and they are equivalent to tail-recursion.
+ The major advantages of tail recursion over looping is that the assignment
+ and dependencies are explicit.
+ We decided we could make loops that are as safe as tail recursion while
+ being almost as friendly as loops:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+value y:Int = 5
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+value x:Int = loop(y=y,x=y)
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  if(condition=(y>0), 
+\end_layout
+
+\begin_layout Plain Layout
+
+  then={x = x*y 
+\end_layout
+
+\begin_layout Plain Layout
+
+  y = y-1
+\end_layout
+
+\begin_layout Plain Layout
+
+  continue}, 
+\end_layout
+
+\begin_layout Plain Layout
+
+  else=break)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Types
 \end_layout
