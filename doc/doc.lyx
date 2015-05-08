@@ -801,28 +801,234 @@ Scope
 \begin_layout Standard
 Among the goals of this programming language is to help the programmer understan
 d the program.
- One way we do this is to make dependencies between top-level functions
- explicit via 
+ One way we do this is to make dependencies between functions explicit via
+ 
 \emph on
 inclusions
 \emph default
 .
- It is common 
+ It is common among languages for changes in one function to affect the
+ correctness of seemingly unrelated parts of the program.
+ In the following example, changing the definition of function c affects
+ the output of function a:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function a:Nothing = 
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  b()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+function b:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  c()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+function c:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("string")
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+While the above example is a bit contrived, it illustrates the problem.
+ Using inclusions, the dependencies become explicit:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function a(b:Inclusion, c:Inclusion):Nothing = 
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  b(c)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+function b(c:Inclusion):Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  c()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+function c:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("string")
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that inclusions are not functions as arguments - the passed function
+ and the name of the inclusion must have the same name; it is simply there
+ to make dependencies between functions explicit.
 \end_layout
 
 \begin_layout Standard
 In keeping with our goal of being modern and familiar, we allow definitions
  of functions inside other definitions of functions.
  Recursive function definitions, that is.
- This decision begets more decisions: 
+ This means that developers can hide functions inside other functions when
+ they are not needed outside them.
 \end_layout
 
 \begin_layout Section
 Operators
 \end_layout
 
+\begin_layout Standard
+Operators are functions with two arguments and the function name in between
+ the arguments.
+ There are multiple problems with them:
+\end_layout
+
+\begin_layout Enumerate
+Convention suggests that their names should be information-anemically short,
+ often one character.
+ This is obviously problematic
+\end_layout
+
+\begin_layout Enumerate
+Their arguments are nameless, which kind of sabotages the point of having
+ named arguments for functions a little
+\end_layout
+
+\begin_layout Enumerate
+How to define operator precedence? For math operators there's convention,
+ but otherwise this may be confusing for users of operators.
+\end_layout
+
+\begin_layout Standard
+We haven't found any good solutions to this, but it's hard to argue with
+ the convenience of operators.
+ We provide some predictability to operators by enforcing the following
+ rules:
+\end_layout
+
+\begin_layout Enumerate
+Either the types of the two arguments has to be the same or one of the types
+ have to be a container type of the other.
+ For example Int and Int or List[Int] and Int.
+\end_layout
+
+\begin_layout Enumerate
+There's no operator precedence, it has to be defined on a case-by-case basis
+ using parentheses
+\end_layout
+
 \begin_layout Section
 Mutability, Or The Absence of Such
+\end_layout
+
+\begin_layout Standard
+Mutable variables are a major source of bugs, and even experienced developers
+ create bugs when a variable that would have held the correct information
+ previously no longer holds that information.
+ At the same time we need mutable values in some ways in order to share
+ information across threads.
+ So we disallow mutable variables, except the synchronized variables that
+ are shared across threads.
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -830,7 +1036,7 @@ Loops
 \end_layout
 
 \begin_layout Section
-Classes and Values
+Types
 \end_layout
 
 \begin_layout Chapter
@@ -864,6 +1070,10 @@ Code generator
 
 \begin_layout Subsection
 Annotator
+\end_layout
+
+\begin_layout Section
+Not Implemented
 \end_layout
 
 \begin_layout Chapter
