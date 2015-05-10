@@ -1254,7 +1254,45 @@ Overview
 The compiler consists of four parts: The scanner, parser, checker and code
  generator.
  There is no optimizer, although the requirement for no dynamic destruction
- or creation allows us to use a loop in threads instead of just 
+ or creation allows us to use a loop in threads instead of just recursion.
+ This is necessary because neither Clang nor GCC could correctly optimize
+ that tail recursion into a loop in testing, leading to a stack overflow.
+\end_layout
+
+\begin_layout Standard
+Parsers look 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def intParser: Parser[IntegerT] = positioned( new Regex("""(0|[1-9]
+\backslash
+d*)""") ^^ {x => println("scanned integer "+x.toString);IntegerT(x.toInt)}
+ )
+\end_layout
+
+\begin_layout Plain Layout
+
+def equalParser: Parser[EqualT] = positioned( new Regex("=") ^^ {x => println("s
+canned = "+x.toString);EqualT()} )
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The parsers are combined like this
+\end_layout
+
+\begin_layout Standard
+
 \end_layout
 
 \begin_layout Section

@@ -1256,7 +1256,202 @@ The compiler consists of four parts: The scanner, parser, checker and code
  There is no optimizer, although the requirement for no dynamic destruction
  or creation allows us to use a loop in threads instead of just recursion.
  This is necessary because neither Clang nor GCC could correctly optimize
- that tail recursion into a loop in testing.
+ that tail recursion into a loop in testing, leading to a stack overflow.
+\end_layout
+
+\begin_layout Standard
+Parse
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def intParser: Parser[IntegerT] = positioned( new Regex("""(0|[1-9]
+\backslash
+d*)""") ^^ {x => IntegerT(x.toInt)} )
+\end_layout
+
+\begin_layout Plain Layout
+
+def equalParser: Parser[EqualT] = positioned( new Regex("=") ^^ {x => EqualT()}
+ )
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The parsers are combined into the final scanner:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def scan: Parser[Token] = 
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  (
+\end_layout
+
+\begin_layout Plain Layout
+
+    spaceParser                 |
+\end_layout
+
+\begin_layout Plain Layout
+
+    programStrParser            |
+\end_layout
+
+\begin_layout Plain Layout
+
+    threadParser                |
+\end_layout
+
+\begin_layout Plain Layout
+
+    actionParser                |
+\end_layout
+
+\begin_layout Plain Layout
+
+    synchronizedVariableParser  |
+\end_layout
+
+\begin_layout Plain Layout
+
+    functionParser              |
+\end_layout
+
+\begin_layout Plain Layout
+
+    trueParser                  |
+\end_layout
+
+\begin_layout Plain Layout
+
+    falseParser                 |
+\end_layout
+
+\begin_layout Plain Layout
+
+    openParenthesisParser       |
+\end_layout
+
+\begin_layout Plain Layout
+
+    closeParenthesisParser      |
+\end_layout
+
+\begin_layout Plain Layout
+
+    openCurlyBracketParser      |
+\end_layout
+
+\begin_layout Plain Layout
+
+    closeCurlyBracketParser     |
+\end_layout
+
+\begin_layout Plain Layout
+
+    doubleParser                |
+\end_layout
+
+\begin_layout Plain Layout
+
+    intParser                   |
+\end_layout
+
+\begin_layout Plain Layout
+
+    equalParser                 |
+\end_layout
+
+\begin_layout Plain Layout
+
+    colonParser                 |
+\end_layout
+
+\begin_layout Plain Layout
+
+    commaParser                 |
+\end_layout
+
+\begin_layout Plain Layout
+
+    //emptyParser               |
+\end_layout
+
+\begin_layout Plain Layout
+
+    newlineParser               |
+\end_layout
+
+\begin_layout Plain Layout
+
+    stringParser                |
+\end_layout
+
+\begin_layout Plain Layout
+
+    idParser                    |
+\end_layout
+
+\begin_layout Plain Layout
+
+    typeParser  
+\end_layout
+
+\begin_layout Plain Layout
+
+  )            
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Quotes eld
+\end_inset
+
+|
+\begin_inset Quotes erd
+\end_inset
+
+ is an alternative operator with backtracking
+\begin_inset CommandInset citation
+LatexCommand cite
+key "scala parser combinator doc"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -1446,6 +1641,18 @@ key "Parser combinators"
 \end_inset
 
 Frost et Launchbury, 1989
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "11"
+key "scala parser combinator doc"
+
+\end_inset
+
+http://www.scala-lang.org/files/archive/api/2.11.x/scala-parser-combinators/index.htm
+l#scala.util.parsing.combinator.Parsers$Parser
 \end_layout
 
 \begin_layout Chapter
