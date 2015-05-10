@@ -359,6 +359,14 @@ Transactional memory, though it makes it look as if thread communication
 What The Author Learned
 \end_layout
 
+\begin_layout Section
+Compilers
+\end_layout
+
+\begin_layout Section
+Parser Combinators
+\end_layout
+
 \begin_layout Chapter
 Analysis and Design
 \end_layout
@@ -1221,6 +1229,10 @@ class intAndStringAndBool(int:Integer, string:String, bool:Boolean) implements
 
 \end_layout
 
+\begin_layout Section
+Grammar
+\end_layout
+
 \begin_layout Chapter
 Implementation
 \end_layout
@@ -1235,11 +1247,35 @@ Give code details (not a complete listing, but descriptions of key parts).
 \end_layout
 
 \begin_layout Section
+Overview
+\end_layout
+
+\begin_layout Standard
+The compiler consists of four parts: The scanner, parser, checker and code
+ generator.
+ There is no optimizer, although the requirement for no dynamic destruction
+ or creation allows us to use a loop in threads instead of just recursion.
+ This is necessary because neither Clang nor GCC could correctly optimize
+ that tail recursion into a loop in testing.
+\end_layout
+
+\begin_layout Section
 Scanner
+\end_layout
+
+\begin_layout Standard
+Drawing on experience from the TU Berlin course, the Scala Standard Parser
+ Combinator Library was chosen.
+ 
 \end_layout
 
 \begin_layout Section
 Parser
+\end_layout
+
+\begin_layout Standard
+Like in the scanner, the Scala Standard Parser Combinator Library was used.
+ This 
 \end_layout
 
 \begin_layout Section
@@ -1399,6 +1435,17 @@ key "Haskell-to-C"
 \end_inset
 
 Hall, Hammond, Partain, Jones et Wadler, 1993
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "10"
+key "Parser combinators"
+
+\end_inset
+
+Frost et Launchbury, 1989
 \end_layout
 
 \begin_layout Chapter
