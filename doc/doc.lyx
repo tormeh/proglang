@@ -7,7 +7,8 @@
 \lstset{
 numbers=left,
 breaklines=true,
-frame=single}
+frame=single,
+basicstyle=\footnotesize\ttfamily}
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
@@ -448,7 +449,7 @@ Let's discuss the operators:
 \end_layout
 
 \begin_layout Itemize
-^^ is used to apply a function to the succesfull result of the parser.
+^^ is used to apply a function to the succesful result of the parser.
 \end_layout
 
 \begin_layout Itemize
@@ -1995,38 +1996,35 @@ def progParser: Parser[List[Definition]] = (paddedDefParser.+) <~ eofParser
 
 \begin_layout Plain Layout
 
-def paddedDefParser:Parser[Definition] = {println("paddeddefparser"); newlinePar
-ser.* ~> defParser <~ newlineParser.* }
+def paddedDefParser:Parser[Definition] = { newlineParser.* ~> defParser <~
+ newlineParser.* }
 \end_layout
 
 \begin_layout Plain Layout
 
-def defParser: Parser[Definition] = {println("defparser");  positioned((deflhsPa
-rser <~ equalParser ~! newlineParser.*) ~! defrhsParser ^^ {x=>Definition(x._1,x._2
-)}) }
+def defParser: Parser[Definition] = {positioned((deflhsParser <~ equalParser
+ ~! newlineParser.*) ~! defrhsParser ^^ {x=>Definition(x._1,x._2)}) }
 \end_layout
 
 \begin_layout Plain Layout
 
-def deflhsParser: Parser[DefLhs] = {println("deflhsparser");  (defdescriptionPar
-ser ~ idParser ~ argsParser ~! (colonParser ~> typeParser)) ^^ {x=>DefLhs(x._1._1._
-1, x._1._1._2, x._1._2, x._2)} }
-\end_layout
-
-\begin_layout Plain Layout
-
-def argsParser: Parser[Option[Arguments]] = {println("argsparser"); openParenthe
-sisParser ~> ((idParser <~ colonParser) ~ typeParser ~ subsequentArgsParser.*)
- <~ closeParenthesisParser ^^{x=>Some(Arguments( (Argument(x._1._1, x._1._2)
- +: x._2).sortWith((left,right)=>left.id.value<right.id.value) ))} | emptyParser
- ^^ {x=>None} }
-\end_layout
-
-\begin_layout Plain Layout
-
-def subsequentArgsParser: Parser[Argument] = {println("args2parserparser");
-  commaParser ~> (idParser <~ colonParser) ~ typeParser ^^{x=>Argument(x._1,
+def deflhsParser: Parser[DefLhs] = {(defdescriptionParser ~ idParser ~ argsParse
+r ~! (colonParser ~> typeParser)) ^^ {x=>DefLhs(x._1._1._1, x._1._1._2, x._1._2,
  x._2)} }
+\end_layout
+
+\begin_layout Plain Layout
+
+def argsParser: Parser[Option[Arguments]] = {openParenthesisParser ~> ((idParser
+ <~ colonParser) ~ typeParser ~ subsequentArgsParser.*) <~ closeParenthesisParser
+ ^^{x=>Some(Arguments( (Argument(x._1._1, x._1._2) +: x._2).sortWith((left,right)=>lef
+t.id.value<right.id.value) ))} | emptyParser ^^ {x=>None} }
+\end_layout
+
+\begin_layout Plain Layout
+
+def subsequentArgsParser: Parser[Argument] = {commaParser ~> (idParser <~
+ colonParser) ~ typeParser ^^{x=>Argument(x._1, x._2)} }
 \end_layout
 
 \begin_layout Plain Layout
@@ -2036,65 +2034,59 @@ def subsequentArgsParser: Parser[Argument] = {println("args2parserparser");
 
 \begin_layout Plain Layout
 
-def defrhsParser: Parser[DefRhs] = {println("-defrhsparser"); (openCurlyBracketP
-arser ~ newlineParser.* ~> expressionParser ~ (newlineParser.+ ~> expressionParser
-).*) <~ newlineParser.* ~ closeCurlyBracketParser ^^{x=>DefRhs(x._1 +: x._2)}
- }
+def defrhsParser: Parser[DefRhs] = {(openCurlyBracketParser ~ newlineParser.*
+ ~> expressionParser ~ (newlineParser.+ ~> expressionParser).*) <~ newlineParser.*
+ ~ closeCurlyBracketParser ^^{x=>DefRhs(x._1 +: x._2)} }
 \end_layout
 
 \begin_layout Plain Layout
 
-def expressionParser: Parser[Expression] = {println("expressionparser");
- positioned(defParser | statementParser) }
+def expressionParser: Parser[Expression] = {positioned(defParser | statementPars
+er) }
 \end_layout
 
 \begin_layout Plain Layout
 
-def statementParser: Parser[Statement] = {println("statementparser"); functionCa
-llParser | basicStatementParser  | identifierStatementParser }
+def statementParser: Parser[Statement] = {functionCallParser | basicStatementPar
+ser  | identifierStatementParser }
 \end_layout
 
 \begin_layout Plain Layout
 
-def callargsParser: Parser[Either[Callarg,NamedCallargs]] = {println("callargspa
-rser"); openParenthesisParser ~> (namedcallargsParser | callargParser) <~
- closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCal
-largs=>Right(x)}} }
+def callargsParser: Parser[Either[Callarg,NamedCallargs]] = {openParenthesisPars
+er ~> (namedcallargsParser | callargParser) <~ closeParenthesisParser ^^{x=>x
+ match{case x:Callarg => Left(x); case x:NamedCallargs=>Right(x)}} }
 \end_layout
 
 \begin_layout Plain Layout
 
-def callargParser: Parser[Callarg] = {println("callargparser"); positioned(funct
-ionCallParser | identifierStatementParser | basicStatementParser | success(NoArg
-s())) }
+def callargParser: Parser[Callarg] = {positioned(functionCallParser | identifier
+StatementParser | basicStatementParser | success(NoArgs())) }
 \end_layout
 
 \begin_layout Plain Layout
 
-def namedcallargsParser: Parser[NamedCallargs] = {println("namedcallargsparser")
-; namedcallargParser ~ subsequentnamedcallargsParser.+ ^^ {x => NamedCallargs((x._
-1 +: x._2).sortWith((left,right)=>left.id.value<right.id.value))} }
+def namedcallargsParser: Parser[NamedCallargs] = {namedcallargParser ~ subsequen
+tnamedcallargsParser.+ ^^ {x => NamedCallargs((x._1 +: x._2).sortWith((left,right)=>
+left.id.value<right.id.value))} }
 \end_layout
 
 \begin_layout Plain Layout
 
-def subsequentnamedcallargsParser: Parser[NamedCallarg] = {println("subsequentna
-medcallargsParser"); (commaParser ~! success(Unit)) ~> namedcallargParser
- }
+def subsequentnamedcallargsParser: Parser[NamedCallarg] = {(commaParser
+ ~! success(Unit)) ~> namedcallargParser }
 \end_layout
 
 \begin_layout Plain Layout
 
-def namedcallargParser:Parser[NamedCallarg] = {println("namedcallargparser");
- (idParser <~ equalParser) ~ callargParser ^^ {x=>NamedCallarg(x._1, x._2)}
- }
+def namedcallargParser:Parser[NamedCallarg] = {(idParser <~ equalParser)
+ ~ callargParser ^^ {x=>NamedCallarg(x._1, x._2)} }
 \end_layout
 
 \begin_layout Plain Layout
 
-def functionCallParser:Parser[FunctionCallStatement] = {println("functioncallpar
-ser"); idParser ~ callargsParser ^^ {x=>FunctionCallStatement(x._1 match{case
- IdT(str)=>str}, x._2)} }
+def functionCallParser:Parser[FunctionCallStatement] = {idParser ~ callargsParse
+r ^^ {x=>FunctionCallStatement(x._1 match{case IdT(str)=>str}, x._2)} }
 \end_layout
 
 \end_inset
@@ -2103,7 +2095,7 @@ ser"); idParser ~ callargsParser ^^ {x=>FunctionCallStatement(x._1 match{case
 \end_layout
 
 \begin_layout Standard
-The entirety produces an ast defined as:
+The entirety produces an abstract syntax tree defined as:
 \end_layout
 
 \begin_layout Standard
