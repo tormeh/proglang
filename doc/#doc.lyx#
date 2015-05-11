@@ -377,6 +377,85 @@ key "Parser combinators"
  recursive descent parsers.
 \end_layout
 
+\begin_layout Subsection
+The Scala Standard Parser Combinator Library (and its operators)
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:The-Scala-Parser"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+All the information here is also available at 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "scala parser combinator doc"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Let's discuss the operators:
+\end_layout
+
+\begin_layout Itemize
+~ is used to combine parsers sequentially
+\end_layout
+
+\begin_layout Itemize
+~> is used to combine parsers sequentially but ignore the result of the
+ left parser
+\end_layout
+
+\begin_layout Itemize
+~! is used to combine parsers sequentially but dissallow backtracking.
+\end_layout
+
+\begin_layout Itemize
+* applies the parser to the left as many times as it is succesful, moving
+ on at failure
+\end_layout
+
+\begin_layout Itemize
++ applies the parser to the left as many times as it is succesful, moving
+ on at failure.
+ Must be applied at least once
+\end_layout
+
+\begin_layout Itemize
+? applies the parser to the left zero or one time
+\end_layout
+
+\begin_layout Itemize
+| used to combine parsers in a manner similar to logical 
+\begin_inset Quotes eld
+\end_inset
+
+||
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Tries to apply the left parser first.
+ If the left parser fails, it will backtrack and attempt the right parser.
+ If none work then an error is returned.
+\end_layout
+
+\begin_layout Itemize
+^^ is used to apply a function to the succesfull result of the parser.
+\end_layout
+
+\begin_layout Itemize
+^^^ is used to apply a function to the result of the parser, successful
+ or not.
+\end_layout
+
 \begin_layout Section
 What The Author Learned
 \end_layout
@@ -1029,6 +1108,17 @@ How to define operator precedence? For math operators there's convention,
 \end_layout
 
 \begin_layout Standard
+A prime example of unhelpful operator behaviour is found in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:The-Scala-Parser"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
 We haven't found any good solutions to this, but it's hard to argue with
  the convenience of operators.
  We provide some predictability to operators by enforcing the following
@@ -1293,8 +1383,14 @@ Scanner
 \end_layout
 
 \begin_layout Standard
-Drawing on experience from the TU Berlin course, the Scala Standard Parser
- Combinator Library was chosen.
+Drawing on experience from the TU Berlin course
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:TUB course"
+
+\end_inset
+
+, the Scala Standard Parser Combinator Library was chosen.
 \end_layout
 
 \begin_layout Standard
@@ -1348,8 +1444,7 @@ object FumurtScanner extends RegexParsers
 
 \begin_layout Plain Layout
 
-    parseAll((scan*), in) match  // "*" is the operator for performing a
- parser zero or more times
+    parseAll((scan*), in) match
 \end_layout
 
 \begin_layout Plain Layout
@@ -1421,6 +1516,11 @@ object FumurtScanner extends RegexParsers
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+"*" is the operator for performing a parser zero or more times.
+ There are two scan functions; one with, and one without, arguments.
 \end_layout
 
 \begin_layout Standard
@@ -1595,7 +1695,6 @@ def scan: Parser[Token] =
 \end_layout
 
 \begin_layout Standard
-Where 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1631,12 +1730,13 @@ key "scala parser combinator doc"
 \begin_inset Quotes eld
 \end_inset
 
-positioned([...])
+positioned(parser)
 \begin_inset Quotes erd
 \end_inset
 
- assigns the source code position to the token class, which allows us to
- output really nice error messages.
+ assigns the source code position of the input text to the token object
+ produced by the parser, which allows us to output really nice error messages
+ later on.
 \end_layout
 
 \begin_layout Standard
@@ -1880,7 +1980,270 @@ Parser
 Like in the scanner, the Scala Standard Parser Combinator Library was used.
  Unfortunately, the tasks of the parser is a bit more complicated than those
  of the scanner, and the code reflects this.
- 
+ This is where the grammar is encoded into the program.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def progParser: Parser[List[Definition]] = (paddedDefParser.+) <~ eofParser
+\end_layout
+
+\begin_layout Plain Layout
+
+def paddedDefParser:Parser[Definition] = {println("paddeddefparser"); newlinePar
+ser.* ~> defParser <~ newlineParser.* }
+\end_layout
+
+\begin_layout Plain Layout
+
+def defParser: Parser[Definition] = {println("defparser");  positioned((deflhsPa
+rser <~ equalParser ~! newlineParser.*) ~! defrhsParser ^^ {x=>Definition(x._1,x._2
+)}) }
+\end_layout
+
+\begin_layout Plain Layout
+
+def deflhsParser: Parser[DefLhs] = {println("deflhsparser");  (defdescriptionPar
+ser ~ idParser ~ argsParser ~! (colonParser ~> typeParser)) ^^ {x=>DefLhs(x._1._1._
+1, x._1._1._2, x._1._2, x._2)} }
+\end_layout
+
+\begin_layout Plain Layout
+
+def argsParser: Parser[Option[Arguments]] = {println("argsparser"); openParenthe
+sisParser ~> ((idParser <~ colonParser) ~ typeParser ~ subsequentArgsParser.*)
+ <~ closeParenthesisParser ^^{x=>Some(Arguments( (Argument(x._1._1, x._1._2)
+ +: x._2).sortWith((left,right)=>left.id.value<right.id.value) ))} | emptyParser
+ ^^ {x=>None} }
+\end_layout
+
+\begin_layout Plain Layout
+
+def subsequentArgsParser: Parser[Argument] = {println("args2parserparser");
+  commaParser ~> (idParser <~ colonParser) ~ typeParser ^^{x=>Argument(x._1,
+ x._2)} }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+def defrhsParser: Parser[DefRhs] = {println("-defrhsparser"); (openCurlyBracketP
+arser ~ newlineParser.* ~> expressionParser ~ (newlineParser.+ ~> expressionParser
+).*) <~ newlineParser.* ~ closeCurlyBracketParser ^^{x=>DefRhs(x._1 +: x._2)}
+ }
+\end_layout
+
+\begin_layout Plain Layout
+
+def expressionParser: Parser[Expression] = {println("expressionparser");
+ positioned(defParser | statementParser) }
+\end_layout
+
+\begin_layout Plain Layout
+
+def statementParser: Parser[Statement] = {println("statementparser"); functionCa
+llParser | basicStatementParser  | identifierStatementParser }
+\end_layout
+
+\begin_layout Plain Layout
+
+def callargsParser: Parser[Either[Callarg,NamedCallargs]] = {println("callargspa
+rser"); openParenthesisParser ~> (namedcallargsParser | callargParser) <~
+ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCal
+largs=>Right(x)}} }
+\end_layout
+
+\begin_layout Plain Layout
+
+def callargParser: Parser[Callarg] = {println("callargparser"); positioned(funct
+ionCallParser | identifierStatementParser | basicStatementParser | success(NoArg
+s())) }
+\end_layout
+
+\begin_layout Plain Layout
+
+def namedcallargsParser: Parser[NamedCallargs] = {println("namedcallargsparser")
+; namedcallargParser ~ subsequentnamedcallargsParser.+ ^^ {x => NamedCallargs((x._
+1 +: x._2).sortWith((left,right)=>left.id.value<right.id.value))} }
+\end_layout
+
+\begin_layout Plain Layout
+
+def subsequentnamedcallargsParser: Parser[NamedCallarg] = {println("subsequentna
+medcallargsParser"); (commaParser ~! success(Unit)) ~> namedcallargParser
+ }
+\end_layout
+
+\begin_layout Plain Layout
+
+def namedcallargParser:Parser[NamedCallarg] = {println("namedcallargparser");
+ (idParser <~ equalParser) ~ callargParser ^^ {x=>NamedCallarg(x._1, x._2)}
+ }
+\end_layout
+
+\begin_layout Plain Layout
+
+def functionCallParser:Parser[FunctionCallStatement] = {println("functioncallpar
+ser"); idParser ~ callargsParser ^^ {x=>FunctionCallStatement(x._1 match{case
+ IdT(str)=>str}, x._2)} }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The entirety produces an ast defined as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+class Expression() extends Positional
+\end_layout
+
+\begin_layout Plain Layout
+
+trait Callarg extends Positional
+\end_layout
+
+\begin_layout Plain Layout
+
+trait Statement extends Expression
+\end_layout
+
+\begin_layout Plain Layout
+
+trait BasicValueStatement extends Statement with Callarg with aCallarg with
+ aStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+case class Definition(val leftside:DefLhs, val rightside:DefRhs) extends
+ Expression
+\end_layout
+
+\begin_layout Plain Layout
+
+case class DefLhs(val description:DefDescriptionT, val id:IdT, val args:Option[A
+rguments], val returntype:TypeT)
+\end_layout
+
+\begin_layout Plain Layout
+
+/*case class Arguments(val id:IdT, val typestr:TypeT, val args2:Option[Arguments
+2])
+\end_layout
+
+\begin_layout Plain Layout
+
+case class Arguments2(val id:IdT, val typestr:TypeT, val args2:Option[Arguments2
+])*/
+\end_layout
+
+\begin_layout Plain Layout
+
+case class Arguments(val args:List[Argument])
+\end_layout
+
+\begin_layout Plain Layout
+
+case class Argument(val id:IdT, val typestr:TypeT)
+\end_layout
+
+\begin_layout Plain Layout
+
+case class DefRhs(val expressions:List[Expression] )
+\end_layout
+
+\begin_layout Plain Layout
+
+case class Empty();
+\end_layout
+
+\begin_layout Plain Layout
+
+case class DefDescription(val value:Token)
+\end_layout
+
+\begin_layout Plain Layout
+
+case class NamedCallarg(id:IdT, argument:Callarg) //extends Callarg
+\end_layout
+
+\begin_layout Plain Layout
+
+case class NamedCallargs(val value:List[NamedCallarg])
+\end_layout
+
+\begin_layout Plain Layout
+
+case class NoArgs() extends Callarg with aCallarg
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+case class StringStatement(val value:String) extends BasicValueStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+case class IntegerStatement(val value:Int) extends BasicValueStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+case class DoubleStatement(val value:Double) extends BasicValueStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+case class TrueStatement() extends BasicValueStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+case class FalseStatement() extends BasicValueStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+case class IdentifierStatement(val value:String) extends Statement with
+ Callarg with aCallarg with aStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+case class FunctionCallStatement(val functionidentifier:String, val args:Either[
+Callarg,NamedCallargs]) extends Statement with Callarg
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
