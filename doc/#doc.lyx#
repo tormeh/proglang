@@ -551,6 +551,10 @@ key "Hadoop at facebook"
 \end_layout
 
 \begin_layout Section
+Inter-thread communication
+\end_layout
+
+\begin_layout Section
 Intermediate Target
 \end_layout
 
@@ -1039,7 +1043,8 @@ Either the types of the two arguments has to be the same or one of the types
 
 \begin_layout Enumerate
 There's no operator precedence, it has to be defined on a case-by-case basis
- using parentheses
+ using parentheses.
+ Ambiguous use of operators disallowed.
 \end_layout
 
 \begin_layout Section
@@ -1290,7 +1295,132 @@ Scanner
 \begin_layout Standard
 Drawing on experience from the TU Berlin course, the Scala Standard Parser
  Combinator Library was chosen.
- 
+\end_layout
+
+\begin_layout Standard
+The main function for the scanner:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+object FumurtScanner extends RegexParsers
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  override val skipWhitespace = false
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def scan(in:String, opts:Options):Either[NoSuccess, List[Token]] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    println(in) 
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\end_layout
+
+\begin_layout Plain Layout
+
+    parseAll((scan*), in) match  // "*" is the operator for performing a
+ parser zero or more times
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Success(result, _) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        val tokens = result.filter(x=>x match{case SpaceT() => false; case
+ _ => true}) :+ EofT()
+\end_layout
+
+\begin_layout Plain Layout
+
+        Right(tokens)
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case f:Failure => Left(f)
+\end_layout
+
+\begin_layout Plain Layout
+
+      case e:Error => Left(e)
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  //the rest of the scanner here
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1738,7 +1868,8 @@ positioned
 \end_inset
 
  call in the parsers assigns the Position to the token.
- This is all inherited from libraries, so it's 
+ This is all inherited from the parser combinator library, so it's hard
+ to understand what's going on from looking at the source alone.
 \end_layout
 
 \begin_layout Section

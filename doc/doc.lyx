@@ -1043,7 +1043,8 @@ Either the types of the two arguments has to be the same or one of the types
 
 \begin_layout Enumerate
 There's no operator precedence, it has to be defined on a case-by-case basis
- using parentheses
+ using parentheses.
+ Ambiguous use of operators disallowed.
 \end_layout
 
 \begin_layout Section
@@ -1294,7 +1295,136 @@ Scanner
 \begin_layout Standard
 Drawing on experience from the TU Berlin course, the Scala Standard Parser
  Combinator Library was chosen.
- 
+\end_layout
+
+\begin_layout Standard
+The main function for the scanner:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+object FumurtScanner extends RegexParsers
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  override val skipWhitespace = false
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def scan(in:String, opts:Options):Either[NoSuccess, List[Token]] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    println(in) 
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\end_layout
+
+\begin_layout Plain Layout
+
+    parseAll((scan*), in) match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Success(result, _) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        val tokens = result.filter(x=>x match{case SpaceT() => false; case
+ _ => true}) :+ EofT()
+\end_layout
+
+\begin_layout Plain Layout
+
+        Right(tokens)
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case f:Failure => Left(f)
+\end_layout
+
+\begin_layout Plain Layout
+
+      case e:Error => Left(e)
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  //the rest of the scanner here
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+"*" is the operator for performing a parser zero or more times.
+ There are two scan functions; one with, and one without, arguments.
 \end_layout
 
 \begin_layout Standard
@@ -1469,7 +1599,6 @@ def scan: Parser[Token] =
 \end_layout
 
 \begin_layout Standard
-Where 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1505,12 +1634,13 @@ key "scala parser combinator doc"
 \begin_inset Quotes eld
 \end_inset
 
-positioned([...])
+positioned(parser)
 \begin_inset Quotes erd
 \end_inset
 
- assigns the source code position to the token class, which allows us to
- output really nice error messages.
+ assigns the source code position of the input text to the token object
+ produced by the parser, which allows us to output really nice error messages
+ later on.
 \end_layout
 
 \begin_layout Standard
@@ -1754,7 +1884,126 @@ Parser
 Like in the scanner, the Scala Standard Parser Combinator Library was used.
  Unfortunately, the tasks of the parser is a bit more complicated than those
  of the scanner, and the code reflects this.
- 
+ This is where the grammar is encoded into the program.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def progParser: Parser[List[Definition]] = (paddedDefParser.+) <~ eofParser
+\end_layout
+
+\begin_layout Plain Layout
+
+def paddedDefParser:Parser[Definition] = {println("paddeddefparser"); newlinePar
+ser.* ~> defParser <~ newlineParser.* }
+\end_layout
+
+\begin_layout Plain Layout
+
+def defParser: Parser[Definition] = {println("defparser");  positioned((deflhsPa
+rser <~ equalParser ~! newlineParser.*) ~! defrhsParser ^^ {x=>Definition(x._1,x._2
+)}) }
+\end_layout
+
+\begin_layout Plain Layout
+
+def deflhsParser: Parser[DefLhs] = {println("deflhsparser");  (defdescriptionPar
+ser ~ idParser ~ argsParser ~! (colonParser ~> typeParser)) ^^ {x=>DefLhs(x._1._1._
+1, x._1._1._2, x._1._2, x._2)} }
+\end_layout
+
+\begin_layout Plain Layout
+
+def argsParser: Parser[Option[Arguments]] = {println("argsparser"); openParenthe
+sisParser ~> ((idParser <~ colonParser) ~ typeParser ~ subsequentArgsParser.*)
+ <~ closeParenthesisParser ^^{x=>Some(Arguments( (Argument(x._1._1, x._1._2)
+ +: x._2).sortWith((left,right)=>left.id.value<right.id.value) ))} | emptyParser
+ ^^ {x=>None} }
+\end_layout
+
+\begin_layout Plain Layout
+
+def subsequentArgsParser: Parser[Argument] = {println("args2parserparser");
+  commaParser ~> (idParser <~ colonParser) ~ typeParser ^^{x=>Argument(x._1,
+ x._2)} }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+def defrhsParser: Parser[DefRhs] = {println("-defrhsparser"); (openCurlyBracketP
+arser ~ newlineParser.* ~> expressionParser ~ (newlineParser.+ ~> expressionParser
+).*) <~ newlineParser.* ~ closeCurlyBracketParser ^^{x=>DefRhs(x._1 +: x._2)}
+ }
+\end_layout
+
+\begin_layout Plain Layout
+
+def expressionParser: Parser[Expression] = {println("expressionparser");
+ positioned(defParser | statementParser) }
+\end_layout
+
+\begin_layout Plain Layout
+
+def statementParser: Parser[Statement] = {println("statementparser"); functionCa
+llParser | basicStatementParser  | identifierStatementParser }
+\end_layout
+
+\begin_layout Plain Layout
+
+def callargsParser: Parser[Either[Callarg,NamedCallargs]] = {println("callargspa
+rser"); openParenthesisParser ~> (namedcallargsParser | callargParser) <~
+ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case x:NamedCal
+largs=>Right(x)}} }
+\end_layout
+
+\begin_layout Plain Layout
+
+def callargParser: Parser[Callarg] = {println("callargparser"); positioned(funct
+ionCallParser | identifierStatementParser | basicStatementParser | success(NoArg
+s())) }
+\end_layout
+
+\begin_layout Plain Layout
+
+def namedcallargsParser: Parser[NamedCallargs] = {println("namedcallargsparser")
+; namedcallargParser ~ subsequentnamedcallargsParser.+ ^^ {x => NamedCallargs((x._
+1 +: x._2).sortWith((left,right)=>left.id.value<right.id.value))} }
+\end_layout
+
+\begin_layout Plain Layout
+
+def subsequentnamedcallargsParser: Parser[NamedCallarg] = {println("subsequentna
+medcallargsParser"); (commaParser ~! success(Unit)) ~> namedcallargParser
+ }
+\end_layout
+
+\begin_layout Plain Layout
+
+def namedcallargParser:Parser[NamedCallarg] = {println("namedcallargparser");
+ (idParser <~ equalParser) ~ callargParser ^^ {x=>NamedCallarg(x._1, x._2)}
+ }
+\end_layout
+
+\begin_layout Plain Layout
+
+def functionCallParser:Parser[FunctionCallStatement] = {println("functioncallpar
+ser"); idParser ~ callargsParser ^^ {x=>FunctionCallStatement(x._1 match{case
+ IdT(str)=>str}, x._2)} }
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
