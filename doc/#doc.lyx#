@@ -1380,6 +1380,346 @@ The compiler consists of four parts: The scanner, parser, checker and code
 \end_layout
 
 \begin_layout Section
+The Gluework
+\end_layout
+
+\begin_layout Standard
+It is instructive to first take a view at how the pieces fit together:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+  def getOptions(args:Array[String],file:String): Options =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    println(args.toString)
+\end_layout
+
+\begin_layout Plain Layout
+
+    new Options(CompileTypeOption.interpreted, true, file)
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def compile(opts:Options):Unit =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    println("Now compiling!")
+\end_layout
+
+\begin_layout Plain Layout
+
+    val sourcestring = fromFile(opts.file).mkString
+\end_layout
+
+\begin_layout Plain Layout
+
+    FumurtScanner.scan(sourcestring, opts) match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Left(error) => println("Error in scanner: " + error.toString)
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Right(tokens) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        FumurtParser.parse(tokens) match
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          case Left(error) => println("Error in parser: " + error.toString)
+\end_layout
+
+\begin_layout Plain Layout
+
+          case Right(ast) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            FumurtTypeChecker.check(ast) match
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              case Some(errors) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                errors.map(x=>println(x))
+\end_layout
+
+\begin_layout Plain Layout
+
+                val errornum:String = errors.length match
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 1 => "one"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 2 => "two"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 3 => "three"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 4 => "four"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 5 => "five"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 6 => "six"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 7 => "seven"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 8 => "eight"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 9 => "nine"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case x => x.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                println(errornum.capitalize+" errors found")
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+              case None => 
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                val generatedcode = FumurtCodeGenerator.generate(ast)
+\end_layout
+
+\begin_layout Plain Layout
+
+                import java.nio.file.{Paths, Files}
+\end_layout
+
+\begin_layout Plain Layout
+
+                import java.nio.charset.StandardCharsets
+\end_layout
+
+\begin_layout Plain Layout
+
+                val outname = "generated"
+\end_layout
+
+\begin_layout Plain Layout
+
+                val fileending = ".cpp"
+\end_layout
+
+\begin_layout Plain Layout
+
+                Files.write(Paths.get("./"+outname+fileending), generatedcode.getByt
+es(StandardCharsets.UTF_8))
+\end_layout
+
+\begin_layout Plain Layout
+
+                val options = " -pthread -std=c++11 -O3"
+\end_layout
+
+\begin_layout Plain Layout
+
+                println("
+\backslash
+n
+\backslash
+n===Starting Clang cpp compilation===")
+\end_layout
+
+\begin_layout Plain Layout
+
+                import scala.sys.process._
+\end_layout
+
+\begin_layout Plain Layout
+
+                val command = "clang++ " + outname + fileending + options
+ + " -o " + outname
+\end_layout
+
+\begin_layout Plain Layout
+
+                (command).!
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+First, the code is scanned.
+ If there is an error it's printed and compilation ended.
+ Note that neither scanner nor parser are advanced enough to detect more
+ than one error.
+ Second, the tokens from the scanner is parsed.
+ If there is an error it's printed and compilation ended.
+ Third, the AST from the parser is handed to the checker, which looks for
+ any semantic errors, if there are any, they are printed out.
+\end_layout
+
+\begin_layout Section
 Scanner
 \end_layout
 
@@ -1981,7 +2321,7 @@ Parser
 Like in the scanner, the Scala Standard Parser Combinator Library was used.
  Unfortunately, the tasks of the parser is a bit more complicated than those
  of the scanner, and the code reflects this.
- This is where the grammar is encoded into the program.
+ This is where the grammar is encoded into the program:
 \end_layout
 
 \begin_layout Standard
@@ -2118,8 +2458,8 @@ The relevant values are extracted from the result by using the
 \end_layout
 
 \begin_layout Standard
-There are also a number of somewhat boring helper parsers, of which we provide
- an example:
+There are also a number of somewhat less exciting helper parsers, of which
+ we provide an example:
 \end_layout
 
 \begin_layout Standard
@@ -2161,6 +2501,10 @@ ue);
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+We can here see some of how the parser error messages are generated.
 \end_layout
 
 \begin_layout Standard
@@ -2297,6 +2641,132 @@ Callarg,NamedCallargs]) extends Statement with Callarg
 
 \begin_layout Section
 Checker
+\end_layout
+
+\begin_layout Standard
+The checker, contrary to its in-source name (FumurtTypeChecker) checks more
+ than types.
+ It does not modify, annotate or otherwise change the abstract syntax tree.
+ It simply returns errors found or returns nothing.
+ When the implementation of the checker began it was envisaged that the
+ basic functions would be treated equally with user defined functions, but
+ due to the lack of generics and other abstraction mechanisms, most of the
+ basic functions still needed special treatment, with 
+\begin_inset Quotes eld
+\end_inset
+
+actionPrint
+\begin_inset Quotes erd
+\end_inset
+
+ being the notable exception.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+object FumurtTypeChecker
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  def check(in:List[Definition]):Option[List[FumurtError]] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    val providedTypes = List("Integer", "Double", "Boolean", "String", "Nothing"
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val print = DefLhs(ActionT(), IdT("actionPrint"), Some(Arguments(List(Argume
+nt(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
+\end_layout
+
+\begin_layout Plain Layout
+
+    val basicfunctions = List(print)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val errors = checktop(in, basicfunctions)
+\end_layout
+
+\begin_layout Plain Layout
+
+    if (errors.isEmpty)
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      None
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    else
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      Some(errors)
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  //the rest goes here
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section

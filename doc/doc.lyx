@@ -1379,8 +1379,12 @@ The compiler consists of four parts: The scanner, parser, checker and code
  that tail recursion into a loop in testing, leading to a stack overflow.
 \end_layout
 
+\begin_layout Section
+The Glue
+\end_layout
+
 \begin_layout Standard
-The main is:
+It is instructive to first take a view at how the pieces fit together:
 \end_layout
 
 \begin_layout Standard
@@ -1465,14 +1469,6 @@ status open
 
 \begin_layout Plain Layout
 
-        println("successful scan.
- Tokens: "+tokens.toString+"
-\backslash
-n")
-\end_layout
-
-\begin_layout Plain Layout
-
         FumurtParser.parse(tokens) match
 \end_layout
 
@@ -1494,11 +1490,6 @@ n")
 \begin_layout Plain Layout
 
           {
-\end_layout
-
-\begin_layout Plain Layout
-
-            println("Success in parser: " + ast.toString)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1613,23 +1604,7 @@ n")
 
 \begin_layout Plain Layout
 
-                println("
-\backslash
-nNo errors in checker")
-\end_layout
-
-\begin_layout Plain Layout
-
                 val generatedcode = FumurtCodeGenerator.generate(ast)
-\end_layout
-
-\begin_layout Plain Layout
-
-                println("
-\backslash
-ncode generated: 
-\backslash
-n" + generatedcode)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1674,11 +1649,6 @@ n===Starting Clang cpp compilation===")
 
 \begin_layout Plain Layout
 
-                //println("options = " + options)
-\end_layout
-
-\begin_layout Plain Layout
-
                 import scala.sys.process._
 \end_layout
 
@@ -1686,11 +1656,6 @@ n===Starting Clang cpp compilation===")
 
                 val command = "clang++ " + outname + fileending + options
  + " -o " + outname
-\end_layout
-
-\begin_layout Plain Layout
-
-                println(command)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1741,6 +1706,46 @@ n===Starting Clang cpp compilation===")
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Consider the steps:
+\end_layout
+
+\begin_layout Enumerate
+The code is scanned.
+ If there is an error it's printed and compilation ended.
+ Note that neither scanner nor parser are advanced enough to detect more
+ than one error.
+ 
+\end_layout
+
+\begin_layout Enumerate
+The tokens from the scanner is parsed.
+ If there is an error it's printed and compilation ended.
+ 
+\end_layout
+
+\begin_layout Enumerate
+The AST from the parser is handed to the checker, which looks for any semantic
+ errors.
+ If there are any, they are printed out and compilation ended.
+\end_layout
+
+\begin_layout Enumerate
+The AST from from the parser is given to the code generator, which produces
+ C++ code conforming to the C++11 standard.
+\end_layout
+
+\begin_layout Enumerate
+The Clang C family compiler
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Clang"
+
+\end_inset
+
+ is used to compile the C++ code to native binaries.
 \end_layout
 
 \begin_layout Section
@@ -1884,8 +1889,7 @@ object FumurtScanner extends RegexParsers
 \end_layout
 
 \begin_layout Standard
-"*" is the operator for performing a parser zero or more times.
- There are two scan functions; one with, and one without, arguments, confusingly.
+There are two scan functions; one with, and one without, arguments, confusingly.
 \end_layout
 
 \begin_layout Standard
@@ -2345,7 +2349,7 @@ Parser
 Like in the scanner, the Scala Standard Parser Combinator Library was used.
  Unfortunately, the tasks of the parser is a bit more complicated than those
  of the scanner, and the code reflects this.
- This is where the grammar is encoded into the program.
+ This is where the grammar is encoded into the program:
 \end_layout
 
 \begin_layout Standard
@@ -2479,11 +2483,20 @@ The relevant values are extracted from the result by using the
 \end_inset
 
  is then the first value of the set, etc.
+ The structure of these sets are sometimes not immediately obvious.
+ For the operators refer back to 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:The-Scala-Parser"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-There are also a number of somewhat boring helper parsers, of which we provide
- an example:
+There are also a number of somewhat less exciting helper parsers, of which
+ we provide an example:
 \end_layout
 
 \begin_layout Standard
@@ -2672,7 +2685,18 @@ The checker, contrary to its in-source name (FumurtTypeChecker) checks more
  than types.
  It does not modify, annotate or otherwise change the abstract syntax tree.
  It simply returns errors found or returns nothing.
- 
+ When the implementation of the checker began it was envisaged that the
+ basic functions would be treated equally with user defined functions, but
+ due to the lack of generics and other abstraction mechanisms, most of the
+ basic functions still needed special treatment, with 
+\begin_inset Quotes eld
+\end_inset
+
+actionPrint
+\begin_inset Quotes erd
+\end_inset
+
+ being the notable exception.
 \end_layout
 
 \begin_layout Standard
@@ -2776,6 +2800,21 @@ nt(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
 
 }
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A diagram
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename checker.eps
+	lyxscale 70
+	width 100text%
 
 \end_inset
 
@@ -2970,6 +3009,17 @@ key "Positional"
 
 http://www.scala-lang.org/files/archive/api/2.11.x/scala-parser-combinators/index.htm
 l#scala.util.parsing.input.Positional
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "13"
+key "Clang"
+
+\end_inset
+
+http://clang.llvm.org/
 \end_layout
 
 \begin_layout Chapter
