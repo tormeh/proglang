@@ -356,15 +356,33 @@ Transactional memory, though it makes it look as if thread communication
 \end_layout
 
 \begin_layout Section
-What The Author Learned
-\end_layout
-
-\begin_layout Section
 Compilers
 \end_layout
 
 \begin_layout Section
 Parser Combinators
+\end_layout
+
+\begin_layout Standard
+Parser combinators are a higher order functions that accepts other parser
+ combinators or parsers as input
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Parser combinators"
+
+\end_inset
+
+.
+ The overall effect is similar to a domain specific language for constructing
+ recursive descent parsers.
+\end_layout
+
+\begin_layout Section
+What The Author Learned
+\end_layout
+
+\begin_layout Standard
+Regex, C++11, advanced Scala/functional programming, parser combinators,
 \end_layout
 
 \begin_layout Chapter
@@ -1150,7 +1168,7 @@ status open
 
 \begin_layout Plain Layout
 
-class intAndString(int:Integer, string:String)
+class IntAndString(int:Integer, string:String)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1159,7 +1177,7 @@ class intAndString(int:Integer, string:String)
 
 \begin_layout Plain Layout
 
-value x = intAndString(int=3, string="something")
+value x = IntAndString(int=3, string="something")
 \end_layout
 
 \end_inset
@@ -1173,6 +1191,12 @@ We do not have inheritance, because while inheritance means you get code
  When one class inherits from a hierarchy, one needs to understand not only
  what's written about that class but also the entire hierarchy in order
  to understand the end result.
+\end_layout
+
+\begin_layout Standard
+In order to aid the programmer in understanding their own and others' code,
+ the names of types always lead with a capital letter.
+ Conversely, leading with a capital letter for anything else is illegal.
 \end_layout
 
 \begin_layout Subsection
@@ -1201,7 +1225,7 @@ status open
 
 \begin_layout Plain Layout
 
-interface intAndString(int:Integer, string:String)
+interface IntAndString(int:Integer, string:String)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1211,7 +1235,7 @@ interface intAndString(int:Integer, string:String)
 
 \begin_layout Plain Layout
 
-class intAndString(int:Integer, string:String)
+class IntAndString(int:Integer, string:String)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1220,8 +1244,8 @@ class intAndString(int:Integer, string:String)
 
 \begin_layout Plain Layout
 
-class intAndStringAndBool(int:Integer, string:String, bool:Boolean) implements
- intAndString
+class IntAndStringAndBool(int:Integer, string:String, bool:Boolean) implements
+ IntAndString
 \end_layout
 
 \end_inset
@@ -1259,8 +1283,18 @@ The compiler consists of four parts: The scanner, parser, checker and code
  that tail recursion into a loop in testing, leading to a stack overflow.
 \end_layout
 
+\begin_layout Section
+Scanner
+\end_layout
+
 \begin_layout Standard
-Parse
+Drawing on experience from the TU Berlin course, the Scala Standard Parser
+ Combinator Library was chosen.
+ 
+\end_layout
+
+\begin_layout Standard
+Parsers for individual tokens are formed like this:
 \end_layout
 
 \begin_layout Standard
@@ -1397,11 +1431,6 @@ def scan: Parser[Token] =
 
 \begin_layout Plain Layout
 
-    //emptyParser               |
-\end_layout
-
-\begin_layout Plain Layout
-
     newlineParser               |
 \end_layout
 
@@ -1452,16 +1481,6 @@ key "scala parser combinator doc"
 \end_inset
 
 
-\end_layout
-
-\begin_layout Section
-Scanner
-\end_layout
-
-\begin_layout Standard
-Drawing on experience from the TU Berlin course, the Scala Standard Parser
- Combinator Library was chosen.
- 
 \end_layout
 
 \begin_layout Section

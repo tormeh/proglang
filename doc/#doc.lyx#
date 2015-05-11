@@ -356,15 +356,33 @@ Transactional memory, though it makes it look as if thread communication
 \end_layout
 
 \begin_layout Section
-What The Author Learned
-\end_layout
-
-\begin_layout Section
 Compilers
 \end_layout
 
 \begin_layout Section
 Parser Combinators
+\end_layout
+
+\begin_layout Standard
+Parser combinators are a higher order functions that accepts other parser
+ combinators or parsers as input
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Parser combinators"
+
+\end_inset
+
+.
+ The overall effect is similar to a domain specific language for constructing
+ recursive descent parsers.
+\end_layout
+
+\begin_layout Section
+What The Author Learned
+\end_layout
+
+\begin_layout Standard
+Regex, C++11, advanced Scala/functional programming, parser combinators,
 \end_layout
 
 \begin_layout Chapter
@@ -1150,7 +1168,7 @@ status open
 
 \begin_layout Plain Layout
 
-class intAndString(int:Integer, string:String)
+class IntAndString(int:Integer, string:String)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1159,7 +1177,7 @@ class intAndString(int:Integer, string:String)
 
 \begin_layout Plain Layout
 
-value x = intAndString(int=3, string="something")
+value x = IntAndString(int=3, string="something")
 \end_layout
 
 \end_inset
@@ -1173,6 +1191,12 @@ We do not have inheritance, because while inheritance means you get code
  When one class inherits from a hierarchy, one needs to understand not only
  what's written about that class but also the entire hierarchy in order
  to understand the end result.
+\end_layout
+
+\begin_layout Standard
+In order to aid the programmer in understanding their own and others' code,
+ the names of types always lead with a capital letter.
+ Conver
 \end_layout
 
 \begin_layout Subsection
@@ -1259,8 +1283,18 @@ The compiler consists of four parts: The scanner, parser, checker and code
  that tail recursion into a loop in testing, leading to a stack overflow.
 \end_layout
 
+\begin_layout Section
+Scanner
+\end_layout
+
 \begin_layout Standard
-Parsers look 
+Drawing on experience from the TU Berlin course, the Scala Standard Parser
+ Combinator Library was chosen.
+ 
+\end_layout
+
+\begin_layout Standard
+Parsers for individual tokens are formed like this:
 \end_layout
 
 \begin_layout Standard
@@ -1272,14 +1306,13 @@ status open
 
 def intParser: Parser[IntegerT] = positioned( new Regex("""(0|[1-9]
 \backslash
-d*)""") ^^ {x => println("scanned integer "+x.toString);IntegerT(x.toInt)}
- )
+d*)""") ^^ {x => IntegerT(x.toInt)} )
 \end_layout
 
 \begin_layout Plain Layout
 
-def equalParser: Parser[EqualT] = positioned( new Regex("=") ^^ {x => println("s
-canned = "+x.toString);EqualT()} )
+def equalParser: Parser[EqualT] = positioned( new Regex("=") ^^ {x => EqualT()}
+ )
 \end_layout
 
 \end_inset
@@ -1288,21 +1321,166 @@ canned = "+x.toString);EqualT()} )
 \end_layout
 
 \begin_layout Standard
-The parsers are combined like this
+The parsers are combined into the final scanner:
 \end_layout
 
 \begin_layout Standard
+\begin_inset listings
+inline false
+status open
 
+\begin_layout Plain Layout
+
+def scan: Parser[Token] = 
 \end_layout
 
-\begin_layout Section
-Scanner
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  (
+\end_layout
+
+\begin_layout Plain Layout
+
+    spaceParser                 |
+\end_layout
+
+\begin_layout Plain Layout
+
+    programStrParser            |
+\end_layout
+
+\begin_layout Plain Layout
+
+    threadParser                |
+\end_layout
+
+\begin_layout Plain Layout
+
+    actionParser                |
+\end_layout
+
+\begin_layout Plain Layout
+
+    synchronizedVariableParser  |
+\end_layout
+
+\begin_layout Plain Layout
+
+    functionParser              |
+\end_layout
+
+\begin_layout Plain Layout
+
+    trueParser                  |
+\end_layout
+
+\begin_layout Plain Layout
+
+    falseParser                 |
+\end_layout
+
+\begin_layout Plain Layout
+
+    openParenthesisParser       |
+\end_layout
+
+\begin_layout Plain Layout
+
+    closeParenthesisParser      |
+\end_layout
+
+\begin_layout Plain Layout
+
+    openCurlyBracketParser      |
+\end_layout
+
+\begin_layout Plain Layout
+
+    closeCurlyBracketParser     |
+\end_layout
+
+\begin_layout Plain Layout
+
+    doubleParser                |
+\end_layout
+
+\begin_layout Plain Layout
+
+    intParser                   |
+\end_layout
+
+\begin_layout Plain Layout
+
+    equalParser                 |
+\end_layout
+
+\begin_layout Plain Layout
+
+    colonParser                 |
+\end_layout
+
+\begin_layout Plain Layout
+
+    commaParser                 |
+\end_layout
+
+\begin_layout Plain Layout
+
+    newlineParser               |
+\end_layout
+
+\begin_layout Plain Layout
+
+    stringParser                |
+\end_layout
+
+\begin_layout Plain Layout
+
+    idParser                    |
+\end_layout
+
+\begin_layout Plain Layout
+
+    typeParser  
+\end_layout
+
+\begin_layout Plain Layout
+
+  )            
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Drawing on experience from the TU Berlin course, the Scala Standard Parser
- Combinator Library was chosen.
- 
+Where 
+\begin_inset Quotes eld
+\end_inset
+
+|
+\begin_inset Quotes erd
+\end_inset
+
+ is an alternative operator with backtracking
+\begin_inset CommandInset citation
+LatexCommand cite
+key "scala parser combinator doc"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -1482,6 +1660,18 @@ key "Parser combinators"
 \end_inset
 
 Frost et Launchbury, 1989
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "11"
+key "scala parser combinator doc"
+
+\end_inset
+
+http://www.scala-lang.org/files/archive/api/2.11.x/scala-parser-combinators/index.htm
+l#scala.util.parsing.combinator.Parsers$Parser
 \end_layout
 
 \begin_layout Chapter
