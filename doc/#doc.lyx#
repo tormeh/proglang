@@ -1196,7 +1196,7 @@ We do not have inheritance, because while inheritance means you get code
 \begin_layout Standard
 In order to aid the programmer in understanding their own and others' code,
  the names of types always lead with a capital letter.
- Conver
+ Conversely, leading with a capital letter for anything else is illegal.
 \end_layout
 
 \begin_layout Subsection
@@ -1225,7 +1225,7 @@ status open
 
 \begin_layout Plain Layout
 
-interface intAndString(int:Integer, string:String)
+interface IntAndString(int:Integer, string:String)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1235,7 +1235,7 @@ interface intAndString(int:Integer, string:String)
 
 \begin_layout Plain Layout
 
-class intAndString(int:Integer, string:String)
+class IntAndString(int:Integer, string:String)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1244,8 +1244,8 @@ class intAndString(int:Integer, string:String)
 
 \begin_layout Plain Layout
 
-class intAndStringAndBool(int:Integer, string:String, bool:Boolean) implements
- intAndString
+class IntAndStringAndBool(int:Integer, string:String, bool:Boolean) implements
+ IntAndString
 \end_layout
 
 \end_inset
@@ -1321,7 +1321,7 @@ def equalParser: Parser[EqualT] = positioned( new Regex("=") ^^ {x => EqualT()}
 \end_layout
 
 \begin_layout Standard
-The parsers are combined into the final scanner:
+The parsers are then combined into the final scanner:
 \end_layout
 
 \begin_layout Standard
@@ -1473,14 +1473,272 @@ Where
 \begin_inset Quotes erd
 \end_inset
 
- is an alternative operator with backtracking
+ is an alternative operator with backtracking and 
+\begin_inset Quotes eld
+\end_inset
+
+^^
+\begin_inset Quotes erd
+\end_inset
+
+ means 
+\begin_inset Quotes eld
+\end_inset
+
+if succesful then do
+\begin_inset Quotes erd
+\end_inset
+
+
 \begin_inset CommandInset citation
 LatexCommand cite
 key "scala parser combinator doc"
 
 \end_inset
 
+.
+ 
+\begin_inset Quotes eld
+\end_inset
 
+positioned([...])
+\begin_inset Quotes erd
+\end_inset
+
+ assigns the source code position to the token class, which allows us to
+ output really nice error messages.
+\end_layout
+
+\begin_layout Standard
+It all goes into a list of tokens.
+ The tokens are defined like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+abstract class Token() extends Positional
+\end_layout
+
+\begin_layout Plain Layout
+
+abstract class DefDescriptionT() extends Token
+\end_layout
+
+\begin_layout Plain Layout
+
+abstract class BasicValueT() extends Token
+\end_layout
+
+\begin_layout Plain Layout
+
+abstract class SyntaxT() extends Token
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+case class EmptyT() extends Token
+\end_layout
+
+\begin_layout Plain Layout
+
+case class TrueT() extends BasicValueT {override def toString = "true"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class FalseT() extends BasicValueT {override def toString = "false"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class ProgramT() extends DefDescriptionT {override def toString = "program"
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class ActionT() extends DefDescriptionT {override def toString = "action"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class ThreadT() extends DefDescriptionT {override def toString = "thread"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class FunctionT() extends DefDescriptionT {override def toString =
+ "function"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class ValueT() extends DefDescriptionT {override def toString = "value"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class SynchronizedVariableT() extends DefDescriptionT {override def
+ toString = "synchronized variable"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class OpenParenthesisT() extends SyntaxT {override def toString = "
+\backslash
+"(
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class CloseParenthesisT() extends SyntaxT {override def toString =
+ "
+\backslash
+")
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class OpenCurlyBracketT() extends SyntaxT {override def toString =
+ "
+\backslash
+"{
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class CloseCurlyBracketT() extends SyntaxT {override def toString =
+ "
+\backslash
+"}
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class DoubleT(val value:Double) extends BasicValueT {override def toString
+ = "decimal number"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class IntegerT(val value:Int) extends BasicValueT {override def toString
+ = "integer"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class EqualT() extends SyntaxT {override def toString = "
+\backslash
+"=
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class ColonT() extends SyntaxT {override def toString = "
+\backslash
+":
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class CommaT() extends SyntaxT {override def toString = "
+\backslash
+",
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class NewlineT() extends SyntaxT {override def toString = "newline"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class IdT(val value:String) extends Token {override def toString =
+ "identifier(
+\backslash
+""+value+"
+\backslash
+")"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class TypeT(val value:String) extends Token {override def toString
+ = "type(
+\backslash
+""+value+"
+\backslash
+")"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class StringT(val value:String) extends BasicValueT {override def toString
+ = "string"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class SpaceT() extends SyntaxT
+\end_layout
+
+\begin_layout Plain Layout
+
+case class DummyT() extends Token
+\end_layout
+
+\begin_layout Plain Layout
+
+case class EofT() extends SyntaxT {override def toString = "end of file"}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Positional
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Positional"
+
+\end_inset
+
+ is a trait that gives the token a Position.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+positioned
+\begin_inset Quotes erd
+\end_inset
+
+ call in the parsers assigns the Position to the token.
+ This is all inherited from libraries, so it's 
 \end_layout
 
 \begin_layout Section
@@ -1489,7 +1747,9 @@ Parser
 
 \begin_layout Standard
 Like in the scanner, the Scala Standard Parser Combinator Library was used.
- This 
+ Unfortunately, the tasks of the parser is a bit more complicated than those
+ of the scanner, and the code reflects this.
+ 
 \end_layout
 
 \begin_layout Section
@@ -1672,6 +1932,18 @@ key "scala parser combinator doc"
 
 http://www.scala-lang.org/files/archive/api/2.11.x/scala-parser-combinators/index.htm
 l#scala.util.parsing.combinator.Parsers$Parser
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "12"
+key "Positional"
+
+\end_inset
+
+http://www.scala-lang.org/files/archive/api/2.11.x/scala-parser-combinators/index.htm
+l#scala.util.parsing.input.Positional
 \end_layout
 
 \begin_layout Chapter
