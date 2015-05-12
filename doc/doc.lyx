@@ -2811,7 +2811,7 @@ nt(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
 \end_layout
 
 \begin_layout Standard
-A diagram
+This graphic illustrates how the functions in the checker call each other:
 \end_layout
 
 \begin_layout Standard
@@ -2823,6 +2823,10 @@ A diagram
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+The checker have no datastructures of importance.
 \end_layout
 
 \begin_layout Section
