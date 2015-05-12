@@ -2826,15 +2826,61 @@ This graphic illustrates how the functions in the checker call each other:
 \end_layout
 
 \begin_layout Standard
-The checker have no datastructures of importance.
+The checker have no datastructures (of importance?).
 \end_layout
 
 \begin_layout Section
 Code generator
 \end_layout
 
+\begin_layout Standard
+\begin_inset Graphics
+	filename codegenerator.eps
+	lyxscale 70
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Annotator
+\end_layout
+
+\begin_layout Standard
+The function 
+\begin_inset Quotes eld
+\end_inset
+
+getAnnotatedTree
+\begin_inset Quotes erd
+\end_inset
+
+ annotates the abstract syntax tree.
+ Technically, the finished code can always be determined directly from the
+ AST, but it was discovered that in order to do this in the Fumurt case,
+ the same rules would have to be encoded into the code in several different
+ places.
+ In the current state of implementation, the only rule that required annotation
+ was the rule for determining the C++ names of function.
+ There are three aspects to the naming: 
+\end_layout
+
+\begin_layout Enumerate
+Actions and functions that are in other functions need to get new names
+ and the hierarchy needs to be flattened
+\end_layout
+
+\begin_layout Enumerate
+Actions need to be demultiplexed, as their C++ code needs to be different
+ depending on which thread calls that action.
+ For instance, an actionPrint needs to be transformed to a push to a list
+ whose name depends on the calling thread
+\end_layout
+
+\begin_layout Enumerate
+Function calls need to be changed so they have the correct names
 \end_layout
 
 \begin_layout Section
