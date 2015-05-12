@@ -1353,6 +1353,10 @@ class IntAndStringAndBool(int:Integer, string:String, bool:Boolean) implements
 Grammar
 \end_layout
 
+\begin_layout Section
+Program Declaration
+\end_layout
+
 \begin_layout Chapter
 Implementation
 \end_layout
