@@ -337,7 +337,7 @@ on over these.
  of information is an acceptible failure mode for actors.
  However, this makes actors unsuitable for real-time systems as recovering
  from data loss and unpredictable memory usage are unacceptable tradeoffs.
- Ordering of IO is alse unpredictable.
+ Ordering of IO is also unpredictable.
 \end_layout
 
 \begin_layout Itemize
@@ -365,8 +365,8 @@ Parser Combinators
 \end_layout
 
 \begin_layout Standard
-Parser combinators are a higher order functions that accepts other parser
- combinators or parsers as input
+Parser combinators is a higher order function that accepts parsers as input
+ and returns a new parser
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Parser combinators"
@@ -376,10 +376,103 @@ key "Parser combinators"
 .
  The overall effect is similar to a domain specific language for constructing
  recursive descent parsers.
+ 
+\end_layout
+
+\begin_layout Standard
+A parser is a function that converts one data structure to a more sensible
+ data structure.
+ Usually, the output data structure is more restricted and systematic than
+ the input one.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Example:
+\end_layout
+
+\begin_layout Standard
+Consider a function that accepts the string 
+\begin_inset Quotes eld
+\end_inset
+
+=
+\begin_inset Quotes erd
+\end_inset
+
+ and returns an object of class equalToken or, if the string it is given
+ is not 
+\begin_inset Quotes eld
+\end_inset
+
+=
+\begin_inset Quotes erd
+\end_inset
+
+, returns an error object.
+ Such a function is then a parser.
+ Such parsers can be combined to form a larger parser that can work as a
+ scanner, that is a parser that converts a list of characters to a list
+ of tokens (very simple objects).
+ Let the previously discussed function be called the equalParser.
+ Let a parser that works exactly the same, save for exchanging 
+\begin_inset Quotes eld
+\end_inset
+
+=
+\begin_inset Quotes erd
+\end_inset
+
+ for 
+\begin_inset Quotes eld
+\end_inset
+
+-
+\begin_inset Quotes erd
+\end_inset
+
+ be called the minusParser and let it return a minusToken upon success.
+ Consider combining the equalParser with the minusParser using an 
+\emph on
+alternate parser combinator
+\emph default
+ (the 
+\begin_inset Quotes eld
+\end_inset
+
+|
+\begin_inset Quotes erd
+\end_inset
+
+ operator in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:The-Scala-Parser"
+
+\end_inset
+
+).
+ The resulting function would then first try the equalParser, and if that
+ returned an error object, it would try the minusParser, returning an error
+ object if both of these parsers fail.
+ This new parser would not need to return a minusToken or equalToken, but
+ can process the results from equalParser and minusParser into something
+ new.
+ In this example, we have formed two parsers and combined them into a new
+ parser using a parser combinator.
+ This new parser can be part of a scanner.
+ Indeed, the Fumurt scanner is formed like this (see 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "scanner combined"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Subsection
-The Scala Standard Parser Combinator Library (and its operators)
+The Scala Standard Parser Combinator Library
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:The-Scala-Parser"
@@ -398,7 +491,11 @@ key "scala parser combinator doc"
 \end_inset
 
 .
- 
+\end_layout
+
+\begin_layout Standard
+The Scala Standard Parser Combinator Library introduces many parser combinators,
+ most of whom are formulated as operators.
 \end_layout
 
 \begin_layout Standard
@@ -458,7 +555,7 @@ Let's discuss the operators:
 \end_layout
 
 \begin_layout Section
-What The Author Learned
+Knowledge Dividends
 \end_layout
 
 \begin_layout Standard
@@ -635,7 +732,7 @@ Inter-thread communication
 \end_layout
 
 \begin_layout Section
-Intermediate Target
+Choice of Intermediate Target
 \end_layout
 
 \begin_layout Standard
@@ -685,7 +782,7 @@ C++ seems to satisfy all these criteria, and were therefore selected as
 \end_layout
 
 \begin_layout Section
-Compiler Implementation Language
+Choice of Compiler Implementation Language
 \end_layout
 
 \begin_layout Standard
@@ -897,10 +994,6 @@ if(condition=true, then=toString(1), else=toString(0))
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Subsection
 
 \end_layout
 
@@ -1139,7 +1232,7 @@ There's no operator precedence, it has to be defined on a case-by-case basis
 \end_layout
 
 \begin_layout Section
-Mutability, Or The Absence of Such
+Immutability
 \end_layout
 
 \begin_layout Standard
@@ -1905,6 +1998,13 @@ The parsers are then combined into the final scanner using the alternate
 \begin_inset CommandInset citation
 LatexCommand cite
 key "scala parser combinator doc"
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "scanner combined"
 
 \end_inset
 
