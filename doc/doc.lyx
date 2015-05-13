@@ -817,10 +817,6 @@ One might wish for brackets to be optional in such one-liners, though,
 \end_layout
 
 \begin_layout Subsection
-Simple
-\end_layout
-
-\begin_layout Subsection
 Predictable and Helpful
 \end_layout
 
@@ -904,6 +900,133 @@ if(condition=true, then=toString(1), else=toString(0))
 
 \end_layout
 
+\begin_layout Subsection
+Grammar
+\end_layout
+
+\begin_layout Standard
+Here's the EBNF (ISO/IEC 14977) for the grammar:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+prog = paddedDef, {paddedDef}, EoF;
+\end_layout
+
+\begin_layout Plain Layout
+
+paddedDef = {"
+\backslash
+n"}, def, {"
+\backslash
+n"};
+\end_layout
+
+\begin_layout Plain Layout
+
+def = deflhs, "=", {"
+\backslash
+n"}, defrhs;
+\end_layout
+
+\begin_layout Plain Layout
+
+deflhs = defdescription, id, args, ":", type;
+\end_layout
+
+\begin_layout Plain Layout
+
+args = ("(", id, ":", type, {subsequentArg}) | "";
+\end_layout
+
+\begin_layout Plain Layout
+
+subsequentArg = ",", id, ":", type;
+\end_layout
+
+\begin_layout Plain Layout
+
+defrhs = "{", {"
+\backslash
+n"}, expression, {("
+\backslash
+n", {"
+\backslash
+n"}, expression)}, {"
+\backslash
+n"}, "}";
+\end_layout
+
+\begin_layout Plain Layout
+
+expression = def | statement;
+\end_layout
+
+\begin_layout Plain Layout
+
+statement = functionCall | basicStatement | identifierStatement;
+\end_layout
+
+\begin_layout Plain Layout
+
+callargs = "(", (namedcallargs|callarg), ")";
+\end_layout
+
+\begin_layout Plain Layout
+
+callarg = statement | "";
+\end_layout
+
+\begin_layout Plain Layout
+
+namedcallargs = namedcallarg, subsequentnamedcallarg, {subsequentnamedcallarg};
+\end_layout
+
+\begin_layout Plain Layout
+
+subsequentnamedcallarg = ",", namedcallarg;
+\end_layout
+
+\begin_layout Plain Layout
+
+namedcallarg = id, "=", callarg;
+\end_layout
+
+\begin_layout Plain Layout
+
+functionCall = id, callargs;
+\end_layout
+
+\begin_layout Plain Layout
+
+identifierStatement = id
+\end_layout
+
+\begin_layout Plain Layout
+
+basicStatement = 
+\end_layout
+
+\begin_layout Plain Layout
+
+id
+\end_layout
+
+\begin_layout Plain Layout
+
+defdescription = "program" | "action" | "thread" | "function" | "value"
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Scope
 \end_layout
@@ -930,7 +1053,7 @@ status open
 
 \begin_layout Plain Layout
 
-function a:Nothing = 
+action actionA:Nothing = 
 \end_layout
 
 \begin_layout Plain Layout
@@ -950,7 +1073,7 @@ function a:Nothing =
 
 \begin_layout Plain Layout
 
-function b:Nothing =
+action actionB:Nothing =
 \end_layout
 
 \begin_layout Plain Layout
@@ -970,7 +1093,7 @@ function b:Nothing =
 
 \begin_layout Plain Layout
 
-function c:Nothing =
+action actionC:Nothing =
 \end_layout
 
 \begin_layout Plain Layout
@@ -1005,7 +1128,7 @@ status open
 
 \begin_layout Plain Layout
 
-function a(b:Inclusion, c:Inclusion):Nothing = 
+action actionA(b:Inclusion, c:Inclusion):Nothing = 
 \end_layout
 
 \begin_layout Plain Layout
@@ -1015,7 +1138,7 @@ function a(b:Inclusion, c:Inclusion):Nothing =
 
 \begin_layout Plain Layout
 
-  b(c)
+  b(c=c)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1025,7 +1148,7 @@ function a(b:Inclusion, c:Inclusion):Nothing =
 
 \begin_layout Plain Layout
 
-function b(c:Inclusion):Nothing =
+action actionB(c:Inclusion):Nothing =
 \end_layout
 
 \begin_layout Plain Layout
@@ -1045,7 +1168,7 @@ function b(c:Inclusion):Nothing =
 
 \begin_layout Plain Layout
 
-function c:Nothing =
+action actionC:Nothing =
 \end_layout
 
 \begin_layout Plain Layout
@@ -1105,7 +1228,7 @@ Their arguments are nameless, which kind of sabotages the point of having
 
 \begin_layout Enumerate
 How to define operator precedence? For math operators there's convention,
- but otherwise this may be confusing for users of operators.
+ but otherwise this may be confusing for users of operators
 \end_layout
 
 \begin_layout Standard
@@ -1135,7 +1258,7 @@ Either the types of the two arguments has to be the same or one of the types
 \begin_layout Enumerate
 There's no operator precedence, it has to be defined on a case-by-case basis
  using parentheses.
- Ambiguous use of operators disallowed.
+ Ambiguous use of operators are not allowed.
 \end_layout
 
 \begin_layout Section
@@ -1347,10 +1470,6 @@ class IntAndStringAndBool(int:Integer, string:String, bool:Boolean) implements
 \end_inset
 
 
-\end_layout
-
-\begin_layout Section
-Grammar
 \end_layout
 
 \begin_layout Section
@@ -2885,6 +3004,18 @@ Function calls need to be changed so they have the correct names
 
 \begin_layout Section
 Not Implemented
+\end_layout
+
+\begin_layout Itemize
+Loops
+\end_layout
+
+\begin_layout Itemize
+User-defined types
+\end_layout
+
+\begin_layout Itemize
+Boolean functions and logic
 \end_layout
 
 \begin_layout Chapter
