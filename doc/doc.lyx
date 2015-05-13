@@ -169,7 +169,7 @@ The Examiners are just as interested in the process you went through in
 \end_layout
 
 \begin_layout Section
-Acknowledgements
+Prior Knowledge
 \end_layout
 
 \begin_layout Standard
@@ -466,7 +466,7 @@ Regex, C++11, advanced Scala/functional programming, parser combinators,
 \end_layout
 
 \begin_layout Chapter
-Analysis and Design
+Specification
 \end_layout
 
 \begin_layout Standard
@@ -901,129 +901,6 @@ if(condition=true, then=toString(1), else=toString(0))
 \end_layout
 
 \begin_layout Subsection
-Grammar
-\end_layout
-
-\begin_layout Standard
-Here's the EBNF (ISO/IEC 14977) for the grammar:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-prog = paddedDef, {paddedDef}, EoF;
-\end_layout
-
-\begin_layout Plain Layout
-
-paddedDef = {"
-\backslash
-n"}, def, {"
-\backslash
-n"};
-\end_layout
-
-\begin_layout Plain Layout
-
-def = deflhs, "=", {"
-\backslash
-n"}, defrhs;
-\end_layout
-
-\begin_layout Plain Layout
-
-deflhs = defdescription, id, args, ":", type;
-\end_layout
-
-\begin_layout Plain Layout
-
-args = ("(", id, ":", type, {subsequentArg}) | "";
-\end_layout
-
-\begin_layout Plain Layout
-
-subsequentArg = ",", id, ":", type;
-\end_layout
-
-\begin_layout Plain Layout
-
-defrhs = "{", {"
-\backslash
-n"}, expression, {("
-\backslash
-n", {"
-\backslash
-n"}, expression)}, {"
-\backslash
-n"}, "}";
-\end_layout
-
-\begin_layout Plain Layout
-
-expression = def | statement;
-\end_layout
-
-\begin_layout Plain Layout
-
-statement = functionCall | basicStatement | identifierStatement;
-\end_layout
-
-\begin_layout Plain Layout
-
-callargs = "(", (namedcallargs|callarg), ")";
-\end_layout
-
-\begin_layout Plain Layout
-
-callarg = statement | "";
-\end_layout
-
-\begin_layout Plain Layout
-
-namedcallargs = namedcallarg, subsequentnamedcallarg, {subsequentnamedcallarg};
-\end_layout
-
-\begin_layout Plain Layout
-
-subsequentnamedcallarg = ",", namedcallarg;
-\end_layout
-
-\begin_layout Plain Layout
-
-namedcallarg = id, "=", callarg;
-\end_layout
-
-\begin_layout Plain Layout
-
-functionCall = id, callargs;
-\end_layout
-
-\begin_layout Plain Layout
-
-identifierStatement = id
-\end_layout
-
-\begin_layout Plain Layout
-
-basicStatement = 
-\end_layout
-
-\begin_layout Plain Layout
-
-id
-\end_layout
-
-\begin_layout Plain Layout
-
-defdescription = "program" | "action" | "thread" | "function" | "value"
-\end_layout
-
-\end_inset
-
 
 \end_layout
 
@@ -1502,6 +1379,17 @@ The compiler consists of four parts: The scanner, parser, checker and code
  that tail recursion into a loop in testing, leading to a stack overflow.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Graphics
+	filename compiler.eps
+	lyxscale 70
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 The Glue
 \end_layout
@@ -1657,42 +1545,7 @@ status open
 
 \begin_layout Plain Layout
 
-                  case 2 => "two"
-\end_layout
-
-\begin_layout Plain Layout
-
-                  case 3 => "three"
-\end_layout
-
-\begin_layout Plain Layout
-
-                  case 4 => "four"
-\end_layout
-
-\begin_layout Plain Layout
-
-                  case 5 => "five"
-\end_layout
-
-\begin_layout Plain Layout
-
-                  case 6 => "six"
-\end_layout
-
-\begin_layout Plain Layout
-
-                  case 7 => "seven"
-\end_layout
-
-\begin_layout Plain Layout
-
-                  case 8 => "eight"
-\end_layout
-
-\begin_layout Plain Layout
-
-                  case 9 => "nine"
+                  /*[...]*/
 \end_layout
 
 \begin_layout Plain Layout
@@ -2043,7 +1896,19 @@ def equalParser: Parser[EqualT] = positioned( new Regex("=") ^^ {x => EqualT()}
 \end_layout
 
 \begin_layout Standard
-The parsers are then combined into the final scanner:
+The parsers are then combined into the final scanner using the alternate
+ operator
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "scala parser combinator doc"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -2078,17 +1943,7 @@ def scan: Parser[Token] =
 
 \begin_layout Plain Layout
 
-    threadParser                |
-\end_layout
-
-\begin_layout Plain Layout
-
-    actionParser                |
-\end_layout
-
-\begin_layout Plain Layout
-
-    synchronizedVariableParser  |
+    /*[...]*/
 \end_layout
 
 \begin_layout Plain Layout
@@ -2103,27 +1958,7 @@ def scan: Parser[Token] =
 
 \begin_layout Plain Layout
 
-    falseParser                 |
-\end_layout
-
-\begin_layout Plain Layout
-
-    openParenthesisParser       |
-\end_layout
-
-\begin_layout Plain Layout
-
-    closeParenthesisParser      |
-\end_layout
-
-\begin_layout Plain Layout
-
-    openCurlyBracketParser      |
-\end_layout
-
-\begin_layout Plain Layout
-
-    closeCurlyBracketParser     |
+    /*[...]*/
 \end_layout
 
 \begin_layout Plain Layout
@@ -2143,22 +1978,7 @@ def scan: Parser[Token] =
 
 \begin_layout Plain Layout
 
-    colonParser                 |
-\end_layout
-
-\begin_layout Plain Layout
-
-    commaParser                 |
-\end_layout
-
-\begin_layout Plain Layout
-
-    newlineParser               |
-\end_layout
-
-\begin_layout Plain Layout
-
-    stringParser                |
+    /*[...]*/                   
 \end_layout
 
 \begin_layout Plain Layout
@@ -2184,51 +2004,6 @@ def scan: Parser[Token] =
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Quotes eld
-\end_inset
-
-|
-\begin_inset Quotes erd
-\end_inset
-
- is an alternative operator with backtracking and 
-\begin_inset Quotes eld
-\end_inset
-
-^^
-\begin_inset Quotes erd
-\end_inset
-
- means 
-\begin_inset Quotes eld
-\end_inset
-
-if succesful then do
-\begin_inset Quotes erd
-\end_inset
-
-
-\begin_inset CommandInset citation
-LatexCommand cite
-key "scala parser combinator doc"
-
-\end_inset
-
-.
- 
-\begin_inset Quotes eld
-\end_inset
-
-positioned(parser)
-\begin_inset Quotes erd
-\end_inset
-
- assigns the source code position of the input text to the token object
- produced by the parser, which allows us to output really nice error messages
- later on.
 \end_layout
 
 \begin_layout Standard
@@ -2277,11 +2052,6 @@ case class TrueT() extends BasicValueT {override def toString = "true"}
 
 \begin_layout Plain Layout
 
-case class FalseT() extends BasicValueT {override def toString = "false"}
-\end_layout
-
-\begin_layout Plain Layout
-
 case class ProgramT() extends DefDescriptionT {override def toString = "program"
 }
 \end_layout
@@ -2289,28 +2059,6 @@ case class ProgramT() extends DefDescriptionT {override def toString = "program"
 \begin_layout Plain Layout
 
 case class ActionT() extends DefDescriptionT {override def toString = "action"}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class ThreadT() extends DefDescriptionT {override def toString = "thread"}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class FunctionT() extends DefDescriptionT {override def toString =
- "function"}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class ValueT() extends DefDescriptionT {override def toString = "value"}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class SynchronizedVariableT() extends DefDescriptionT {override def
- toString = "synchronized variable"}
 \end_layout
 
 \begin_layout Plain Layout
@@ -2324,44 +2072,8 @@ case class OpenParenthesisT() extends SyntaxT {override def toString = "
 
 \begin_layout Plain Layout
 
-case class CloseParenthesisT() extends SyntaxT {override def toString =
- "
-\backslash
-")
-\backslash
-""}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class OpenCurlyBracketT() extends SyntaxT {override def toString =
- "
-\backslash
-"{
-\backslash
-""}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class CloseCurlyBracketT() extends SyntaxT {override def toString =
- "
-\backslash
-"}
-\backslash
-""}
-\end_layout
-
-\begin_layout Plain Layout
-
 case class DoubleT(val value:Double) extends BasicValueT {override def toString
  = "decimal number"}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class IntegerT(val value:Int) extends BasicValueT {override def toString
- = "integer"}
 \end_layout
 
 \begin_layout Plain Layout
@@ -2371,29 +2083,6 @@ case class EqualT() extends SyntaxT {override def toString = "
 "=
 \backslash
 ""}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class ColonT() extends SyntaxT {override def toString = "
-\backslash
-":
-\backslash
-""}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class CommaT() extends SyntaxT {override def toString = "
-\backslash
-",
-\backslash
-""}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class NewlineT() extends SyntaxT {override def toString = "newline"}
 \end_layout
 
 \begin_layout Plain Layout
@@ -2408,28 +2097,7 @@ case class IdT(val value:String) extends Token {override def toString =
 
 \begin_layout Plain Layout
 
-case class TypeT(val value:String) extends Token {override def toString
- = "type(
-\backslash
-""+value+"
-\backslash
-")"}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class StringT(val value:String) extends BasicValueT {override def toString
- = "string"}
-\end_layout
-
-\begin_layout Plain Layout
-
 case class SpaceT() extends SyntaxT
-\end_layout
-
-\begin_layout Plain Layout
-
-case class DummyT() extends Token
 \end_layout
 
 \begin_layout Plain Layout
@@ -2462,6 +2130,17 @@ positioned
  call in the parsers assigns the Position to the token.
  This is all inherited from the parser combinator library, so it's hard
  to understand what's going on from looking at the source alone.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+positioned
+\begin_inset Quotes erd
+\end_inset
+
+ call assigns the source code position of the input text to the token object
+ produced by the parser, which allows us to output really nice error messages
+ later on.
 \end_layout
 
 \begin_layout Section
@@ -2472,7 +2151,181 @@ Parser
 Like in the scanner, the Scala Standard Parser Combinator Library was used.
  Unfortunately, the tasks of the parser is a bit more complicated than those
  of the scanner, and the code reflects this.
- This is where the grammar is encoded into the program:
+\end_layout
+
+\begin_layout Subsection
+Grammar
+\end_layout
+
+\begin_layout Standard
+Here's the EBNF (ISO/IEC 14977) for the grammar, as implemented:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+prog = paddedDef, {paddedDef}, EoF;
+\end_layout
+
+\begin_layout Plain Layout
+
+paddedDef = {"
+\backslash
+n"}, def, {"
+\backslash
+n"};
+\end_layout
+
+\begin_layout Plain Layout
+
+def = deflhs, "=", {"
+\backslash
+n"}, defrhs;
+\end_layout
+
+\begin_layout Plain Layout
+
+deflhs = defdescription, id, args, ":", type;
+\end_layout
+
+\begin_layout Plain Layout
+
+args = ("(", id, ":", type, {subsequentArg}) | "";
+\end_layout
+
+\begin_layout Plain Layout
+
+subsequentArg = ",", id, ":", type;
+\end_layout
+
+\begin_layout Plain Layout
+
+defrhs = "{", {"
+\backslash
+n"}, expression, {("
+\backslash
+n", {"
+\backslash
+n"}, expression)}, {"
+\backslash
+n"}, "}";
+\end_layout
+
+\begin_layout Plain Layout
+
+expression = def | statement;
+\end_layout
+
+\begin_layout Plain Layout
+
+statement = functionCall | basicStatement | identifierStatement;
+\end_layout
+
+\begin_layout Plain Layout
+
+callargs = "(", (namedcallargs|callarg), ")";
+\end_layout
+
+\begin_layout Plain Layout
+
+callarg = statement | "";
+\end_layout
+
+\begin_layout Plain Layout
+
+namedcallargs = namedcallarg, subsequentnamedcallarg, {subsequentnamedcallarg};
+\end_layout
+
+\begin_layout Plain Layout
+
+subsequentnamedcallarg = ",", namedcallarg;
+\end_layout
+
+\begin_layout Plain Layout
+
+namedcallarg = id, "=", callarg;
+\end_layout
+
+\begin_layout Plain Layout
+
+functionCall = id, callargs;
+\end_layout
+
+\begin_layout Plain Layout
+
+identifierStatement = id;
+\end_layout
+
+\begin_layout Plain Layout
+
+defdescription = "program" | "action" | "thread" | "function" | "value";
+\end_layout
+
+\begin_layout Plain Layout
+
+basicStatement = boolean | string | integer | float;
+\end_layout
+
+\begin_layout Plain Layout
+
+float = integer, ".", digit, {digit};
+\end_layout
+
+\begin_layout Plain Layout
+
+integer = "0" | (digit excluding zero, {digit});
+\end_layout
+
+\begin_layout Plain Layout
+
+digit excluding zero = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+ ;
+\end_layout
+
+\begin_layout Plain Layout
+
+digit = "0" | digit excluding zero ;
+\end_layout
+
+\begin_layout Plain Layout
+
+upper case = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" |
+ "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" |
+ "W" | "X" | "Y" | "Z" ;
+\end_layout
+
+\begin_layout Plain Layout
+
+lower case = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" |
+ "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" |
+ "w" | "x" | "y" | "z" ;
+\end_layout
+
+\begin_layout Plain Layout
+
+id = lower case, {(upper case | lower case)}
+\end_layout
+
+\begin_layout Plain Layout
+
+type = upper case, {(upper case | lower case)}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Code
+\end_layout
+
+\begin_layout Standard
+This is where the grammar is encoded into the program:
 \end_layout
 
 \begin_layout Standard
@@ -3002,6 +2855,19 @@ Actions need to be demultiplexed, as their C++ code needs to be different
 Function calls need to be changed so they have the correct names
 \end_layout
 
+\begin_layout Chapter
+Testing
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Test plan -- how the program/system was verified.
+ Put the actual test results in the Appendix.
+ This section is useful if your project is more on the software engineering
+ side than research focused.
+\end_layout
+
 \begin_layout Section
 Not Implemented
 \end_layout
@@ -3016,19 +2882,6 @@ User-defined types
 
 \begin_layout Itemize
 Boolean functions and logic
-\end_layout
-
-\begin_layout Chapter
-Testing
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-Test plan -- how the program/system was verified.
- Put the actual test results in the Appendix.
- This section is useful if your project is more on the software engineering
- side than research focused.
 \end_layout
 
 \begin_layout Chapter
