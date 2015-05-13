@@ -499,7 +499,7 @@ The Scala Standard Parser Combinator Library introduces many parser combinators,
 \end_layout
 
 \begin_layout Standard
-Let's discuss the operators:
+Let's discuss these operators:
 \end_layout
 
 \begin_layout Itemize
@@ -776,9 +776,10 @@ Mature standard that is unlikely to break backwards compatibility.
 \begin_layout Standard
 C++ seems to satisfy all these criteria, and were therefore selected as
  the intermediate language.
- In particular, C has too few features, which means a transformation will
- have to make more difficult transformations and/or we would need to manually
- implement things like linked lists.
+ In particular, C has too few features, which means a compiler would have
+ to make more difficult transformations and/or things like linked lists
+ would have to be manually implemented.
+ Such difficulties seem unnecessary.
 \end_layout
 
 \begin_layout Section
@@ -1337,6 +1338,24 @@ value x:Int = loop(y=y,x=y)
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+All variables passed to the loop would then need to be copied.
+ In the example above, the y modified inside the loop cannot be the same
+ that is defined outside it.
+ Such scoping of variables are common in function calls, and a similar mechanism
+ can be used for loops.
+\end_layout
+
+\begin_layout Standard
+An additional benefit of loops is that their use has constant memory consumption
+ independent of number of iterations.
+ While the same can be achieved using tail recursion with optimizing compilers,
+ such compilers are still not the norm.
+ Mutual tail recursion optimization is particularly rare.
+ Since optimizations are not an immediate goal for the Fumurt compiler,
+ loops would offer an important guarantee.
 \end_layout
 
 \begin_layout Section
