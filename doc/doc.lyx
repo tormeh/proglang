@@ -360,6 +360,73 @@ Transactional memory, though it makes it look as if thread communication
 Compilers
 \end_layout
 
+\begin_layout Standard
+A compiler is a program (one may regard it as a function) that accepts a
+ program in a source format and outputs a corresponding program in a target
+ format.
+ The source and target format may differ in terms of encoding, language
+ and any other way one may imagine.
+ 
+\end_layout
+
+\begin_layout Standard
+This figure, reconstructed from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "eng compiler"
+
+\end_inset
+
+, illustrates the structure of a typical compiler:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename textbookcompiler.eps
+	lyxscale 70
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Consider the steps:
+\end_layout
+
+\begin_layout Enumerate
+The front end accepts source text and transforms it into an intermediate
+ representation that is easier to work with.
+ It is generally independent of the target format.
+\end_layout
+
+\begin_layout Enumerate
+The optimizer improves the code as encoded in the intermediate representation.
+ The improvement is usually done with regards to performance, code size
+ or memory usage .
+\end_layout
+
+\begin_layout Enumerate
+The back end accepts the intermediate representation and outputs the the
+ program encoded therein translated to the target format.
+ It can be independent of the source format, depending on how general and
+ flexible the intermediate representation is.
+\end_layout
+
+\begin_layout Standard
+Since the compiler described in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:Implementation"
+
+\end_inset
+
+ does not deal with optimization and conversion to binary itself, but rather
+ outsources this to a C++ compiler, all of the difficult material on instruction
+ selection, scheduling and register allocation is of no relevance.
+\end_layout
+
 \begin_layout Section
 Parser Combinators
 \end_layout
@@ -1467,6 +1534,13 @@ Program Declaration
 
 \begin_layout Chapter
 Implementation
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Implementation"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3177,6 +3251,22 @@ key "Clang"
 \end_inset
 
 http://clang.llvm.org/
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "14"
+key "eng compiler"
+
+\end_inset
+
+Cooper et Torczon (2012), 
+\emph on
+Engineering a Compiler Second Edition.
+ 
+\emph default
+Burlington, MA, USA: Morgan kaufmann
 \end_layout
 
 \begin_layout Chapter
