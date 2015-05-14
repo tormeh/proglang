@@ -485,8 +485,197 @@ The back end is composed of successive passes, of which every step transform
 Grammars
 \end_layout
 
+\begin_layout Standard
+A grammar is a formal and complete description of the syntax of a language.
+ It is mostly used for programming languages.
+ It consists of the confusingly named 
+\begin_inset Quotes eld
+\end_inset
+
+production rules
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Example:
+\end_layout
+
+\begin_layout Standard
+Consider a notion of a lower case letter can be described like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+lower case letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+ | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u"
+ | "v" | "w" | "x" | "y" | "z" ;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Quotes eld
+\end_inset
+
+=
+\begin_inset Quotes erd
+\end_inset
+
+ signify the two sides of the production rule, 
+\begin_inset Quotes eld
+\end_inset
+
+|
+\begin_inset Quotes erd
+\end_inset
+
+ signify alternation (intuitively 
+\begin_inset Quotes eld
+\end_inset
+
+or
+\begin_inset Quotes erd
+\end_inset
+
+), quotes signify a string and 
+\begin_inset Quotes eld
+\end_inset
+
+;
+\begin_inset Quotes erd
+\end_inset
+
+ signify the end of the rule.
+ Let us expand the example by describing a lower case word:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+lower case word = lower case letter, {lower case letter};
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the correctness of the word as it pertains to English is ignored.
+ The comma signify a sequence, and the curly brackets signify that their
+ contents can be repeated one or more time.
+ A lower case word, as it has been defined here, is simply one lower case
+ letter, followed by zero or more lower case letters.
+ Next we can do the same for sentences, again ignoring rules for English:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+lower case sentence = lower case word, {(", ", lower case word) | (" ",
+ lower case word)}, ".
+ ";
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Parentheses allows grouping of sequences.
+ Here, it allows us to alternate between sequences of symbols rather than
+ just single symbols.
+ Finally we say that:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+lower case text = lower case sentence, {lower case sentence}; 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now we have a very simple grammar, which allows us to partition up a text
+ into sentences and words.
+\end_layout
+
 \begin_layout Subsubsection
 Abstract Syntax Trees
+\end_layout
+
+\begin_layout Standard
+Now suppose we wanted to systematize a string of characters according to
+ the grammar above.
+ A data structure corresponding to the grammar would be appropriate.
+ Consider the following figure:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Abstract Syntax Tree.eps
+	lyxscale 70
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is an abstract syntax tree, often abreviated AST.
+ An abstract syntax tree is a tree, in the computer science sense, that
+ represents the production of the source string from the grammar.
+ In code:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+class Text(val sentences:List[Sentence])
+\end_layout
+
+\begin_layout Plain Layout
+
+class Sentence(val words:List[Word])
+\end_layout
+
+\begin_layout Plain Layout
+
+class Word(val letters:List[Char])
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
