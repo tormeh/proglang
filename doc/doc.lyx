@@ -425,6 +425,68 @@ reference "chap:Implementation"
  does not deal with optimization and conversion to binary itself, but rather
  outsources this to a C++ compiler, all of the difficult material on instruction
  selection, scheduling and register allocation is of no relevance.
+ The parts of relevance to this report is the front end and a relatively
+ simple back end.
+\end_layout
+
+\begin_layout Standard
+Consider the parts of the front end:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename textbookfrontend.eps
+	lyxscale 70
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Scanner: Transforms source text into a list of tokens (simple objects),
+ possibly ignoring some symbols (such as spaces, comments, indentation etc.)
+\end_layout
+
+\begin_layout Itemize
+Parser: Transforms a list of tokens into an abstract syntax tree.
+ In the process, it checks whether the syntax of the program is correct.
+\end_layout
+
+\begin_layout Itemize
+Context Sensitive Analysis: Checks the correctness of program semantics.
+ Most interpreted languages skip this step and deal with semantic errors
+ at runtime.
+ The correct time to do semantic analysis is not a settled matter, but in
+ a static compiler such as the one in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:Implementation"
+
+\end_inset
+
+ it is done here.
+ In the case where a language has type inference, this step may emit a modified
+ intermediate representation.
+\end_layout
+
+\begin_layout Standard
+The back end is composed of successive passes, of which every step transform
+ the input intermediate representation into an output that is closer to
+ the target format.
+ The number of passes required vary greatly and depend on the differences
+ between the source and ouput formats.
+ In the trivial case, where the input and output format is identical (for
+ example C to C) the number of necessary passes would be zero.
+\end_layout
+
+\begin_layout Subsection
+Grammars
+\end_layout
+
+\begin_layout Subsubsection
+Abstract Syntax Trees
 \end_layout
 
 \begin_layout Section
@@ -432,7 +494,7 @@ Parser Combinators
 \end_layout
 
 \begin_layout Standard
-Parser combinators is a higher order function that accepts parsers as input
+A parser combinator is a higher order function that accepts parsers as input
  and returns a new parser
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -536,6 +598,34 @@ reference "scanner combined"
 \end_inset
 
 ).
+\end_layout
+
+\begin_layout Paragraph
+Conflicting terminology:
+\end_layout
+
+\begin_layout Standard
+Unfortunately there is a case of conflicting terminology concerning the
+ term 
+\begin_inset Quotes eld
+\end_inset
+
+parser
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Here we refer to parser in two senses: 
+\end_layout
+
+\begin_layout Enumerate
+The parser as defined above.
+ A function that converts one data structure to a more sensible data structure.
+\end_layout
+
+\begin_layout Enumerate
+A parser as a compilation step that converts a list of tokens into an abstract
+ syntax tree
 \end_layout
 
 \begin_layout Subsection
