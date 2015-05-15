@@ -915,25 +915,11 @@ Specification
 \begin_layout Standard
 
 \emph on
-If your project involves designing a system, give a good high-level overview
- of your design.
+Elaboration of the problem
 \end_layout
 
 \begin_layout Standard
 
-\emph on
-In many projects, the initial design and the final design differ somewhat.
- If the differences are interesting, write about them, and why the changes
- were made.
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-If your design was not implemented fully, describe which parts you did implement
-, and which you didn't.
- If the reason you didn't implement everything is interesting (eg it turned
- out to be difficult for unexpected reasons), write about it.
 \end_layout
 
 \begin_layout Standard
@@ -1075,95 +1061,6 @@ key "Hadoop at facebook"
 
 \begin_layout Section
 Inter-thread communication
-\end_layout
-
-\begin_layout Section
-Choice of Intermediate Target
-\end_layout
-
-\begin_layout Standard
-For easy debugging and wide selection of binary targets we chose to first
- compile to an intermediate language and then let an external compiler perform
- the final transformation to binary form.
- This is a well-trodden path
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Haskell-to-C"
-
-\end_inset
-
-, and C is often used.
- Though many modern languages would be suitable for this, we had a wishlist
- of features that determined which language to choose:
-\end_layout
-
-\begin_layout Enumerate
-No garbage collection or other other source of run-to-run variability.
-\end_layout
-
-\begin_layout Enumerate
-Wide selection of final targets, including embedded.
-\end_layout
-
-\begin_layout Enumerate
-Low overhead, whether in performance or memory.
- 
-\end_layout
-
-\begin_layout Enumerate
-A solid set of features to make transformation into the language easier.
- 
-\end_layout
-
-\begin_layout Enumerate
-Mature standard that is unlikely to break backwards compatibility.
-\end_layout
-
-\begin_layout Standard
-C++ seems to satisfy all these criteria, and were therefore selected as
- the intermediate language.
- In particular, C has too few features, which means a compiler would have
- to make more difficult transformations and/or things like linked lists
- would have to be manually implemented.
- Such difficulties seem unnecessary.
-\end_layout
-
-\begin_layout Section
-Choice of Compiler Implementation Language
-\end_layout
-
-\begin_layout Standard
-Scala was chosen as the implementation language for the compiler partly
- because it's what the author used in the TU Berlin compiler bau course
- (see 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:TUB course"
-
-\end_inset
-
-) and already had lots of experience in, but it also has some highly attractive
- qualities for making a compiler:
-\end_layout
-
-\begin_layout Itemize
-A solid type checking which makes the code easier to work with, especially
- when refactoring
-\end_layout
-
-\begin_layout Itemize
-A wide selection of functional abstractions, which allows compact code and
- eliminates simple but irritating bugs as well as access to imperative construct
-s like loops etc.
- when this is more convenient
-\end_layout
-
-\begin_layout Itemize
-A parser combinator library
-\end_layout
-
-\begin_layout Itemize
-Fast execution time
 \end_layout
 
 \begin_layout Section
@@ -1809,6 +1706,153 @@ class IntAndStringAndBool(int:Integer, string:String, bool:Boolean) implements
 
 \begin_layout Section
 Program Declaration
+\end_layout
+
+\begin_layout Chapter
+Analysis and Design
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+If your project involves designing a system, give a good high-level overview
+ of your design.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+In many projects, the initial design and the final design differ somewhat.
+ If the differences are interesting, write about them, and why the changes
+ were made.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+If your design was not implemented fully, describe which parts you did implement
+, and which you didn't.
+ If the reason you didn't implement everything is interesting (eg it turned
+ out to be difficult for unexpected reasons), write about it.
+\end_layout
+
+\begin_layout Section
+Choice of Intermediate Target
+\end_layout
+
+\begin_layout Standard
+For easy debugging and wide selection of binary targets we chose to first
+ compile to an intermediate language and then let an external compiler perform
+ the final transformation to binary form.
+ This is a well-trodden path
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Haskell-to-C"
+
+\end_inset
+
+, and C is often used.
+ Though many modern languages would be suitable for this, we had a wishlist
+ of features that determined which language to choose:
+\end_layout
+
+\begin_layout Enumerate
+No garbage collection or other other source of run-to-run variability.
+\end_layout
+
+\begin_layout Enumerate
+Wide selection of final targets, including embedded.
+\end_layout
+
+\begin_layout Enumerate
+Low overhead, whether in performance or memory.
+ 
+\end_layout
+
+\begin_layout Enumerate
+A solid set of features to make transformation into the language easier.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Mature standard that is unlikely to break backwards compatibility.
+\end_layout
+
+\begin_layout Standard
+C++ seems to satisfy all these criteria, and were therefore selected as
+ the intermediate language.
+ In particular, C has too few features, which means a compiler would have
+ to make more difficult transformations and/or things like linked lists
+ would have to be manually implemented.
+ Such difficulties seem unnecessary.
+\end_layout
+
+\begin_layout Section
+Choice of Compiler Implementation Language
+\end_layout
+
+\begin_layout Standard
+Scala was chosen as the implementation language for the compiler partly
+ because it's what the author used in the TU Berlin compiler bau course
+ (see 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:TUB course"
+
+\end_inset
+
+) and already had lots of experience in, but it also has some highly attractive
+ qualities for making a compiler:
+\end_layout
+
+\begin_layout Itemize
+A solid type checking which makes the code easier to work with, especially
+ when refactoring
+\end_layout
+
+\begin_layout Itemize
+A wide selection of functional abstractions, which allows compact code and
+ eliminates simple but irritating bugs as well as access to imperative construct
+s like loops etc.
+ when this is more convenient
+\end_layout
+
+\begin_layout Itemize
+A parser combinator library
+\end_layout
+
+\begin_layout Itemize
+Fast execution time
+\end_layout
+
+\begin_layout Section
+A Need for Annotation
+\end_layout
+
+\begin_layout Standard
+Technically, the finished code can always be determined directly from the
+ AST, but it was discovered that in order to do this in the Fumurt case,
+ the same rules would have to be encoded into the code in several different
+ places.
+ In the current state of implementation, the only rule that required annotation
+ was the rule for determining the C++ names of function.
+ There are three aspects to the naming: 
+\end_layout
+
+\begin_layout Enumerate
+Actions and functions that are in other functions need to get new names
+ and the hierarchy needs to be flattened
+\end_layout
+
+\begin_layout Enumerate
+Actions need to be demultiplexed, as their C++ code needs to be different
+ depending on which thread calls that action.
+ For instance, an actionPrint needs to be transformed to a push to a list
+ whose name depends on the calling thread
+\end_layout
+
+\begin_layout Enumerate
+Function calls need to be changed so they refer to the new names
 \end_layout
 
 \begin_layout Chapter
@@ -3292,41 +3336,6 @@ Code generator
 Annotator
 \end_layout
 
-\begin_layout Standard
-The function 
-\begin_inset Quotes eld
-\end_inset
-
-getAnnotatedTree
-\begin_inset Quotes erd
-\end_inset
-
- annotates the abstract syntax tree.
- Technically, the finished code can always be determined directly from the
- AST, but it was discovered that in order to do this in the Fumurt case,
- the same rules would have to be encoded into the code in several different
- places.
- In the current state of implementation, the only rule that required annotation
- was the rule for determining the C++ names of function.
- There are three aspects to the naming: 
-\end_layout
-
-\begin_layout Enumerate
-Actions and functions that are in other functions need to get new names
- and the hierarchy needs to be flattened
-\end_layout
-
-\begin_layout Enumerate
-Actions need to be demultiplexed, as their C++ code needs to be different
- depending on which thread calls that action.
- For instance, an actionPrint needs to be transformed to a push to a list
- whose name depends on the calling thread
-\end_layout
-
-\begin_layout Enumerate
-Function calls need to be changed so they have the correct names
-\end_layout
-
 \begin_layout Chapter
 Testing
 \end_layout
@@ -3338,6 +3347,1119 @@ Test plan -- how the program/system was verified.
  Put the actual test results in the Appendix.
  This section is useful if your project is more on the software engineering
  side than research focused.
+\end_layout
+
+\begin_layout Section
+Full program test
+\end_layout
+
+\begin_layout Standard
+The following Fumurt code:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+program p:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  synchronized variable synchronizedNumber:Integer = {synchronized(variable=0,
+ writer=threadPrintHello)}
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintHello(synchronizedNumber)
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintWorld(synchronizedNumber)
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintLol(actionPrintFoo=actionPrintFoo, integerIdentity=integerIdentity)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("world ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(synchronizedNumber))
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintWorld(synchronizedNumber)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+thread threadPrintHello(synchronizedNumber:Integer):Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(synchronizedNumber))
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(" Hello ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionMutate(variable=synchronizedNumber, newValue=plus(left=synchronizedNumbe
+r, right=1))
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintHello(synchronizedNumber)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+thread threadPrintLol(actionPrintFoo:Inclusion, integerIdentity:Inclusion):Nothi
+ng =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  action actionPrintLol:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    actionPrint("  LOL   ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrintLol()
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrintFoo(integerIdentity)
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintLol(actionPrintFoo=actionPrintFoo, integerIdentity=integerIdentity)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+action actionPrintFoo(integerIdentity:Inclusion):Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  action actionPrintFooo:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    actionPrint("  FOOO  ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("  FOO   ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrintFooo()
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(integerIdentity(5)))
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("  ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(if(condition=true, then=toString(6), else=toString(3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function integerIdentity(x:Integer):Integer = {x}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Gets compiled to the following C++11 code:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={C++}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+#include <iostream>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <thread>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <string>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <atomic>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <condition_variable>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <list>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <chrono>
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+#define NUMTOPTHREADS 3
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[[noreturn]] static void threadPrintWorld();
+\end_layout
+
+\begin_layout Plain Layout
+
+[[noreturn]] static void threadPrintHello();
+\end_layout
+
+\begin_layout Plain Layout
+
+[[noreturn]] static void threadPrintLol();
+\end_layout
+
+\begin_layout Plain Layout
+
+void actionPrintLol$threadPrintLol();
+\end_layout
+
+\begin_layout Plain Layout
+
+int integerIdentity$(int x);
+\end_layout
+
+\begin_layout Plain Layout
+
+void actionPrintFoo$threadPrintLol();
+\end_layout
+
+\begin_layout Plain Layout
+
+void actionPrintFooo$threadPrintLolactionPrintFoo();
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+static int synchronizedNumber = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+static int writeSynchronizedNumber = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+static std::list<std::string> printthreadPrintHello;
+\end_layout
+
+\begin_layout Plain Layout
+
+static std::list<std::string> printthreadPrintWorld;
+\end_layout
+
+\begin_layout Plain Layout
+
+static std::list<std::string> printthreadPrintLol;
+\end_layout
+
+\begin_layout Plain Layout
+
+static std::atomic<int> rendezvousCounter;
+\end_layout
+
+\begin_layout Plain Layout
+
+static std::mutex rendezvousSyncMutex;
+\end_layout
+
+\begin_layout Plain Layout
+
+static std::condition_variable cv;static void waitForRendezvous(std::string
+ name)
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  std::unique_lock<std::mutex> lk(rendezvousSyncMutex);
+\end_layout
+
+\begin_layout Plain Layout
+
+  ++rendezvousCounter;
+\end_layout
+
+\begin_layout Plain Layout
+
+  if(rendezvousCounter.load() < NUMTOPTHREADS)
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    cv.wait(lk);
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  else if (rendezvousCounter.load() == NUMTOPTHREADS)
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    while(!printthreadPrintHello.empty()){
+\end_layout
+
+\begin_layout Plain Layout
+
+std::cout << printthreadPrintHello.front();
+\end_layout
+
+\begin_layout Plain Layout
+
+printthreadPrintHello.pop_front();
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+while(!printthreadPrintWorld.empty()){
+\end_layout
+
+\begin_layout Plain Layout
+
+std::cout << printthreadPrintWorld.front();
+\end_layout
+
+\begin_layout Plain Layout
+
+printthreadPrintWorld.pop_front();
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+while(!printthreadPrintLol.empty()){
+\end_layout
+
+\begin_layout Plain Layout
+
+std::cout << printthreadPrintLol.front();
+\end_layout
+
+\begin_layout Plain Layout
+
+printthreadPrintLol.pop_front();
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+synchronizedNumber = writeSynchronizedNumber;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      rendezvousCounter.store(0);
+\end_layout
+
+\begin_layout Plain Layout
+
+      cv.notify_all();
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  else
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    std::cout << "error in wait for " << name << ".
+ Rendezvouscounter out of bounds.
+ RedezvousCounter = " << rendezvousCounter.load() << "
+\backslash
+n";
+\end_layout
+
+\begin_layout Plain Layout
+
+    exit(0);
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[[noreturn]] static void threadPrintWorld()
+\end_layout
+
+\begin_layout Plain Layout
+
+{while(true)
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  printthreadPrintWorld.push_back("world ");
+\end_layout
+
+\begin_layout Plain Layout
+
+  printthreadPrintWorld.push_back(std::to_string(synchronizedNumber));
+\end_layout
+
+\begin_layout Plain Layout
+
+  waitForRendezvous("threadPrintWorld");
+\end_layout
+
+\begin_layout Plain Layout
+
+  continue;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[[noreturn]] static void threadPrintHello()
+\end_layout
+
+\begin_layout Plain Layout
+
+{while(true)
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  printthreadPrintHello.push_back(std::to_string(synchronizedNumber));
+\end_layout
+
+\begin_layout Plain Layout
+
+  printthreadPrintHello.push_back(" Hello ");
+\end_layout
+
+\begin_layout Plain Layout
+
+  writeSynchronizedNumber = (synchronizedNumber + 1);
+\end_layout
+
+\begin_layout Plain Layout
+
+  waitForRendezvous("threadPrintHello");
+\end_layout
+
+\begin_layout Plain Layout
+
+  continue;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[[noreturn]] static void threadPrintLol()
+\end_layout
+
+\begin_layout Plain Layout
+
+{while(true)
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrintLol$threadPrintLol();
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrintFoo$threadPrintLol();
+\end_layout
+
+\begin_layout Plain Layout
+
+  waitForRendezvous("threadPrintLol");
+\end_layout
+
+\begin_layout Plain Layout
+
+  continue;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+void actionPrintLol$threadPrintLol()
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  printthreadPrintLol.push_back("  LOL   ");
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+int integerIdentity$(int x)
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  return x;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+void actionPrintFoo$threadPrintLol()
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  printthreadPrintLol.push_back("  FOO   ");
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrintFooo$threadPrintLolactionPrintFoo();
+\end_layout
+
+\begin_layout Plain Layout
+
+  printthreadPrintLol.push_back(std::to_string(integerIdentity$(5)));
+\end_layout
+
+\begin_layout Plain Layout
+
+  printthreadPrintLol.push_back("  ");
+\end_layout
+
+\begin_layout Plain Layout
+
+  printthreadPrintLol.push_back(std::to_string(6));
+\end_layout
+
+\begin_layout Plain Layout
+
+  printthreadPrintLol.push_back("
+\backslash
+n");
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+void actionPrintFooo$threadPrintLolactionPrintFoo()
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  printthreadPrintLol.push_back("  FOOO  ");
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+int main()
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+rendezvousCounter.store(0);
+\end_layout
+
+\begin_layout Plain Layout
+
+std::thread tthreadPrintHello (threadPrintHello);
+\end_layout
+
+\begin_layout Plain Layout
+
+std::thread tthreadPrintWorld (threadPrintWorld);
+\end_layout
+
+\begin_layout Plain Layout
+
+std::thread tthreadPrintLol (threadPrintLol);
+\end_layout
+
+\begin_layout Plain Layout
+
+while(true)
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+std::this_thread::sleep_for(std::chrono::seconds(1));
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When run in a terminal, this results in the following output:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+0 Hello world 0  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+1 Hello world 1  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+2 Hello world 2  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+3 Hello world 3  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+4 Hello world 4  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+5 Hello world 5  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+6 Hello world 6  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+7 Hello world 7  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+8 Hello world 8  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+9 Hello world 9  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+10 Hello world 10  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+11 Hello world 11  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+12 Hello world 12  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+13 Hello world 13  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+14 Hello world 14  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+15 Hello world 15  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+16 Hello world 16  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+17 Hello world 17  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+18 Hello world 18  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+19 Hello world 19  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+20 Hello world 20  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+21 Hello world 21  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+22 Hello world 22  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+23 Hello world 23  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+24 Hello world 24  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+25 Hello world 25  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+26 Hello world 26  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+27 Hello world 27  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+28 Hello world 28  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+29 Hello world 29  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+30 Hello world 30  LOL     FOO     FOOO  5  6
+\end_layout
+
+\begin_layout Plain Layout
+
+/*and so on...*/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is in line with Fumurt's goal of being a multithreaded language with
+ concurrent execution while having no sequential communication semantics.
 \end_layout
 
 \begin_layout Section

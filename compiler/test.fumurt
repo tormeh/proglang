@@ -10,7 +10,6 @@ thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
 {
   actionPrint("world ")
   actionPrint(toString(synchronizedNumber))
-  actionPrint("\n")
   threadPrintWorld(synchronizedNumber)
 }
   
@@ -45,7 +44,7 @@ action actionPrintFoo(integerIdentity:Inclusion):Nothing =
   actionPrint(toString(integerIdentity(5)))
   actionPrint("  ")
   actionPrint(if(condition=true, then=toString(6), else=toString(3)))
-  actionPrint("  ")
+  actionPrint("\n")
 }
 
 function integerIdentity(x:Integer):Integer = {x}
