@@ -1889,11 +1889,56 @@ riable cv.
 \end_layout
 
 \begin_layout Enumerate
-We define a static void waitForRendezvous(std::string name) which a thread
- calls when it is ready to wait.
- Inside
+For each synchronized variable in the source code, we define one variable
+ which holds the global state of this variable and one which holds the local
+ state of this variable in the thread that is allowed to write to it.
 \end_layout
 
+\begin_layout Enumerate
+We define a [[noreturn]] static void threadName() for each thread, holding
+ its values.
+ All arguments to thread in the source code are converted to static global
+ variables.
+\end_layout
+
+\begin_layout Enumerate
+We define a main function, inside of which:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+rendezvousCounter is set to 0, std::thread are started with the thread functions
+ (defined in previous step) as arguments and finally the main function enters
+ a loop executing std::this_thread::sleep_for(std::chrono::seconds(1)).
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+We define a static void waitForRendezvous(std::string name) which a thread
+ calls when it is ready to wait.
+ Inside of which:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The thread locks the rendezvousSyncMutex
+\end_layout
+
+\begin_layout Enumerate
+Increments the rendezvousCounter
+\end_layout
+
+\begin_layout Enumerate
+If the value in the rendezvousCounter is less than NUMTOPTHREADS, the thread
+ waits on cv, at which point rendezvousSyncMutex will be automatically unlocked.
+ If the rendezvousCounter equals NUMTOPTHREADS, the thread prints all strings
+ held in the printLists as described above, sets any global synchronized
+ variables to its local values, sets rendezvousCounter to 0 and finally
+ notifies all other threads using cv.notify_all before exiting the function.
+ rendezvousSyncMutex is unlocked on function exit.
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Section
 A Need for Annotation
