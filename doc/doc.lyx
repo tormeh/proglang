@@ -8,7 +8,10 @@
 numbers=left,
 breaklines=true,
 frame=single,
-basicstyle=\footnotesize\ttfamily}
+basicstyle=\footnotesize\ttfamily,
+showspaces=false,
+showstringspaces=false,
+showtabs=false}
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
@@ -956,7 +959,14 @@ It is the goals of Fumurt to aid in producing correct programs suitable
 \end_layout
 
 \begin_layout Section
-Runtime Execution
+Runtime Execution Model
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Runtime-Execution-Model"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1704,6 +1714,14 @@ class IntAndStringAndBool(int:Integer, string:String, bool:Boolean) implements
 
 \end_layout
 
+\begin_layout Subsection
+Modules
+\end_layout
+
+\begin_layout Standard
+Modules are singletons containing only immutable values, actions and functions.
+\end_layout
+
 \begin_layout Section
 Program Declaration
 \end_layout
@@ -1825,6 +1843,58 @@ A parser combinator library
 Fast execution time
 \end_layout
 
+\begin_layout Section
+Synchronization Mechanisms in The Intermediate Language
+\end_layout
+
+\begin_layout Standard
+Our execution model formulated in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Runtime-Execution-Model"
+
+\end_inset
+
+ needs be formulated in the compiled C++ code.
+\end_layout
+
+\begin_layout Itemize
+Each thread gets its own printList (type std::list<std::string>), and actionPrin
+ts are translated into printList.push_back.
+ The same principle can be used for future output as well.
+ When the threads are finished with the computational phase, the last thread
+ to finish will print printList.pop_front until the printList is empty.
+ The thread started first in the program statement gets its printList emptied
+ first, and so on.
+\end_layout
+
+\begin_layout Itemize
+We use a rendezvous pattern:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+We define a macro NUMTOPTHREADS, with the number of threads defined in the
+ program statement
+\end_layout
+
+\begin_layout Enumerate
+We define a static std::atomic<int> rendezvousCounter, which holds the number
+ of threads that have arrived at the rendezvous point.
+\end_layout
+
+\begin_layout Enumerate
+We define a static std::mutex rendezvousSyncMutex and a static std::condition_va
+riable cv.
+\end_layout
+
+\begin_layout Enumerate
+We define a static void waitForRendezvous(std::string name) which a thread
+ calls when it is ready to wait.
+ Inside
+\end_layout
+
+\end_deeper
 \begin_layout Section
 A Need for Annotation
 \end_layout
@@ -2459,7 +2529,7 @@ def scan: Parser[Token] =
 
 \begin_layout Plain Layout
 
-    /*[...]*/
+    /*more here*/
 \end_layout
 
 \begin_layout Plain Layout
@@ -2474,7 +2544,7 @@ def scan: Parser[Token] =
 
 \begin_layout Plain Layout
 
-    /*[...]*/
+    /*more here*/
 \end_layout
 
 \begin_layout Plain Layout
@@ -2494,7 +2564,7 @@ def scan: Parser[Token] =
 
 \begin_layout Plain Layout
 
-    /*[...]*/                   
+    /*more here*/                   
 \end_layout
 
 \begin_layout Plain Layout
@@ -2889,64 +2959,7 @@ def subsequentArgsParser: Parser[Argument] = {commaParser ~> (idParser <~
 
 \begin_layout Plain Layout
 
-  
-\end_layout
-
-\begin_layout Plain Layout
-
-def defrhsParser: Parser[DefRhs] = {(openCurlyBracketParser ~ newlineParser.*
- ~> expressionParser ~ (newlineParser.+ ~> expressionParser).*) <~ newlineParser.*
- ~ closeCurlyBracketParser ^^{x=>DefRhs(x._1 +: x._2)} }
-\end_layout
-
-\begin_layout Plain Layout
-
-def expressionParser: Parser[Expression] = {positioned(defParser | statementPars
-er) }
-\end_layout
-
-\begin_layout Plain Layout
-
-def statementParser: Parser[Statement] = {functionCallParser | basicStatementPar
-ser  | identifierStatementParser }
-\end_layout
-
-\begin_layout Plain Layout
-
-def callargsParser: Parser[Either[Callarg,NamedCallargs]] = {openParenthesisPars
-er ~> (namedcallargsParser | callargParser) <~ closeParenthesisParser ^^{x=>x
- match{case x:Callarg => Left(x); case x:NamedCallargs=>Right(x)}} }
-\end_layout
-
-\begin_layout Plain Layout
-
-def callargParser: Parser[Callarg] = {positioned(functionCallParser | identifier
-StatementParser | basicStatementParser | success(NoArgs())) }
-\end_layout
-
-\begin_layout Plain Layout
-
-def namedcallargsParser: Parser[NamedCallargs] = {namedcallargParser ~ subsequen
-tnamedcallargsParser.+ ^^ {x => NamedCallargs((x._1 +: x._2).sortWith((left,right)=>
-left.id.value<right.id.value))} }
-\end_layout
-
-\begin_layout Plain Layout
-
-def subsequentnamedcallargsParser: Parser[NamedCallarg] = {(commaParser
- ~! success(Unit)) ~> namedcallargParser }
-\end_layout
-
-\begin_layout Plain Layout
-
-def namedcallargParser:Parser[NamedCallarg] = {(idParser <~ equalParser)
- ~ callargParser ^^ {x=>NamedCallarg(x._1, x._2)} }
-\end_layout
-
-\begin_layout Plain Layout
-
-def functionCallParser:Parser[FunctionCallStatement] = {idParser ~ callargsParse
-r ^^ {x=>FunctionCallStatement(x._1 match{case IdT(str)=>str}, x._2)} }
+/*more here*/
 \end_layout
 
 \end_inset
@@ -4458,8 +4471,8 @@ status open
 \end_layout
 
 \begin_layout Standard
-This is in line with Fumurt's goal of being a multithreaded language with
- concurrent execution while having no sequential communication semantics.
+We observe that all output is deterministic.
+ Multithreading is an implementation detail here.
 \end_layout
 
 \begin_layout Section
@@ -4506,6 +4519,44 @@ Conclusion, Evaluation and Further Work
 What have you achieved? Give a critical appraisal (evaluation) of your own
  work - how could the work be taken further (perhaps by another student
  next year)?
+\end_layout
+
+\begin_layout Section
+Further Work
+\end_layout
+
+\begin_layout Subsection
+Further Grammar Development
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+defRhs
+\begin_inset Quotes erd
+\end_inset
+
+ in the current grammar is essentially a multiline statement.
+ It would be beneficial if the line between statement and defRhs could be
+ eliminated.
+ For instance, multiline statements could replace function calls in if-calls
+ or a single line statement without brackets could serve as right hand side
+ in a definition.
+\end_layout
+
+\begin_layout Standard
+Adding operators seem beneficial, as do 
+\end_layout
+
+\begin_layout Subsection
+More IO
+\end_layout
+
+\begin_layout Standard
+At the time of writing, print is the only type of IO that Fumurt has.
+ It goes without saying that this is inadequate for serious usage.
 \end_layout
 
 \begin_layout Bibliography
