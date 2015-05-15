@@ -3417,33 +3417,60 @@ defParser:Parser[Definition]
  to parse the definition part.
 \end_layout
 
-\begin_layout Subsection
-TokenReader
+\begin_layout Paragraph
+Class List
 \end_layout
 
-\begin_layout Standard
-Class TokenReader is a wrapping around the list of tokens.
+\begin_layout Itemize
+
+\emph on
+Class TokenReader
+\emph default
+ is a wrapping around the list of tokens.
  It is required by the parser combinator library and implements the Reader
  interface.
  It has the following functions:
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
-atEnd which returns true if the list of tokens is empty
+
+\emph on
+atEnd
+\emph default
+ which returns true if the list of tokens is empty
 \end_layout
 
 \begin_layout Itemize
-first, which returns the current first element in the list
+
+\emph on
+first
+\emph default
+, which returns the current first element in the list
 \end_layout
 
 \begin_layout Itemize
-pos, which returns the source text position of the first element in the
- list
+
+\emph on
+pos
+\emph default
+, which returns the source text position of the first element in the list
 \end_layout
 
 \begin_layout Itemize
-rest, which returns a new TokenReader wrapping all elements except the first
+
+\emph on
+rest
+\emph default
+, which returns a new TokenReader wrapping all elements except the first
  in the list
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Different classes forming parts of the AST, for example 
+\emph on
+class Definition(val leftside:DefLhs, val rightside:DefRhs).
 \end_layout
 
 \begin_layout Section
@@ -3591,12 +3618,255 @@ This graphic illustrates how the functions in the checker call each other:
 
 \end_layout
 
-\begin_layout Standard
-The checker have no datastructures (of importance?).
+\begin_layout Paragraph
+Function List
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+check(in:List[Definition]):Option[List[FumurtError]]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checktop(in:List[Definition], basicFunctions:List[DefLhs]): List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checkprogram(program:Definition, topleveldefs:List[DefLhs], basicFunctions:List[
+DefLhs]): List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checkuseofthread(program:Definition, thread:DefLhs):List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checkexpressions(tree:List[Expression], containingdefinition:Option[Definition],
+ containingdefinitionarguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]
+):List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checkexpression(tocheck:Expression, containingdefinition:Option[Definition],
+ arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:L
+ist[DefLhs]):List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checkstatement(tocheck:Statement, containingdefinition:DefLhs, arguments:Option[
+List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs],
+ expectedreturn:TypeT): List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checkifcall(ifcall:FunctionCallStatement, expectedtype:TypeT, containingdefiniti
+on:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
+ inSameDefinition:List[DefLhs]):List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checkmutatecall(call:FunctionCallStatement, expectedtype:TypeT, containingdefini
+tion:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
+ inSameDefinition:List[DefLhs]):List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checkbasicmathcall(call:FunctionCallStatement, expectedtype:TypeT, containingdef
+inition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
+ inSameDefinition:List[DefLhs]):List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checktostringcall(call:FunctionCallStatement, expectedtype:TypeT, containingdefi
+nition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
+ inSameDefinition:List[DefLhs]):List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checknamedcallargs(calledfunction:DefLhs, namedcallargs:List[NamedCallarg],
+ containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:Lis
+t[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checkCallarg(expectedtype:TypeT, arg:Callarg, containingdefinition:DefLhs,
+ arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:L
+ist[DefLhs]):List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checkbasicvaluestatement(expectedtype:TypeT, basicstatement:BasicValueStatement,
+ role:String):List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+checkdefinition(tocheck:Definition, containingdefinition:Option[DefLhs],
+ arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]): List[FumurtError]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+indexlefts(in:List[Expression]):List[DefLhs]
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+findinscope(arguments:Option[List[DefLhs]], inSameDefinition:List[DefLhs],
+ basicfunctions:List[DefLhs], enclosingDefinition:Option[DefLhs], searchFor:Stri
+ng):Either[String, DefLhs]
 \end_layout
 
 \begin_layout Section
 Code generator
+\end_layout
+
+\begin_layout Paragraph
+Function List
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+generate(ast:List[Definition]):String
+\end_layout
+
+\begin_layout Itemize
+getAnnotatedTree(ast:List[Expression], topthreadcalls:List[FunctionCallStatement
+]):List[aExpression]
+\end_layout
+
+\begin_layout Itemize
+getCallsAnnotatedTreeInternal(ast:List[aExpression], arguments:List[aDefLhs],
+ containingDefinition:Option[aDefinition]):List[aExpression]
+\end_layout
+
+\begin_layout Itemize
+annotateFunctionCall(functioncall:aFunctionCallStatement, arguments:List[aDefLhs
+], inSameDefinition:List[aDefLhs], containingDefinition:Option[aDefinition]):aFu
+nctionCallStatement
+\end_layout
+
+\begin_layout Itemize
+removeInclusions(args:Either[aCallarg,aNamedCallargs], ldeffargs:Option[Argument
+s]):Either[aCallarg,aNamedCallargs]
+\end_layout
+
+\begin_layout Itemize
+indexlefts(in:List[aExpression]):List[aDefLhs]
+\end_layout
+
+\begin_layout Itemize
+findinscope(arguments:Option[List[aDefLhs]], inSameDefinition:List[aDefLhs],
+ enclosingDefinition:Option[aDefLhs], searchFor:String):aDefLhs
+\end_layout
+
+\begin_layout Itemize
+getAnnotatedTreeInternal(ast:List[Expression], topthreadcalls:List[FunctionCallS
+tatement], hierarchy:String, callingthread:Option[String]):List[aExpression]
+\end_layout
+
+\begin_layout Itemize
+getFunctionDeclarations(ast:List[aExpression]):(String,String)
+\end_layout
+
+\begin_layout Itemize
+getFunctionSignature(cppid:IdT, optargs:Option[Arguments], returntype:TypeT):Str
+ing
+\end_layout
+
+\begin_layout Itemize
+typetranslator(in:TypeT):String
+\end_layout
+
+\begin_layout Itemize
+callargTranslator(callarg:aCallarg, callingthread:String):String
+\end_layout
+
+\begin_layout Itemize
+functioncalltranslator(call:aFunctionCallStatement, callingthread:String):String
+\end_layout
+
+\begin_layout Itemize
+basicmathcalltranslator(call:aFunctionCallStatement, callingthread:String):Strin
+g
+\end_layout
+
+\begin_layout Itemize
+gettopthreadstatements(ast:List[Definition]):List[FunctionCallStatement]
+\end_layout
+
+\begin_layout Itemize
+getprintlistdeclarations(topthreads:List[FunctionCallStatement]):String
+\end_layout
+
+\begin_layout Itemize
+getmain(topthreads:List[FunctionCallStatement]):String
+\end_layout
+
+\begin_layout Itemize
+getsynchronizerfunction(synchvariables:List[Definition], topthreads:List[Functio
+nCallStatement]):String
+\end_layout
+
+\begin_layout Itemize
+getGlobalSynchVariableDeclarations(synchvariables:List[Definition]):String
+\end_layout
+
+\begin_layout Itemize
+getsynchronizedvariables(ast:List[Definition]):List[Definition]
+\end_layout
+
+\begin_layout Paragraph
+Classes
+\end_layout
+
+\begin_layout Standard
+The generator holds classes needed to annotate the AST, for example 
+\emph on
+class aDefinition(val leftside:aDefLhs, val rightside:aDefRhs).
+ 
+\emph default
+Existing AST classes are used unless extra information needs to be held
+ or it is a parent of such a class.
+ The most dramatic example is 
+\emph on
+class aDefLhs(val description:DefDescriptionT, val id:IdT, val cppid:IdT,
+ val callingthread:String, val args:Option[Arguments], val returntype:TypeT)
+\emph default
+.
+ In cases where functions need to be demultiplexed, the new AST will be
+ modified to hold those as well.
 \end_layout
 
 \begin_layout Standard

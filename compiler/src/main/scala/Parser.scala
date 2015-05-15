@@ -109,7 +109,6 @@ object FumurtParser extends Parsers //with PackratParsers
   }
 }
 
-class AstNode()
 class Expression() extends Positional
 trait Callarg extends Positional
 trait Statement extends Expression

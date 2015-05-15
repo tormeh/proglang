@@ -581,15 +581,7 @@ object FumurtTypeChecker
   }*/
 }
 
-class DefinitionC(val location:List[String], val outType:String, val inTypes:Option[List[ArgumentC]], typee:DefinitionType)
-case class ArgumentC(name:String, typee:String) 
 
-class DefinitionType()
-
-case class FunctionType() extends DefinitionType
-case class ActionType() extends DefinitionType
-case class UnsafeActionType() extends DefinitionType
-case class ValueType() extends DefinitionType
 
 
 
