@@ -15,11 +15,11 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
 {
   override val skipWhitespace = false
   
-  def scan(in:String, opts:Options):Either[NoSuccess, List[Token]] =
+  def scan(in:String):Either[NoSuccess, List[Token]] =
   {
     println(in) 
    
-    parseAll((scan*), in) match
+    parseAll((scanInternal*), in) match
     {
       case Success(result, _) =>
       {
@@ -53,7 +53,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
   def closeParenthesisParser: Parser[CloseParenthesisT] = positioned( new Regex("""\)""") ^^ {x => println("scanned ) "+x.toString);CloseParenthesisT()} )
   def openCurlyBracketParser: Parser[OpenCurlyBracketT] = positioned( new Regex("""\{""") ^^ {x => println("scanned { "+x.toString);OpenCurlyBracketT()} )
   def closeCurlyBracketParser: Parser[CloseCurlyBracketT] = positioned( new Regex("""\}""") ^^ {x => println("scanned } "+x.toString);;CloseCurlyBracketT()} )
-  def doubleParser: Parser[DoubleT] = positioned( new Regex("""[-+]?[0-9]*\.?[0-9]+""") ^^ {x => println("scanned double "+x.toString);DoubleT(x.toDouble)} )
+  def doubleParser: Parser[DoubleT] = positioned( new Regex("""[-+]?[0-9]*\.[0-9]+""") ^^ {x => println("scanned double "+x.toString);DoubleT(x.toDouble)} )
   def intParser: Parser[IntegerT] = positioned( new Regex("""(0|[1-9]\d*)""") ^^ {x => println("scanned integer "+x.toString);IntegerT(x.toInt)} )
   def equalParser: Parser[EqualT] = positioned( new Regex("=") ^^ {x => println("scanned = "+x.toString);EqualT()} )
   def colonParser: Parser[ColonT] = positioned( new Regex(":") ^^ {x => println("scanned : "+x.toString);ColonT()} )
@@ -65,7 +65,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
   def typeParser: Parser[TypeT] = positioned( new Regex("[A-Z][a-zA-Z]*") ^^ {x => println("scanned type "+x.toString);TypeT(x.toString)} )
   
   
-  def scan: Parser[Token] = 
+  def scanInternal: Parser[Token] = 
   {
     (
       spaceParser               |

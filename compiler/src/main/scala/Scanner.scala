@@ -15,11 +15,11 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
 {
   override val skipWhitespace = false
   
-  def scan(in:String, opts:Options):Either[NoSuccess, List[Token]] =
+  def scan(in:String):Either[NoSuccess, List[Token]] =
   {
     println(in) 
    
-    parseAll((scan*), in) match
+    parseAll((scanInternal*), in) match
     {
       case Success(result, _) =>
       {
@@ -35,10 +35,6 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
   }
   
   
-  def removeSpaces(intokens:List[Token]):List[Token] =
-  {
-    intokens
-  }
 
   def spaceParser:Parser[SpaceT] = positioned( new Regex(""" """) ^^ {x => println("scanned space");SpaceT()} )
   def programStrParser: Parser[ProgramT] = positioned( new Regex("program ") ^^ {x => println("scanned program "+x.toString);ProgramT()} )
@@ -65,7 +61,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
   def typeParser: Parser[TypeT] = positioned( new Regex("[A-Z][a-zA-Z]*") ^^ {x => println("scanned type "+x.toString);TypeT(x.toString)} )
   
   
-  def scan: Parser[Token] = 
+  def scanInternal: Parser[Token] = 
   {
     (
       spaceParser               |

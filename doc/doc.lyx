@@ -1930,12 +1930,131 @@ Increments the rendezvousCounter
 
 \begin_layout Enumerate
 If the value in the rendezvousCounter is less than NUMTOPTHREADS, the thread
- waits on cv, at which point rendezvousSyncMutex will be automatically unlocked.
+ waits using cv.wait, at which point rendezvousSyncMutex will be automatically
+ unlocked.
  If the rendezvousCounter equals NUMTOPTHREADS, the thread prints all strings
  held in the printLists as described above, sets any global synchronized
  variables to its local values, sets rendezvousCounter to 0 and finally
  notifies all other threads using cv.notify_all before exiting the function.
  rendezvousSyncMutex is unlocked on function exit.
+ Consider the salient details:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+static void waitForRendezvous(std::string name)
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  std::unique_lock<std::mutex> lk(rendezvousSyncMutex);
+\end_layout
+
+\begin_layout Plain Layout
+
+  ++rendezvousCounter;
+\end_layout
+
+\begin_layout Plain Layout
+
+  if(rendezvousCounter.load() < NUMTOPTHREADS)
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    cv.wait(lk);
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  else if (rendezvousCounter.load() == NUMTOPTHREADS)
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    while(!printthreadPrintHello.empty())
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      std::cout << printthreadPrintHello.front();
+\end_layout
+
+\begin_layout Plain Layout
+
+      printthreadPrintHello.pop_front();
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+	/*similarly for other thread print lists*/
+\end_layout
+
+\begin_layout Plain Layout
+
+    synchronizedNumber = writeSynchronizedNumber;
+\end_layout
+
+\begin_layout Plain Layout
+
+    rendezvousCounter.store(0);
+\end_layout
+
+\begin_layout Plain Layout
+
+    cv.notify_all();
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  /*abnormal situation diagnostics mechanism here*/
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -2079,7 +2198,7 @@ status open
 
 \begin_layout Plain Layout
 
-    FumurtScanner.scan(sourcestring, opts) match
+    FumurtScanner.scan(sourcestring) match
 \end_layout
 
 \begin_layout Plain Layout
@@ -2394,7 +2513,7 @@ object FumurtScanner extends RegexParsers
 
 \begin_layout Plain Layout
 
-  def scan(in:String, opts:Options):Either[NoSuccess, List[Token]] =
+  def scan(in:String):Either[NoSuccess, List[Token]] =
 \end_layout
 
 \begin_layout Plain Layout
@@ -2414,7 +2533,7 @@ object FumurtScanner extends RegexParsers
 
 \begin_layout Plain Layout
 
-    parseAll((scan*), in) match
+    parseAll((scanInternal*), in) match
 \end_layout
 
 \begin_layout Plain Layout
@@ -2489,10 +2608,6 @@ object FumurtScanner extends RegexParsers
 \end_layout
 
 \begin_layout Standard
-There are two scan functions; one with, and one without, arguments, confusingly.
-\end_layout
-
-\begin_layout Standard
 Parsers for individual tokens are formed like this:
 \end_layout
 
@@ -2549,7 +2664,7 @@ status open
 
 \begin_layout Plain Layout
 
-def scan: Parser[Token] = 
+def scanInternal: Parser[Token] = 
 \end_layout
 
 \begin_layout Plain Layout
@@ -2772,6 +2887,39 @@ positioned
  call assigns the source code position of the input text to the token object
  produced by the parser, which allows us to output really nice error messages
  later on.
+\end_layout
+
+\begin_layout Paragraph
+Function List
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+scan(in:String):Either[NoSuccess, List[Token]] 
+\emph default
+Takes the source file as a string and either outputs a list of tokens or
+ an error message
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+scanInternal:Parser[Token]
+\emph default
+ Is the internal scanner.
+ The parser combinator library will use this to create a sparser to serve
+ as scanner at compile time
+\end_layout
+
+\begin_layout Itemize
+x
+\emph on
+Parser: Parser[XT] 
+\emph default
+Parses that particular type of token, for example 
+\emph on
+newlineParser: Parser[NewlineT]
 \end_layout
 
 \begin_layout Section
@@ -3226,6 +3374,78 @@ Callarg,NamedCallargs]) extends Statement with Callarg
 
 \end_layout
 
+\begin_layout Paragraph
+Function List
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+parse(in:List[Token]):Either[NoSuccess, List[Definition]] 
+\emph default
+takes a list of tokens and returns either an error message or an AST
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+progParser: Parser[List[Definition]]
+\emph default
+ is the head of the parsers, from which the parser combinator library will
+ generate the final parser
+\end_layout
+
+\begin_layout Itemize
+x
+\emph on
+Parser:Parser[X] 
+\emph default
+parses that particular kind of AST node, for example 
+\emph on
+defParser:Parser[Definition]
+\emph default
+.
+ Can often be a bit indirect.
+ For example, 
+\emph on
+paddedDefParser:Parser[Definition] 
+\emph default
+parses a definition with newlines around it, but using 
+\emph on
+defParser:Parser[Definition]
+\emph default
+ to parse the definition part.
+\end_layout
+
+\begin_layout Subsection
+TokenReader
+\end_layout
+
+\begin_layout Standard
+Class TokenReader is a wrapping around the list of tokens.
+ It is required by the parser combinator library and implements the Reader
+ interface.
+ It has the following functions:
+\end_layout
+
+\begin_layout Itemize
+atEnd which returns true if the list of tokens is empty
+\end_layout
+
+\begin_layout Itemize
+first, which returns the current first element in the list
+\end_layout
+
+\begin_layout Itemize
+pos, which returns the source text position of the first element in the
+ list
+\end_layout
+
+\begin_layout Itemize
+rest, which returns a new TokenReader wrapping all elements except the first
+ in the list
+\end_layout
+
 \begin_layout Section
 Checker
 \end_layout
@@ -3409,6 +3629,13 @@ Test plan -- how the program/system was verified.
 
 \begin_layout Section
 Full program test
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Full-program-test"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4518,6 +4745,61 @@ status open
 \begin_layout Standard
 We observe that all output is deterministic.
  Multithreading is an implementation detail here.
+\end_layout
+
+\begin_layout Section
+Error messages
+\end_layout
+
+\begin_layout Standard
+Changing the source in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Full-program-test"
+
+\end_inset
+
+ to have 5.0 instead of 5 as an argument to integerIdentity we get the following
+ type error:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+44.40: Call argument type should be Integer.
+ Call argument type was Double
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(integerIdentity(5.0)))
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+                                       ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+One errors found
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
