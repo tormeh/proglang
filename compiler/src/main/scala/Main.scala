@@ -91,7 +91,7 @@ object Main
                 val outname = "generated"
                 val fileending = ".cpp"
                 Files.write(Paths.get("./"+outname+fileending), generatedcode.getBytes(StandardCharsets.UTF_8))
-                val options = " -pthread -std=c++11 -O3"
+                val options = " -pthread -std=c++11 -O3 -march=native"
                 println("\n\n===Starting Clang cpp compilation===")
                 //println("options = " + options)
                 import scala.sys.process._

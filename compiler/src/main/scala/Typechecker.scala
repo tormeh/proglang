@@ -119,7 +119,6 @@ object FumurtTypeChecker
           case None => List()
           case Some(contdef) => indexlefts(contdef.rightside.expressions)
         }
-        //bugs here:
         val (newargs, argpropagationerrors) = x.leftside.args match
         {
           case None => (List(), List())
@@ -137,7 +136,7 @@ object FumurtTypeChecker
             else 
             {
               
-              //(hits, List(FumurtError(x.pos,"One or more arguments not found in local scope"))) TODO: Find better solution than just IGNORING the problem
+              //(hits, List(FumurtError(x.pos,"One or more arguments not found in local scope"))) TODO: Find better solution than just abandoning compile time dependent checking. Checking for each function call might be possible...
               (hits,List())
             }
           }
@@ -298,7 +297,8 @@ object FumurtTypeChecker
               case Left(str) => List(FumurtError(z.pos, str))
               case Right(defl)=>
               {
-                checkCallarg(defl.returntype, value.argument, containingdefinition, arguments, basicFunctions, inSameDefinition)
+                (if (defl.description != SynchronizedVariableT()){List(FumurtError(call.pos, "Variable must be synchronized"))}else{List()})++
+                (checkCallarg(defl.returntype, value.argument, containingdefinition, arguments, basicFunctions, inSameDefinition))m/.bcfghtvy xjloikm
               }
             }
           }
@@ -363,7 +363,7 @@ object FumurtTypeChecker
         val outerrors = expectedtype match{ case TypeT("String")=>List(); case TypeT(str)=>List(FumurtError(call.pos, "toString returns String not "+str))}
         argumenterrors++outerrors
       }
-      case Right(NamedCallargs(arglist))=>List(FumurtError(call.pos, "Call to toString needs one arguments"))
+      case Right(NamedCallargs(arglist))=>List(FumurtError(call.pos, "Call to toString needs one argument"))
     }
   }
   

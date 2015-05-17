@@ -49,7 +49,7 @@ object Main
   {
     println("Now compiling!")
     val sourcestring = fromFile(opts.file).mkString
-    FumurtScanner.scan(sourcestring, opts) match
+    FumurtScanner.scan(sourcestring) match
     {
       case Left(error) => println("Error in scanner: " + error.toString)
       case Right(tokens) => 

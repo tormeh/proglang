@@ -3625,26 +3625,41 @@ Function List
 \begin_layout Itemize
 
 \emph on
-check(in:List[Definition]):Option[List[FumurtError]]
+check(in:List[Definition]):Option[List[FumurtError]] 
+\emph default
+is the interface to the rest of the program.
+ Takes in a AST and returns a list of errors, if there are any.
 \end_layout
 
 \begin_layout Itemize
 
 \emph on
 checktop(in:List[Definition], basicFunctions:List[DefLhs]): List[FumurtError]
+ 
+\emph default
+checks the top level of the program.
+ The top is special because it contains threads and the program statement,
+ though only the program statement need special treatment.
 \end_layout
 
 \begin_layout Itemize
 
 \emph on
 checkprogram(program:Definition, topleveldefs:List[DefLhs], basicFunctions:List[
-DefLhs]): List[FumurtError]
+DefLhs]): List[FumurtError] 
+\emph default
+checks the program statement.
+ Uses checkuseofthread and checks whether there are any calls to non-threads
+ or definition of non-synchronized variables.
 \end_layout
 
 \begin_layout Itemize
 
 \emph on
-checkuseofthread(program:Definition, thread:DefLhs):List[FumurtError]
+checkuseofthread(program:Definition, thread:DefLhs):List[FumurtError] 
+\emph default
+checks that the thread given is actually called in the program statement.
+ Declaring a thread and failing to call it is an error.
 \end_layout
 
 \begin_layout Itemize
@@ -3652,7 +3667,17 @@ checkuseofthread(program:Definition, thread:DefLhs):List[FumurtError]
 \emph on
 checkexpressions(tree:List[Expression], containingdefinition:Option[Definition],
  containingdefinitionarguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]
-):List[FumurtError]
+):List[FumurtError] 
+\emph default
+checks a list of expressions, such as might be found in the right-hand side
+ of a definition.
+ Uses 
+\emph on
+indexleft
+\emph default
+ to get new in-scope definitions and passes them to 
+\emph on
+checkexpression
 \end_layout
 
 \begin_layout Itemize
@@ -3660,7 +3685,16 @@ checkexpressions(tree:List[Expression], containingdefinition:Option[Definition],
 \emph on
 checkexpression(tocheck:Expression, containingdefinition:Option[Definition],
  arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:L
-ist[DefLhs]):List[FumurtError]
+ist[DefLhs]):List[FumurtError] 
+\emph default
+checks an individual expression.
+ Uses 
+\emph on
+checkstatement
+\emph default
+ and 
+\emph on
+checkdefinition
 \end_layout
 
 \begin_layout Itemize
@@ -3668,7 +3702,22 @@ ist[DefLhs]):List[FumurtError]
 \emph on
 checkstatement(tocheck:Statement, containingdefinition:DefLhs, arguments:Option[
 List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs],
- expectedreturn:TypeT): List[FumurtError]
+ expectedreturn:TypeT): List[FumurtError] 
+\emph default
+checks a statement.
+ If it's an identifierStatement, checks that its return value is as expected.
+ Uses 
+\emph on
+checkbasicvaluestatement 
+\emph default
+for the same for basic values.
+ If it's a function call, then it either uses special case functions, such
+ as 
+\emph on
+checkifcall
+\emph default
+ or finds the function in scope and uses a general approach using checknamedcall
+args and/or checkcallarg
 \end_layout
 
 \begin_layout Itemize
@@ -3677,6 +3726,11 @@ List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs],
 checkifcall(ifcall:FunctionCallStatement, expectedtype:TypeT, containingdefiniti
 on:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
  inSameDefinition:List[DefLhs]):List[FumurtError]
+\emph default
+ checks calls to if.
+ Makes sure the return type of then and else is the same and that condition
+ is a boolean.
+ Also checks naming, of course.
 \end_layout
 
 \begin_layout Itemize
@@ -3685,6 +3739,9 @@ on:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
 checkmutatecall(call:FunctionCallStatement, expectedtype:TypeT, containingdefini
 tion:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
  inSameDefinition:List[DefLhs]):List[FumurtError]
+\emph default
+ checks that the variable is a synchronized variable and otherwise has the
+ same type as the new value
 \end_layout
 
 \begin_layout Itemize
@@ -3692,7 +3749,10 @@ tion:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
 \emph on
 checkbasicmathcall(call:FunctionCallStatement, expectedtype:TypeT, containingdef
 inition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
- inSameDefinition:List[DefLhs]):List[FumurtError]
+ inSameDefinition:List[DefLhs]):List[FumurtError] 
+\emph default
+checks the four basic math operators, with special attention to the return
+ type when double and int are mixed
 \end_layout
 
 \begin_layout Itemize
@@ -3700,7 +3760,9 @@ inition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
 \emph on
 checktostringcall(call:FunctionCallStatement, expectedtype:TypeT, containingdefi
 nition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
- inSameDefinition:List[DefLhs]):List[FumurtError]
+ inSameDefinition:List[DefLhs]):List[FumurtError] 
+\emph default
+checks that there is only one argument and that the expected type is String
 \end_layout
 
 \begin_layout Itemize
@@ -3708,7 +3770,11 @@ nition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
 \emph on
 checknamedcallargs(calledfunction:DefLhs, namedcallargs:List[NamedCallarg],
  containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:Lis
-t[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError]
+t[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] 
+\emph default
+checks named call arguments.
+ Checks that the correct names are used, that the correct number of arguments
+ are given and uses checkcallarg to check each argument individually.
 \end_layout
 
 \begin_layout Itemize
@@ -3717,6 +3783,8 @@ t[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError]
 checkCallarg(expectedtype:TypeT, arg:Callarg, containingdefinition:DefLhs,
  arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:L
 ist[DefLhs]):List[FumurtError]
+\emph default
+ 
 \end_layout
 
 \begin_layout Itemize

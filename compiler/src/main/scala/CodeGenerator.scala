@@ -319,7 +319,7 @@ object FumurtCodeGenerator
             y=> y match
             {
               case aDefinition(leftside, rightside)=>None
-              case aFunctionCallStatement(id.value,_, args,_) => Some("waitForRendezvous(\""+cppid.value+"\");\n  continue;")
+              case aFunctionCallStatement(id.value,_, args,_) => Some("waitForRendezvous(\""+cppid.value+"\");\n  continue;") //TODO: update variables as the argument list says it should be done.
               case z:aFunctionCallStatement => Some(functioncalltranslator(z, id.value) + ";")
               //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
             }
