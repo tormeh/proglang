@@ -3653,6 +3653,7 @@ checks the program statement.
  or definition of non-synchronized variables.
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
 
 \emph on
@@ -3662,6 +3663,7 @@ checks that the thread given is actually called in the program statement.
  Declaring a thread and failing to call it is an error.
 \end_layout
 
+\end_deeper
 \begin_layout Itemize
 
 \emph on
@@ -3837,92 +3839,215 @@ Function List
 
 \emph on
 generate(ast:List[Definition]):String
+\emph default
+ generates the final C++ code from the Fumurt AST
 \end_layout
 
 \begin_layout Itemize
+
+\emph on
 getAnnotatedTree(ast:List[Expression], topthreadcalls:List[FunctionCallStatement
-]):List[aExpression]
+]):List[aExpression] 
+\emph default
+Returns an annotated version of the supplied AST.
+ This version has the final C++ names for functions and function calls
 \end_layout
 
 \begin_layout Itemize
+
+\emph on
 getCallsAnnotatedTreeInternal(ast:List[aExpression], arguments:List[aDefLhs],
- containingDefinition:Option[aDefinition]):List[aExpression]
+ containingDefinition:Option[aDefinition]):List[aExpression] 
+\emph default
+returns an annotated version of the AST with final C++ names for function
+ calls.
+ Requires that function names have been annotated first
 \end_layout
 
 \begin_layout Itemize
+
+\emph on
 annotateFunctionCall(functioncall:aFunctionCallStatement, arguments:List[aDefLhs
 ], inSameDefinition:List[aDefLhs], containingDefinition:Option[aDefinition]):aFu
-nctionCallStatement
+nctionCallStatement 
+\emph default
+annotates a single function call
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+annotateCallargs(args:Either[aCallarg,aNamedCallargs], arguments:List[aDefLhs],
+ inSameDefinition:List[aDefLhs], containingDefinition:Option[aDefinition]):Eithe
+r[aCallarg,aNamedCallargs] annotates that function calls call arguments.
+ Since call arguments can be function calls, this is often recursive.
 \end_layout
 
 \begin_layout Itemize
+
+\emph on
 removeInclusions(args:Either[aCallarg,aNamedCallargs], ldeffargs:Option[Argument
-s]):Either[aCallarg,aNamedCallargs]
+s]):Either[aCallarg,aNamedCallargs] 
+\emph default
+removes inclusion arguments from functions, since these have no purpose
+ in C++
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+indexlefts(in:List[aExpression]):List[aDefLhs] 
+\emph default
+indexes DefLhs's like in the checker, but with the annotated types.
 \end_layout
 
 \begin_layout Itemize
-indexlefts(in:List[aExpression]):List[aDefLhs]
-\end_layout
 
-\begin_layout Itemize
+\emph on
 findinscope(arguments:Option[List[aDefLhs]], inSameDefinition:List[aDefLhs],
- enclosingDefinition:Option[aDefLhs], searchFor:String):aDefLhs
+ enclosingDefinition:Option[aDefLhs], searchFor:String):aDefLhs 
+\emph default
+same as the version in the checker, but with annotated types.
 \end_layout
 
 \begin_layout Itemize
+
+\emph on
 getAnnotatedTreeInternal(ast:List[Expression], topthreadcalls:List[FunctionCallS
 tatement], hierarchy:String, callingthread:Option[String]):List[aExpression]
+ 
+\emph default
+returns an AST with with final C++ names for functions
 \end_layout
 
 \begin_layout Itemize
-getFunctionDeclarations(ast:List[aExpression]):(String,String)
+
+\emph on
+getFunctionDeclarations(ast:List[aExpression]):(String,String) 
+\emph default
+gets the functions, in C++, from the AST
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
+
+\emph on
+actfunrecursivetranslate(cppid:IdT, callingthread:String, args:Option[Arguments]
+, returntype:TypeT, expressions:List[aExpression]):Option[(String,String)]
+ 
+\emph default
+gets function body and signature of a function corresponding to the arguments
+ as well as all functions defined in the body of the definition.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
 getFunctionSignature(cppid:IdT, optargs:Option[Arguments], returntype:TypeT):Str
-ing
+ing 
+\emph default
+constructs a C++ function signature from the arguments
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+argtranslator(arg:Argument):String
+\emph default
+ translates an argument as used in defining a function
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+typetranslator(in:TypeT):String 
+\emph default
+translates (basic) Fumurt types to their C++ equivalents
 \end_layout
 
 \begin_layout Itemize
-typetranslator(in:TypeT):String
+
+\emph on
+callargTranslator(callarg:aCallarg, callingthread:String):String 
+\emph default
+translates a call argument to C++ equivalent
 \end_layout
 
 \begin_layout Itemize
-callargTranslator(callarg:aCallarg, callingthread:String):String
-\end_layout
 
-\begin_layout Itemize
+\emph on
 functioncalltranslator(call:aFunctionCallStatement, callingthread:String):String
+ 
+\emph default
+translates function call
 \end_layout
 
 \begin_layout Itemize
+
+\emph on
 basicmathcalltranslator(call:aFunctionCallStatement, callingthread:String):Strin
 g
 \end_layout
 
 \begin_layout Itemize
+
+\emph on
 gettopthreadstatements(ast:List[Definition]):List[FunctionCallStatement]
+ 
+\emph default
+gets the C++ statements spawning the threads.
+ 
 \end_layout
 
 \begin_layout Itemize
+
+\emph on
 getprintlistdeclarations(topthreads:List[FunctionCallStatement]):String
+ 
+\emph default
+gets the printList declarations.
+ These are lists in which strings to be printed are kept.
 \end_layout
 
 \begin_layout Itemize
-getmain(topthreads:List[FunctionCallStatement]):String
+
+\emph on
+getmain(topthreads:List[FunctionCallStatement]):String 
+\emph default
+gets the main function.
+ This only spawns the threads and then goes to sleep
 \end_layout
 
 \begin_layout Itemize
+
+\emph on
 getsynchronizerfunction(synchvariables:List[Definition], topthreads:List[Functio
-nCallStatement]):String
+nCallStatement]):String 
+\emph default
+gets the mostly static and hand-written function that performs all actions
+ during the communication phase
 \end_layout
 
 \begin_layout Itemize
+
+\emph on
 getGlobalSynchVariableDeclarations(synchvariables:List[Definition]):String
+\emph default
+ gets the C++ declarations of the synchronized variables
 \end_layout
 
 \begin_layout Itemize
+
+\emph on
 getsynchronizedvariables(ast:List[Definition]):List[Definition]
+\emph default
+ gets the definitions of the synchronized variables, so that they can later
+ be used in 
+\emph on
+getGlobalSynchVariableDeclarations
 \end_layout
 
 \begin_layout Paragraph

@@ -271,7 +271,7 @@ object FumurtCodeGenerator
   
   def getFunctionDeclarations(ast:List[aExpression]):(String,String) =
   {
-    def actfunrecursivetranslate(cppid:IdT, callingthread:String, args:Option[Arguments], returntype:TypeT, expressions:List[aExpression]) =
+    def actfunrecursivetranslate(cppid:IdT, callingthread:String, args:Option[Arguments], returntype:TypeT, expressions:List[aExpression]):Option[(String,String)] =
     {
       val signature = getFunctionSignature(cppid, args, returntype)
       val functionstart = signature+"\n{"
