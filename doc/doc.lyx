@@ -3784,7 +3784,9 @@ checkCallarg(expectedtype:TypeT, arg:Callarg, containingdefinition:DefLhs,
  arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:L
 ist[DefLhs]):List[FumurtError]
 \emph default
- 
+ checks a call argument.
+ Makes sure the type is correct.
+ Uses checkbasicvaluestatement and checkstatement.
 \end_layout
 
 \begin_layout Itemize
@@ -3792,6 +3794,8 @@ ist[DefLhs]):List[FumurtError]
 \emph on
 checkbasicvaluestatement(expectedtype:TypeT, basicstatement:BasicValueStatement,
  role:String):List[FumurtError]
+\emph default
+ checks that the type is correct.
 \end_layout
 
 \begin_layout Itemize
@@ -3805,6 +3809,9 @@ checkdefinition(tocheck:Definition, containingdefinition:Option[DefLhs],
 
 \emph on
 indexlefts(in:List[Expression]):List[DefLhs]
+\emph default
+ takes a list of expressions and returns a list of all the left sides of
+ definitions in that list.
 \end_layout
 
 \begin_layout Itemize
@@ -3812,7 +3819,10 @@ indexlefts(in:List[Expression]):List[DefLhs]
 \emph on
 findinscope(arguments:Option[List[DefLhs]], inSameDefinition:List[DefLhs],
  basicfunctions:List[DefLhs], enclosingDefinition:Option[DefLhs], searchFor:Stri
-ng):Either[String, DefLhs]
+ng):Either[String, DefLhs] 
+\emph default
+finds a left side of the definition in the current scope with the same name
+ as that which is searched for.
 \end_layout
 
 \begin_layout Section
