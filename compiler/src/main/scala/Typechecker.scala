@@ -298,7 +298,7 @@ object FumurtTypeChecker
               case Right(defl)=>
               {
                 (if (defl.description != SynchronizedVariableT()){List(FumurtError(call.pos, "Variable must be synchronized"))}else{List()})++
-                (checkCallarg(defl.returntype, value.argument, containingdefinition, arguments, basicFunctions, inSameDefinition))m/.bcfghtvy xjloikm
+                (checkCallarg(defl.returntype, value.argument, containingdefinition, arguments, basicFunctions, inSameDefinition))
               }
             }
           }
