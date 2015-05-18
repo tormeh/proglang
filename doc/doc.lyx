@@ -232,7 +232,14 @@ Interestingly, one can observe that as each feature becomes easier to reason
  One way to do this is by using recursion, which is a full replacement for
  iteration.
  But recursion, while allowing immutability, is often harder for humans
- to understand [citation needed].
+ to understand 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "milne2002difficulties"
+
+\end_inset
+
+.
  To ameliorate this problem, a variety of machanisms have been implemented,
  for example map and fold, which performs common functions previously performed
  utilizing iteration.
@@ -242,8 +249,12 @@ Interestingly, one can observe that as each feature becomes easier to reason
  increasing feature number outweigh the benefit of increased analyzability
  and predictability? Answering these questions is outside the scope of this
  report.
- Much progress has been made in making programs easier to understand and
- analyze in this fashion, yet there is always room for improvement.
+ Much 
+\begin_inset Quotes eld
+\end_inset
+
+progress has been made in making programs easier to understand and analyze
+ in this fashion, yet there is always room for improvement.
  In later years, one feature in particular has risen to notability: Concurrency.
  In the past, concurrency has not been an issue for most programmers but
  as multi-processor (or multi-core) systems have gone mainstream, so has
@@ -289,7 +300,14 @@ key "hoare1978communicatingCSP"
 \end_layout
 
 \begin_layout Itemize
-Transactional memory[citation needed]
+Transactional memory
+\begin_inset CommandInset citation
+LatexCommand cite
+key "herlihy1993transactional"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -1512,6 +1530,14 @@ Loops are familiar for many people, yet are usually not included in languages
  However, they are convenient and they are equivalent to tail-recursion.
  The major advantages of tail recursion over looping is that the assignment
  and dependencies are explicit.
+ And yet loops are far easier to understand
+\begin_inset CommandInset citation
+LatexCommand cite
+key "milne2002difficulties"
+
+\end_inset
+
+.
  We decided we could make loops that are as safe as tail recursion while
  being almost as friendly as loops:
 \end_layout
@@ -2089,6 +2115,15 @@ Actions need to be demultiplexed, as their C++ code needs to be different
 
 \begin_layout Enumerate
 Function calls need to be changed so they refer to the new names
+\end_layout
+
+\begin_layout Standard
+This can be accomplished by doing two passes over the AST.
+ In the first pass, we annotate all fucntion definitions with their final
+ C++ names.
+ In the last pass, we annotate all function calls with the final C++ name
+ of the function they call, copying from the annotation done in pass one.
+ 
 \end_layout
 
 \begin_layout Chapter

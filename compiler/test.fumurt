@@ -41,7 +41,7 @@ action actionPrintFoo(integerIdentity:Inclusion):Nothing =
   }
   actionPrint("  FOO   ")
   actionPrintFooo()
-  actionPrint(toString(integerIdentity(5)))
+  actionPrint(toString(integerIdentity(5.0)))
   actionPrint("  ")
   actionPrint(if(condition=true, then=toString(6), else=toString(3)))
   actionPrint("\n")
