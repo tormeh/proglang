@@ -4,6 +4,8 @@
 \begin_header
 \textclass report
 \begin_preamble
+\usepackage{url}
+
 \lstset{
 numbers=left,
 breaklines=true,
@@ -208,7 +210,7 @@ It is commonly understood that writing software is hard.
 goto replaced by sequence, selection and iteration 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "structured proof"
+key "bohm1966flowStructuredProgramming"
 
 \end_inset
 
@@ -248,7 +250,7 @@ Interestingly, one can observe that as each feature becomes easier to reason
  multithreaded programming
 \begin_inset CommandInset citation
 LatexCommand cite
-key "free lunch over"
+key "sutter2005freeLunch"
 
 \end_inset
 
@@ -268,7 +270,7 @@ key "free lunch over"
 Actors 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "actors"
+key "hewitt1973universalActors"
 
 \end_inset
 
@@ -279,7 +281,7 @@ key "actors"
 CSP 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "CSP"
+key "hoare1978communicatingCSP"
 
 \end_inset
 
@@ -294,7 +296,7 @@ Transactional memory[citation needed]
 Synchronous programming
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Esterel"
+key "berry1992esterel"
 
 \end_inset
 
@@ -376,7 +378,7 @@ A compiler is a program (one may regard it as a function) that accepts a
 This figure, reconstructed from 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "eng compiler"
+key "cooper2011engineering"
 
 \end_inset
 
@@ -835,7 +837,7 @@ name "sub:The-Scala-Parser"
 All the information here is also available at 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "scala parser combinator doc"
+key "ScalaParserCombinatorDoc"
 
 \end_inset
 
@@ -940,7 +942,7 @@ Initially, the goal of this thesis was to create a fundamentally new approach
  Given the importance of a familiar superficialities for language adoption
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Language adoption"
+key "meyerovich2013empiricalProgrammingLanguageAdoption"
 
 \end_inset
 
@@ -1059,7 +1061,7 @@ key "mapReduce"
 , is easy to use and widely applicative to many problems.
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Hadoop at facebook"
+key "borthakur2011apache"
 
 \end_inset
 
@@ -1765,7 +1767,7 @@ For easy debugging and wide selection of binary targets we chose to first
  This is a well-trodden path
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Haskell-to-C"
+key "hall1993glasgowHaskellToC"
 
 \end_inset
 
@@ -2460,7 +2462,7 @@ The AST from from the parser is given to the code generator, which produces
 The Clang C family compiler
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Clang"
+key "clang2005language"
 
 \end_inset
 
@@ -2480,131 +2482,6 @@ reference "sec:TUB course"
 \end_inset
 
 , the Scala Standard Parser Combinator Library was chosen.
-\end_layout
-
-\begin_layout Standard
-The main function for the scanner:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-object FumurtScanner extends RegexParsers
-\end_layout
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\begin_layout Plain Layout
-
-  override val skipWhitespace = false
-\end_layout
-
-\begin_layout Plain Layout
-
-  
-\end_layout
-
-\begin_layout Plain Layout
-
-  def scan(in:String):Either[NoSuccess, List[Token]] =
-\end_layout
-
-\begin_layout Plain Layout
-
-  {
-\end_layout
-
-\begin_layout Plain Layout
-
-    println(in) 
-\end_layout
-
-\begin_layout Plain Layout
-
-   
-\end_layout
-
-\begin_layout Plain Layout
-
-    parseAll((scanInternal*), in) match
-\end_layout
-
-\begin_layout Plain Layout
-
-    {
-\end_layout
-
-\begin_layout Plain Layout
-
-      case Success(result, _) =>
-\end_layout
-
-\begin_layout Plain Layout
-
-      {
-\end_layout
-
-\begin_layout Plain Layout
-
-        val tokens = result.filter(x=>x match{case SpaceT() => false; case
- _ => true}) :+ EofT()
-\end_layout
-
-\begin_layout Plain Layout
-
-        Right(tokens)
-\end_layout
-
-\begin_layout Plain Layout
-
-      }
-\end_layout
-
-\begin_layout Plain Layout
-
-      case f:Failure => Left(f)
-\end_layout
-
-\begin_layout Plain Layout
-
-      case e:Error => Left(e)
-\end_layout
-
-\begin_layout Plain Layout
-
-    }
-\end_layout
-
-\begin_layout Plain Layout
-
-   
-\end_layout
-
-\begin_layout Plain Layout
-
-  }
-\end_layout
-
-\begin_layout Plain Layout
-
-  //the rest of the scanner here
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -2860,7 +2737,7 @@ case class EofT() extends SyntaxT {override def toString = "end of file"}
 Positional
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Positional"
+key "ScalaParserPositional"
 
 \end_inset
 
@@ -5359,166 +5236,19 @@ At the time of writing, print is the only type of IO that Fumurt has.
  It goes without saying that this is inadequate for serious usage.
 \end_layout
 
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "1"
-key "structured proof"
+\begin_layout Standard
 
-\end_inset
-
- Böhm et Jacopini, 1966
 \end_layout
 
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "2"
-key "free lunch over"
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "cites"
+options "bibtotoc,acm"
 
 \end_inset
 
- Sutter, 2005
-\end_layout
 
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "3"
-key "Esterel"
-
-\end_inset
-
-Berry et Gonthier, 1992
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "4"
-key "Language adoption"
-
-\end_inset
-
-Meyerovich et Rabkin, 2013
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "5"
-key "actors"
-
-\end_inset
-
-Hewitt, Bishop et Steiger, 1973
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "6"
-key "CSP"
-
-\end_inset
-
-Hoare, 1978
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "7"
-key "mapReduce"
-
-\end_inset
-
-Dean et Ghemawat, 2004
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "8"
-key "Hadoop at facebook"
-
-\end_inset
-
-Borthakur et al.
- 2011
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "9"
-key "Haskell-to-C"
-
-\end_inset
-
-Hall, Hammond, Partain, Jones et Wadler, 1993
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "10"
-key "Parser combinators"
-
-\end_inset
-
-Frost et Launchbury, 1989
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "11"
-key "scala parser combinator doc"
-
-\end_inset
-
-http://www.scala-lang.org/files/archive/api/2.11.x/scala-parser-combinators/index.htm
-l#scala.util.parsing.combinator.Parsers$Parser
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "12"
-key "Positional"
-
-\end_inset
-
-http://www.scala-lang.org/files/archive/api/2.11.x/scala-parser-combinators/index.htm
-l#scala.util.parsing.input.Positional
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "13"
-key "Clang"
-
-\end_inset
-
-http://clang.llvm.org/
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-label "14"
-key "eng compiler"
-
-\end_inset
-
-Cooper et Torczon (2012), 
-\emph on
-Engineering a Compiler Second Edition.
- 
-\emph default
-Burlington, MA, USA: Morgan kaufmann
 \end_layout
 
 \begin_layout Chapter
