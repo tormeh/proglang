@@ -1636,18 +1636,22 @@ An additional benefit of loops is that their use has constant memory consumption
  such compilers are still not the norm.
  Mutual tail recursion optimization is particularly rare.
  Since optimizations are not an immediate goal for the Fumurt compiler,
- loops would offer an important guarantee.
+ loops would offer an important guarantee for the programmer.
 \end_layout
 
 \begin_layout Section
 Types
 \end_layout
 
+\begin_layout Subsection
+Classes
+\end_layout
+
 \begin_layout Standard
 Because we try to be familiar we want to provide types along with their
  popular object oriented nomenclature.
  So we have classes, just that they are immutable.
- They are defined by their constructors:
+ They are defined by their constructors, optionally with extra static methods:
 \end_layout
 
 \begin_layout Standard
@@ -1657,7 +1661,22 @@ status open
 
 \begin_layout Plain Layout
 
-class IntAndString(int:Integer, string:String)
+class IntAndString(int:Integer, string:String) = 
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  function combine:String = {concatenate(left=toString(int), right=string)}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
 \end_layout
 
 \begin_layout Plain Layout
@@ -1667,6 +1686,21 @@ class IntAndString(int:Integer, string:String)
 \begin_layout Plain Layout
 
 value x = IntAndString(int=3, string="something")
+\end_layout
+
+\begin_layout Plain Layout
+
+actionPrint(x.combine)
+\end_layout
+
+\begin_layout Plain Layout
+
+actionPrint("==")
+\end_layout
+
+\begin_layout Plain Layout
+
+actionPrint(concatenate(left=toString(x.int), right=x.string))
 \end_layout
 
 \end_inset
@@ -1748,10 +1782,22 @@ Modules
 
 \begin_layout Standard
 Modules are singletons containing only immutable values, actions and functions.
+ They can therefore serve as libraries.
+ Their scope is handled the same way functions' scope is.
+ This avoids the problem where singletons are global entities and functions'
+ dependence on them are completely obscure.
 \end_layout
 
 \begin_layout Section
 Program Declaration
+\end_layout
+
+\begin_layout Standard
+The program declaration is meant to give a high level overview of the behaviour
+ of the program.
+ It declares what threads are spawned, in what sequence their IO should
+ be enacted, which synchronized variables exist and which threads have write
+ permission to which variable.
 \end_layout
 
 \begin_layout Chapter
