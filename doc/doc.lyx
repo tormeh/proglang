@@ -927,8 +927,204 @@ Let's discuss these operators:
 Knowledge Dividends
 \end_layout
 
+\begin_layout Subsection
+Regex
+\end_layout
+
+\begin_layout Subsection
+C++11
+\end_layout
+
+\begin_layout Subsection
+Advanced Scala
+\end_layout
+
 \begin_layout Standard
-Regex, C++11, advanced Scala/functional programming, parser combinators,
+The compiler includes two loops, instead the code relies primarily on functions
+ such as:
+\end_layout
+
+\begin_layout Itemize
+fold: supplied with a function which produces a single value from two input
+ values, all of the same type, fold repeatedly uses this to produce a single
+ value from a list.
+ Can be executed in parallel.
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala> (0 to 2).fold(0)((left,right)=>left+right) 
+\end_layout
+
+\begin_layout Plain Layout
+
+res1: Int = 3
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> (0 to 2).par.fold(0)((left,right)=>left+right) 
+\end_layout
+
+\begin_layout Plain Layout
+
+res2: Int = 3 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+foldLeft and foldRight are equivalent, except that the iteration over the
+ list goes in opposite directions.
+ In contrast to fold, the input and output types can be unequal.
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).foldLeft("numbers")((string,number)=>string+number.toString)
+\end_layout
+
+\begin_layout Plain Layout
+
+res1: String = numbers0123456789
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).foldRight("numbers")((number,string)=>number.toString+string)
+\end_layout
+
+\begin_layout Plain Layout
+
+res2: String = 0123456789numbers
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+map
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).map(x=>x*x)
+\end_layout
+
+\begin_layout Plain Layout
+
+res1: scala.collection.immutable.IndexedSeq[Int] = Vector(0, 1, 4, 9, 16, 25,
+ 36, 49, 64, 81)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).par.map(x=>x*x)
+\end_layout
+
+\begin_layout Plain Layout
+
+res2: scala.collection.parallel.immutable.ParSeq[Int] = ParVector(0, 1, 4, 9,
+ 16, 25, 36, 49, 64, 81)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+flatMap
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).flatMap(x=>if(x%2==0){None}else{Some(x)})
+\end_layout
+
+\begin_layout Plain Layout
+
+res1: scala.collection.immutable.IndexedSeq[Int] = Vector(1, 3, 5, 7, 9)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).flatMap(x=>if(x%2==0){None}else{Some(x*x)})
+\end_layout
+
+\begin_layout Plain Layout
+
+res2: scala.collection.immutable.IndexedSeq[Int] = Vector(1, 9, 25, 49, 81)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Together:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).par.flatMap(x=>if(x%2==0){None}else{Some(x*x)}).fold(0)((left,right
+)=>left+right) 
+\end_layout
+
+\begin_layout Plain Layout
+
+res1: Int = 165 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Parser Combinators
+\end_layout
+
+\begin_layout Standard
+Before starting to write the thesis, the mere existence of parser combinators
+ were outside the scope of the author's knowledge.
+ Both the scanner and parser in the compiler described herein is built with
+ parser combinators.
 \end_layout
 
 \begin_layout Chapter
