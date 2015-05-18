@@ -19,9 +19,9 @@ object FumurtTypeChecker
     //all standard library functions available everywhere (maybe also actions). 
     //checkexpression(in, DefLhs(UnsafeActionT(), IdT(""), None, TypeT("Nothing")), None, List(List():List[Definition]), basics, List():List[DefLhs], List():List[FumurtErrors])
     
-    println()
+    //println()
     val errors = checktop(in, basicfunctions)
-    println()
+    //println()
     if (errors.isEmpty)
     {
       None
@@ -162,7 +162,7 @@ object FumurtTypeChecker
         val statedvalue = findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), b.value)
         statedvalue match
         {
-          case Left(string) => List(FumurtError(b.pos, "in checkstatement "+string))
+          case Left(string) => List(FumurtError(b.pos, /*"in checkstatement "+*/string))
           case Right(deflhs) => 
           {
             if(containingdefinition.returntype.value != deflhs.returntype.value)
@@ -215,7 +215,7 @@ object FumurtTypeChecker
         {
           findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), y.functionidentifier) match
           {
-            case Left(string) => List(FumurtError(y.pos, "in checkstatement_2 "+string))
+            case Left(string) => List(FumurtError(y.pos, /*"in checkstatement_2 "+*/string))
             case Right(calledfunction) => 
             {
               val argumenterrors:List[FumurtError] = y.args match 
@@ -423,7 +423,7 @@ object FumurtTypeChecker
       {
         findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), c.value) match
         {
-          case Left(str) => List(FumurtError(c.pos, "in checkcallarg "+str))
+          case Left(str) => List(FumurtError(c.pos, /*"in checkcallarg "+*/str))
           case Right(thingdef) =>
           {
             if(expectedtype.value == "Inclusion")
@@ -556,17 +556,17 @@ object FumurtTypeChecker
     {
       enclosingDefinition match
       {
-        case None=>Left(searchFor+" not found" +" arguments is: "+arguments+". insamedefinition is "+inSameDefinition)
+        case None=>Left(searchFor+" not found" /*+" arguments is: "+arguments+". insamedefinition is "+inSameDefinition*/)
         case Some(DefLhs(_,_,Some(Arguments(internalargs)),_))=>
         {
           internalargs.find(x=>x.id.value==searchFor) match
           {
-            case Some(Argument(id, TypeT("Inclusion")))=> Left(searchFor+" not found" +" arguments is: "+arguments+". insamedefinition is "+inSameDefinition)
+            case Some(Argument(id, TypeT("Inclusion")))=> Left(searchFor+" not found" /*+" arguments is: "+arguments+". insamedefinition is "+inSameDefinition*/)
             case Some(Argument(id, typestr))=> Right(DefLhs(ValueT(),id,None,typestr))
-            case None=>Left(searchFor+" not found" +" arguments is: "+arguments+". insamedefinition is "+inSameDefinition)
+            case None=>Left(searchFor+" not found" /*+" arguments is: "+arguments+". insamedefinition is "+inSameDefinition*/)
           }
         }
-        case Some(_)=> Left(searchFor+" not found" +" arguments is: "+arguments+". insamedefinition is "+inSameDefinition)
+        case Some(_)=> Left(searchFor+" not found" /*+" arguments is: "+arguments+". insamedefinition is "+inSameDefinition*/)
       }
     }
     else

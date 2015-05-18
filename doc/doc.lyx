@@ -928,7 +928,13 @@ Knowledge Dividends
 \end_layout
 
 \begin_layout Subsection
-Regex
+Regular Expressions
+\end_layout
+
+\begin_layout Standard
+The parsers in the scanner operate at the string-level and are based on
+ regular expressions, though the author had no knowledge of how they worked
+ before writing this thesis.
 \end_layout
 
 \begin_layout Subsection
@@ -936,7 +942,7 @@ C++11
 \end_layout
 
 \begin_layout Subsection
-Advanced Scala
+Functional Programming
 \end_layout
 
 \begin_layout Standard
@@ -5386,14 +5392,347 @@ reference "sec:Full-program-test"
 
 \end_inset
 
- to have 5.0 instead of 5 as an argument to integerIdentity we get the following
- type error:
+ to the following erroneous program:
 \end_layout
 
 \begin_layout Standard
 \begin_inset listings
 inline false
 status open
+
+\begin_layout Plain Layout
+
+program p:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  synchronized variable synchronizedNumber:Integer = {synchronized(variable=0,
+ writer=threadPrintHello)}
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintHello(synchronizedNumber)
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintWorld(synchronizedNumber)
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintLol(actionPrintFoo=actionPrintFoo, integerIdentity=integerIdentity)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("world ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(synchronizedNumber))
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintWorld(synchronizedNumber)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+thread threadPrintHello(synchronizedNumber:Integer):Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(synchronizedNumber))
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(" Hello ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionMutate(variable=synchronizedNumber, newValue=plus(left=synchronizedNumbe
+r, right=1))
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintHello(synchronizedNumber)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+thread threadPrintLol(actionPrintFoo:Inclusion, integerIdentity:Inclusion):Nothi
+ng =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  action actionPrintLol:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    actionPrint("  LOL   ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrintLol()
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrintFoo(integerIdentity)
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintLol(actionPrintFoo=actionPrintFoo, integerIdentity=integerIdentity)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function printFoo(integerIdentity:Inclusion):Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  action actionPrintFooo:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    actionPrint("  FOOO  ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("  FOO   ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrintFooo()
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(integerIdentity(5.0)))
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("  ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(if(condition=true, then=toString(6), else=toString(3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function integerIdentity(x:Integer):Integer = {x}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+lets us test our type checker and its error messages.
+ We get the following type error:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+32.3: actionPrintFoo not found
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrintFoo(integerIdentity)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+33.33: actionPrintFoo not found
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintLol(actionPrintFoo=actionPrintFoo, integerIdentity=integerIdentity)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+                                ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+38.3: actions cannot be defined in  functions
+\end_layout
+
+\begin_layout Plain Layout
+
+  action actionPrintFooo:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \begin_layout Plain Layout
 
@@ -5421,7 +5760,7 @@ status open
 
 \begin_layout Plain Layout
 
-One errors found
+Four errors found
 \end_layout
 
 \end_inset
