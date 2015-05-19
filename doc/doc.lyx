@@ -5,12 +5,53 @@
 \textclass report
 \begin_preamble
 \usepackage{url}
+\usepackage{color}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+
+\lstdefinelanguage{scala}{
+  morekeywords={abstract,case,catch,class,def,%
+    do,else,extends,false,final,finally,%
+    for,if,implicit,import,match,mixin,%
+    new,null,object,override,package,%
+    private,protected,requires,return,sealed,%
+    super,this,throw,trait,true,try,%
+    type,val,var,while,with,yield},
+  otherkeywords={=>,<-,<\%,<:,>:,\#,@},
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[n]{/*}{*/},
+  morestring=[b]",
+  morestring=[b]',
+  morestring=[b]"""
+}
+
+\lstdefinelanguage{grammar}{
+otherkeywords={ | , \{ , \} , =},
+morestring=[b]"
+}
+
+\lstdefinelanguage{fumurt}{
+  morekeywords={program, function, action, thread, true, false},
+  otherkeywords={:},
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[n]{/*}{*/},
+  morestring=[b]"
+}
 
 \lstset{
 numbers=left,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
 breaklines=true,
 frame=single,
 basicstyle=\footnotesize\ttfamily,
+breakatwhitespace=true,
 showspaces=false,
 showstringspaces=false,
 showtabs=false}
@@ -82,7 +123,20 @@ Tormod Gjeitnes Hellen
 
 \begin_layout Standard
 http://www.cs.ucl.ac.uk/teaching_learning/msc_cgvi/projects/project_report_structure
-/
+/ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=scala}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -533,6 +587,19 @@ Example:
 
 \begin_layout Standard
 Consider a notion of a lower case letter can be described like this:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=grammar}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -587,6 +654,19 @@ or
 
  signify the end of the rule.
  Let us expand the example by describing a lower case word:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=grammar}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -611,6 +691,19 @@ Note that the correctness of the word as it pertains to English is ignored.
  A lower case word, as it has been defined here, is simply one lower case
  letter, followed by zero or more lower case letters.
  Next we can do the same for sentences, again ignoring rules for English:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=grammar}
+\end_layout
+
+\end_inset
+
+
 \begin_inset listings
 inline false
 status open
@@ -632,6 +725,19 @@ Parentheses allows grouping of sequences.
  Here, it allows us to alternate between sequences of symbols rather than
  just single symbols.
  Finally we say that:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=grammar}
+\end_layout
+
+\end_inset
+
+
 \begin_inset listings
 inline false
 status open
@@ -639,6 +745,11 @@ status open
 \begin_layout Plain Layout
 
 lower case text = lower case sentence, {lower case sentence}; 
+\end_layout
+
+\begin_layout Plain Layout
+
+lols
 \end_layout
 
 \end_inset
@@ -678,6 +789,19 @@ This is an abstract syntax tree, often abreviated AST.
  An abstract syntax tree is a tree, in the computer science sense, that
  represents the production of the source string from the grammar.
  In code:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=scala}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -928,6 +1052,10 @@ Let's discuss these operators:
 \end_layout
 
 \begin_layout Section
+A Quick Tour of The Compiler Implementation Language
+\end_layout
+
+\begin_layout Section
 Knowledge Dividends
 \end_layout
 
@@ -959,13 +1087,26 @@ fold: supplied with a function which produces a single value from two input
  values, all of the same type, fold repeatedly uses this to produce a single
  value from a list.
  Can be executed in parallel.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=scala}
+\end_layout
+
+\end_inset
+
+
 \begin_inset listings
 inline false
 status open
 
 \begin_layout Plain Layout
 
-scala> (0 to 2).fold(0)((left,right)=>left+right) 
+scala> (0 to 2).fold(0)((left,right) => left+right) 
 \end_layout
 
 \begin_layout Plain Layout
@@ -979,7 +1120,7 @@ res1: Int = 3
 
 \begin_layout Plain Layout
 
-scala> (0 to 2).par.fold(0)((left,right)=>left+right) 
+scala> (0 to 2).par.fold(0)((left,right) => left+right) 
 \end_layout
 
 \begin_layout Plain Layout
@@ -1002,7 +1143,7 @@ status open
 
 \begin_layout Plain Layout
 
-scala> (0 to 9).foldLeft("numbers")((string,number)=>string+number.toString)
+scala> (0 to 9).foldLeft("numbers")((string,number) => string+number.toString)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1016,7 +1157,7 @@ res1: String = numbers0123456789
 
 \begin_layout Plain Layout
 
-scala> (0 to 9).foldRight("numbers")((number,string)=>number.toString+string)
+scala> (0 to 9).foldRight("numbers")((number,string) => number.toString+string)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1278,7 +1419,7 @@ Futures and parallel list comprehensions are together applicable to all
  sometimes called mapReduce
 \begin_inset CommandInset citation
 LatexCommand cite
-key "mapReduce"
+key "dean2008mapreduce"
 
 \end_inset
 
@@ -1372,6 +1513,19 @@ We use
 
 \begin_layout Standard
 This results in syntax with a distinctly modern look:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language={}}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1414,6 +1568,19 @@ action
 \end_inset
 
 , like so:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=fumurt}
+\end_layout
+
+\end_inset
+
+
 \begin_inset listings
 inline false
 status open
@@ -1463,6 +1630,19 @@ synchronized
 Function arguments, if there are more than one, are distinguished not by
  relative position, but by name (as is optionally available in Python).
  Here we see a call to the if function and some calls to the toString function:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=fumurt}
+\end_layout
+
+\end_inset
+
+
 \begin_inset listings
 inline false
 status open
@@ -1509,6 +1689,19 @@ inclusions
  correctness of seemingly unrelated parts of the program.
  In the following example, changing the definition of function c affects
  the output of function a:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=fumurt}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1584,6 +1777,19 @@ action actionC:Nothing =
 \begin_layout Standard
 While the above example is a bit contrived, it illustrates the problem.
  Using inclusions, the dependencies become explicit:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=fumurt}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1761,6 +1967,19 @@ key "milne2002difficulties"
 .
  We decided we could make loops that are as safe as tail recursion while
  being almost as friendly as loops:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=fumurt}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1873,6 +2092,19 @@ Because we try to be familiar we want to provide types along with their
  popular object oriented nomenclature.
  So we have classes, just that they are immutable.
  They are defined by their constructors, optionally with extra static methods:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=fumurt}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1960,6 +2192,19 @@ interface
  keyword.
  When implementing an interface one explicitly have to note what interfaces
  the class is implementing.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=fumurt}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2138,6 +2383,10 @@ A parser combinator library
 Fast execution time
 \end_layout
 
+\begin_layout Standard
+Other languages under consideration were C and C++
+\end_layout
+
 \begin_layout Section
 Synchronization Mechanisms in The Intermediate Language
 \end_layout
@@ -2233,6 +2482,19 @@ If the value in the rendezvousCounter is less than NUMTOPTHREADS, the thread
  notifies all other threads using cv.notify_all before exiting the function.
  rendezvousSyncMutex is unlocked on function exit.
  Consider the salient details:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=c++}
+\end_layout
+
+\end_inset
+
+
 \begin_inset listings
 inline false
 status open
@@ -2437,300 +2699,6 @@ The compiler consists of four parts: The scanner, parser, checker and code
 
 \end_layout
 
-\begin_layout Section
-The Glue
-\end_layout
-
-\begin_layout Standard
-It is instructive to first take a view at how the pieces fit together:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-  def getOptions(args:Array[String],file:String): Options =
-\end_layout
-
-\begin_layout Plain Layout
-
-  {
-\end_layout
-
-\begin_layout Plain Layout
-
-    println(args.toString)
-\end_layout
-
-\begin_layout Plain Layout
-
-    new Options(CompileTypeOption.interpreted, true, file)
-\end_layout
-
-\begin_layout Plain Layout
-
-  }
-\end_layout
-
-\begin_layout Plain Layout
-
-  
-\end_layout
-
-\begin_layout Plain Layout
-
-  def compile(opts:Options):Unit =
-\end_layout
-
-\begin_layout Plain Layout
-
-  {
-\end_layout
-
-\begin_layout Plain Layout
-
-    println("Now compiling!")
-\end_layout
-
-\begin_layout Plain Layout
-
-    val sourcestring = fromFile(opts.file).mkString
-\end_layout
-
-\begin_layout Plain Layout
-
-    FumurtScanner.scan(sourcestring) match
-\end_layout
-
-\begin_layout Plain Layout
-
-    {
-\end_layout
-
-\begin_layout Plain Layout
-
-      case Left(error) => println("Error in scanner: " + error.toString)
-\end_layout
-
-\begin_layout Plain Layout
-
-      case Right(tokens) => 
-\end_layout
-
-\begin_layout Plain Layout
-
-      {
-\end_layout
-
-\begin_layout Plain Layout
-
-        FumurtParser.parse(tokens) match
-\end_layout
-
-\begin_layout Plain Layout
-
-        {
-\end_layout
-
-\begin_layout Plain Layout
-
-          case Left(error) => println("Error in parser: " + error.toString)
-\end_layout
-
-\begin_layout Plain Layout
-
-          case Right(ast) => 
-\end_layout
-
-\begin_layout Plain Layout
-
-          {
-\end_layout
-
-\begin_layout Plain Layout
-
-            FumurtTypeChecker.check(ast) match
-\end_layout
-
-\begin_layout Plain Layout
-
-            {
-\end_layout
-
-\begin_layout Plain Layout
-
-              case Some(errors) => 
-\end_layout
-
-\begin_layout Plain Layout
-
-              {
-\end_layout
-
-\begin_layout Plain Layout
-
-                errors.map(x=>println(x))
-\end_layout
-
-\begin_layout Plain Layout
-
-                val errornum:String = errors.length match
-\end_layout
-
-\begin_layout Plain Layout
-
-                {
-\end_layout
-
-\begin_layout Plain Layout
-
-                  case 1 => "one"
-\end_layout
-
-\begin_layout Plain Layout
-
-                  /*[...]*/
-\end_layout
-
-\begin_layout Plain Layout
-
-                  case x => x.toString
-\end_layout
-
-\begin_layout Plain Layout
-
-                }
-\end_layout
-
-\begin_layout Plain Layout
-
-                println(errornum.capitalize+" errors found")
-\end_layout
-
-\begin_layout Plain Layout
-
-              }
-\end_layout
-
-\begin_layout Plain Layout
-
-              case None => 
-\end_layout
-
-\begin_layout Plain Layout
-
-              {
-\end_layout
-
-\begin_layout Plain Layout
-
-                val generatedcode = FumurtCodeGenerator.generate(ast)
-\end_layout
-
-\begin_layout Plain Layout
-
-                import java.nio.file.{Paths, Files}
-\end_layout
-
-\begin_layout Plain Layout
-
-                import java.nio.charset.StandardCharsets
-\end_layout
-
-\begin_layout Plain Layout
-
-                val outname = "generated"
-\end_layout
-
-\begin_layout Plain Layout
-
-                val fileending = ".cpp"
-\end_layout
-
-\begin_layout Plain Layout
-
-                Files.write(Paths.get("./"+outname+fileending), generatedcode.getByt
-es(StandardCharsets.UTF_8))
-\end_layout
-
-\begin_layout Plain Layout
-
-                val options = " -pthread -std=c++11 -O3"
-\end_layout
-
-\begin_layout Plain Layout
-
-                println("
-\backslash
-n
-\backslash
-n===Starting Clang cpp compilation===")
-\end_layout
-
-\begin_layout Plain Layout
-
-                import scala.sys.process._
-\end_layout
-
-\begin_layout Plain Layout
-
-                val command = "clang++ " + outname + fileending + options
- + " -o " + outname
-\end_layout
-
-\begin_layout Plain Layout
-
-                (command).!
-\end_layout
-
-\begin_layout Plain Layout
-
-              }
-\end_layout
-
-\begin_layout Plain Layout
-
-            }
-\end_layout
-
-\begin_layout Plain Layout
-
-          }
-\end_layout
-
-\begin_layout Plain Layout
-
-        }
-\end_layout
-
-\begin_layout Plain Layout
-
-      }
-\end_layout
-
-\begin_layout Plain Layout
-
-    }
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\end_layout
-
-\begin_layout Plain Layout
-
-  }
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Standard
 Consider the steps:
 \end_layout
@@ -2776,18 +2744,31 @@ Scanner
 \end_layout
 
 \begin_layout Standard
-Drawing on experience from the TU Berlin course
+Drawing on experience from the TU Berlin course (see 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:TUB course"
 
 \end_inset
 
-, the Scala Standard Parser Combinator Library was chosen.
+), the Scala Standard Parser Combinator Library was chosen.
 \end_layout
 
 \begin_layout Standard
 Parsers for individual tokens are formed like this:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=scala}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2833,107 +2814,25 @@ name "scanner combined"
 
 \end_inset
 
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-def scanInternal: Parser[Token] = 
-\end_layout
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\begin_layout Plain Layout
-
-  (
-\end_layout
-
-\begin_layout Plain Layout
-
-    spaceParser                 |
-\end_layout
-
-\begin_layout Plain Layout
-
-    programStrParser            |
-\end_layout
-
-\begin_layout Plain Layout
-
-    /*more here*/
-\end_layout
-
-\begin_layout Plain Layout
-
-    functionParser              |
-\end_layout
-
-\begin_layout Plain Layout
-
-    trueParser                  |
-\end_layout
-
-\begin_layout Plain Layout
-
-    /*more here*/
-\end_layout
-
-\begin_layout Plain Layout
-
-    doubleParser                |
-\end_layout
-
-\begin_layout Plain Layout
-
-    intParser                   |
-\end_layout
-
-\begin_layout Plain Layout
-
-    equalParser                 |
-\end_layout
-
-\begin_layout Plain Layout
-
-    /*more here*/                   
-\end_layout
-
-\begin_layout Plain Layout
-
-    idParser                    |
-\end_layout
-
-\begin_layout Plain Layout
-
-    typeParser  
-\end_layout
-
-\begin_layout Plain Layout
-
-  )            
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
+.
 \end_layout
 
 \begin_layout Standard
 It all goes into a list of tokens.
  The tokens are defined like this:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=scala}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2967,67 +2866,7 @@ abstract class SyntaxT() extends Token
 
 \begin_layout Plain Layout
 
-case class EmptyT() extends Token
-\end_layout
-
-\begin_layout Plain Layout
-
 case class TrueT() extends BasicValueT {override def toString = "true"}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class ProgramT() extends DefDescriptionT {override def toString = "program"
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class ActionT() extends DefDescriptionT {override def toString = "action"}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class OpenParenthesisT() extends SyntaxT {override def toString = "
-\backslash
-"(
-\backslash
-""}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class DoubleT(val value:Double) extends BasicValueT {override def toString
- = "decimal number"}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class EqualT() extends SyntaxT {override def toString = "
-\backslash
-"=
-\backslash
-""}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class IdT(val value:String) extends Token {override def toString =
- "identifier(
-\backslash
-""+value+"
-\backslash
-")"}
-\end_layout
-
-\begin_layout Plain Layout
-
-case class SpaceT() extends SyntaxT
-\end_layout
-
-\begin_layout Plain Layout
-
-case class EofT() extends SyntaxT {override def toString = "end of file"}
 \end_layout
 
 \end_inset
@@ -3116,7 +2955,23 @@ Grammar
 \end_layout
 
 \begin_layout Standard
-Here's the EBNF (ISO/IEC 14977) for the grammar, as implemented:
+The grammar serves as a formal definition of the language.
+ Though not needed in order to understand the language, it is included for
+ completeness.
+ Here's the EBNF (ISO/IEC 14977) for the grammar, as implemented:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=grammar}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3284,6 +3139,19 @@ Code
 
 \begin_layout Standard
 This is where the grammar is encoded into the program:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=scala}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3300,33 +3168,6 @@ def progParser: Parser[List[Definition]] = (paddedDefParser.+) <~ eofParser
 
 def paddedDefParser:Parser[Definition] = { newlineParser.* ~> defParser <~
  newlineParser.* }
-\end_layout
-
-\begin_layout Plain Layout
-
-def defParser: Parser[Definition] = {positioned((deflhsParser <~ equalParser
- ~! newlineParser.*) ~! defrhsParser ^^ {x=>Definition(x._1,x._2)}) }
-\end_layout
-
-\begin_layout Plain Layout
-
-def deflhsParser: Parser[DefLhs] = {(defdescriptionParser ~ idParser ~ argsParse
-r ~! (colonParser ~> typeParser)) ^^ {x=>DefLhs(x._1._1._1, x._1._1._2, x._1._2,
- x._2)} }
-\end_layout
-
-\begin_layout Plain Layout
-
-def argsParser: Parser[Option[Arguments]] = {openParenthesisParser ~> ((idParser
- <~ colonParser) ~ typeParser ~ subsequentArgsParser.*) <~ closeParenthesisParser
- ^^{x=>Some(Arguments( (Argument(x._1._1, x._1._2) +: x._2).sortWith((left,right)=>lef
-t.id.value<right.id.value) ))} | emptyParser ^^ {x=>None} }
-\end_layout
-
-\begin_layout Plain Layout
-
-def subsequentArgsParser: Parser[Argument] = {commaParser ~> (idParser <~
- colonParser) ~ typeParser ^^{x=>Argument(x._1, x._2)} }
 \end_layout
 
 \begin_layout Plain Layout
@@ -3374,6 +3215,19 @@ reference "sub:The-Scala-Parser"
 \begin_layout Standard
 There are also a number of somewhat less exciting helper parsers, of which
  we provide an example:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=scala}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3388,28 +3242,28 @@ def equalParser:Parser[Token] = accept(EqualT())
 
 \begin_layout Plain Layout
 
-def colonParser:Parser[Elem] = accept(ColonT())
-\end_layout
-
-\begin_layout Plain Layout
-
-def commaParser:Parser[Elem] = accept(CommaT())
-\end_layout
-
-\begin_layout Plain Layout
-
 def basicStatementParser:Parser[BasicValueStatement] = accept("expected
- string, integer, boolean or float", {case StringT(value) => StringStatement(val
-ue);                                                                   
-                               case IntegerT(value)=> IntegerStatement(value)
-                                                                       
-                          case DoubleT(value) => DoubleStatement(value)
-                                                                       
-                          case TrueT() => TrueStatement()              
-                                                                       
-            case FalseT() => FalseStatement()}                         
-                                                                       
- )
+ string, integer, boolean or float", {
+\end_layout
+
+\begin_layout Plain Layout
+
+case StringT(value) => StringStatement(value);
+\end_layout
+
+\begin_layout Plain Layout
+
+case IntegerT(value)=> IntegerStatement(value)
+\end_layout
+
+\begin_layout Plain Layout
+
+case TrueT() => TrueStatement()
+\end_layout
+
+\begin_layout Plain Layout
+
+})
 \end_layout
 
 \end_inset
@@ -3422,7 +3276,24 @@ We can here see some of how the parser error messages are generated.
 \end_layout
 
 \begin_layout Standard
-The entirety produces an abstract syntax tree defined as:
+The entirety produces an abstract syntax tree.
+ Both the checker and the code generator operates on this AST, and it is
+ the centerpiece of the implementation.
+ Without understanding the AST, the rest of the implementation will appear
+ cryptic at best:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=scala}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3673,113 +3544,6 @@ actionPrint
 \end_inset
 
  being the notable exception.
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-object FumurtTypeChecker
-\end_layout
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\begin_layout Plain Layout
-
-  def check(in:List[Definition]):Option[List[FumurtError]] =
-\end_layout
-
-\begin_layout Plain Layout
-
-  {
-\end_layout
-
-\begin_layout Plain Layout
-
-    val providedTypes = List("Integer", "Double", "Boolean", "String", "Nothing"
-)
-\end_layout
-
-\begin_layout Plain Layout
-
-    val print = DefLhs(ActionT(), IdT("actionPrint"), Some(Arguments(List(Argume
-nt(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
-\end_layout
-
-\begin_layout Plain Layout
-
-    val basicfunctions = List(print)
-\end_layout
-
-\begin_layout Plain Layout
-
-    val errors = checktop(in, basicfunctions)
-\end_layout
-
-\begin_layout Plain Layout
-
-    if (errors.isEmpty)
-\end_layout
-
-\begin_layout Plain Layout
-
-    {
-\end_layout
-
-\begin_layout Plain Layout
-
-      None
-\end_layout
-
-\begin_layout Plain Layout
-
-    }
-\end_layout
-
-\begin_layout Plain Layout
-
-    else
-\end_layout
-
-\begin_layout Plain Layout
-
-    {
-\end_layout
-
-\begin_layout Plain Layout
-
-      Some(errors)
-\end_layout
-
-\begin_layout Plain Layout
-
-    }
-\end_layout
-
-\begin_layout Plain Layout
-
-  }
-\end_layout
-
-\begin_layout Plain Layout
-
-  //the rest goes here
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -4292,6 +4056,19 @@ name "sec:Full-program-test"
 
 \begin_layout Standard
 The following Fumurt code:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=fumurt}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4556,6 +4333,19 @@ function integerIdentity(x:Integer):Integer = {x}
 
 \begin_layout Standard
 Gets compiled to the following C++11 code:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=c++}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5222,6 +5012,19 @@ std::this_thread::sleep_for(std::chrono::seconds(1));
 
 \begin_layout Standard
 When run in a terminal, this results in the following output:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language={}}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5412,6 +5215,19 @@ reference "sec:Full-program-test"
 \end_inset
 
  to the following erroneous program:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=fumurt}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5676,7 +5492,20 @@ function integerIdentity(x:Integer):Integer = {x}
 
 \begin_layout Standard
 lets us test our type checker and its error messages.
- We get the following type error:
+ We get the following type errors:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language={}}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5801,6 +5630,10 @@ User-defined types
 
 \begin_layout Itemize
 Boolean functions and logic
+\end_layout
+
+\begin_layout Itemize
+exit function
 \end_layout
 
 \begin_layout Chapter
