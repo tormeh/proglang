@@ -1470,9 +1470,24 @@ if(condition=true, then=toString(1), else=toString(0))
 
 \end_inset
 
-
+Type classes are an alternative to named arguments, the idea being that
+ you have one type per role a variable can play.
+ There are multiple problems with this:
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+It's unnecessarily verbose.
+ Worst case, you'll end up with one type class declaration per value.
+\end_layout
+
+\begin_layout Itemize
+Because it's unnecessarily verbose, the temptation will be to use the same
+ type class everywhere or just use a base class (like Integer) instead.
+ Which would mean that we're back at square one.
+\end_layout
+
+\end_deeper
 \begin_layout Section
 Scope
 \end_layout
