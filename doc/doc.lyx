@@ -113,17 +113,137 @@ showtabs=false}
 
 \begin_body
 
-\begin_layout Title
-Fumurt: A programming language with deterministic threading
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{empty}
 \end_layout
 
-\begin_layout Author
-Tormod Gjeitnes Hellen
+\begin_layout Plain Layout
+
+
+\backslash
+includegraphics[scale=1.0]{NTNU.pdf}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+mbox{}
+\backslash
+
+\backslash
+[6pc]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Huge{A programming language with deterministic threading}
+\backslash
+
+\backslash
+[2pc]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Large{Tormod Gjeitnes Hellen}
+\backslash
+
+\backslash
+[1pc]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+large{Spring 2015}
+\backslash
+
+\backslash
+[2pc]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+MASTER THESIS
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Department of Engineering Cybernetics
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Norwegian University of Science and Technology
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+vfill
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent Supervisor : Sverre Hendseth
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-http://www.cs.ucl.ac.uk/teaching_learning/msc_cgvi/projects/project_report_structure
-/ 
 \begin_inset ERT
 status open
 
@@ -150,6 +270,10 @@ LatexCommand tableofcontents
 \end_inset
 
 
+\end_layout
+
+\begin_layout Chapter
+Objective
 \end_layout
 
 \begin_layout Chapter
@@ -957,7 +1081,7 @@ reference "scanner combined"
 \end_layout
 
 \begin_layout Paragraph
-Conflicting terminology:
+A Note on Conflicting terminology:
 \end_layout
 
 \begin_layout Standard
@@ -1071,6 +1195,1149 @@ Let's discuss these operators:
 A Quick Tour of The Compiler Implementation Language
 \end_layout
 
+\begin_layout Standard
+In order to understand the code in the compiler, which is included in appendix
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:Code-listing"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Execution
+\end_layout
+
+\begin_layout Standard
+There are three ways to execute Scala code:
+\end_layout
+
+\begin_layout Enumerate
+In a read-evaluate-print loop (REPL).
+\end_layout
+
+\begin_layout Enumerate
+Interpreted as a script.
+\end_layout
+
+\begin_layout Enumerate
+As compiled Java bytecode.
+\end_layout
+
+\begin_layout Standard
+The compiler is executed as compiled Java bytecode.
+ Scala can look somewhat different when it is compiled versus when it is
+ interpreted, due to the requirements imposed by the Java bytecode.
+ As a result, methods need to be contained in an object if the code is intended
+ for compilation, but in the REPL and in a script there are no such restrictions.
+ In the REPL and script, statements are evaluated starting from the top,
+ while a main method is required if the program is supposed to be compiled.
+ This report only uses code meant to be compiled or code as it would look
+ in a REPL.
+ The two are easily distinguished by the latter's use of the 
+\begin_inset Quotes eld
+\end_inset
+
+scala>
+\begin_inset Quotes erd
+\end_inset
+
+ command prompt.
+\end_layout
+
+\begin_layout Subsection
+Hello World
+\end_layout
+
+\begin_layout Standard
+A simple Hello World example illustrates some main concepts.
+\end_layout
+
+\begin_layout Itemize
+A singleton is called an 
+\begin_inset Quotes eld
+\end_inset
+
+object
+\begin_inset Quotes erd
+\end_inset
+
+.
+ These are sometimes called static classes in other languages
+\end_layout
+
+\begin_layout Itemize
+Scope is demarcated using curly braces
+\end_layout
+
+\begin_layout Itemize
+A method is defined using the 
+\begin_inset Quotes eld
+\end_inset
+
+def
+\begin_inset Quotes erd
+\end_inset
+
+ keyword
+\end_layout
+
+\begin_layout Itemize
+Arguments are given using parentheses (separated by commas and identified
+ by relative position)
+\end_layout
+
+\begin_layout Itemize
+Types of values are written after the object name, separated with 
+\begin_inset Quotes eld
+\end_inset
+
+:
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Unit, as a return type, means the method returns nothing
+\end_layout
+
+\begin_layout Itemize
+Some types are container types, such as List[Int] or Array[String].
+ These can hold any type through generics.
+ In this case the square brackets means that args is an object of type Array,
+ which in this case holds String.
+\end_layout
+
+\begin_layout Itemize
+There are sequences, like Array or List
+\end_layout
+
+\begin_layout Itemize
+lines need not be terminated with 
+\begin_inset Quotes eld
+\end_inset
+
+;
+\begin_inset Quotes erd
+\end_inset
+
+ (but it is optional)
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=scala}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+object HelloWorld 
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  def main(args:Array[String]):Unit =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    println("Hello, world!")
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Creating and Using Objects
+\end_layout
+
+\begin_layout Itemize
+All values are objects, even native types
+\end_layout
+
+\begin_layout Itemize
+Functions are objects, but methods are not
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Functions are objects that implement an interface, for example Function1
+ for functions with one argument.
+ This interface has a method 
+\begin_inset Quotes eld
+\end_inset
+
+apply
+\begin_inset Quotes erd
+\end_inset
+
+ where the actual 
+\begin_inset Quotes eld
+\end_inset
+
+function
+\begin_inset Quotes erd
+\end_inset
+
+, in the C sense of the word, is stored.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Var lets you create mutable references to objects
+\end_layout
+
+\begin_layout Itemize
+Val lets you create immutable references to objects
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala> def int1 = 3
+\end_layout
+
+\begin_layout Plain Layout
+
+int1: Int
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> val int2 = 2
+\end_layout
+
+\begin_layout Plain Layout
+
+int2: Int = 2
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> var int3 = 7
+\end_layout
+
+\begin_layout Plain Layout
+
+int3: Int = 7
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala>//reassignment to a def is illegal
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> int1 = int1+1
+\end_layout
+
+\begin_layout Plain Layout
+
+<console>:8: error: value int1_= is not a member of object $iw
+\end_layout
+
+\begin_layout Plain Layout
+
+       int1 = int1+1
+\end_layout
+
+\begin_layout Plain Layout
+
+       ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala>//so is reassignment to val
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> int2 = int2+1
+\end_layout
+
+\begin_layout Plain Layout
+
+<console>:8: error: reassignment to val
+\end_layout
+
+\begin_layout Plain Layout
+
+       int2 = int2+1
+\end_layout
+
+\begin_layout Plain Layout
+
+            ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala>//reassignment to var is completely ok
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> int3 = int3+1
+\end_layout
+
+\begin_layout Plain Layout
+
+int3: Int = 8
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> int1+int2+int3
+\end_layout
+
+\begin_layout Plain Layout
+
+res0: Int = 13
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala>//all values are objects
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> int1.+(int2.+(int3)) 
+\end_layout
+
+\begin_layout Plain Layout
+
+res1: Int = 13 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala>//even functions
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> val square = ((x:Int) => x*x) 
+\end_layout
+
+\begin_layout Plain Layout
+
+square: Int => Int = <function1>
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> square(3) 
+\end_layout
+
+\begin_layout Plain Layout
+
+res2: Int = 9
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> square.toString 
+\end_layout
+
+\begin_layout Plain Layout
+
+res3: String = <function1>
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala>//but methods are not
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> def cube(x:Int) = x*x*x
+\end_layout
+
+\begin_layout Plain Layout
+
+cube: (x: Int)Int
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> cube(3)
+\end_layout
+
+\begin_layout Plain Layout
+
+res4: Int = 27
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> cube.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+<console>:9: error: missing arguments for method cube;
+\end_layout
+
+\begin_layout Plain Layout
+
+follow this method with `_' if you want to treat it as a partially applied
+ function
+\end_layout
+
+\begin_layout Plain Layout
+
+              cube.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+              ^
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Classes and Pattern Matching
+\end_layout
+
+\begin_layout Itemize
+Classes work much like they do in Java
+\end_layout
+
+\begin_layout Itemize
+Case classes are different than normal classes.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Their constructors can be used like normal functions.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+new
+\begin_inset Quotes erd
+\end_inset
+
+ keyword is not necessary
+\end_layout
+
+\begin_layout Itemize
+Their constructor parameters are exported
+\end_layout
+
+\begin_layout Itemize
+One can use pattern matching on them.
+ Pattern matching allows one to test which type an object has and extract
+ it, its values or both.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Pattern matching looks like this:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+val x:String = input match
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  case TypeA("specific string") => "specific string"
+\end_layout
+
+\begin_layout Plain Layout
+
+  case TypeB(anystring, otherstring) => anystring + " " + otherstring
+\end_layout
+
+\begin_layout Plain Layout
+
+  case TypeB(_,otherstring) => "only care about "+otherstring
+\end_layout
+
+\begin_layout Plain Layout
+
+  case TypeB(_,_) => "only care about type"
+\end_layout
+
+\begin_layout Plain Layout
+
+  case reference:TypeA => "the object looks like this: "+reference.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+  case reference @ TypeA(str) => "both a reference and the constructor parameter
+"
+\end_layout
+
+\begin_layout Plain Layout
+
+  //case reference:TypeA(str) => "this is unfortunately a syntax error"
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+The wildcard 
+\begin_inset Quotes eld
+\end_inset
+
+_
+\begin_inset Quotes erd
+\end_inset
+
+ can be used to represent anything.
+ In pattern matching it can be used much like 
+\begin_inset Quotes eld
+\end_inset
+
+else
+\begin_inset Quotes erd
+\end_inset
+
+ would in an if statement
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala>//classes in scala function mutch like classes in Java
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> class A(int:Int, str:String)
+\end_layout
+
+\begin_layout Plain Layout
+
+defined class A
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> val a = A(3,"a string")
+\end_layout
+
+\begin_layout Plain Layout
+
+<console>:7: error: not found: value A
+\end_layout
+
+\begin_layout Plain Layout
+
+       val a = A(3,"a string")
+\end_layout
+
+\begin_layout Plain Layout
+
+               ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> val a = new A(3,"a string")
+\end_layout
+
+\begin_layout Plain Layout
+
+a: A = A@66ae2a84
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala>//case classes, on the other hand, have more functionality.
+ Their constructors are called like normal functions
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> case class B(str:String, int:Int)
+\end_layout
+
+\begin_layout Plain Layout
+
+defined class B
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> val b = B("other string", 5)
+\end_layout
+
+\begin_layout Plain Layout
+
+b: B = B(other string,5)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala>//and one can pattern matching on them
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> case class C(double:Double, int:Int)
+\end_layout
+
+\begin_layout Plain Layout
+
+defined class C
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> val c = C(3.0, 3)
+\end_layout
+
+\begin_layout Plain Layout
+
+c: C = C(3.0,3)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> def matchfunc(in:Any):Unit = in match
+\end_layout
+
+\begin_layout Plain Layout
+
+     | {
+\end_layout
+
+\begin_layout Plain Layout
+
+     |   case B(string,integer) => println(string + integer.toString)
+\end_layout
+
+\begin_layout Plain Layout
+
+     |   case x:C => println(x.double.toString+x.int.toString)
+\end_layout
+
+\begin_layout Plain Layout
+
+     |   case _ => println("unknown type")
+\end_layout
+
+\begin_layout Plain Layout
+
+     | }
+\end_layout
+
+\begin_layout Plain Layout
+
+matchfunc: (in: Any)Unit
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> matchfunc(b)
+\end_layout
+
+\begin_layout Plain Layout
+
+other string5
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> matchfunc(c)
+\end_layout
+
+\begin_layout Plain Layout
+
+3.03
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Iteration
+\end_layout
+
+\begin_layout Itemize
+While works like C while loops
+\end_layout
+
+\begin_layout Itemize
+For is a sequence comprehension which works much like in Python.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The indices of sequences are reprecented by 32 bit integers so 
+\begin_inset Quotes eld
+\end_inset
+
+for(x <- -1 until Int.MaxValue){println(x)}
+\begin_inset Quotes erd
+\end_inset
+
+ won't work since 
+\begin_inset Quotes eld
+\end_inset
+
+-1 until Int.MaxValue
+\begin_inset Quotes erd
+\end_inset
+
+ is a range with Int.MaxValue +1 elements
+\end_layout
+
+\begin_layout Itemize
+It is possible to iterate over any sequence with the for syntax
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+FoldLeft, foldRight and fold allow combination of a sequence's elements,
+ going left to right, right to left and in an undefined direction, respectively
+\end_layout
+
+\begin_layout Itemize
+Map and flatMap allows transformation of one sequence to another by applying
+ a function to all elements.
+ FlatMap allows the function to additionally eliminate elements whose results
+ will thereby not be a part of the resulting list.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala> var int = 0
+\end_layout
+
+\begin_layout Plain Layout
+
+int: Int = 0
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> while(int<10){println(int); int=int+1}
+\end_layout
+
+\begin_layout Plain Layout
+
+0
+\end_layout
+
+\begin_layout Plain Layout
+
+1
+\end_layout
+
+\begin_layout Plain Layout
+
+2
+\end_layout
+
+\begin_layout Plain Layout
+
+3
+\end_layout
+
+\begin_layout Plain Layout
+
+4
+\end_layout
+
+\begin_layout Plain Layout
+
+5
+\end_layout
+
+\begin_layout Plain Layout
+
+6
+\end_layout
+
+\begin_layout Plain Layout
+
+7
+\end_layout
+
+\begin_layout Plain Layout
+
+8
+\end_layout
+
+\begin_layout Plain Layout
+
+9
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> for(x <- 0 until 10){println(x)}
+\end_layout
+
+\begin_layout Plain Layout
+
+0
+\end_layout
+
+\begin_layout Plain Layout
+
+1
+\end_layout
+
+\begin_layout Plain Layout
+
+2
+\end_layout
+
+\begin_layout Plain Layout
+
+3
+\end_layout
+
+\begin_layout Plain Layout
+
+4
+\end_layout
+
+\begin_layout Plain Layout
+
+5
+\end_layout
+
+\begin_layout Plain Layout
+
+6
+\end_layout
+
+\begin_layout Plain Layout
+
+7
+\end_layout
+
+\begin_layout Plain Layout
+
+8
+\end_layout
+
+\begin_layout Plain Layout
+
+9
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> val l = List(0,1,2,3,4,5,6,7,8,9)
+\end_layout
+
+\begin_layout Plain Layout
+
+l: List[Int] = List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> for(x <- l){println(x)}
+\end_layout
+
+\begin_layout Plain Layout
+
+0
+\end_layout
+
+\begin_layout Plain Layout
+
+1
+\end_layout
+
+\begin_layout Plain Layout
+
+2
+\end_layout
+
+\begin_layout Plain Layout
+
+3
+\end_layout
+
+\begin_layout Plain Layout
+
+4
+\end_layout
+
+\begin_layout Plain Layout
+
+5
+\end_layout
+
+\begin_layout Plain Layout
+
+6
+\end_layout
+
+\begin_layout Plain Layout
+
+7
+\end_layout
+
+\begin_layout Plain Layout
+
+8
+\end_layout
+
+\begin_layout Plain Layout
+
+9
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For fold, foldLeft, foldRight, map and flatMap examples, see 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Functional-Programming"
+
+\end_inset
+
+ 
+\end_layout
+
 \begin_layout Section
 Knowledge Dividends
 \end_layout
@@ -1091,11 +2358,18 @@ C++11
 
 \begin_layout Subsection
 Functional Programming
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Functional-Programming"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-The compiler includes two loops, instead the code relies primarily on functions
- such as:
+The compiler includes only two loops, instead the code relies primarily
+ on functions such as:
 \end_layout
 
 \begin_layout Itemize
@@ -5931,6 +7205,13 @@ This should give enough information for someone to use what you have designed
 
 \begin_layout Chapter
 Code listing
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Code-listing"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
