@@ -139,6 +139,10 @@ lstset{language=scala}
 
 \end_layout
 
+\begin_layout Abstract
+Abs
+\end_layout
+
 \begin_layout Standard
 \begin_inset CommandInset toc
 LatexCommand tableofcontents
@@ -177,6 +181,17 @@ Set the scene and problem statement/specification.
  Provide the motivation for reading this report.
  Introduce the structure of report (what you will cover in which chapters).
  
+\end_layout
+
+\begin_layout Standard
+The report layout adheres to a standard set by University College London
+\begin_inset CommandInset citation
+LatexCommand cite
+key "UCLReportStructure"
+
+\end_inset
+
+, modified with supervisor's recommendations.
 \end_layout
 
 \begin_layout Chapter
@@ -2337,11 +2352,19 @@ A solid set of features to make transformation into the language easier.
 Mature standard that is unlikely to break backwards compatibility.
 \end_layout
 
+\begin_layout Enumerate
+One, preferably more, good and mature open source implementations available.
+\end_layout
+
+\begin_layout Enumerate
+Possibility of running without an operating system.
+\end_layout
+
 \begin_layout Standard
 C++ seems to satisfy all these criteria, and were therefore selected as
  the intermediate language.
- In particular, C has too few features, which means a compiler would have
- to make more difficult transformations and/or things like linked lists
+ Its main competitor, C, has too few features, which means a compiler would
+ have to make more difficult transformations and/or things like linked lists
  would have to be manually implemented.
  Such difficulties seem unnecessary.
 \end_layout
@@ -2385,7 +2408,7 @@ Fast execution time
 \end_layout
 
 \begin_layout Standard
-Other languages under consideration were C and C++
+Other languages under consideration were C, C++ and Haskell.
 \end_layout
 
 \begin_layout Section
