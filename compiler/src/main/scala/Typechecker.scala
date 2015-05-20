@@ -242,7 +242,7 @@ object FumurtTypeChecker
               } 
               val returnerror:List[FumurtError] = if (expectedreturn != calledfunction.returntype)
               {
-                List(FumurtError(y.pos, "Expected return type: "+expectedreturn+". Got "+calledfunction.returntype+". containingdefinition is"+containingdefinition))
+                List(FumurtError(y.pos, "Expected return type "+expectedreturn.value+". Got "+calledfunction.returntype.value/*+". containingdefinition is"+containingdefinition*/))
               }
               else {List()}
               returnerror ++ argumenterrors

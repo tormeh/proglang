@@ -380,7 +380,8 @@ key "berry1992esterel"
 \end_layout
 
 \begin_layout Standard
-In the end we decided on using the synchronous programming paradigm.
+In the end a decision was made in favor of using the synchronous programming
+ paradigm.
  There are tradeoffs associated with chosing synchronous programming, but
  they were determined to be preferable to the alternatives.
  The main problems with synchronous programming are 
@@ -690,7 +691,7 @@ Note that the correctness of the word as it pertains to English is ignored.
  contents can be repeated one or more time.
  A lower case word, as it has been defined here, is simply one lower case
  letter, followed by zero or more lower case letters.
- Next we can do the same for sentences, again ignoring rules for English:
+ Next, the same is done for sentences, again ignoring rules for English:
 \begin_inset ERT
 status open
 
@@ -724,7 +725,7 @@ lower case sentence = lower case word, {(", ", lower case word) | (" ",
 Parentheses allows grouping of sequences.
  Here, it allows us to alternate between sequences of symbols rather than
  just single symbols.
- Finally we say that:
+ Finally:
 \begin_inset ERT
 status open
 
@@ -758,7 +759,7 @@ lols
 \end_layout
 
 \begin_layout Standard
-Now we have a very simple grammar, which allows us to partition up a text
+The result is a very simple grammar, which allows us to partition up a text
  into sentences and words.
 \end_layout
 
@@ -767,8 +768,8 @@ Abstract Syntax Trees
 \end_layout
 
 \begin_layout Standard
-Now suppose we wanted to systematize a string of characters according to
- the grammar above.
+Now suppose it was desired to systematize a string of characters according
+ to the grammar above.
  A data structure corresponding to the grammar would be appropriate.
  Consider the following figure:
 \end_layout
@@ -927,8 +928,8 @@ reference "sub:The-Scala-Parser"
  This new parser would not need to return a minusToken or equalToken, but
  can process the results from equalParser and minusParser into something
  new.
- In this example, we have formed two parsers and combined them into a new
- parser using a parser combinator.
+ In this example, two parsers have been formed and combined into a new parser
+ using a parser combinator.
  This new parser can be part of a scanner.
  Indeed, the Fumurt scanner is formed like this (see 
 \begin_inset CommandInset ref
@@ -955,7 +956,7 @@ parser
 \end_inset
 
 .
- Here we refer to parser in two senses: 
+ The parser is refered to in two senses: 
 \end_layout
 
 \begin_layout Enumerate
@@ -1396,8 +1397,8 @@ In terms of the actual execution a more detailed figure is offered:
 \end_layout
 
 \begin_layout Standard
-Observe that in the computational stage we can make available parallel list
- transformations like map and fold or even futures, without affecting the
+Observe that in the computational stage parallel list transformations like
+ map and fold or even futures can be made available, without affecting the
  outward behaviour of the system, except for performance:
 \end_layout
 
@@ -1447,7 +1448,7 @@ Syntax
 \begin_layout Standard
 Syntax is by definition somewhat arbitrary, but as Brainfuck demonstrates,
  some syntaxes are better than others.
- We settled on the following goals:
+ The following goals were decided on:
 \end_layout
 
 \begin_layout Itemize
@@ -1500,7 +1501,6 @@ Type instanceOfType
 \end_layout
 
 \begin_layout Itemize
-We use 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1508,7 +1508,7 @@ We use
 \begin_inset Quotes erd
 \end_inset
 
- to perform definitions and mark the boundaries of blocks with brackets
+ is used to perform definitions and mark the boundaries of blocks with brackets
 \end_layout
 
 \begin_layout Standard
@@ -1552,9 +1552,9 @@ Predictable and Helpful
 \end_layout
 
 \begin_layout Standard
-We observe that although modern languages and their type systems have made
- the use of functions safe, the syntax of modern languages insufficiently
- aid the programmer in understanding what a function does, as it is called:
+Although modern languages and their type systems have made the use of functions
+ safe, the syntax of modern languages insufficiently aid the programmer
+ in understanding what a function does, as it is called:
 \end_layout
 
 \begin_layout Itemize
@@ -1629,7 +1629,8 @@ synchronized
 \begin_layout Itemize
 Function arguments, if there are more than one, are distinguished not by
  relative position, but by name (as is optionally available in Python).
- Here we see a call to the if function and some calls to the toString function:
+ Here fis presented a call to the if function and some calls to the toString
+ function:
 \begin_inset ERT
 status open
 
@@ -1679,8 +1680,8 @@ Scope
 \begin_layout Standard
 Among the goals of this programming language is to help the programmer understan
 d the program.
- One way we do this is to make dependencies between functions explicit via
- 
+ One way this is done is to make dependencies between functions explicit
+ via 
 \emph on
 inclusions
 \emph default
@@ -1869,8 +1870,8 @@ Note that inclusions are not functions as arguments - the passed function
 \end_layout
 
 \begin_layout Standard
-In keeping with our goal of being modern and familiar, we allow definitions
- of functions inside other definitions of functions.
+In keeping with the goal of being modern and familiar, definitions of functions
+ inside other definitions of functions are allowed.
  Recursive function definitions, that is.
  This means that developers can hide functions inside other functions when
  they are not needed outside them.
@@ -1914,9 +1915,9 @@ reference "sub:The-Scala-Parser"
 \end_layout
 
 \begin_layout Standard
-We haven't found any good solutions to this, but it's hard to argue with
- the convenience of operators.
- We provide some predictability to operators by enforcing the following
+Any good solutions to this have not been found, to the author's knowledge,
+ but it's hard to argue with the convenience of operators.
+ Some predictability to operators are provided by enforcing the following
  rules:
 \end_layout
 
@@ -1940,10 +1941,10 @@ Immutability
 Mutable variables are a major source of bugs, and even experienced developers
  create bugs when a variable that would have held the correct information
  previously no longer holds that information.
- At the same time we need mutable values in some ways in order to share
- information across threads.
- So we disallow mutable variables, except the synchronized variables that
- are shared across threads.
+ At the same time mutable variables are needed in order to share information
+ across threads.
+ Therefore mutable variables are disallowed, except the synchronized variables
+ that are shared across threads.
  
 \end_layout
 
@@ -1965,8 +1966,8 @@ key "milne2002difficulties"
 \end_inset
 
 .
- We decided we could make loops that are as safe as tail recursion while
- being almost as friendly as loops:
+ Loops that are as safe as tail recursion while being almost as friendly
+ as common loops are possible:
 \begin_inset ERT
 status open
 
@@ -2088,9 +2089,9 @@ Classes
 \end_layout
 
 \begin_layout Standard
-Because we try to be familiar we want to provide types along with their
+In trying to be familiar, it is desireable to provide types along with their
  popular object oriented nomenclature.
- So we have classes, just that they are immutable.
+ So classes are present, just that they are immutable.
  They are defined by their constructors, optionally with extra static methods:
 \begin_inset ERT
 status open
@@ -2162,8 +2163,8 @@ actionPrint(concatenate(left=toString(x.int), right=x.string))
 \end_layout
 
 \begin_layout Standard
-We do not have inheritance, because while inheritance means you get code
- reuse, it also obscures the class that inherits.
+Fumurt does not have inheritance, because while inheritance means you get
+ code reuse, it also obscures the class that inherits.
  When one class inherits from a hierarchy, one needs to understand not only
  what's written about that class but also the entire hierarchy in order
  to understand the end result.
@@ -2299,9 +2300,9 @@ Choice of Intermediate Target
 \end_layout
 
 \begin_layout Standard
-For easy debugging and wide selection of binary targets we chose to first
- compile to an intermediate language and then let an external compiler perform
- the final transformation to binary form.
+For easy debugging and wide selection of binary targets it was decided to
+ first compile to an intermediate language and then let an external compiler
+ perform the final transformation to binary form.
  This is a well-trodden path
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -2310,8 +2311,8 @@ key "hall1993glasgowHaskellToC"
 \end_inset
 
 , and C is often used.
- Though many modern languages would be suitable for this, we had a wishlist
- of features that determined which language to choose:
+ Though many modern languages would be suitable for this, a wishlist of
+ features determined which language to choose:
 \end_layout
 
 \begin_layout Enumerate
@@ -2413,40 +2414,40 @@ ts are translated into printList.push_back.
 \end_layout
 
 \begin_layout Itemize
-We use a rendezvous pattern:
+A rendezvous pattern is used:
 \end_layout
 
 \begin_deeper
 \begin_layout Enumerate
-We define a macro NUMTOPTHREADS, with the number of threads defined in the
- program statement
+A macro NUMTOPTHREADS, with the number of threads defined in the program
+ statement is defined
 \end_layout
 
 \begin_layout Enumerate
-We define a static std::atomic<int> rendezvousCounter, which holds the number
- of threads that have arrived at the rendezvous point.
+A static std::atomic<int> rendezvousCounter, which holds the number of threads
+ that have arrived at the rendezvous point is defined.
 \end_layout
 
 \begin_layout Enumerate
-We define a static std::mutex rendezvousSyncMutex and a static std::condition_va
-riable cv.
+A static std::mutex rendezvousSyncMutex and a static std::condition_variable
+ cv are defined.
 \end_layout
 
 \begin_layout Enumerate
-For each synchronized variable in the source code, we define one variable
- which holds the global state of this variable and one which holds the local
- state of this variable in the thread that is allowed to write to it.
+For each synchronized variable in the source code, one variable which holds
+ the global state of this variable and one which holds the local state of
+ this variable in the thread that is allowed to write to it is defined.
 \end_layout
 
 \begin_layout Enumerate
-We define a [[noreturn]] static void threadName() for each thread, holding
+A [[noreturn]] static void threadName() is defined for each thread, holding
  its values.
  All arguments to thread in the source code are converted to static global
  variables.
 \end_layout
 
 \begin_layout Enumerate
-We define a main function, inside of which:
+A main function is defined, inside of which:
 \end_layout
 
 \begin_deeper
@@ -2458,8 +2459,8 @@ rendezvousCounter is set to 0, std::thread are started with the thread functions
 
 \end_deeper
 \begin_layout Enumerate
-We define a static void waitForRendezvous(std::string name) which a thread
- calls when it is ready to wait.
+static void waitForRendezvous(std::string name) which a thread calls when
+ it is ready to wait, is defined.
  Inside of which:
 \end_layout
 
@@ -2648,9 +2649,9 @@ Function calls need to be changed so they refer to the new names
 
 \begin_layout Standard
 This can be accomplished by doing two passes over the AST.
- In the first pass, we annotate all fucntion definitions with their final
+ In the first pass, all function definitions are annotated with their final
  C++ names.
- In the last pass, we annotate all function calls with the final C++ name
+ In the last pass, all function calls are annotated with the final C++ name
  of the function they call, copying from the annotation done in pass one.
  
 \end_layout
@@ -3214,7 +3215,7 @@ reference "sub:The-Scala-Parser"
 
 \begin_layout Standard
 There are also a number of somewhat less exciting helper parsers, of which
- we provide an example:
+ an example is provided:
 \begin_inset ERT
 status open
 
@@ -3272,7 +3273,7 @@ case TrueT() => TrueStatement()
 \end_layout
 
 \begin_layout Standard
-We can here see some of how the parser error messages are generated.
+This shows how the parser error messages are generated.
 \end_layout
 
 \begin_layout Standard
@@ -5361,8 +5362,7 @@ status open
 \end_layout
 
 \begin_layout Standard
-We observe that all output is deterministic.
- Multithreading is an implementation detail here.
+Observe that all output is deterministic.
 \end_layout
 
 \begin_layout Section
@@ -5370,14 +5370,15 @@ Error messages
 \end_layout
 
 \begin_layout Standard
-Changing the source in 
+Error messages are useful to detect errors in the program at compile time.
+ Changing the source in 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:Full-program-test"
 
 \end_inset
 
- to the following erroneous program:
+ to the following erroneous program allow us to test them:
 \begin_inset ERT
 status open
 
@@ -5654,8 +5655,7 @@ function integerIdentity(x:Integer):Integer = {x}
 \end_layout
 
 \begin_layout Standard
-lets us test our type checker and its error messages.
- We get the following type errors:
+The following type errors are produced:
 \begin_inset ERT
 status open
 
