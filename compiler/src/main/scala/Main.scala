@@ -41,26 +41,26 @@ object Main
   
   def getOptions(args:Array[String],file:String): Options =
   {
-    println(args.toString)
+    //println(args.toString)
     new Options(CompileTypeOption.interpreted, true, file)
   }
   
   def compile(opts:Options):Unit =
   {
-    println("Now compiling!")
+    //println("Now compiling!")
     val sourcestring = fromFile(opts.file).mkString
     FumurtScanner.scan(sourcestring) match
     {
       case Left(error) => println("Error in scanner: " + error.toString)
       case Right(tokens) => 
       {
-        println("successful scan. Tokens: "+tokens.toString+"\n")
+        //println("successful scan. Tokens: "+tokens.toString+"\n")
         FumurtParser.parse(tokens) match
         {
           case Left(error) => println("Error in parser: " + error.toString)
           case Right(ast) => 
           {
-            println("Success in parser: " + ast.toString)
+            //println("Success in parser: " + ast.toString)
             FumurtTypeChecker.check(ast) match
             {
               case Some(errors) => 
@@ -79,13 +79,14 @@ object Main
                   case 9 => "nine"
                   case x => x.toString
                 }
-                println(errornum.capitalize+" errors found")
+                val singularplural:String = if(errors.length==1){" error"}else{" errors"}
+                println(errornum.capitalize + singularplural + " found")
               }
               case None => 
               {
                 println("\nNo errors in checker")
                 val generatedcode = FumurtCodeGenerator.generate(ast)
-                println("\ncode generated: \n" + generatedcode)
+                //println("\ncode generated: \n" + generatedcode)
                 import java.nio.file.{Paths, Files}
                 import java.nio.charset.StandardCharsets
                 val outname = "generated"

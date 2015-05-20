@@ -146,7 +146,7 @@ object FumurtTypeChecker
       case x:Statement => containingdefinition match
       {
         case None => List(FumurtError(x.pos, "Statements must be enclosed in either Program or another definition"))
-        case Some(contdef) => println("\n"+x); checkstatement(x, contdef.leftside, arguments, basicFunctions, inSameDefinition, contdef.leftside.returntype)
+        case Some(contdef) => /*println("\n"+x);*/ checkstatement(x, contdef.leftside, arguments, basicFunctions, inSameDefinition, contdef.leftside.returntype)
       }
     }
   }
@@ -478,6 +478,25 @@ object FumurtTypeChecker
   {
     //println("\nIn checkdefinition:   tocheck: "+tocheck+"containingdefinition: "+containingdefinition+" arguments: "+arguments)
     val undererrors = checkexpressions(tocheck.rightside.expressions, Some(tocheck), arguments, basicFunctions)
+    val threadenderror:List[FumurtError] = tocheck.leftside.description match
+    {
+      case ThreadT() => tocheck.rightside.expressions.last match
+      {
+        case FunctionCallStatement(functionidentifier,_) =>
+        {
+          if(functionidentifier != tocheck.leftside.id.value)
+          {
+            List(FumurtError(tocheck.rightside.expressions.last.pos, "A thread must recurse on itself (at least until exit() is implemented)"))
+          }
+          else
+          {
+            List()
+          }
+        }
+        case _ => List(FumurtError(tocheck.rightside.expressions.last.pos, "A thread must recurse on itself (at least until exit() is implemented)"))
+      }
+      case _ => List()
+    }
     val nameerror = tocheck.leftside.description match
     {
       case ActionT() => if(!tocheck.leftside.id.value.startsWith("action")){List(FumurtError(tocheck.pos, "Name of action is not prefixed with \"action\""))} else{List()}
@@ -502,7 +521,7 @@ object FumurtTypeChecker
       case ProgramT() => println("Program got checked by checkdefinition. This is better checked in checkprogram"); scala.sys.exit()
     }
     
-    undererrors.toList ++ nameerror ++ permissionerror
+    undererrors.toList ++ nameerror ++ permissionerror ++ threadenderror
   }
   
   

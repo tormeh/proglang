@@ -1,8 +1,10 @@
-program p:Nothing =
+program helloworld:Nothing =
 {
-  between(start=millisecond(0), end=millisecond(10), action=actionPrintHelloWorld)
+  threadPrintHelloWorld()
 }
-action actionPrintHello:Nothing =
+
+thread threadPrintHelloWorld:Nothing =
 {
-  println("hello world")
+  actionPrint("Hello World\n")
+  
 }

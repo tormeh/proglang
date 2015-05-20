@@ -9,7 +9,7 @@ object FumurtCodeGenerator
     val includestatement = "#include <iostream>\n#include <thread>\n#include <string>\n#include <atomic>\n#include <condition_variable>\n#include <list>\n#include <chrono>\n\n\n"
     val topthreads = gettopthreadstatements(ast)
     val atree = getAnnotatedTree(ast, topthreads)
-    println(atree)
+    //println(atree)
     val numtopthreads = topthreads.length
     val synchronizationGlobalVars = "static std::atomic<int> rendezvousCounter;\nstatic std::mutex rendezvousSyncMutex;\nstatic std::condition_variable cv;"
     val main = getmain(topthreads)
@@ -146,7 +146,7 @@ object FumurtCodeGenerator
       }
       val ldeff = findinscope(Some(arguments), inSameDefinition, containingDefinition.map(x=>x.leftside), fid)
       val newargs = annotateCallargs(removeInclusions(args, ldeff.args), arguments, inSameDefinition, containingDefinition)
-      println("ldeff.cppid.value: "+ldeff.cppid.value)
+      //println("ldeff.cppid.value: "+ldeff.cppid.value)
       aFunctionCallStatement(fid,ldeff.cppid.value,newargs,ldeff.returntype.value)
     }
   }
@@ -400,7 +400,7 @@ object FumurtCodeGenerator
   {
     //println("in functioncalltranslator. call is "+call)
     //if(call.functionidentifier=="plus"){println("found")}
-    println("\n\n"+call)
+    //println("\n\n"+call)
     call match
     {
       case aFunctionCallStatement("actionPrint",_, Left(StringStatement(value)),_) => "print" + callingthread + ".push_back(" + value + ")"

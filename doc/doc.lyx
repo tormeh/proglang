@@ -4044,6 +4044,169 @@ Test plan -- how the program/system was verified.
 \end_layout
 
 \begin_layout Section
+Hello World
+\end_layout
+
+\begin_layout Standard
+A simple Hello World is written like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+program helloworld:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintHelloWorld()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+thread threadPrintHelloWorld:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("Hello World
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintHelloWorld()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Which prints Hello World forever:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello World
+\end_layout
+
+\begin_layout Plain Layout
+
+/*and so on*/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
 Full program test
 \begin_inset CommandInset label
 LatexCommand label
