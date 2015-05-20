@@ -174,7 +174,7 @@ object FumurtCodeGenerator
     
     val res = argsres ++ inscoperes ++ enclosingres
     
-    if(res.length==0){println("{arguments: "+arguments+"\n\ninSameDefinition: "+inSameDefinition+"\n\nenclosingDefinition: "+enclosingDefinition+"\n\nsearchFor: "+searchFor+"}\n\n\n")}
+    if(res.length==0){println("{arguments: "+arguments+"\n\ninSameDefinition: "+inSameDefinition+"\n\nenclosingDefinition: "+enclosingDefinition+"\n\nsearchFor: "+searchFor+"}\n\n\n");scala.sys.exit()}
     res.head
   }
   

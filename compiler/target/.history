@@ -142,3 +142,4 @@ quit
 run test.fumurt
 compile
 run helloworld.fumurt
+run test.fumurt

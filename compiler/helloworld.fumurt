@@ -6,5 +6,5 @@ program helloworld:Nothing =
 thread threadPrintHelloWorld:Nothing =
 {
   actionPrint("Hello World\n")
-  
+  threadPrintHelloWorld()
 }

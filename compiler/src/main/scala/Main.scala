@@ -84,7 +84,7 @@ object Main
               }
               case None => 
               {
-                println("\nNo errors in checker")
+                //println("\nNo errors in checker")
                 val generatedcode = FumurtCodeGenerator.generate(ast)
                 //println("\ncode generated: \n" + generatedcode)
                 import java.nio.file.{Paths, Files}
@@ -93,11 +93,11 @@ object Main
                 val fileending = ".cpp"
                 Files.write(Paths.get("./"+outname+fileending), generatedcode.getBytes(StandardCharsets.UTF_8))
                 val options = " -pthread -std=c++11 -O3 -march=native"
-                println("\n\n===Starting Clang cpp compilation===")
+                //println("\n\n===Starting Clang cpp compilation===")
                 //println("options = " + options)
                 import scala.sys.process._
                 val command = "clang++ " + outname + fileending + options + " -o " + outname
-                println(command)
+                //println(command)
                 (command).!
               }
             }

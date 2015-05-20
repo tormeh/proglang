@@ -80,11 +80,11 @@ object Main
                   case x => x.toString
                 }
                 val singularplural:String = if(errors.length==1){" error"}else{" errors"}
-                println(errornum.capitalize + errorstring + " found")
+                println(errornum.capitalize + singularplural + " found")
               }
               case None => 
               {
-                println("\nNo errors in checker")
+                //println("\nNo errors in checker")
                 val generatedcode = FumurtCodeGenerator.generate(ast)
                 //println("\ncode generated: \n" + generatedcode)
                 import java.nio.file.{Paths, Files}
