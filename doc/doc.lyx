@@ -260,7 +260,7 @@ lstset{language=scala}
 \end_layout
 
 \begin_layout Abstract
-Abs
+It is determined that [somethings]
 \end_layout
 
 \begin_layout Standard
@@ -313,14 +313,39 @@ This report describes a master thesis done as a part of the MSc Engineering
 \begin_layout Standard
 It is commonly understood that writing software is hard and that writing
  mutlithreaded software is even harder.
- This report concerns itself with a new language - Fumurt - with partially
- implemented compiler.
+ This report concerns itself with a new language - Fumurt - with a functional,
+ though incomplete, compiler.
  This language is intended as a viability test of some new language semantics
  and a starting point for further development.
  The semantics of the language are intended to ease development of multithreaded
  real-time applications and produce programs which require less testing
  and have fewer bugs than the existing state of the art.
- This language 
+\end_layout
+
+\begin_layout Standard
+Specifying a language and implementing a compiler are inherently difficult
+ tasks.
+ The former is an exercise in subjective judgement and trade-offs and the
+ latter is a highly challenging exercise in software engineering.
+ 
+\end_layout
+
+\begin_layout Standard
+Fumurt is a language built with the intention that the programmer shall
+ never be surprised.
+ It strives to make the least possible demands on programmers ability to
+ build mental models and memorize.
+ Therefore Fumurt strives to imbue its syntax with as much meaning as possible
+ and to concentrate declaration of concurrent code in one place (parallel
+ but not concurrent code not affected).
+ Language design inherently necessitates compromise and Fumurt compromises
+ minimally on readability and predictability, sacrificing instead keyboard
+ typing and rapid iteration.
+ It favors predictability over performance and explicitness over terseness.
+\end_layout
+
+\begin_layout Section
+Report Structure
 \end_layout
 
 \begin_layout Standard
@@ -337,7 +362,7 @@ key "UCLReportStructure"
 
 \end_inset
 
-, modified with supervisor's recommendations.
+, modified in consultation with superviser.
 \end_layout
 
 \begin_layout Chapter
@@ -2175,7 +2200,7 @@ defined class Sub
 \end_layout
 
 \begin_layout Standard
-Inheritance is only used very sparingly in this report.
+Inheritance is used very sparingly in this report.
 \end_layout
 
 \begin_layout Subsection
@@ -2701,19 +2726,7 @@ Prior Art
 \end_layout
 
 \begin_layout Subsection
-Ada
-\end_layout
-
-\begin_layout Subsection
 Esterel
-\end_layout
-
-\begin_layout Subsection
-Erlang
-\end_layout
-
-\begin_layout Subsection
-Dthread
 \end_layout
 
 \begin_layout Subsection
@@ -3011,10 +3024,32 @@ name "sec:Runtime-Execution-Model"
 \begin_layout Standard
 The goal of the programming language is to make a multithreaded program
  behave as predictably as were it singlethreaded and, more generally, to
- help create reliable applications A corollary of this is that only changes
- of state that are visible to a single thread can happen concurrently.
+ help create reliable applications.
+ A corollary of this is that only changes of state that are visible to a
+ single thread can happen concurrently.
  All IO and inter-thread communication are required happen in a statically
  determined sequence.
+ There are several ways to do this.
+ CONSEQUENCE
+\begin_inset CommandInset citation
+LatexCommand cite
+key "merrifield2015highCONSEQUENCE"
+
+\end_inset
+
+ and similar systems built using an instruction-based logical clock
+\begin_inset CommandInset citation
+LatexCommand cite
+key "olszewski2009kendo"
+
+\end_inset
+
+ provide superior performance to round-robin systems.
+ However, these are for the time being an active area of research, require
+ a deviation from standard C++ and IO sequence depends on compilation target,
+ requiring programmer intervention where this is undesirable.
+ In the interest of future relevance, we choose to implement multithreaded
+ behavior in a standard-only way.
  One way to do this is to have the program have two alternating phases:
 \end_layout
 
@@ -3940,6 +3975,18 @@ The program declaration is meant to give a high level overview of the behaviour
 
 \begin_layout Section
 Built-in Functions
+\end_layout
+
+\begin_layout Standard
+Fumurt provides the following built-in functions:
+\end_layout
+
+\begin_layout Itemize
+toString(x), defined for all types
+\end_layout
+
+\begin_layout Itemize
+
 \end_layout
 
 \begin_layout Chapter
@@ -5732,7 +5779,7 @@ Hello World
 \end_layout
 
 \begin_layout Standard
-A simple Hello World is written like this:
+A simple repeating Hello World is written like this:
 \end_layout
 
 \begin_layout Standard
@@ -7513,7 +7560,7 @@ What have you achieved? Give a critical appraisal (evaluation) of your own
 \end_layout
 
 \begin_layout Section
-Further Work
+Suggestions for Future Work
 \end_layout
 
 \begin_layout Subsection
@@ -7546,8 +7593,21 @@ More IO
 \end_layout
 
 \begin_layout Standard
-At the time of writing, print is the only type of IO that Fumurt has.
+At the time of writing, the only type of IO that Fumurt has is printing
+ to terminal.
  It goes without saying that this is inadequate for serious usage.
+\end_layout
+
+\begin_layout Subsection
+Boolean Functions
+\end_layout
+
+\begin_layout Subsection
+Custom Types, Generics
+\end_layout
+
+\begin_layout Subsection
+Evaluate the Possibility of Using Instruction-Based Logical Clock 
 \end_layout
 
 \begin_layout Standard
