@@ -273,10 +273,6 @@ LatexCommand tableofcontents
 \end_layout
 
 \begin_layout Chapter
-Objective
-\end_layout
-
-\begin_layout Chapter
 Introduction
 \end_layout
 
@@ -304,7 +300,33 @@ What design choices did you have along the way, and why did you make the
 Set the scene and problem statement/specification.
  Provide the motivation for reading this report.
  Introduce the structure of report (what you will cover in which chapters).
- 
+\end_layout
+
+\begin_layout Standard
+This report describes a master thesis done as a part of the MSc Engineering
+ Cybernetics course at NTNU.
+ It was written in the spring semester of 2015.
+ It assumes that readers have prior experience working with a programming
+ language and knows some common nomenclature.
+\end_layout
+
+\begin_layout Standard
+It is commonly understood that writing software is hard and that writing
+ mutlithreaded software is even harder.
+ This report concerns itself with a new language - Fumurt - with partially
+ implemented compiler.
+ This language is intended as a viability test of some new language semantics
+ and a starting point for further development.
+ The semantics of the language are intended to ease development of multithreaded
+ real-time applications and produce programs which require less testing
+ and have fewer bugs than the existing state of the art.
+ This language 
+\end_layout
+
+\begin_layout Standard
+The Background chapter contains information needed to understand the rest
+ of the report.
+ [more here]
 \end_layout
 
 \begin_layout Standard
@@ -1955,7 +1977,7 @@ b: B = B(other string,5)
 
 \begin_layout Plain Layout
 
-scala>//and one can pattern matching on them
+scala>//and one can pattern match on them
 \end_layout
 
 \begin_layout Plain Layout
@@ -2060,6 +2082,100 @@ scala> matchfunc(c)
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Inheritance
+\end_layout
+
+\begin_layout Itemize
+A trait is an interface, a class with only abstract methods, that can also
+ have default implementations of methods
+\end_layout
+
+\begin_layout Itemize
+Classes and trait inherit from each other using 
+\begin_inset Quotes eld
+\end_inset
+
+extends [first super] with [second super] with [third super]
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+A class can inherit multiple traits.
+ In the case where two traits have the same signature for different method
+ implementations, the last trait to be inherited is the one whose implementation
+ will be used
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala> trait Super
+\end_layout
+
+\begin_layout Plain Layout
+
+defined trait Super
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> trait Side
+\end_layout
+
+\begin_layout Plain Layout
+
+defined trait Side
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> trait Side2 
+\end_layout
+
+\begin_layout Plain Layout
+
+defined trait Side2 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> case class Sub(int:Int) extends Super with Side with Side2
+\end_layout
+
+\begin_layout Plain Layout
+
+defined class Sub
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Inheritance is only used very sparingly in this report.
 \end_layout
 
 \begin_layout Subsection
@@ -2338,11 +2454,277 @@ reference "sub:Functional-Programming"
  
 \end_layout
 
+\begin_layout Subsection
+Container Types
+\end_layout
+
+\begin_layout Standard
+Scala has several container types, some more exotic than others.
+\end_layout
+
+\begin_layout Itemize
+Option allows handling of values which may or may not have any content.
+ Both 
+\begin_inset Quotes eld
+\end_inset
+
+Some(3)
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+None
+\begin_inset Quotes erd
+\end_inset
+
+ can be passed as a parameter of type Option[Int].
+ Options can be mapped, in which case the unwrapping of the contents and
+ subsequent re-wrapping is handled automatically.
+\end_layout
+
+\begin_layout Itemize
+Either allows handling of values which are one of two types.
+ It's applicability is therefore a superset of that of Option.
+ Left(3) and Right(
+\begin_inset Quotes eld
+\end_inset
+
+str
+\begin_inset Quotes erd
+\end_inset
+
+) can be passed as a parameter of type Either[Int, String]
+\end_layout
+
+\begin_layout Itemize
+Sets are somewhat similar to arrays in that their size is fixed.
+ However, each element has a fixed type.
+ So 
+\begin_inset Quotes eld
+\end_inset
+
+(3, 
+\begin_inset Quotes eld
+\end_inset
+
+str
+\begin_inset Quotes erd
+\end_inset
+
+, 5.0)
+\begin_inset Quotes erd
+\end_inset
+
+ is of type (Int, String, Double).
+ specific places in the set are accessed using 
+\begin_inset Quotes eld
+\end_inset
+
+set._n
+\begin_inset Quotes erd
+\end_inset
+
+, where n is the 1-indexed index.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala>//Option:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> def maybeSquare(in:Option[Int]):Option[Int] = in.map(x => x*x)
+\end_layout
+
+\begin_layout Plain Layout
+
+maybeSquare: (in: Option[Int])Option[Int]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> maybeSquare(Some(3))
+\end_layout
+
+\begin_layout Plain Layout
+
+res0: Option[Int] = Some(9)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> maybeSquare(None)
+\end_layout
+
+\begin_layout Plain Layout
+
+res1: Option[Int] = None
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala>//Either:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> def squareOrCube(in:Either[Int,Int]) = in match 
+\end_layout
+
+\begin_layout Plain Layout
+
+     | {
+\end_layout
+
+\begin_layout Plain Layout
+
+     |   case Left(x) => x*x
+\end_layout
+
+\begin_layout Plain Layout
+
+     |   case Right(x) => x*x*x
+\end_layout
+
+\begin_layout Plain Layout
+
+     | }
+\end_layout
+
+\begin_layout Plain Layout
+
+squareOrCube: (in: Either[Int,Int])Int
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> squareOrCube(Left(3))
+\end_layout
+
+\begin_layout Plain Layout
+
+res2: Int = 9
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> squareOrCube(Right(3))
+\end_layout
+
+\begin_layout Plain Layout
+
+res3: Int = 27
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala>//set:
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> def change(in:(Int, String, Double)):(Int, String, Double) = (in._1*in._1,
+ in._2+"ing", in._3)
+\end_layout
+
+\begin_layout Plain Layout
+
+change: (in: (Int, String, Double))(Int, String, Double)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> change((3, "str", 5.0))
+\end_layout
+
+\begin_layout Plain Layout
+
+res4: (Int, String, Double) = (9,string,5.0)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
-Knowledge Dividends
+Prior Art
 \end_layout
 
 \begin_layout Subsection
+Ada
+\end_layout
+
+\begin_layout Subsection
+Esterel
+\end_layout
+
+\begin_layout Subsection
+Erlang
+\end_layout
+
+\begin_layout Subsection
+Dthread
+\end_layout
+
+\begin_layout Subsection
+CONSEQUENCE
+\end_layout
+
+\begin_layout Chapter
+Knowledge Dividends
+\end_layout
+
+\begin_layout Section
 Regular Expressions
 \end_layout
 
@@ -2352,11 +2734,11 @@ The parsers in the scanner operate at the string-level and are based on
  before writing this thesis.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Section
 C++11
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Section
 Functional Programming
 \begin_inset CommandInset label
 LatexCommand label
@@ -2557,7 +2939,7 @@ res1: Int = 165
 
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Section
 Parser Combinators
 \end_layout
 
@@ -3554,6 +3936,10 @@ The program declaration is meant to give a high level overview of the behaviour
  It declares what threads are spawned, in what sequence their IO should
  be enacted, which synchronized variables exist and which threads have write
  permission to which variable.
+\end_layout
+
+\begin_layout Section
+Built-in Functions
 \end_layout
 
 \begin_layout Chapter
