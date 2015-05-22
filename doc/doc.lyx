@@ -2746,14 +2746,7 @@ key "merrifield2015highCONSEQUENCE"
 
 \begin_layout Standard
 Deterministic multithreading is an active area of research.
- Two components are necessary for determinism
-\begin_inset CommandInset citation
-LatexCommand cite
-key "merrifield2015highCONSEQUENCE"
-
-\end_inset
-
-:
+ Two components are necessary for determinism:
 \end_layout
 
 \begin_layout Itemize
@@ -2780,27 +2773,51 @@ Round-robin scheduling
 
 \begin_layout Itemize
 Instruction-count based scheduling
+\begin_inset CommandInset citation
+LatexCommand cite
+key "olszewski2009kendo"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Round robin scheduling means that for each lock, all threads using that
- lock needs to pause whenever 
+Both concern themselves with which thread's turn it is to do synchronization
+ calls.
+ In normal pthread systems, it is the thread which calls first that, say,
+ acquires the lock.
+ Round robin scheduling means that it is the thread that has gotten it last
+ that will get it next.
+ In instruction-count scheduling, the next recipient of the lock is determined
+ by which thread has completed the least amount of instructions, with a
+ tie-breaker.
+ Notice that in the latter model, synchronization call order is not robust
+ in the face of changing inputs.
+ 
 \end_layout
 
 \begin_layout Subsection
 Deterministic Memory Consistency Model
 \end_layout
 
+\begin_layout Standard
+The memory consistency model concerns itself with making guarantees about
+ the determinism of memory access.
+ Total Store Order guarantees that all writes are globally visible in determinis
+tic order, yet makes no guarantees about when.
+ Other models relax this to guaranteeing that a write with respect to a
+ synchronization object is only visible to the next thread that holds this
+ object.
+ 
+\end_layout
+
 \begin_layout Section
-Prior Art
+Related work
 \end_layout
 
 \begin_layout Subsection
-Esterel
-\end_layout
-
-\begin_layout Subsection
-CONSEQUENCE
+CoreDet
 \end_layout
 
 \begin_layout Chapter
@@ -3115,12 +3132,12 @@ key "olszewski2009kendo"
 \end_inset
 
  provide superior performance to round-robin systems.
- However, these are for the time being an active area of research, require
- a deviation from standard C++ and IO sequence depends on compilation target,
- requiring programmer intervention where this is undesirable.
- In the interest of future relevance, it was decided to implement multithreaded
- behavior in a standard-only way.
- One way to do this is to have the program have two alternating phases:
+ However, IO sequence in these schemes depends on input, requiring programmer
+ intervention where this is undesirable.
+ While performance is undoubtedly good, it seems prudent to make such optimizati
+ons opt-in rather than opt-out.
+ [more stuff here] One way to do this is to have the program have two alternatin
+g phases:
 \end_layout
 
 \begin_layout Itemize
@@ -3140,16 +3157,7 @@ In the computational phase, the order in which computations are performed
  this phase, the only difference between concurrent execution and sequential
  execution is speed.
  In the communicative phase, however, execution has to be single threaded.
- In the terms from 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Deterministic-Multithreading"
-
-\end_inset
-
-, all memory stores are synchronized using a round-robin deterministic clock
- and global lock.
- This is somewhat reminiscent of a low-tech Dthreads
+ This is somewhat reminiscent of a very conservative low-tech Dthreads
 \begin_inset CommandInset citation
 LatexCommand cite
 key "liu2011dthreads"
@@ -7717,8 +7725,14 @@ key "merrifield2015highCONSEQUENCE"
  requirements can be relaxed.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Subsection
+Allow Programmer-Defined Synchronization Intervals
+\end_layout
 
+\begin_layout Standard
+Not all tasks require updates equally often.
+ It would be beneficial in some cases to let computation-heavy threads participa
+te in only every Nth communication phase.
 \end_layout
 
 \begin_layout Standard
