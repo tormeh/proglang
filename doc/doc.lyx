@@ -318,8 +318,8 @@ It is commonly understood that writing software is hard and that writing
  This language is intended as a viability test of some new language semantics
  and a starting point for further development.
  The semantics of the language are intended to ease development of multithreaded
- real-time applications and produce programs which require less testing
- and have fewer bugs than the existing state of the art.
+ real-time and reactive applications and produce programs which require
+ less testing and have fewer bugs than the existing state of the art.
 \end_layout
 
 \begin_layout Standard
@@ -2722,6 +2722,76 @@ res4: (Int, String, Double) = (9,string,5.0)
 \end_layout
 
 \begin_layout Section
+Deterministic Multithreading
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Deterministic-Multithreading"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+All material here is based on 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "merrifield2015highCONSEQUENCE"
+
+\end_inset
+
+ unless otherwise stated.
+ 
+\end_layout
+
+\begin_layout Standard
+Deterministic multithreading is an active area of research.
+ Two components are necessary for determinism
+\begin_inset CommandInset citation
+LatexCommand cite
+key "merrifield2015highCONSEQUENCE"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Itemize
+A deterministic logical clock, which orders synchronization operations determini
+stically
+\end_layout
+
+\begin_layout Itemize
+A deterministic memory consistency model, which ensures unsynchronized load
+ operations have deterministic results
+\end_layout
+
+\begin_layout Subsection
+Deterministic Logical Clock
+\end_layout
+
+\begin_layout Standard
+There are two main approaches to this:
+\end_layout
+
+\begin_layout Itemize
+Round-robin scheduling
+\end_layout
+
+\begin_layout Itemize
+Instruction-count based scheduling
+\end_layout
+
+\begin_layout Standard
+Round robin scheduling means that for each lock, all threads using that
+ lock needs to pause whenever 
+\end_layout
+
+\begin_layout Subsection
+Deterministic Memory Consistency Model
+\end_layout
+
+\begin_layout Section
 Prior Art
 \end_layout
 
@@ -3048,7 +3118,7 @@ key "olszewski2009kendo"
  However, these are for the time being an active area of research, require
  a deviation from standard C++ and IO sequence depends on compilation target,
  requiring programmer intervention where this is undesirable.
- In the interest of future relevance, we choose to implement multithreaded
+ In the interest of future relevance, it was decided to implement multithreaded
  behavior in a standard-only way.
  One way to do this is to have the program have two alternating phases:
 \end_layout
@@ -3070,7 +3140,27 @@ In the computational phase, the order in which computations are performed
  this phase, the only difference between concurrent execution and sequential
  execution is speed.
  In the communicative phase, however, execution has to be single threaded.
- Using this scheme, the application appears to be single threaded both to
+ In the terms from 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Deterministic-Multithreading"
+
+\end_inset
+
+, all memory stores are synchronized using a round-robin deterministic clock
+ and global lock.
+ This is somewhat reminiscent of a low-tech Dthreads
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2011dthreads"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Using this scheme, the application appears to be single threaded both to
  itself and to the rest of the world, all the while enabling separation
  of concerns and better utilization of multi-core systems.
  The following figure illustrates the principle:
@@ -3141,6 +3231,11 @@ key "borthakur2011apache"
  Supporting map-and-fold and futures reduces the performance problems of
  all threads waiting on each other significantly as long as it can be applied
  to the most time-consuming task.
+\end_layout
+
+\begin_layout Standard
+The overall effect of this execution model is that phases per second becomes
+ an important measure of responsiveness of the system.
 \end_layout
 
 \begin_layout Section
@@ -7608,6 +7703,18 @@ Custom Types, Generics
 
 \begin_layout Subsection
 Evaluate the Possibility of Using Instruction-Based Logical Clock 
+\end_layout
+
+\begin_layout Standard
+Systems such as CONSEQUENCE
+\begin_inset CommandInset citation
+LatexCommand cite
+key "merrifield2015highCONSEQUENCE"
+
+\end_inset
+
+ may make it possible to obtain greater performance in cases where scheduling
+ requirements can be relaxed.
 \end_layout
 
 \begin_layout Standard
