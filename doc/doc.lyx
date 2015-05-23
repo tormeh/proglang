@@ -5613,7 +5613,11 @@ Step by step approach:
 \end_layout
 
 \begin_layout Enumerate
-[headers or whatever]
+First we determine the C++ include statements, which are handwritten.
+\end_layout
+
+\begin_layout Enumerate
+We scan the program declaration and find the threads that will 
 \end_layout
 
 \begin_layout Paragraph
@@ -5869,7 +5873,7 @@ class aDefLhs(val description:DefDescriptionT, val id:IdT, val cppid:IdT,
 \end_layout
 
 \begin_layout Subsection
-Annotator
+
 \end_layout
 
 \begin_layout Chapter
@@ -5891,6 +5895,19 @@ Hello World
 
 \begin_layout Standard
 A simple repeating Hello World is written like this:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=fumurt}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5956,6 +5973,19 @@ n")
 
 \begin_layout Standard
 Which prints Hello World forever:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language={}}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -7641,24 +7671,6 @@ exit function
 \end_layout
 
 \begin_layout Chapter
-Results
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-This covers different areas to the 'Testing' chapter, and is appropriate
- for 'research style' projects.
- For such projects this chapter should detail the types of experiments/simulatio
-ns that were carried out with the code written.
- Why were certain experiments carried out but not others? What were the
- important parameters in the simulation and how did they affect the results?
- If there are very many graphs and tables associated with this chapter they
- may be put in the Appendix, but it is generally better to keep these close
- to the text they illustrate, as this is easier for the reader.
-\end_layout
-
-\begin_layout Chapter
 Conclusion, Evaluation and Further Work
 \end_layout
 
@@ -7668,6 +7680,18 @@ Conclusion, Evaluation and Further Work
 What have you achieved? Give a critical appraisal (evaluation) of your own
  work - how could the work be taken further (perhaps by another student
  next year)?
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+A language has been designed and a compiler has been built for it.
+ In hindsight, the code generator could have been better written.
+ Adding an additional two steps with the annotator was a fairly late decision,
+ and the architecture of the module suffered for it.
+ 
 \end_layout
 
 \begin_layout Section
@@ -7696,29 +7720,41 @@ defRhs
 \end_layout
 
 \begin_layout Standard
-Adding operators seem beneficial, as do 
+Operators would make many common operations less verbose.
 \end_layout
 
 \begin_layout Subsection
-More IO
+More Functionality
 \end_layout
 
 \begin_layout Standard
-At the time of writing, the only type of IO that Fumurt has is printing
- to terminal.
- It goes without saying that this is inadequate for serious usage.
+Fumurt is lacking in functionality.
+ A larger standard library is needed.
+ More specifically:
+\end_layout
+
+\begin_layout Itemize
+More IO
+\end_layout
+
+\begin_layout Itemize
+Boolean and Comparison Functions
+\end_layout
+
+\begin_layout Itemize
+Map and fold functions
+\end_layout
+
+\begin_layout Itemize
+Loops
 \end_layout
 
 \begin_layout Subsection
-Boolean Functions
+Custom Types, Interfaces and Generics
 \end_layout
 
 \begin_layout Subsection
-Custom Types, Generics
-\end_layout
-
-\begin_layout Subsection
-Evaluate the Possibility of Using Instruction-Based Logical Clock 
+Evaluate the Possibility of Using A Instruction-Based Logical Clock System
 \end_layout
 
 \begin_layout Standard
@@ -7729,8 +7765,8 @@ key "merrifield2015highCONSEQUENCE"
 
 \end_inset
 
- may make it possible to obtain greater performance in cases where scheduling
- requirements can be relaxed.
+ may make it possible to obtain greater performance in cases where the programme
+r can allow scheduling requirements to be relaxed.
 \end_layout
 
 \begin_layout Subsection
@@ -7744,7 +7780,19 @@ te in only every Nth communication phase.
 \end_layout
 
 \begin_layout Subsection
-Investigate Erlang as supervisor for several Fumurt systems
+Investigate Erlang/OTP as supervisor for several Fumurt systems
+\end_layout
+
+\begin_layout Standard
+The design of Fumurt centers around predictability, but in order to guarantee
+ any predictability we have to assume correctness of the underlying hardware.
+ Fumurt is by design not fault-tolerant, because fault tolerance deals with,
+ and causes, unpredictability.
+ This is in many cases inappropriate.
+ It would be beneficial if it was possible to construct some system wherein
+ multiple computers or chips running Fumurt code could be coordinated by
+ a system that does deal with fault-tolerance.
+ Erlang with OTP seems like the standard for such applications.
 \end_layout
 
 \begin_layout Standard
