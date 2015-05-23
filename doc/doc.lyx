@@ -4222,6 +4222,10 @@ Other languages under consideration were C, C++ and Haskell.
 \end_layout
 
 \begin_layout Section
+Choice of C++ Compiler
+\end_layout
+
+\begin_layout Section
 Synchronization Mechanisms in The Intermediate Language
 \end_layout
 
