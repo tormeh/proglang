@@ -5608,6 +5608,14 @@ finds a left side of the definition in the current scope with the same name
 Code generator
 \end_layout
 
+\begin_layout Standard
+Step by step approach:
+\end_layout
+
+\begin_layout Enumerate
+[headers or whatever]
+\end_layout
+
 \begin_layout Paragraph
 Function List
 \end_layout
@@ -7733,6 +7741,10 @@ Allow Programmer-Defined Synchronization Intervals
 Not all tasks require updates equally often.
  It would be beneficial in some cases to let computation-heavy threads participa
 te in only every Nth communication phase.
+\end_layout
+
+\begin_layout Subsection
+Investigate Erlang as supervisor for several Fumurt systems
 \end_layout
 
 \begin_layout Standard
