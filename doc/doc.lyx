@@ -1251,7 +1251,8 @@ reference "chap:Code-listing"
 
 \end_inset
 
-
+ it is helpful to understand the language it is written in.
+ This section gives a quick introduction to Scala.
 \end_layout
 
 \begin_layout Subsection
@@ -1856,11 +1857,6 @@ val x:String = input match
 
   case reference @ TypeA(str) => "both a reference and the constructor parameter
 "
-\end_layout
-
-\begin_layout Plain Layout
-
-  //case reference:TypeA(str) => "this is unfortunately a syntax error"
 \end_layout
 
 \begin_layout Plain Layout
@@ -2807,8 +2803,8 @@ The memory consistency model concerns itself with making guarantees about
  Total Store Order guarantees that all writes are globally visible in determinis
 tic order, yet makes no guarantees about when.
  Other models relax this to guaranteeing that a write with respect to a
- synchronization object is only visible to the next thread that holds this
- object.
+ synchronization object is only visible to the next thread that holds the
+ synchronization object.
  
 \end_layout
 
@@ -7725,6 +7721,11 @@ defRhs
 
 \begin_layout Standard
 Operators would make many common operations less verbose.
+\end_layout
+
+\begin_layout Standard
+Optional use of begin..end [function name or similar] syntax, as it can be
+ helpful when reading deeply nested functions.
 \end_layout
 
 \begin_layout Subsection

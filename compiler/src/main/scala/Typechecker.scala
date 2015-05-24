@@ -76,6 +76,7 @@ object FumurtTypeChecker
       x++checkuseofthread(program,y)
     ):List[FumurtError]
     
+    val lefts = indexlefts(program.rightside.expressions)
     val unsuitableexpressions = program.rightside.expressions.foldLeft(List():List[FumurtError])((x,y)=>
       y match
       {
@@ -83,13 +84,36 @@ object FumurtTypeChecker
         {
           z.leftside.description match
           {
-            case SynchronizedVariableT() => x
+            case SynchronizedVariableT() => 
+            {
+              if(z.rightside.expressions.length != 1){x++List(FumurtError(z.pos, "only single call to synchronized permitted"))}
+              else
+              {
+                val synchcall = z.rightside.expressions(0)
+                val signatureerror = 
+                synchcall match
+                {
+                  case FunctionCallStatement("synchronized",Right(NamedCallargs(List(NamedCallarg(IdT("variable"),variablearg:Callarg), NamedCallarg(IdT("writer"),writerarg:Callarg)))))=>
+                  {
+                    x++checkCallarg(z.leftside.returntype, variablearg, IdT("variable"), program.leftside, None, basicFunctions, List()) //TODO: make sure that writer is a thread that exists.
+                  }
+                  case _=>x++List(FumurtError(synchcall.pos, "must be call to synchronized with \"variable\" and \"writer\" arguments"))
+                }
+                x++signatureerror
+              }
+              
+            }
             case _=> x++List(FumurtError(z.pos,"Do not define functions, actions or unsynchronized values in Program"))
           }
         }
         case z:FunctionCallStatement=>
         {
-          if(z.functionidentifier.startsWith("thread")){x} else{x++List(FumurtError(z.pos, "Only threads can be called in Program"))}
+          if(!z.functionidentifier.startsWith("thread")){x++List(FumurtError(z.pos, "Only threads can be called in Program"))} 
+          else
+          {
+            x++checkstatement(z, program.leftside, None, basicFunctions, lefts++topleveldefs, TypeT("Nothing"))
+          }
+          
         }
         case z:Expression=>x++List(FumurtError(z.pos, "Only definitions and thread start statements allowed in Program"))
       }
@@ -230,7 +254,7 @@ object FumurtTypeChecker
                   case Some(Arguments(args)) => 
                   {
                     if (args.length != 1) { List(FumurtError(y.pos, "expected "+args.length+" arguments, but only one was given")) }
-                    else { checkCallarg(args(0).typestr, callarg, containingdefinition, arguments, basicFunctions, inSameDefinition) }
+                    else { checkCallarg(args(0).typestr, callarg, args(0).id, containingdefinition, arguments, basicFunctions, inSameDefinition) }
                   }
                   case None => List(FumurtError(y.pos, "expected no arguments, but some were given")) 
                 }
@@ -270,9 +294,9 @@ object FumurtTypeChecker
           ( if(arglist(0).id.value != "condition"){List(FumurtError(ifcall.pos, "Call to if needs a condition argument"))} else {List()} )++
           ( if(arglist(1).id.value != "else"){List(FumurtError(ifcall.pos, "Call to if needs an else argument"))} else {List()} )++
           ( if(arglist(2).id.value != "then"){List(FumurtError(ifcall.pos, "Call to if needs a then argument"))} else {List()} )++
-          checkCallarg(TypeT("Boolean"), arglist(0).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)++
-          (checkCallarg(expectedtype, arglist(1).argument, containingdefinition, arguments, basicFunctions, inSameDefinition))++
-          (checkCallarg(expectedtype, arglist(2).argument, containingdefinition, arguments, basicFunctions, inSameDefinition))
+          checkCallarg(TypeT("Boolean"), arglist(0).argument, IdT("condition"), containingdefinition, arguments, basicFunctions, inSameDefinition)++
+          (checkCallarg(expectedtype, arglist(1).argument, IdT("else"), containingdefinition, arguments, basicFunctions, inSameDefinition))++
+          (checkCallarg(expectedtype, arglist(2).argument, IdT("then"), containingdefinition, arguments, basicFunctions, inSameDefinition))
         }
       }
     }
@@ -298,7 +322,7 @@ object FumurtTypeChecker
               case Right(defl)=>
               {
                 (if (defl.description != SynchronizedVariableT()){List(FumurtError(call.pos, "Variable must be synchronized"))}else{List()})++
-                (checkCallarg(defl.returntype, value.argument, containingdefinition, arguments, basicFunctions, inSameDefinition))
+                (checkCallarg(defl.returntype, value.argument, IdT("variable"), containingdefinition, arguments, basicFunctions, inSameDefinition))
               }
             }
           }
@@ -324,10 +348,10 @@ object FumurtTypeChecker
         }
         else
         {
-          val leftinterrors = checkCallarg(TypeT("Integer"), arglist(0).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)
-          val rightinterrors = checkCallarg(TypeT("Integer"), arglist(1).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)
-          val leftdoubleerrors = checkCallarg(TypeT("Double"), arglist(0).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)
-          val rightdoubleerrors = checkCallarg(TypeT("Double"), arglist(1).argument, containingdefinition, arguments, basicFunctions, inSameDefinition)
+          val leftinterrors = checkCallarg(TypeT("Integer"), arglist(0).argument, IdT("left"), containingdefinition, arguments, basicFunctions, inSameDefinition)
+          val rightinterrors = checkCallarg(TypeT("Integer"), arglist(1).argument, IdT("right"), containingdefinition, arguments, basicFunctions, inSameDefinition)
+          val leftdoubleerrors = checkCallarg(TypeT("Double"), arglist(0).argument, IdT("left"), containingdefinition, arguments, basicFunctions, inSameDefinition)
+          val rightdoubleerrors = checkCallarg(TypeT("Double"), arglist(1).argument, IdT("right"), containingdefinition, arguments, basicFunctions, inSameDefinition)
           val (lefterrors, leftdouble) = if (leftinterrors.length < leftdoubleerrors.length){(leftinterrors,false)} else {(leftdoubleerrors,true)}
           val (righterrors, rightdouble) = if (rightinterrors.length < rightdoubleerrors.length){(rightinterrors,false)} else {(rightdoubleerrors,true)}
           val returnsdouble = leftdouble || rightdouble
@@ -357,8 +381,8 @@ object FumurtTypeChecker
     {
       case Left(callarg) => 
       {
-        val integererrors = checkCallarg(TypeT("Integer"), callarg, containingdefinition, arguments, basicFunctions, inSameDefinition)
-        val doubleerrors = checkCallarg(TypeT("Double"), callarg, containingdefinition, arguments, basicFunctions, inSameDefinition)
+        val integererrors = checkCallarg(TypeT("Integer"), callarg, IdT("none needed as not user defined and single argument"), containingdefinition, arguments, basicFunctions, inSameDefinition)
+        val doubleerrors = checkCallarg(TypeT("Double"), callarg, IdT("none needed as not user defined and single argument"), containingdefinition, arguments, basicFunctions, inSameDefinition)
         val argumenterrors = if(integererrors.length < doubleerrors.length){integererrors} else{doubleerrors}
         val outerrors = expectedtype match{ case TypeT("String")=>List(); case TypeT(str)=>List(FumurtError(call.pos, "toString returns String not "+str))}
         argumenterrors++outerrors
@@ -396,7 +420,7 @@ object FumurtTypeChecker
                 }
                 else 
                 {
-                  checkCallarg(defargs(i).typestr, namedcallargs(i).argument, containingdefinition, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs])
+                  checkCallarg(defargs(i).typestr, namedcallargs(i).argument, defargs(i).id, containingdefinition, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs])
                 }
               )
             }
@@ -409,7 +433,7 @@ object FumurtTypeChecker
     }
   }
   
-  def checkCallarg(expectedtype:TypeT, arg:Callarg, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] = 
+  def checkCallarg(expectedtype:TypeT, arg:Callarg, id:IdT, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] = 
   {
     //println("in checkCallarg. arg is "+arg)
     arg match
@@ -428,7 +452,11 @@ object FumurtTypeChecker
           {
             if(expectedtype.value == "Inclusion")
             {
-              List() //TODO: Ensure that left name of inclusion is same as right name
+              if(thingdef.id.value != id.value)
+              {
+                List(FumurtError(c.pos, "Passed inclusion must be the same as the one referenced inside the function"))
+              }
+              else{List()}
             }
             else if(expectedtype.value != thingdef.returntype.value)
             {
@@ -603,7 +631,7 @@ object FumurtTypeChecker
 
 
 
-
+//TODO: add type for synchronized variables and use it to pass them around, so that it can be controlled that a thread calling actionMutate has write rights
 
 
 

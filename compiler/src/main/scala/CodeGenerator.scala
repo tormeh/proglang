@@ -118,7 +118,14 @@ object FumurtCodeGenerator
         {
           ldeffargs match
           {
-            case Some(Arguments(defargs))=>if(defargs.head.typestr.value=="Inclusion"){Left(NoArgs())}else{args}
+            case Some(Arguments(defargs))=>
+            {
+              if(defargs.head.typestr.value=="Inclusion"){Left(NoArgs())}
+              else
+              {
+                args
+              }
+            }
             case None=>Left(NoArgs())
             //case _=>Left(NoArgs())
           }
@@ -309,7 +316,7 @@ object FumurtCodeGenerator
     
     val list = ast.flatMap(node=>node match
       {
-        case aDefinition(aDefLhs(ThreadT(),id,cppid,_,_,_),aDefRhs(expressions))=>
+        case aDefinition(aDefLhs(ThreadT(),id,cppid,_,args,_),aDefRhs(expressions))=>
         {
           val signature = "[[noreturn]] static void "+cppid.value+"()"
           val functionstart = signature+"\n{"
@@ -319,7 +326,45 @@ object FumurtCodeGenerator
             y=> y match
             {
               case aDefinition(leftside, rightside)=>None
-              case aFunctionCallStatement(id.value,_, args,_) => Some("waitForRendezvous(\""+cppid.value+"\");\n  continue;") //TODO: update variables as the argument list says it should be done.
+              case aFunctionCallStatement(id.value,_, callargs,_) => 
+              {
+                val updates = args match
+                {
+                  case None => ""
+                  case Some(Arguments(List(Argument(argid,_)))) =>
+                  {
+                    callargs match
+                    {
+                      case Left(callarg) => 
+                      {
+                        val newvalue = callargTranslator(callarg, id.value)
+                        if (argid.value.startsWith("synchronized") && argid.value!=newvalue){"\nwe haven't figured out the correct way to handle this yet"} 
+                        else{"\n"+argid.value+" = "+newvalue+";\n"}
+                          
+                      }
+                      case Right(_)=>"error in generating updates1"
+                    }
+                  }
+                  case Some(Arguments(defargslist)) =>
+                  {
+                    callargs match
+                    {
+                      case Right(namedcallargs) =>
+                      {
+                        namedcallargs.value.foldLeft("\n")((l,r)=>
+                          {
+                            val newvalue = callargTranslator(r.argument, id.value)
+                            if (r.id.value.startsWith("synchronized") && r.id.value!=newvalue){"\nwe haven't figured out the correct way to handle this yet"} 
+                            else{l+r.id.value+" = "+newvalue+";\n"}
+                          }
+                        )
+                      }
+                      case Left(_)=>"error in generating updates2"
+                    }
+                  }
+                }
+                Some("waitForRendezvous(\""+cppid.value+"\");"+updates+"\n  continue;") //TODO: update variables as the argument list says it should be done.
+              }
               case z:aFunctionCallStatement => Some(functioncalltranslator(z, id.value) + ";")
               //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
             }
