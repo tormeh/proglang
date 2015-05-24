@@ -2816,6 +2816,10 @@ Related work
 CoreDet
 \end_layout
 
+\begin_layout Subsection
+Deterministic Parallel Java
+\end_layout
+
 \begin_layout Chapter
 Knowledge Dividends
 \end_layout
@@ -7691,7 +7695,8 @@ A language has been designed and a compiler has been built for it.
  In hindsight, the code generator could have been better written.
  Adding an additional two steps with the annotator was a fairly late decision,
  and the architecture of the module suffered for it.
- 
+ There's also numerous bugs and lacking features, as well as corner cases
+ where the appropriate behavior simply has not been determined.
 \end_layout
 
 \begin_layout Section

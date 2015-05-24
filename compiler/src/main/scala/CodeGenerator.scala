@@ -338,7 +338,11 @@ object FumurtCodeGenerator
                       case Left(callarg) => 
                       {
                         val newvalue = callargTranslator(callarg, id.value)
-                        if (argid.value.startsWith("synchronized") && argid.value!=newvalue){"\nwe haven't figured out the correct way to handle this yet"} 
+                        if (argid.value.startsWith("synchronized"))
+                        {
+                          if( argid.value!=newvalue){"\nwe haven't figured out the correct way to handle this yet"}
+                          else{""}
+                        }
                         else{"\n"+argid.value+" = "+newvalue+";\n"}
                           
                       }
@@ -354,7 +358,11 @@ object FumurtCodeGenerator
                         namedcallargs.value.foldLeft("\n")((l,r)=>
                           {
                             val newvalue = callargTranslator(r.argument, id.value)
-                            if (r.id.value.startsWith("synchronized") && r.id.value!=newvalue){"\nwe haven't figured out the correct way to handle this yet"} 
+                            if(r.id.value.startsWith("synchronized"))
+                            {
+                              if (r.id.value.startsWith("synchronized") && r.id.value!=newvalue){l+"\nwe haven't figured out the correct way to handle this yet"}
+                              else{l}
+                            }
                             else{l+r.id.value+" = "+newvalue+";\n"}
                           }
                         )
