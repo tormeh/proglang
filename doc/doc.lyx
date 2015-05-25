@@ -7471,17 +7471,13 @@ program p:Nothing =
 
 \begin_layout Plain Layout
 
-  threadPrintHello(synchronizedNumber)
-\end_layout
-
-\begin_layout Plain Layout
-
   threadPrintWorld(synchronizedNumber)
 \end_layout
 
 \begin_layout Plain Layout
 
-  threadPrintLol(actionPrintFoo=actionPrintFoo, integerIdentity=integerIdentity)
+  threadPrintLol(actionPrintFoo=integerIdentity, integerIdentity=integerIdentity
+yy)
 \end_layout
 
 \begin_layout Plain Layout
@@ -7540,7 +7536,7 @@ thread threadPrintHello(synchronizedNumber:Integer):Nothing =
 
 \begin_layout Plain Layout
 
-  actionPrint(toString(synchronizedNumber))
+  actionPrint(synchronizedNumber)
 \end_layout
 
 \begin_layout Plain Layout
@@ -7639,7 +7635,7 @@ function printFoo(integerIdentity:Inclusion):Nothing =
 
 \begin_layout Plain Layout
 
-  action actionPrintFooo:Nothing =
+  action actionPrintFooo:Nothin =
 \end_layout
 
 \begin_layout Plain Layout
@@ -7679,7 +7675,12 @@ function printFoo(integerIdentity:Inclusion):Nothing =
 
 \begin_layout Plain Layout
 
-  actionPrint(if(condition=true, then=toString(6), else=toString(3)))
+  actionPrint(if(condition=0, then=6, else=toString(3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(if(condition=false, then=6, else=3)))
 \end_layout
 
 \begin_layout Plain Layout
@@ -7700,7 +7701,7 @@ n")
 
 \begin_layout Plain Layout
 
-function integerIdentity(x:Integer):Integer = {x}
+function integerIdentity(x:Integer):Integer = {multiply(left=x, right=1.0)}
 \end_layout
 
 \end_inset
@@ -7732,7 +7733,99 @@ status open
 
 \begin_layout Plain Layout
 
-32.3: actionPrintFoo not found
+0.0: thread threadPrintHello is declared but not used
+\end_layout
+
+\begin_layout Plain Layout
+
+global position
+\end_layout
+
+\begin_layout Plain Layout
+
+^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+5.33: Passed inclusion must be the same as the one referenced inside the
+ function
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintLol(actionPrintFoo=integerIdentity, integerIdentity=integerIdentity
+yy)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+                                ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+5.66: integerIdentityyy not found
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintLol(actionPrintFoo=integerIdentity, integerIdentity=integerIdentity
+yy)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+                                                                 ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+17.15: Expected type String.
+ Got Integer
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(synchronizedNumber)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+              ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+31.3: actionPrintFoo not found
 \end_layout
 
 \begin_layout Plain Layout
@@ -7755,7 +7848,7 @@ status open
 
 \begin_layout Plain Layout
 
-33.33: actionPrintFoo not found
+32.33: actionPrintFoo not found
 \end_layout
 
 \begin_layout Plain Layout
@@ -7778,12 +7871,36 @@ status open
 
 \begin_layout Plain Layout
 
-38.3: actions cannot be defined in  functions
+39.5: Expected return type Nothin.
+ Got Nothing
 \end_layout
 
 \begin_layout Plain Layout
 
-  action actionPrintFooo:Nothing =
+    actionPrint("  FOOO  ")
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+37.3: actions cannot be defined in  functions
+\end_layout
+
+\begin_layout Plain Layout
+
+  action actionPrintFooo:Nothin =
 \end_layout
 
 \begin_layout Plain Layout
@@ -7801,7 +7918,31 @@ status open
 
 \begin_layout Plain Layout
 
-44.40: Call argument type should be Integer.
+42.3: Expected return type Nothing.
+ Got Nothin
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrintFooo()
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+43.40: Call argument type should be Integer.
  Call argument type was Double
 \end_layout
 
@@ -7825,7 +7966,78 @@ status open
 
 \begin_layout Plain Layout
 
-Four errors found
+45.28: Call argument type should be Boolean.
+ Call argument type was Integer
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(if(condition=0, then=6, else=toString(3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+                           ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+45.36: Call argument type should be String.
+ Call argument type was Integer
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(if(condition=0, then=6, else=toString(3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+                                   ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+50.48: This call to multiply returns a Double not an Integer
+\end_layout
+
+\begin_layout Plain Layout
+
+function integerIdentity(x:Integer):Integer = {multiply(left=x, right=1.0)}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+                                               ^
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+13 errors found
 \end_layout
 
 \end_inset
@@ -8021,15 +8233,14 @@ Two things can be concluded from these measurements:
 \end_layout
 
 \begin_layout Enumerate
-The execution incurs considerable cost
+The execution model incurs considerable cost
 \end_layout
 
 \begin_layout Enumerate
-The execution model, due to having sequential IO, can achieve superior performan
-ce compared to an unsynchronized model when the program is dominated by
- access to terminal output.
+The execution model can achieve superior performance compared to an unsynchroniz
+ed model when the program is dominated by access to terminal output.
  One may speculate that this is due to resource contention and applies equally
- to all inherently sequential IO.
+ to all inherently sequential IO
 \end_layout
 
 \begin_layout Section
