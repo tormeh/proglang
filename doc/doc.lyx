@@ -365,6 +365,10 @@ key "UCLReportStructure"
 , modified in consultation with superviser.
 \end_layout
 
+\begin_layout Standard
+The citation style is that of the Association for Computing Machinery.
+\end_layout
+
 \begin_layout Chapter
 Background
 \end_layout
@@ -2823,8 +2827,42 @@ Related work
 CoreDet
 \end_layout
 
+\begin_layout Standard
+A compiler and runtime system that runs arbitrary multithreaded C/C++ POSIX
+ Threads programs deterministically
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bergan2010coredet"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Subsection
 Deterministic Parallel Java
+\end_layout
+
+\begin_layout Standard
+DPJ extends Java with a deterministic features.
+ It is built on the idea of 
+\emph on
+regions.
+
+\emph default
+ The programmer divide memory into regions by annotating classes, and thereafter
+ annotates methods with effect summaries stating which regions are read
+ and written by a method.
+ The compiler uses the class types and method effect summaries to check
+ that all concurrent (read, write) and (write, write) pairs of accesses
+ to the same region are disjoint 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bocchino2009parallel"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Chapter
