@@ -7837,6 +7837,201 @@ Four errors found
 Performance
 \end_layout
 
+\begin_layout Standard
+In order to understand the cost of the synchronization in the execution
+ model, a test was performed.
+ The C++ code generated in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Full-program-test"
+
+\end_inset
+
+ was modified to exit when synchronizedNumber was equal to or bigger than
+ 20000.
+ Let this be the 
+\emph on
+original.
+
+\emph default
+ Then all synchronization mechanisms was removed.
+ Let this be the 
+\emph on
+unsynchronized
+\emph default
+.
+ Then the print statements of both was removed, as if the original Fumurt
+ program had had no calls to actionPrint.
+ Let these be 
+\emph on
+originalNoPrint
+\emph default
+ and 
+\emph on
+unsynchronizedNoPrint
+\emph default
+.
+ The times taken until completion was then measured using the Unix 
+\emph on
+time
+\emph default
+ utility.
+ The optimizations used were 
+\begin_inset Quotes eld
+\end_inset
+
+-O3 -march=native
+\begin_inset Quotes erd
+\end_inset
+
+ on an Intel i5-2500 CPU.
+ The results were very interesting:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Code
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Time until completion (in seconds)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+original
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.399
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+unsynchronized
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4.797
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+originalNoPrint
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.179
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+unsynchronizedNoPrint
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.002
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The same results are visualized in the plot below:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename perf.eps
+	lyxscale 70
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Two things can be concluded from these measurements:
+\end_layout
+
+\begin_layout Enumerate
+The execution incurs considerable cost
+\end_layout
+
+\begin_layout Enumerate
+The execution model, due to having sequential IO, can achieve superior performan
+ce compared to an unsynchronized model when the program is dominated by
+ access to terminal output.
+ One may speculate that this is due to resource contention and applies equally
+ to all inherently sequential IO.
+\end_layout
+
 \begin_layout Section
 Not Implemented
 \end_layout
