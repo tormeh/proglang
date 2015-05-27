@@ -259,8 +259,118 @@ lstset{language=scala}
 
 \end_layout
 
-\begin_layout Abstract
-It is determined that [somethings]
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+newpage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Problem Statement
+\end_layout
+
+\begin_layout Standard
+The student shall develop and implement a new programming language which
+ easy development of high-reliability multithreaded programs.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+newpage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Foreword
+\end_layout
+
+\begin_layout Standard
+This report describes a master thesis done as a part of the MSc Engineering
+ Cybernetics course at NTNU.
+ It was written in the spring semester of 2015.
+\end_layout
+
+\begin_layout Standard
+It assumes that readers have prior experience working with a programming
+ language and knows some common nomenclature.
+\end_layout
+
+\begin_layout Standard
+26.
+ mai 2015
+\end_layout
+
+\begin_layout Standard
+NTNU, Trondheim
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+newline
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Tormod Gjeitnes Hellen
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+newpage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Abstract
+\end_layout
+
+\begin_layout Standard
+fgh
+\end_layout
+
+\begin_layout Section*
+Sammendrag
+\end_layout
+
+\begin_layout Standard
+gjhm
 \end_layout
 
 \begin_layout Standard
@@ -300,14 +410,6 @@ What design choices did you have along the way, and why did you make the
 Set the scene and problem statement/specification.
  Provide the motivation for reading this report.
  Introduce the structure of report (what you will cover in which chapters).
-\end_layout
-
-\begin_layout Standard
-This report describes a master thesis done as a part of the MSc Engineering
- Cybernetics course at NTNU.
- It was written in the spring semester of 2015.
- It assumes that readers have prior experience working with a programming
- language and knows some common nomenclature.
 \end_layout
 
 \begin_layout Standard
@@ -2399,12 +2501,12 @@ scala> for(x <- 0 until 10){println(x)}
 
 \begin_layout Plain Layout
 
-scala> val l = List(0,1,2,3,4,5,6,7,8,9)
+scala> val list = List(0,1,2,3,4,5,6,7,8,9)
 \end_layout
 
 \begin_layout Plain Layout
 
-l: List[Int] = List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+list: List[Int] = List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 \end_layout
 
 \begin_layout Plain Layout
@@ -2413,7 +2515,7 @@ l: List[Int] = List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 
 \begin_layout Plain Layout
 
-scala> for(x <- l){println(x)}
+scala> for(x <- list){println(x)}
 \end_layout
 
 \begin_layout Plain Layout
@@ -2476,14 +2578,192 @@ scala> for(x <- l){println(x)}
 \end_layout
 
 \begin_layout Standard
-For fold, foldLeft, foldRight, map and flatMap examples, see 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sub:Functional-Programming"
+For fold, foldLeft, foldRight, map and flatMap examples:
+\end_layout
+
+\begin_layout Itemize
+fold is supplied with a function which produces a single value from two
+ input values, all three of the same type, fold repeatedly uses this to
+ produce a single value from a list.
+ Can be executed in parallel.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=scala}
+\end_layout
 
 \end_inset
 
- 
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala> (0 to 2).fold(0)((left,right) => left+right) 
+\end_layout
+
+\begin_layout Plain Layout
+
+res1: Int = 3
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> (0 to 2).par.fold(0)((left,right) => left+right) 
+\end_layout
+
+\begin_layout Plain Layout
+
+res2: Int = 3 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+foldLeft and foldRight are equivalent, except that the iteration over the
+ list goes in opposite directions.
+ In contrast to fold, the input and output types can be unequal.
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).foldLeft("numbers")((string,number) => string+number.toString)
+\end_layout
+
+\begin_layout Plain Layout
+
+res1: String = numbers0123456789
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).foldRight("numbers")((number,string) => number.toString+string)
+\end_layout
+
+\begin_layout Plain Layout
+
+res2: String = 0123456789numbers
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+map
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).map(x=>x*x)
+\end_layout
+
+\begin_layout Plain Layout
+
+res1: scala.collection.immutable.IndexedSeq[Int] = Vector(0, 1, 4, 9, 16, 25,
+ 36, 49, 64, 81)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).par.map(x=>x*x)
+\end_layout
+
+\begin_layout Plain Layout
+
+res2: scala.collection.parallel.immutable.ParSeq[Int] = ParVector(0, 1, 4, 9,
+ 16, 25, 36, 49, 64, 81)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+flatMap
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).flatMap(x=>if(x%2==0){None}else{Some(x)})
+\end_layout
+
+\begin_layout Plain Layout
+
+res1: scala.collection.immutable.IndexedSeq[Int] = Vector(1, 3, 5, 7, 9)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).flatMap(x=>if(x%2==0){None}else{Some(x*x)})
+\end_layout
+
+\begin_layout Plain Layout
+
+res2: scala.collection.immutable.IndexedSeq[Int] = Vector(1, 9, 25, 49, 81)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Together:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scala> (0 to 9).par.flatMap(x=>if(x%2==0){None}else{Some(x*x)}).fold(0)((left,right
+)=>left+right) 
+\end_layout
+
+\begin_layout Plain Layout
+
+res1: Int = 165 
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -2729,6 +3009,14 @@ res4: (Int, String, Double) = (9,string,5.0)
 \end_layout
 
 \begin_layout Section
+C++11
+\end_layout
+
+\begin_layout Section
+Regular Expressions
+\end_layout
+
+\begin_layout Section
 Deterministic Multithreading
 \begin_inset CommandInset label
 LatexCommand label
@@ -2820,7 +3108,17 @@ tic order, yet makes no guarantees about when.
 \end_layout
 
 \begin_layout Section
-Related work
+Related Work
+\end_layout
+
+\begin_layout Standard
+There are related work which also tries to make multithreaded programs easier
+ to work with, using custom compilers or languages extensions.
+ Among these are CoreDet and Deterministic Parallel Java.
+ CoreDet is a custom compiler for C/C++ made by modifying LLVM.
+ Deterministic Parallel Java is a langage extension for Java.
+ Given that they are about making multithreading easier they're worth mentioning
+, even though they haven't influenced this thesis.
 \end_layout
 
 \begin_layout Subsection
@@ -2850,12 +3148,20 @@ DPJ extends Java with a deterministic features.
 regions.
 
 \emph default
- The programmer divide memory into regions by annotating classes, and thereafter
- annotates methods with effect summaries stating which regions are read
+ The programmer divides memory into regions by annotating classes, and thereafte
+r annotates methods with effect summaries stating which regions are read
  and written by a method.
- The compiler uses the class types and method effect summaries to check
- that all concurrent (read, write) and (write, write) pairs of accesses
- to the same region are disjoint 
+ 
+\begin_inset Quotes eld
+\end_inset
+
+The compiler uses the class types and method effect summaries to check that
+ all concurrent (read, write) and (write, write) pairs of accesses to the
+ same region are disjoint
+\begin_inset Quotes erd
+\end_inset
+
+ 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "bocchino2009parallel"
@@ -2863,236 +3169,6 @@ key "bocchino2009parallel"
 \end_inset
 
 .
-\end_layout
-
-\begin_layout Chapter
-Knowledge Dividends
-\end_layout
-
-\begin_layout Section
-Regular Expressions
-\end_layout
-
-\begin_layout Standard
-The parsers in the scanner operate at the string-level and are based on
- regular expressions, though the author had no knowledge of how they worked
- before writing this thesis.
-\end_layout
-
-\begin_layout Section
-C++11
-\end_layout
-
-\begin_layout Section
-Functional Programming
-\begin_inset CommandInset label
-LatexCommand label
-name "sub:Functional-Programming"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The compiler includes only two loops, instead the code relies primarily
- on higher-order functions such as:
-\end_layout
-
-\begin_layout Itemize
-fold: supplied with a function which produces a single value from two input
- values, all of the same type, fold repeatedly uses this to produce a single
- value from a list.
- Can be executed in parallel.
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstset{language=scala}
-\end_layout
-
-\end_inset
-
-
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-scala> (0 to 2).fold(0)((left,right) => left+right) 
-\end_layout
-
-\begin_layout Plain Layout
-
-res1: Int = 3
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-scala> (0 to 2).par.fold(0)((left,right) => left+right) 
-\end_layout
-
-\begin_layout Plain Layout
-
-res2: Int = 3 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-foldLeft and foldRight are equivalent, except that the iteration over the
- list goes in opposite directions.
- In contrast to fold, the input and output types can be unequal.
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-scala> (0 to 9).foldLeft("numbers")((string,number) => string+number.toString)
-\end_layout
-
-\begin_layout Plain Layout
-
-res1: String = numbers0123456789
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-scala> (0 to 9).foldRight("numbers")((number,string) => number.toString+string)
-\end_layout
-
-\begin_layout Plain Layout
-
-res2: String = 0123456789numbers
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-map
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-scala> (0 to 9).map(x=>x*x)
-\end_layout
-
-\begin_layout Plain Layout
-
-res1: scala.collection.immutable.IndexedSeq[Int] = Vector(0, 1, 4, 9, 16, 25,
- 36, 49, 64, 81)
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-scala> (0 to 9).par.map(x=>x*x)
-\end_layout
-
-\begin_layout Plain Layout
-
-res2: scala.collection.parallel.immutable.ParSeq[Int] = ParVector(0, 1, 4, 9,
- 16, 25, 36, 49, 64, 81)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-flatMap
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-scala> (0 to 9).flatMap(x=>if(x%2==0){None}else{Some(x)})
-\end_layout
-
-\begin_layout Plain Layout
-
-res1: scala.collection.immutable.IndexedSeq[Int] = Vector(1, 3, 5, 7, 9)
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-scala> (0 to 9).flatMap(x=>if(x%2==0){None}else{Some(x*x)})
-\end_layout
-
-\begin_layout Plain Layout
-
-res2: scala.collection.immutable.IndexedSeq[Int] = Vector(1, 9, 25, 49, 81)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Together:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-scala> (0 to 9).par.flatMap(x=>if(x%2==0){None}else{Some(x*x)}).fold(0)((left,right
-)=>left+right) 
-\end_layout
-
-\begin_layout Plain Layout
-
-res1: Int = 165 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-Parser Combinators
-\end_layout
-
-\begin_layout Standard
-Before starting to write the thesis, the mere existence of parser combinators
- were outside the scope of the author's knowledge.
- Both the scanner and parser in the compiler described herein is built with
- parser combinators.
 \end_layout
 
 \begin_layout Chapter
@@ -8269,7 +8345,7 @@ check that only the thread with write rights to a synchronized variable
 \end_layout
 
 \begin_layout Chapter
-Conclusion, Evaluation and Further Work
+Conclusion, Discussion and Further Work
 \end_layout
 
 \begin_layout Standard
@@ -8286,7 +8362,15 @@ Conclusion
 
 \begin_layout Standard
 A language has been designed and a compiler has been built for it.
- In hindsight, the code generator could have been better written.
+ 
+\end_layout
+
+\begin_layout Section
+Discussion
+\end_layout
+
+\begin_layout Standard
+In hindsight, the code generator could have been better written.
  Adding an additional two steps with the annotator was a fairly late decision,
  and the architecture of the module suffered for it.
  There's also numerous bugs and lacking features, as well as corner cases
@@ -8355,7 +8439,9 @@ key "merrifield2015highCONSEQUENCE"
 
  may make it possible to obtain greater performance in cases where the programme
 r can allow scheduling requirements to be relaxed.
- 
+ Likewise, software transactional memory could be interesting, particularly
+ when a thread needs to wait on input from an unpredictable source, like
+ a human, while the rest of the threads needs to be responsive.
 \end_layout
 
 \begin_layout Standard
