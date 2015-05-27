@@ -362,7 +362,19 @@ Abstract
 \end_layout
 
 \begin_layout Standard
-fgh
+This report presents a programming language with deterministic multithreading
+ and its compiler.
+ The language demonstrates that when making IO and inter-thread communication
+ sequential, most problems with multithreaded programming disappears, while
+ most of the architectural and some of the performance benefits of multithreadin
+g are preserved.
+ Much difficulty in modern programming is a result of insufficient abstraction,
+ and while the popular embedded programming languages are unlikely to be
+ replaced anytime soon, effort still has to be made to figure out the next
+ step in the language evolution.
+ In the language presented, threads are written much like functions, dependencie
+s between functions not contained in each other are explicit and arguments
+ are distinguished by name, not sequence.
 \end_layout
 
 \begin_layout Section*
@@ -414,7 +426,7 @@ Set the scene and problem statement/specification.
 
 \begin_layout Standard
 It is commonly understood that writing software is hard and that writing
- mutlithreaded software is even harder.
+ multithreaded software is even harder.
  This report concerns itself with a new language - Fumurt - with a functional,
  though incomplete, compiler.
  This language is intended as a viability test of some new language semantics
@@ -427,7 +439,7 @@ It is commonly understood that writing software is hard and that writing
 \begin_layout Standard
 Specifying a language and implementing a compiler are inherently difficult
  tasks.
- The former is an exercise in subjective judgement and trade-offs and the
+ The former is an exercise in subjective judgment and trade-offs and the
  latter is a highly challenging exercise in software engineering.
  
 \end_layout
@@ -464,7 +476,7 @@ key "UCLReportStructure"
 
 \end_inset
 
-, modified in consultation with superviser.
+, modified in consultation with supervisor.
 \end_layout
 
 \begin_layout Standard
@@ -590,11 +602,11 @@ key "milne2002difficulties"
 \end_inset
 
 .
- To ameliorate this problem, a variety of machanisms have been implemented,
+ To ameliorate this problem, a variety of mechanisms have been implemented,
  for example map and fold, which performs common functions previously performed
  utilizing iteration.
  In this manner, the number of features often increase in the interest of
- analysability.
+ analyzability.
  Is this generally true? And if so, at what point does the drawbacks of
  increasing feature number outweigh the benefit of increased analyzability
  and predictability? Answering these questions is outside the scope of this
@@ -674,8 +686,8 @@ key "berry1992esterel"
 \begin_layout Standard
 In the end a decision was made in favor of using the synchronous programming
  paradigm.
- There are tradeoffs associated with chosing synchronous programming, but
- they were determined to be preferable to the alternatives.
+ There are trade-offs associated with choosing synchronous programming,
+ but they were determined to be preferable to the alternatives.
  The main problems with synchronous programming are 
 \end_layout
 
@@ -685,16 +697,16 @@ Difficulty in scaling beyond one physical machine.
 \end_layout
 
 \begin_layout Enumerate
-Performance loss due to processing resources idling as the synchronicity
+Performance loss due to processing resources idling as the synchronization
  abstraction requires all operations to use the same amount of time.
 \end_layout
 
 \begin_layout Standard
 Synchronous programming therefore has substantial problems, yet for single-machi
-ne systems it presents a way to achieve multi-threaded performance and achitectu
-re but with single-threaded predictability and therefore debugability.
+ne systems it presents a way to achieve multi-threaded performance and architect
+ure but with single-threaded predictability and therefore debugability.
  While the other abstractions place the responsibility for correct concurrent
- behaviour on the programmer, synchronous programming takes care of that
+ behavior on the programmer, synchronous programming takes care of that
  and replaces it with the responsibility for performance, as the program
  performs best if all threads has an equal amount of work.
  Let us discuss the problems of the other abstractions
@@ -708,9 +720,9 @@ Actors assume infinite message queues, with the failure mode being a loss
  Actors are designed to mimic distributed systems and create a unified abstracti
 on over these.
  Distributed systems have to correctly handle hardware failures, so loss
- of information is an acceptible failure mode for actors.
+ of information is an acceptable failure mode for actors.
  However, this makes actors unsuitable for real-time systems as recovering
- from data loss and unpredictable memory usage are unacceptable tradeoffs.
+ from data loss and unpredictable memory usage are unacceptable trade-offs.
  Ordering of IO is also unpredictable.
 \end_layout
 
@@ -850,7 +862,7 @@ The back end is composed of successive passes, of which every step transform
  the input intermediate representation into an output that is closer to
  the target format.
  The number of passes required vary greatly and depend on the differences
- between the source and ouput formats.
+ between the source and output formats.
  In the trivial case, where the input and output format is identical (for
  example C to C) the number of necessary passes would be zero.
 \end_layout
@@ -1085,7 +1097,7 @@ Now suppose it was desired to systematize a string of characters according
 \end_layout
 
 \begin_layout Standard
-This is an abstract syntax tree, often abreviated AST.
+This is an abstract syntax tree, often abbreviated AST.
  An abstract syntax tree is a tree, in the computer science sense, that
  represents the production of the source string from the grammar.
  In code:
@@ -1255,7 +1267,7 @@ parser
 \end_inset
 
 .
- The parser is refered to in two senses: 
+ The parser is referred to in two senses: 
 \end_layout
 
 \begin_layout Enumerate
@@ -1309,16 +1321,16 @@ Let's discuss these operators:
 \end_layout
 
 \begin_layout Itemize
-~! is used to combine parsers sequentially but dissallow backtracking.
+~! is used to combine parsers sequentially but disallow backtracking.
 \end_layout
 
 \begin_layout Itemize
-* applies the parser to the left as many times as it is succesful, moving
+* applies the parser to the left as many times as it is successful, moving
  on at failure
 \end_layout
 
 \begin_layout Itemize
-+ applies the parser to the left as many times as it is succesful, moving
++ applies the parser to the left as many times as it is successful, moving
  on at failure.
  Must be applied at least once
 \end_layout
@@ -1343,7 +1355,7 @@ Let's discuss these operators:
 \end_layout
 
 \begin_layout Itemize
-^^ is used to apply a function to the succesful result of the parser.
+^^ is used to apply a function to the successful result of the parser.
 \end_layout
 
 \begin_layout Itemize
@@ -2326,7 +2338,7 @@ For is a sequence comprehension which works much like in Python.
 
 \begin_deeper
 \begin_layout Itemize
-The indices of sequences are reprecented by 32 bit integers so 
+The indices of sequences are represented by 32 bit integers so 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3116,7 +3128,7 @@ There are related work which also tries to make multithreaded programs easier
  to work with, using custom compilers or languages extensions.
  Among these are CoreDet and Deterministic Parallel Java.
  CoreDet is a custom compiler for C/C++ made by modifying LLVM.
- Deterministic Parallel Java is a langage extension for Java.
+ Deterministic Parallel Java is a language extension for Java.
  Given that they are about making multithreading easier they're worth mentioning
 , even though they haven't influenced this thesis.
 \end_layout
@@ -3231,7 +3243,7 @@ name "sec:Runtime-Execution-Model"
 
 \begin_layout Standard
 The goal of the programming language is to make a multithreaded program
- behave as predictably as were it singlethreaded and, more generally, to
+ behave as predictably as were it single-threaded and, more generally, to
  help create reliable applications.
  A corollary of this is that only changes of state that are visible to a
  single thread can happen concurrently.
@@ -3324,7 +3336,7 @@ In terms of the actual execution a more detailed figure is offered:
 \begin_layout Standard
 Observe that in the computational stage parallel list transformations like
  map and fold or even futures can be made available, without affecting the
- outward behaviour of the system, except for performance:
+ outward behavior of the system, except for performance:
 \end_layout
 
 \begin_layout Standard
@@ -3378,7 +3390,7 @@ Inter-thread communication is provided by synchronized variables.
  The writes to a synchronized variable are effected so that all threads
  can read them during the communication phase.
  Having only one thread have write rights circumvents the entire problem
- of store order, and makes usre the programmer doesn't have to worry about
+ of store order, and makes sure the programmer doesn't have to worry about
  whose threads writes are effected in which order.
 \end_layout
 
@@ -3570,7 +3582,7 @@ synchronized
 \begin_layout Itemize
 Function arguments, if there are more than one, are distinguished not by
  relative position, but by name (as is optionally available in Python).
- Here fis presented a call to the if function and some calls to the toString
+ Here is presented a call to the if function and some calls to the toString
  function:
 \begin_inset ERT
 status open
@@ -3845,7 +3857,7 @@ How to define operator precedence? For math operators there's convention,
 \end_layout
 
 \begin_layout Standard
-A prime example of unhelpful operator behaviour is found in 
+A prime example of unhelpful operator behavior is found in 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:The-Scala-Parser"
@@ -4030,7 +4042,7 @@ Classes
 \end_layout
 
 \begin_layout Standard
-In trying to be familiar, it is desireable to provide types along with their
+In trying to be familiar, it is desirable to provide types along with their
  popular object oriented nomenclature.
  So classes are present, just that they are immutable.
  They are defined by their constructors, optionally with extra static methods:
@@ -4201,7 +4213,7 @@ Program Declaration
 \end_layout
 
 \begin_layout Standard
-The program declaration is meant to give a high level overview of the behaviour
+The program declaration is meant to give a high level overview of the behavior
  of the program.
  It declares what threads are spawned, in what sequence their IO should
  be enacted, which synchronized variables exist and which threads have write
@@ -4225,7 +4237,7 @@ actionPrint(x) prints the string x
 \end_layout
 
 \begin_layout Itemize
-actionMutate(variable, newvalue) assigns the newValue to the synchronized
+actionMutate(variable, newValue) assigns the newValue to the synchronized
  variable 
 \end_layout
 
@@ -4301,8 +4313,12 @@ In many projects, the initial design and the final design differ somewhat.
 \emph on
 If your design was not implemented fully, describe which parts you did implement
 , and which you didn't.
- If the reason you didn't implement everything is interesting (eg it turned
- out to be difficult for unexpected reasons), write about it.
+ If the reason you didn't implement everything is interesting (
+\emph default
+eg.
+
+\emph on
+ it turned out to be difficult for unexpected reasons), write about it.
 \end_layout
 
 \begin_layout Section
@@ -4321,7 +4337,7 @@ key "hall1993glasgowHaskellToC"
 \end_inset
 
 , and C is often used.
- Though many modern languages would be suitable for this, a wishlist of
+ Though many modern languages would be suitable for this, a wish list of
  features determined which language to choose:
 \end_layout
 
@@ -4404,7 +4420,7 @@ Fast execution time
 
 \begin_layout Standard
 Other languages under consideration were C, C++ and Haskell.
- C has inadequate abstractions and lacklustre typechecking.
+ C has inadequate abstractions and lackluster type checking.
  While C++ has much better abstractions, its type checking is still not
  strict enough to prevent many of the errors that would undoubtedly have
  been made during development.
@@ -5619,7 +5635,7 @@ Function List
 \begin_layout Itemize
 
 \emph on
-check(in:List[Definition]):Option[List[FumurtError]] 
+check 
 \emph default
 is the interface to the rest of the program.
  Takes in a AST and returns a list of errors, if there are any.
@@ -5628,8 +5644,7 @@ is the interface to the rest of the program.
 \begin_layout Itemize
 
 \emph on
-checktop(in:List[Definition], basicFunctions:List[DefLhs]): List[FumurtError]
- 
+checktop 
 \emph default
 checks the top level of the program.
  The top is special because it contains threads and the program statement,
@@ -5639,8 +5654,7 @@ checks the top level of the program.
 \begin_layout Itemize
 
 \emph on
-checkprogram(program:Definition, topleveldefs:List[DefLhs], basicFunctions:List[
-DefLhs]): List[FumurtError] 
+checkprogram 
 \emph default
 checks the program statement.
  Uses checkuseofthread and checks whether there are any calls to non-threads
@@ -5651,7 +5665,7 @@ checks the program statement.
 \begin_layout Itemize
 
 \emph on
-checkuseofthread(program:Definition, thread:DefLhs):List[FumurtError] 
+checkuseofthread 
 \emph default
 checks that the thread given is actually called in the program statement.
  Declaring a thread and failing to call it is an error.
@@ -5661,9 +5675,7 @@ checks that the thread given is actually called in the program statement.
 \begin_layout Itemize
 
 \emph on
-checkexpressions(tree:List[Expression], containingdefinition:Option[Definition],
- containingdefinitionarguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]
-):List[FumurtError] 
+checkexpressions 
 \emph default
 checks a list of expressions, such as might be found in the right-hand side
  of a definition.
@@ -5679,12 +5691,11 @@ checkexpression
 \begin_layout Itemize
 
 \emph on
-checkexpression(tocheck:Expression, containingdefinition:Option[Definition],
- arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:L
-ist[DefLhs]):List[FumurtError] 
+checkexpression 
 \emph default
 checks an individual expression.
- Uses 
+ Determines if the expression is a statement or a definition, and subsequently
+ uses 
 \emph on
 checkstatement
 \emph default
@@ -5696,9 +5707,7 @@ checkdefinition
 \begin_layout Itemize
 
 \emph on
-checkstatement(tocheck:Statement, containingdefinition:DefLhs, arguments:Option[
-List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs],
- expectedreturn:TypeT): List[FumurtError] 
+checkstatement 
 \emph default
 checks a statement.
  If it's an identifierStatement, checks that its return value is as expected.
@@ -5719,22 +5728,18 @@ args and/or checkcallarg
 \begin_layout Itemize
 
 \emph on
-checkifcall(ifcall:FunctionCallStatement, expectedtype:TypeT, containingdefiniti
-on:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
- inSameDefinition:List[DefLhs]):List[FumurtError]
+checkifcall
 \emph default
  checks calls to if.
  Makes sure the return type of then and else is the same and that condition
  is a boolean.
- Also checks naming, of course.
+ Also checks naming.
 \end_layout
 
 \begin_layout Itemize
 
 \emph on
-checkmutatecall(call:FunctionCallStatement, expectedtype:TypeT, containingdefini
-tion:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
- inSameDefinition:List[DefLhs]):List[FumurtError]
+checkmutatecall
 \emph default
  checks that the variable is a synchronized variable and otherwise has the
  same type as the new value
@@ -5743,9 +5748,7 @@ tion:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
 \begin_layout Itemize
 
 \emph on
-checkbasicmathcall(call:FunctionCallStatement, expectedtype:TypeT, containingdef
-inition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
- inSameDefinition:List[DefLhs]):List[FumurtError] 
+checkbasicmathcall 
 \emph default
 checks the four basic math operators, with special attention to the return
  type when double and int are mixed
@@ -5754,9 +5757,7 @@ checks the four basic math operators, with special attention to the return
 \begin_layout Itemize
 
 \emph on
-checktostringcall(call:FunctionCallStatement, expectedtype:TypeT, containingdefi
-nition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
- inSameDefinition:List[DefLhs]):List[FumurtError] 
+checktostringcall 
 \emph default
 checks that there is only one argument and that the expected type is String
 \end_layout
@@ -5764,9 +5765,7 @@ checks that there is only one argument and that the expected type is String
 \begin_layout Itemize
 
 \emph on
-checknamedcallargs(calledfunction:DefLhs, namedcallargs:List[NamedCallarg],
- containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:Lis
-t[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] 
+checknamedcallargs 
 \emph default
 checks named call arguments.
  Checks that the correct names are used, that the correct number of arguments
@@ -5776,9 +5775,7 @@ checks named call arguments.
 \begin_layout Itemize
 
 \emph on
-checkCallarg(expectedtype:TypeT, arg:Callarg, containingdefinition:DefLhs,
- arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:L
-ist[DefLhs]):List[FumurtError]
+checkCallarg
 \emph default
  checks a call argument.
  Makes sure the type is correct.
@@ -5788,8 +5785,7 @@ ist[DefLhs]):List[FumurtError]
 \begin_layout Itemize
 
 \emph on
-checkbasicvaluestatement(expectedtype:TypeT, basicstatement:BasicValueStatement,
- role:String):List[FumurtError]
+checkbasicvaluestatement
 \emph default
  checks that the type is correct.
 \end_layout
@@ -5797,8 +5793,11 @@ checkbasicvaluestatement(expectedtype:TypeT, basicstatement:BasicValueStatement,
 \begin_layout Itemize
 
 \emph on
-checkdefinition(tocheck:Definition, containingdefinition:Option[DefLhs],
- arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]): List[FumurtError]
+checkdefinition
+\emph default
+ checks a definition.
+ makes sure the return type is the one specified, that an action is not
+ defined or used from inside a function etc.
 \end_layout
 
 \begin_layout Itemize
@@ -5813,9 +5812,7 @@ indexlefts(in:List[Expression]):List[DefLhs]
 \begin_layout Itemize
 
 \emph on
-findinscope(arguments:Option[List[DefLhs]], inSameDefinition:List[DefLhs],
- basicfunctions:List[DefLhs], enclosingDefinition:Option[DefLhs], searchFor:Stri
-ng):Either[String, DefLhs] 
+findinscope 
 \emph default
 finds a left side of the definition in the current scope with the same name
  as that which is searched for.
@@ -5831,7 +5828,7 @@ Step by step approach:
 
 \begin_layout Enumerate
 First the C++ include statements are determined.
- These are surrently handwritten.
+ These are currently handwritten.
 \end_layout
 
 \begin_layout Enumerate
@@ -5876,7 +5873,7 @@ The C++ equivalent of the threads, actions and functions are constructed
 \end_layout
 
 \begin_layout Enumerate
-synchglobalvars handwritteen
+synchglobalvars handwritten [do something]
 \end_layout
 
 \begin_layout Enumerate
@@ -5897,7 +5894,7 @@ Function List
 \begin_layout Itemize
 
 \emph on
-generate(ast:List[Definition]):String
+generate
 \emph default
  generates the final C++ code from the Fumurt AST
 \end_layout
@@ -5905,8 +5902,7 @@ generate(ast:List[Definition]):String
 \begin_layout Itemize
 
 \emph on
-getAnnotatedTree(ast:List[Expression], topthreadcalls:List[FunctionCallStatement
-]):List[aExpression] 
+getAnnotatedTree 
 \emph default
 Returns an annotated version of the supplied AST.
  This version has the final C++ names for functions and function calls
@@ -5915,8 +5911,7 @@ Returns an annotated version of the supplied AST.
 \begin_layout Itemize
 
 \emph on
-getCallsAnnotatedTreeInternal(ast:List[aExpression], arguments:List[aDefLhs],
- containingDefinition:Option[aDefinition]):List[aExpression] 
+getCallsAnnotatedTreeInternal 
 \emph default
 returns an annotated version of the AST with final C++ names for function
  calls.
@@ -5926,26 +5921,21 @@ returns an annotated version of the AST with final C++ names for function
 \begin_layout Itemize
 
 \emph on
-annotateFunctionCall(functioncall:aFunctionCallStatement, arguments:List[aDefLhs
-], inSameDefinition:List[aDefLhs], containingDefinition:Option[aDefinition]):aFu
-nctionCallStatement 
+annotateFunctionCall 
 \emph default
 annotates a single function call
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-annotateCallargs(args:Either[aCallarg,aNamedCallargs], arguments:List[aDefLhs],
- inSameDefinition:List[aDefLhs], containingDefinition:Option[aDefinition]):Eithe
-r[aCallarg,aNamedCallargs] annotates that function calls call arguments.
+annotateCallargs annotates that function calls call arguments.
  Since call arguments can be function calls, this is often recursive.
 \end_layout
 
 \begin_layout Itemize
 
 \emph on
-removeInclusions(args:Either[aCallarg,aNamedCallargs], ldeffargs:Option[Argument
-s]):Either[aCallarg,aNamedCallargs] 
+removeInclusions 
 \emph default
 removes inclusion arguments from functions, since these have no purpose
  in C++
@@ -5955,7 +5945,7 @@ removes inclusion arguments from functions, since these have no purpose
 \begin_layout Itemize
 
 \emph on
-indexlefts(in:List[aExpression]):List[aDefLhs] 
+indexlefts 
 \emph default
 indexes DefLhs's like in the checker, but with the annotated types.
 \end_layout
@@ -5963,8 +5953,7 @@ indexes DefLhs's like in the checker, but with the annotated types.
 \begin_layout Itemize
 
 \emph on
-findinscope(arguments:Option[List[aDefLhs]], inSameDefinition:List[aDefLhs],
- enclosingDefinition:Option[aDefLhs], searchFor:String):aDefLhs 
+findinscope 
 \emph default
 same as the version in the checker, but with annotated types.
 \end_layout
@@ -5972,9 +5961,7 @@ same as the version in the checker, but with annotated types.
 \begin_layout Itemize
 
 \emph on
-getAnnotatedTreeInternal(ast:List[Expression], topthreadcalls:List[FunctionCallS
-tatement], hierarchy:String, callingthread:Option[String]):List[aExpression]
- 
+getAnnotatedTreeInternal 
 \emph default
 returns an AST with with final C++ names for functions
 \end_layout
@@ -5982,7 +5969,7 @@ returns an AST with with final C++ names for functions
 \begin_layout Itemize
 
 \emph on
-getFunctionDeclarations(ast:List[aExpression]):(String,String) 
+getFunctionDeclarations 
 \emph default
 gets the functions, in C++, from the AST
 \end_layout
@@ -5991,9 +5978,7 @@ gets the functions, in C++, from the AST
 \begin_layout Itemize
 
 \emph on
-actfunrecursivetranslate(cppid:IdT, callingthread:String, args:Option[Arguments]
-, returntype:TypeT, expressions:List[aExpression]):Option[(String,String)]
- 
+actfunrecursivetranslate 
 \emph default
 gets function body and signature of a function corresponding to the arguments
  as well as all functions defined in the body of the definition.
@@ -6003,8 +5988,7 @@ gets function body and signature of a function corresponding to the arguments
 \begin_layout Itemize
 
 \emph on
-getFunctionSignature(cppid:IdT, optargs:Option[Arguments], returntype:TypeT):Str
-ing 
+getFunctionSignature 
 \emph default
 constructs a C++ function signature from the arguments
 \end_layout
@@ -6013,7 +5997,7 @@ constructs a C++ function signature from the arguments
 \begin_layout Itemize
 
 \emph on
-argtranslator(arg:Argument):String
+argtranslator
 \emph default
  translates an argument as used in defining a function
 \end_layout
@@ -6022,7 +6006,7 @@ argtranslator(arg:Argument):String
 \begin_layout Itemize
 
 \emph on
-typetranslator(in:TypeT):String 
+typetranslator 
 \emph default
 translates (basic) Fumurt types to their C++ equivalents
 \end_layout
@@ -6030,7 +6014,7 @@ translates (basic) Fumurt types to their C++ equivalents
 \begin_layout Itemize
 
 \emph on
-callargTranslator(callarg:aCallarg, callingthread:String):String 
+callargTranslator 
 \emph default
 translates a call argument to C++ equivalent
 \end_layout
@@ -6038,8 +6022,7 @@ translates a call argument to C++ equivalent
 \begin_layout Itemize
 
 \emph on
-functioncalltranslator(call:aFunctionCallStatement, callingthread:String):String
- 
+functioncalltranslator 
 \emph default
 translates function call
 \end_layout
@@ -6047,15 +6030,15 @@ translates function call
 \begin_layout Itemize
 
 \emph on
-basicmathcalltranslator(call:aFunctionCallStatement, callingthread:String):Strin
-g
+basicmathcalltranslator 
+\emph default
+translates calls to plus, minus, divide and multiply into +,-,/, and *
 \end_layout
 
 \begin_layout Itemize
 
 \emph on
-gettopthreadstatements(ast:List[Definition]):List[FunctionCallStatement]
- 
+gettopthreadstatements 
 \emph default
 gets the C++ statements spawning the threads.
  
@@ -6064,8 +6047,7 @@ gets the C++ statements spawning the threads.
 \begin_layout Itemize
 
 \emph on
-getprintlistdeclarations(topthreads:List[FunctionCallStatement]):String
- 
+getprintlistdeclarations 
 \emph default
 gets the printList declarations.
  These are lists in which strings to be printed are kept.
@@ -6074,7 +6056,7 @@ gets the printList declarations.
 \begin_layout Itemize
 
 \emph on
-getmain(topthreads:List[FunctionCallStatement]):String 
+getmain 
 \emph default
 gets the main function.
  This only spawns the threads and then goes to sleep
@@ -6083,8 +6065,7 @@ gets the main function.
 \begin_layout Itemize
 
 \emph on
-getsynchronizerfunction(synchvariables:List[Definition], topthreads:List[Functio
-nCallStatement]):String 
+getsynchronizerfunction 
 \emph default
 gets the mostly static and hand-written function that performs all actions
  during the communication phase
@@ -6093,7 +6074,7 @@ gets the mostly static and hand-written function that performs all actions
 \begin_layout Itemize
 
 \emph on
-getGlobalSynchVariableDeclarations(synchvariables:List[Definition]):String
+getGlobalSynchVariableDeclarations
 \emph default
  gets the C++ declarations of the synchronized variables
 \end_layout
@@ -6101,7 +6082,7 @@ getGlobalSynchVariableDeclarations(synchvariables:List[Definition]):String
 \begin_layout Itemize
 
 \emph on
-getsynchronizedvariables(ast:List[Definition]):List[Definition]
+getsynchronizedvariables
 \emph default
  gets the definitions of the synchronized variables, so that they can later
  be used in 
@@ -7508,7 +7489,7 @@ reference "sec:Full-program-test"
 
  to the following erroneous program allow us to test them:[have a lot more
  errors.
- Preferrably all possible]
+ Preferably all possible]
 \begin_inset ERT
 status open
 
@@ -8361,8 +8342,16 @@ Conclusion
 \end_layout
 
 \begin_layout Standard
-A language has been designed and a compiler has been built for it.
- 
+During the writing of this thesis, a deterministic multithreaded language
+ has been designed and a compiler has been built for it.
+ In this report it has been shown that creating a programming language that
+ eliminates almost all of the difficulties of multithreaded programming
+ is possible, while maintaining some of the architectural and performance
+ benefits of multithreading.
+ Fumurt also presents some new ideas regarding the ways in which code should
+ be structured, possibly making it easier to maintain large software projects.
+ Yet Fumurt is not near being a usable language, and many questions remain
+ unanswered.
 \end_layout
 
 \begin_layout Section
@@ -8375,6 +8364,10 @@ In hindsight, the code generator could have been better written.
  and the architecture of the module suffered for it.
  There's also numerous bugs and lacking features, as well as corner cases
  where the appropriate behavior simply has not been determined.
+ The various features of the language included with the intent of easing
+ the maintenance of large programs are not rooted in empirical studies,
+ which is clearly unfortunate.
+ 
 \end_layout
 
 \begin_layout Section
@@ -8384,7 +8377,8 @@ Suggestions for Future Work
 \begin_layout Standard
 It is common for programming languages to need a decade of intensive development
  by several contributors before it is ready for serious usage.
- It is therefore not hard to come up with 
+ It is therefore not hard to come up with ways in which Fumurt could be
+ improved.
 \end_layout
 
 \begin_layout Standard
@@ -8397,15 +8391,16 @@ defRhs
 \begin_inset Quotes erd
 \end_inset
 
- in the current grammar is essentially a multiline statement.
+ in the current grammar is essentially a multi-line statement.
  It would be beneficial if the line between statement and defRhs could be
  eliminated.
- For instance, multiline statements could replace function calls in if-calls
+ For instance, multi-line statements could replace function calls in if-calls
  or a single line statement without brackets could serve as right hand side
  in a definition.
  Operators would make many common operations less verbose.
- Optional use of begin..end [function name or similar] syntax, as it can be
- helpful when reading deeply nested expressions.
+ Optional use of begin..end [function name or similar] syntax would be nice,
+ as it can be helpful when reading deeply nested expressions, where exactly
+ what it is that is ending can often be unclear.
 \end_layout
 
 \begin_layout Standard
@@ -8415,7 +8410,7 @@ A larger standard library is needed.
 \end_layout
 
 \begin_layout Standard
-Fumurt lacks user-defined types, interaces and generics as well as modules.
+Fumurt lacks user-defined types, interfaces and generics as well as modules.
  Mechanisms such as these make it easier to write large programs.
 \end_layout
 
@@ -8454,6 +8449,17 @@ The design of Fumurt centers around predictability, but in order to guarantee
  multiple computers or chips running Fumurt code could be coordinated by
  a system that does deal with fault-tolerance.
  Erlang with OTP seems like the standard for such applications.
+\end_layout
+
+\begin_layout Standard
+User studies concerning how the various aspects of the language are received,
+ particularly by novice programmers, would shed light on whether all the
+ ideas introduced in this report are actually good ideas.
+\end_layout
+
+\begin_layout Standard
+For performance reasons, making the threads lightweight, might be a good
+ idea.
 \end_layout
 
 \begin_layout Standard
