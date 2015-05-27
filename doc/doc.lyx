@@ -4438,7 +4438,7 @@ Choice of C++ Compiler
 There were two compilers under consideration: GCC and Clang.
  Clang is available for Windows, while GCC is tricky to get working on Windows.
  On the other hand, GCC is available as standard on most Linux distributions.
- The choice ultimately fell on Clang, as it is more important that the compiler
+ The choice ultimately fell on Clang, as it is better that the compiler
  is easily available on all platforms rather than being standard on some
  and hard to install on others.
 \end_layout
