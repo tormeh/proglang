@@ -80,7 +80,7 @@ showtabs=false}
 \paperfontsize default
 \spacing single
 \use_hyperref false
-\papersize default
+\papersize b5paper
 \use_geometry false
 \use_amsmath 1
 \use_esint 1
@@ -153,7 +153,7 @@ begin{center}
 
 
 \backslash
-Huge{A programming language with deterministic threading}
+Huge{A Programming Language with Deterministic Threading}
 \backslash
 
 \backslash
@@ -280,8 +280,16 @@ Problem Statement
 \end_layout
 
 \begin_layout Standard
-The student shall develop and implement a new programming language which
- easy development of high-reliability multithreaded programs.
+The student shall:
+\end_layout
+
+\begin_layout Enumerate
+Define a language with syntax and semantics that support writing high-reliabilit
+y, real-time multithreaded programs
+\end_layout
+
+\begin_layout Enumerate
+Implement this language
 \end_layout
 
 \begin_layout Standard
@@ -382,7 +390,18 @@ Sammendrag
 \end_layout
 
 \begin_layout Standard
-gjhm
+Denne rapporten omhandler et programmerinsspråk med deterministisk multitråding
+ og dette språkets kompilator.
+ Språket demonstrerer at når en gjør IO og inter-tråd kommunikasjon sekvensielt,
+ så forsvinner de fleste problemer med multitråding, mens de fleste arkitekturme
+ssige og noen av de ytelsesmessige fordelene forblir.
+ Mange av problemene i moderne programmering er et resultat av manglende
+ abstraksjon, og selv om de populære språkene for mikrokontrollere ikke
+ ser ut til å bli erstattet med det første, må vi fremdeles gjøre en innsats
+ for å finne det neste steget i språkutviklingen.
+ I det presenterte språket er tråder skrevet på samme måte som funksjoner,
+ avhengighet mellom funksjoner er eksplisitt or argumenter skilles fra hverandre
+ ved navn, ikke relativ posisjon.
 \end_layout
 
 \begin_layout Standard
@@ -8367,7 +8386,22 @@ In hindsight, the code generator could have been better written.
  The various features of the language included with the intent of easing
  the maintenance of large programs are not rooted in empirical studies,
  which is clearly unfortunate.
- 
+ In the case where a computational phase runs for a long time, the IO buffers
+ may grow to be too large to be stored in memory.
+ While this is not an issue for desktop and laptop computers where filling
+ up the memory takes so long that the program's unresponsiveness is the
+ bigger issue, for microcontrollers.
+ In general, the sequential IO and inter-thread communication abstraction
+ which the programming language provides can in extreme cases require that
+ the execution itself becomes sequential.
+ It seems intuitively possible that this is simply a necessity when providing
+ such an abstraction.
+ Yet sometimes performance is more important than strict predictability.
+ In such situations mechanisms need to be provided to the programmer so
+ that determinism requirements can be relaxed.
+ Similarly, some kinds of recursion have memory use requirements which are
+ hard to optimize away.
+ The correct way to handle this is yet to be determined.
 \end_layout
 
 \begin_layout Section
@@ -8460,6 +8494,31 @@ User studies concerning how the various aspects of the language are received,
 \begin_layout Standard
 For performance reasons, making the threads lightweight, might be a good
  idea.
+\end_layout
+
+\begin_layout Standard
+Implement tail call elimination for all actions and functions.
+\end_layout
+
+\begin_layout Standard
+Determine and implement an appropriate mechanism for direct access to memory,
+ which is often needed in embedded programming.
+\end_layout
+
+\begin_layout Standard
+Implement an appropriate procedure executed in the cases where the IO buffers
+ can no longer fit in memory.
+ A solution which would degrade performance but otherwise work well would
+ be to pause all threads trying to put IO into a full memory while letting
+ the thread whose IO are to be effected first write directly to IO.
+ Once that first thread is finished, the second thread whose IO shall be
+ effected can write directly to IO and so on until all threads are ready
+ to enter the communicative phase.
+ This will serialize execution, which can degrade performance.
+ In those cases where responsiveness is more important than strict IO sequential
+ity, special mechanisms may be provided whereby the programmer can specify
+ that in such cases IO buffers shall be emptied to IO during the computational
+ phase.
 \end_layout
 
 \begin_layout Standard
