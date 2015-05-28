@@ -8545,6 +8545,135 @@ This should include all the technical details (where is the code? what do
  project next year, to be able to amend your code and extend it.
 \end_layout
 
+\begin_layout Standard
+To avoid confusion, the Fumurt compiler will be referred to as 
+\begin_inset Quotes eld
+\end_inset
+
+the program
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+To compile this code you need the Simple Build Tool (SBT), available at
+ 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.scala-sbt.org/
+\end_layout
+
+\end_inset
+
+.
+ SBT will download the dependencies required including the compiler and
+ the parser combinator library.
+ It will also allow you to run the program.
+ Depending on the way you install SBT and on which platform, you may have
+ to install a Java runtime environment in order to run SBT
+\end_layout
+
+\begin_layout Standard
+To compile the code using SBT, a certain directory hierarchy is required.
+ The directory in which you run SBT must be the same directory that the
+ 
+\begin_inset Quotes eld
+\end_inset
+
+build.sbt
+\begin_inset Quotes erd
+\end_inset
+
+ file and 
+\begin_inset Quotes eld
+\end_inset
+
+src
+\begin_inset Quotes erd
+\end_inset
+
+ directory is in.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+build.sbt
+\begin_inset Quotes erd
+\end_inset
+
+ holds dependency and compilation options for SBT.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+src
+\begin_inset Quotes erd
+\end_inset
+
+ directory holds all the source code for the project in a structure.
+ Since there's only Scala code in this project, the source files shall be
+ in 
+\begin_inset Quotes eld
+\end_inset
+
+src/main/scala
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Once SBT is installed and the directory structure conforms to SBT rules,
+ SBT can be started in the directory by using the 
+\begin_inset Quotes eld
+\end_inset
+
+sbt
+\begin_inset Quotes erd
+\end_inset
+
+ command in a terminal in the directory holding 
+\begin_inset Quotes eld
+\end_inset
+
+build.sbt
+\begin_inset Quotes erd
+\end_inset
+
+ file and 
+\begin_inset Quotes eld
+\end_inset
+
+src
+\begin_inset Quotes erd
+\end_inset
+
+.
+ SBT will then download the files needed to compile and run the program.
+ This usually takes a while.
+ Once this is done, SBT will present a command prompt.
+ The program can then be compiled and run from this SBT command prompt using
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+run [name of Fumurt file]
+\begin_inset Quotes erd
+\end_inset
+
+ command.
+ The compilation also usually takes a while.
+ Note that the Fumurt source file must be in the same directory that you
+ launch SBT in, as the the Fumurt compiler does not handle file paths in
+ its input.
+\end_layout
+
 \begin_layout Chapter
 User manual
 \end_layout
@@ -8554,6 +8683,11 @@ User manual
 \emph on
 This should give enough information for someone to use what you have designed
  and implemented.
+\end_layout
+
+\begin_layout Standard
+You need to have Scala installed to run the Fumurt compiler without SBT
+ (see)
 \end_layout
 
 \begin_layout Chapter
