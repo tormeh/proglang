@@ -1,0 +1,18 @@
+program helloworld:Nothing =
+{
+  synchronized variable synchronizedNumber:Integer = {synchronized(variable=0, writer=threadA)}
+  threadPrintHello()
+  threadPrintWorld()
+}
+
+thread threadA:Nothing =
+{
+  actionPrint("World\n")
+  threadA()
+}
+
+thread threadB:Nothing =
+{
+  actionPrint("Hello ")
+  threadB()
+}

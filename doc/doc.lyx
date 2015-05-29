@@ -80,7 +80,7 @@ showtabs=false}
 \paperfontsize default
 \spacing single
 \use_hyperref false
-\papersize b5paper
+\papersize a4paper
 \use_geometry false
 \use_amsmath 1
 \use_esint 1
@@ -6282,18 +6282,151 @@ Hello World
 
 \begin_layout Plain Layout
 
-Hello World
+/*and so on*/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Multithreaded Hello World
+\end_layout
+
+\begin_layout Standard
+A dualthreaded hello World is written like this:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=fumurt}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+program helloworld:Nothing =
 \end_layout
 
 \begin_layout Plain Layout
 
-Hello World
+{
 \end_layout
 
 \begin_layout Plain Layout
 
-Hello World
+  threadPrintHello()
 \end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintWorld()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+thread threadPrintWorld:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("World
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintWorld()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+thread threadPrintHello:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("Hello ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadPrintHello()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Which also prints Hello World forever:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language={}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
 
 \begin_layout Plain Layout
 
@@ -6335,8 +6468,21 @@ Hello World
 
 \end_layout
 
+\begin_layout Standard
+Note there is absolutely no performance benefits to dualthreading this,
+ as the IO is sequential and this program does nothing but IO.
+\end_layout
+
 \begin_layout Section
-Full program test
+Synchronized Integer
+\end_layout
+
+\begin_layout Section
+Functions and Actions
+\end_layout
+
+\begin_layout Section
+Full Program Test
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:Full-program-test"
@@ -7382,101 +7528,6 @@ status open
 \begin_layout Plain Layout
 
 11 Hello world 11  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-12 Hello world 12  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-13 Hello world 13  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-14 Hello world 14  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-15 Hello world 15  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-16 Hello world 16  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-17 Hello world 17  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-18 Hello world 18  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-19 Hello world 19  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-20 Hello world 20  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-21 Hello world 21  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-22 Hello world 22  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-23 Hello world 23  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-24 Hello world 24  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-25 Hello world 25  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-26 Hello world 26  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-27 Hello world 27  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-28 Hello world 28  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-29 Hello world 29  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-30 Hello world 30  LOL     FOO     FOOO  5  6
 \end_layout
 
 \begin_layout Plain Layout
@@ -8535,6 +8586,13 @@ options "bibtotoc,acm"
 \begin_layout Chapter
 \start_of_appendix
 System manual
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:System-manual"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -8656,7 +8714,7 @@ src
 
 .
  SBT will then download the files needed to compile and run the program.
- This usually takes a while.
+ This usually takes a long while, depending on your Internet connection.
  Once this is done, SBT will present a command prompt.
  The program can then be compiled and run from this SBT command prompt using
  the 
@@ -8668,10 +8726,84 @@ run [name of Fumurt file]
 \end_inset
 
  command.
- The compilation also usually takes a while.
+ The compilation (of the compiler) also usually takes a while.
  Note that the Fumurt source file must be in the same directory that you
  launch SBT in, as the the Fumurt compiler does not handle file paths in
  its input.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+$ ls
+\end_layout
+
+\begin_layout Plain Layout
+
+build.sbt src test.fumurt
+\end_layout
+
+\begin_layout Plain Layout
+
+$ sbt
+\end_layout
+
+\begin_layout Plain Layout
+
+[info] [current sbt state]
+\end_layout
+
+\begin_layout Plain Layout
+
+> run test.fumurt
+\end_layout
+
+\begin_layout Plain Layout
+
+[info] Running fumurtCompiler.Main test.fumurt
+\end_layout
+
+\begin_layout Plain Layout
+
+[success] Total time: 2 s, completed May 29, 2015 5:42:18 PM
+\end_layout
+
+\begin_layout Plain Layout
+
+> [ctrl+c]
+\end_layout
+
+\begin_layout Plain Layout
+
+$ ls
+\end_layout
+
+\begin_layout Plain Layout
+
+generated.cpp build.sbt generated src test.fumurt
+\end_layout
+
+\begin_layout Plain Layout
+
+$ ./generated
+\end_layout
+
+\begin_layout Plain Layout
+
+[program output here]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Chapter
@@ -8686,8 +8818,140 @@ This should give enough information for someone to use what you have designed
 \end_layout
 
 \begin_layout Standard
-You need to have Scala installed to run the Fumurt compiler without SBT
- (see)
+You need to have Scala installed to run the Fumurt compiler from compiled
+ bytecode.
+ The current directory must be the one 
+\emph on
+above
+\emph default
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+.class
+\begin_inset Quotes erd
+\end_inset
+
+ bytecode files.
+ Because the starting point of the program is function 
+\begin_inset Quotes eld
+\end_inset
+
+main
+\begin_inset Quotes erd
+\end_inset
+
+ in object 
+\begin_inset Quotes eld
+\end_inset
+
+Main
+\begin_inset Quotes erd
+\end_inset
+
+ in package 
+\begin_inset Quotes eld
+\end_inset
+
+fumurtCompiler
+\begin_inset Quotes erd
+\end_inset
+
+, the folder containing the bytecode files must be 
+\begin_inset Quotes eld
+\end_inset
+
+fumurtCompiler
+\begin_inset Quotes erd
+\end_inset
+
+, i.e.
+ the name of the package and the command to run must be 
+\begin_inset Quotes eld
+\end_inset
+
+scala fumurtCompiler.Main [fumurt source file here]
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language={}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+$ ls
+\end_layout
+
+\begin_layout Plain Layout
+
+fumurtCompiler  test.fumurt
+\end_layout
+
+\begin_layout Plain Layout
+
+$ ls fumurtCompiler
+\end_layout
+
+\begin_layout Plain Layout
+
+aCallarg.class                                                          
+                  FumurtParser$$anonfun$subsequentArgsParser$1$$anonfun$apply$11.
+class
+\end_layout
+
+\begin_layout Plain Layout
+
+ActionT.class                                                           
+                  FumurtParser$$anonfun$subsequentArgsParser$1.class
+\end_layout
+
+\begin_layout Plain Layout
+
+ActionT$.class                                                          
+                  FumurtParser$$anonfun$subsequentArgsParser$2.class
+\end_layout
+
+\begin_layout Plain Layout
+
+[more bytecode files here]
+\end_layout
+
+\begin_layout Plain Layout
+
+$ scala fumurtCompiler.Main test.fumurt
+\end_layout
+
+\begin_layout Plain Layout
+
+$ ./generated
+\end_layout
+
+\begin_layout Plain Layout
+
+[program output here]
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Chapter
