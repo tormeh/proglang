@@ -143,3 +143,5 @@ run test.fumurt
 run errortest.fumurt
 run test.fumurt
 run helloworldmulti.fumurt
+run synchronized.fumurt
+run actionsFunctions.fumurt

@@ -6477,8 +6477,242 @@ Note there is absolutely no performance benefits to dualthreading this,
 Synchronized Integer
 \end_layout
 
+\begin_layout Standard
+Synchronized variables are the same in all threads, and mutations are published
+ in
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+program helloworld:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  synchronized variable synchronizedCounter:Integer = {synchronized(variable=0,
+ writer=threadC)}
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadA(synchronizedCounter)
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadB(synchronizedCounter)
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadC(synchronizedCounter)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+thread threadA(synchronizedCounter:Integer):Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(synchronizedCounter))
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(" == ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadA(synchronizedCounter)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+thread threadB(synchronizedCounter:Integer):Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(synchronizedCounter))
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadB(synchronizedCounter)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+thread threadC(synchronizedCounter:Integer):Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionMutate(newValue=plus(left=synchronizedCounter, right=1), variable=synchr
+onizedCounter)
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadC(synchronizedCounter)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+gives 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+0 == 0
+\end_layout
+
+\begin_layout Plain Layout
+
+1 == 1
+\end_layout
+
+\begin_layout Plain Layout
+
+2 == 2
+\end_layout
+
+\begin_layout Plain Layout
+
+3 == 3
+\end_layout
+
+\begin_layout Plain Layout
+
+4 == 4
+\end_layout
+
+\begin_layout Plain Layout
+
+5 == 5
+\end_layout
+
+\begin_layout Plain Layout
+
+6 == 6
+\end_layout
+
+\begin_layout Plain Layout
+
+7 == 7
+\end_layout
+
+\begin_layout Plain Layout
+
+8 == 8
+\end_layout
+
+\begin_layout Plain Layout
+
+9 == 9
+\end_layout
+
+\begin_layout Plain Layout
+
+/*and so on*/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Functions and Actions
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -8733,6 +8967,14 @@ run [name of Fumurt file]
 \end_layout
 
 \begin_layout Standard
+The Fumurt compiler uses Clang, and Clang must therefore be installed.
+\end_layout
+
+\begin_layout Standard
+Example:
+\end_layout
+
+\begin_layout Standard
 \begin_inset listings
 inline false
 status open
@@ -8754,7 +8996,7 @@ $ sbt
 
 \begin_layout Plain Layout
 
-[info] [current sbt state]
+[info] /*current sbt state*/
 \end_layout
 
 \begin_layout Plain Layout
@@ -8774,7 +9016,7 @@ $ sbt
 
 \begin_layout Plain Layout
 
-> [ctrl+c]
+> /*ctrl+c*/
 \end_layout
 
 \begin_layout Plain Layout
@@ -8794,11 +9036,7 @@ $ ./generated
 
 \begin_layout Plain Layout
 
-[program output here]
-\end_layout
-
-\begin_layout Plain Layout
-
+/*program output here*/
 \end_layout
 
 \end_inset
@@ -8874,7 +9112,15 @@ scala fumurtCompiler.Main [fumurt source file here]
 \begin_inset Quotes erd
 \end_inset
 
- 
+.
+\end_layout
+
+\begin_layout Standard
+The Fumurt compiler uses Clang, and Clang must therefore be installed.
+\end_layout
+
+\begin_layout Standard
+Example:
 \begin_inset ERT
 status open
 
@@ -8931,7 +9177,7 @@ ActionT$.class
 
 \begin_layout Plain Layout
 
-[more bytecode files here]
+/*more bytecode files here*/
 \end_layout
 
 \begin_layout Plain Layout
@@ -8946,7 +9192,7 @@ $ ./generated
 
 \begin_layout Plain Layout
 
-[program output here]
+/*program output here*/
 \end_layout
 
 \end_inset

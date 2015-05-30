@@ -1,18 +1,27 @@
 program helloworld:Nothing =
 {
-  synchronized variable synchronizedNumber:Integer = {synchronized(variable=0, writer=threadA)}
-  threadPrintHello()
-  threadPrintWorld()
+  synchronized variable synchronizedCounter:Integer = {synchronized(variable=0, writer=threadC)}
+  threadA(synchronizedCounter)
+  threadB(synchronizedCounter)
+  threadC(synchronizedCounter)
 }
 
-thread threadA:Nothing =
+thread threadA(synchronizedCounter:Integer):Nothing =
 {
-  actionPrint("World\n")
-  threadA()
+  actionPrint(toString(synchronizedCounter))
+  actionPrint(" == ")
+  threadA(synchronizedCounter)
 }
 
-thread threadB:Nothing =
+thread threadB(synchronizedCounter:Integer):Nothing =
 {
-  actionPrint("Hello ")
-  threadB()
+  actionPrint(toString(synchronizedCounter))
+  actionPrint("\n")
+  threadB(synchronizedCounter)
+}
+
+thread threadC(synchronizedCounter:Integer):Nothing =
+{
+  actionMutate(newValue=plus(left=synchronizedCounter, right=1), variable=synchronizedCounter)
+  threadC(synchronizedCounter)
 }
