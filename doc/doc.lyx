@@ -6708,6 +6708,154 @@ status open
 
 \begin_layout Plain Layout
 
+program helloworld:Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadA(d=0.0, actionPrintSquare=actionPrintSquare)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+thread threadA(d:Double, actionPrintSquare:Inclusion):Nothing =
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrintSquare(d)
+\end_layout
+
+\begin_layout Plain Layout
+
+  threadA(d = plus(left=d, right=0.5), actionPrintSquare=actionPrintSquare)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+action actionPrintSquare(d:Double):Nothing = 
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  function square(x:Double):Double = {multiply(left=x, right=x)}
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("The square of ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(d))
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(" is ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(square(d)))
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+gives
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+The square of 0.000000 is 0.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The square of 0.500000 is 0.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The square of 1.000000 is 1.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The square of 1.500000 is 2.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The square of 2.000000 is 4.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+/*and so on*/
 \end_layout
 
 \end_inset
