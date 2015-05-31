@@ -12,18 +12,19 @@ object FumurtCodeGenerator
     //println(atree)
     val numtopthreads = topthreads.length
     val synchronizationGlobalVars = "static std::atomic<int> rendezvousCounter;\nstatic std::mutex rendezvousSyncMutex;\nstatic std::condition_variable cv;"
-    val main = getmain(topthreads)
+    val main = getmain(topthreads, atree)
     val synchvars = getsynchronizedvariables(ast)
     val syncfunc = getsynchronizerfunction(synchvars, topthreads)
     val synchvardeclarations = getGlobalSynchVariableDeclarations(synchvars)
     val printdecs = getprintlistdeclarations(topthreads)
     //val topthreaddeclarations = gettopthreaddeclarations(ast)
     val (funSignatures, funDeclarations) = getFunctionDeclarations(atree)
+    val staticthreadargs = getStaticThreadArgs(atree:List[aExpression])
     val topThreadNumMacroln = "#define NUMTOPTHREADS " + numtopthreads.toString + "\n"
     
     //println(funSignatures)
     
-    includestatement + topThreadNumMacroln + funSignatures + "\n" + synchvardeclarations + printdecs + "\n" + synchronizationGlobalVars + syncfunc + "\n\n" /*+ topthreaddeclarations*/ + "\n"+ funDeclarations + "\n\n" + main
+    includestatement + topThreadNumMacroln + funSignatures + "\n" + synchvardeclarations + printdecs + "\n" + synchronizationGlobalVars + staticthreadargs + syncfunc + "\n\n" /*+ topthreaddeclarations*/ + "\n"+ funDeclarations + "\n\n" + main
   }
   
   
@@ -44,7 +45,7 @@ object FumurtCodeGenerator
           val argumentsToDef = args match
           {
             case None => List()
-            case Some(Arguments(arglist)) => arglist.flatMap(arg =>
+            case Some(aArguments(arglist)) => arglist.flatMap(arg =>
                 {
                   val fromargs = arguments.find(x=>x.id.value==arg.id.value)
                   val fromSame = inSameDefinition.find(x=>x.id.value==arg.id.value)
@@ -112,13 +113,13 @@ object FumurtCodeGenerator
     }
     else
     {
-      def removeInclusions(args:Either[aCallarg,aNamedCallargs], ldeffargs:Option[Arguments]):Either[aCallarg,aNamedCallargs] = args match
+      def removeInclusions(args:Either[aCallarg,aNamedCallargs], ldeffargs:Option[aArguments]):Either[aCallarg,aNamedCallargs] = args match
       {
         case Left(callarg)=>
         {
           ldeffargs match
           {
-            case Some(Arguments(defargs))=>
+            case Some(aArguments(defargs))=>
             {
               if(defargs.head.typestr.value=="Inclusion"){Left(NoArgs())}
               else
@@ -134,7 +135,7 @@ object FumurtCodeGenerator
         {
           ldeffargs match
           {
-            case Some(Arguments(defargs))=>
+            case Some(aArguments(defargs))=>
             {
               val mnewargs = ListBuffer():ListBuffer[aNamedCallarg]
               for(i<-0 until defargs.length)
@@ -228,13 +229,34 @@ object FumurtCodeGenerator
         case Definition(DefLhs(ThreadT(),id,args,returntype),DefRhs(expressions)) => 
         {
           val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls.filter(x=>x.functionidentifier==id.value), id.value, Some(id.value))
-          Some(aDefinition(aDefLhs(ThreadT(),id,id,id.value,args,returntype),aDefRhs(aexps)))
+          println("\n"+args+"\n\n")
+          val newargs = args.map(args=>aArguments(args.args.map(arg=>arg match
+                {
+                  case Argument(id, TypeT("Inclusion")) => aArgument(id, id, TypeT("Inclusion"))
+                  case Argument(argid, typee) => 
+                  {
+                    if (argid.value.startsWith("synchronized"))
+                    {
+                      aArgument(argid, argid, typee)
+                    }
+                    else
+                    {
+                      aArgument(argid, IdT(id.value+"$"+argid.value), typee)
+                    }
+                  }
+                }
+              )  
+            )
+          )
+          println(newargs+"\n\n\n") 
+          Some(aDefinition(aDefLhs(ThreadT(),id,id,id.value,newargs,returntype),aDefRhs(aexps)))
         }
         
         case Definition(DefLhs(FunctionT(),id,args,returntype),DefRhs(expressions)) => 
         {
           val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls, hierarchy+id.value, callingthread)
-          Some(aDefinition(aDefLhs(FunctionT(),id,IdT(id.value+"$"+hierarchy),"shouldn't matter",args,returntype),aDefRhs(aexps)))
+          val newargs = args.map(args=>aArguments(args.args.map(arg => aArgument(arg.id, arg.id, arg.typestr))))
+          Some(aDefinition(aDefLhs(FunctionT(),id,IdT(id.value+"$"+hierarchy),"shouldn't matter",newargs,returntype),aDefRhs(aexps)))
         }
         case Definition(DefLhs(ProgramT(),_,_,_),_) => None //we don't really care about it...
         case Definition(DefLhs(ActionT(),id,args,returntype),DefRhs(expressions)) => 
@@ -246,7 +268,8 @@ object FumurtCodeGenerator
           else
           {
             val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls, hierarchy+id.value, callingthread)
-            Some(aDefinition(aDefLhs(ActionT(),id,IdT(id.value+"$"+hierarchy),callingthread match{case Some(z)=>z; case None=>"not found"},args,returntype),aDefRhs(aexps)))
+            val newargs = args.map(args=>aArguments(args.args.map(arg => aArgument(arg.id, arg.id, arg.typestr))))
+            Some(aDefinition(aDefLhs(ActionT(),id,IdT(id.value+"$"+hierarchy),callingthread match{case Some(z)=>z; case None=>"not found"},newargs,returntype),aDefRhs(aexps)))
           }
         }
         case FunctionCallStatement(fid,args)=>
@@ -278,7 +301,7 @@ object FumurtCodeGenerator
   
   def getFunctionDeclarations(ast:List[aExpression]):(String,String) =
   {
-    def actfunrecursivetranslate(cppid:IdT, callingthread:String, args:Option[Arguments], returntype:TypeT, expressions:List[aExpression]):Option[(String,String)] =
+    def actfunrecursivetranslate(cppid:IdT, callingthread:String, args:Option[aArguments], returntype:TypeT, expressions:List[aExpression]):Option[(String,String)] =
     {
       val signature = getFunctionSignature(cppid, args, returntype)
       val functionstart = signature+"\n{"
@@ -322,6 +345,33 @@ object FumurtCodeGenerator
           val functionstart = signature+"\n{"
           val functionend = "\n}\n"
           val (tailrecursestart, tailrecurseend) = ("while(true)\n{", "\n}")
+          
+          def callargmodifier(in:aCallarg, threadargs:Option[aArguments]):aCallarg = in match 
+                {
+                  case call:aFunctionCallStatement=>
+                  {
+                    val newargs:Either[aCallarg,aNamedCallargs] = call.args match
+                    {
+                      case Left(callarg)=>Left(callargmodifier(callarg, threadargs))
+                      case Right(aNamedCallargs(namedcallargs))=>Right(aNamedCallargs(namedcallargs.map(namedcallarg=>aNamedCallarg(namedcallarg.id, callargmodifier(namedcallarg.argument, threadargs)))))
+                    }
+                    aFunctionCallStatement(call.functionidentifier, call.cppfunctionidentifier, newargs, call.returntype)
+                  }
+                  case IdentifierStatement(value)=>
+                  {
+                    threadargs match
+                    {
+                      case None => IdentifierStatement(value)
+                      case Some(aArguments(arglist)) =>
+                      {
+                        val arg = arglist.find(arg=>arg.id.value==value) match{case Some(x)=>x;case None=>println("error in functioncallargmodifier");scala.sys.exit()}
+                        IdentifierStatement(arg.cppid.value)
+                      } 
+                    }
+                  }
+                  case _=>in
+                }
+          
           val generals = expressions.flatMap(
             y=> y match
             {
@@ -331,7 +381,7 @@ object FumurtCodeGenerator
                 val updates = args match
                 {
                   case None => ""
-                  case Some(Arguments(List(Argument(argid,_)))) =>
+                  case Some(aArguments(List(aArgument(argid,cppargid,_)))) =>
                   {
                     callargs match
                     {
@@ -343,13 +393,13 @@ object FumurtCodeGenerator
                           if( argid.value!=newvalue){"\nwe haven't figured out the correct way to handle this yet"}
                           else{""}
                         }
-                        else{"\n"+argid.value+" = "+newvalue+";\n"}
+                        else{"\n"+cppargid.value+" = "+callargTranslator(callargmodifier(callarg, args), id.value)+";\n"}
                           
                       }
                       case Right(_)=>"error in generating updates1"
                     }
                   }
-                  case Some(Arguments(defargslist)) =>
+                  case Some(aArguments(defargslist)) =>
                   {
                     callargs match
                     {
@@ -363,7 +413,11 @@ object FumurtCodeGenerator
                               if (r.id.value.startsWith("synchronized") && r.id.value!=newvalue){l+"\nwe haven't figured out the correct way to handle this yet"}
                               else{l}
                             }
-                            else{l+r.id.value+" = "+newvalue+";\n"}
+                            else
+                            {
+                              val defarg = defargslist.find(defarg=>defarg.id.value == r.id.value) match{case Some(x)=>x;case None=>println("error in generating updates3");scala.sys.exit()}
+                              l+defarg.cppid.value+" = "+callargTranslator(callargmodifier(r.argument, args), id.value)+";\n"
+                            }
                           }
                         )
                       }
@@ -371,9 +425,18 @@ object FumurtCodeGenerator
                     }
                   }
                 }
-                Some("waitForRendezvous(\""+cppid.value+"\");"+updates+"\n  continue;") //TODO: update variables as the argument list says it should be done.
+                Some("waitForRendezvous(\""+cppid.value+"\");"+updates+"\n  continue;") 
               }
-              case z:aFunctionCallStatement => Some(functioncalltranslator(z, id.value) + ";")
+              case z:aFunctionCallStatement =>
+              {
+                val modified = callargmodifier(z, args) match
+                {
+                  case a:aFunctionCallStatement => a
+                  case _=> println("eror when modifying function call");scala.sys.exit()
+                }
+                Some(functioncalltranslator(modified, id.value) + ";")
+              } 
+              //case z:aFunctionCallStatement => Some(functioncalltranslator(z, id.value) + ";")
               //case _=> "not implemented" //println("Error in gettopthreaddeclarations. Not implemented."); scala.sys.exit()
             }
           ).foldLeft("")((x,y)=>x+"\n  "+y)
@@ -394,16 +457,16 @@ object FumurtCodeGenerator
   
   
   
-  def getFunctionSignature(cppid:IdT, optargs:Option[Arguments], returntype:TypeT):String =
+  def getFunctionSignature(cppid:IdT, optargs:Option[aArguments], returntype:TypeT):String =
   {
-    def argtranslator(arg:Argument):String=
+    def argtranslator(arg:aArgument):String=
     {
       typetranslator(arg.typestr)+" "+arg.id.value
     }
     val argsString = optargs match
     {
       case None=>""
-      case Some(Arguments(List(arg)))=>
+      case Some(aArguments(List(arg)))=>
       {
         if(arg.typestr.value!="Inclusion")
         {
@@ -411,7 +474,7 @@ object FumurtCodeGenerator
         }
         else{""}
       }
-      case Some(Arguments(args))=>argtranslator(args.head) + args.tail.foldLeft("")((x,y)=>
+      case Some(aArguments(args))=>argtranslator(args.head) + args.tail.foldLeft("")((x,y)=>
         if(y.typestr.value!="Inclusion"){x+", "+argtranslator(y)} else{x}
       )
       
@@ -576,8 +639,96 @@ object FumurtCodeGenerator
     out
   }
   
-  def getmain(topthreads:List[FunctionCallStatement]):String =
+  def getStaticThreadArgs(atree:List[aExpression]):String =
   {
+    atree.flatMap(exp=>exp match
+      {
+        case aDefinition(aDefLhs(ThreadT(),_,_,_,Some(aArguments(args)),_),_) => Some(args.flatMap(arg =>
+            if (arg.typestr.value == "Inclusion" || arg.id.value.startsWith("synchronized"))
+            {
+              None
+            }
+            else
+            {
+              Some("static "+typetranslator(arg.typestr)+" "+arg.cppid.value+";\n")
+            }
+          ).fold("")((l,r)=>l+r)
+        )
+        case _=> None
+      }
+    ).fold("\n")((l,r)=>l+r)
+    
+  }
+  
+  def getmain(topthreads:List[FunctionCallStatement], atree:List[aExpression]):String =
+  {
+    val threaddefls:List[aDefLhs] = atree.flatMap(exp=>exp match
+      {
+        case aDefinition(a @ aDefLhs(ThreadT(),_,_,_,_,_),_) => Some(a)
+        case _=>None
+      }
+    )
+    
+    val threadargsSet:String = topthreads.map(topthreadcall => 
+      {
+        val threaddefl = threaddefls.find(threaddefl => threaddefl.id.value == topthreadcall.functionidentifier) match {case Some(x)=>x; case None=>println("error in getmain");scala.sys.exit()}
+        topthreadcall.args match
+        {
+          case Left(callarg) => 
+          {
+            threaddefl.args match
+            {
+              case None=>List("")
+              case Some(aArguments(List(defarg)))=>
+              {
+                if (defarg.typestr.value == "Inclusion" || defarg.id.value.startsWith("synchronized"))
+                {
+                  List("")
+                }
+                else
+                {
+                  val modcallarg:aCallarg = callarg match
+                  {
+                    case a:aCallarg => a
+                    case _=>println("error in getmain2(should be forbidden)");scala.sys.exit() //function calls in assignment in program statement doesn't make much sense and should be forbidden
+                  }
+                  List(defarg.cppid.value+" = "+callargTranslator(modcallarg:aCallarg, "shouldn't be here")+";")
+                }
+                
+              }
+              case _=>println("error in getmain3");scala.sys.exit()
+            }
+          }
+          case Right(NamedCallargs(namedarglist)) =>
+          {
+            val defarglist = threaddefl.args match
+            {
+              case None => println("error in getmain4");scala.sys.exit()
+              case Some(aArguments(defarglist))=>defarglist
+            }
+            namedarglist.foldLeft(List():List[String])((list, namedarg)=>
+              {
+                val modcallarg:aCallarg = namedarg.argument match
+                {
+                  case a:aCallarg => a
+                  case _=>println("error in getmain5(should be forbidden)");scala.sys.exit() //function calls in assignment in program statement doesn't make much sense and should be forbidden
+                }
+                val defarg = defarglist.find(defarg => defarg.id.value==namedarg.id.value) match {case Some(x)=>x; case None=>println("error in getmain6");scala.sys.exit()}
+                if (defarg.typestr.value == "Inclusion" || defarg.id.value.startsWith("synchronized"))
+                {
+                  list
+                }
+                else
+                {
+                  list :+ (defarg.cppid.value+" = "+callargTranslator(modcallarg:aCallarg, "shouldn't be here")+";")
+                }
+              }
+            )
+          }
+        }
+      }
+    ).fold(List():List[String])((llist,rlist)=>llist++rlist).foldLeft("\n")((str,sublist)=>str+";\n"+sublist)
+    
     var threadsStart = ""
     
     for(i<-topthreads)
@@ -585,7 +736,7 @@ object FumurtCodeGenerator
       threadsStart = threadsStart + "\n" + "std::thread t" + i.functionidentifier + " (" + i.functionidentifier + ");"
     }
     
-    "int main()\n{\nrendezvousCounter.store(0);" + threadsStart + "\nwhile(true)\n{\nstd::this_thread::sleep_for(std::chrono::seconds(1));\n}" + "\n}"
+    "int main()\n{\nrendezvousCounter.store(0);" + threadargsSet + threadsStart + "\nwhile(true)\n{\nstd::this_thread::sleep_for(std::chrono::seconds(1));\n}" + "\n}"
   }
   
   def getsynchronizerfunction(synchvariables:List[Definition], topthreads:List[FunctionCallStatement]):String=
@@ -687,9 +838,9 @@ trait aCallarg extends Callarg with aStatement
 trait aStatement extends aExpression
 
 case class aDefinition(val leftside:aDefLhs, val rightside:aDefRhs) extends aExpression
-case class aDefLhs(val description:DefDescriptionT, val id:IdT, val cppid:IdT, val callingthread:String, val args:Option[Arguments], val returntype:TypeT)
-//case class Arguments(val args:List[Argument])
-//case class Argument(val id:IdT, val typestr:TypeT)
+case class aDefLhs(val description:DefDescriptionT, val id:IdT, val cppid:IdT, val callingthread:String, val args:Option[aArguments], val returntype:TypeT)
+case class aArguments(val args:List[aArgument])
+case class aArgument(val id:IdT, cppid:IdT, val typestr:TypeT)
 case class aDefRhs(val expressions:List[aExpression] )
 case class aNamedCallarg(id:IdT, argument:aCallarg) //extends Callarg
 case class aNamedCallargs(val value:List[aNamedCallarg])

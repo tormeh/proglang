@@ -1,11 +1,12 @@
 program helloworld:Nothing =
 {
-  threadA(0.0)
+  threadA(d=0.0, actionPrintSquare=actionPrintSquare)
 }
 
-thread threadA(d:Double):Nothing =
+thread threadA(d:Double, actionPrintSquare:Inclusion):Nothing =
 {
-  threadA(plus(left=d, right=0.5))
+  actionPrintSquare(d)
+  threadA(d = plus(left=d, right=0.5), actionPrintSquare=actionPrintSquare)
 }
 
 action actionPrintSquare(d:Double):Nothing = 
@@ -18,8 +19,4 @@ action actionPrintSquare(d:Double):Nothing =
   actionPrint("\n")
 }
 
-//fiks manglende argument ved:
-//1: forandre navnene til argumentene til tråd$argument i annoteringsfasen
-//2: hent ut argumentene og sett de som static globals i C++ filen
-//
-//som det er nå så blir de bare forkastet, så threadA her funker ikke fordi "d" faktisk ikke eksisterer i C++ koden
+
