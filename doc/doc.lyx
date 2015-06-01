@@ -267,6 +267,26 @@ status open
 
 
 \backslash
+newpage 
+\backslash
+thispagestyle{empty} 
+\backslash
+mbox{}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
 newpage
 \end_layout
 
@@ -277,6 +297,18 @@ newpage
 
 \begin_layout Section*
 Problem Statement
+\end_layout
+
+\begin_layout Standard
+In critical applications, multithreading is often problematic, introducing
+ its own errors in addition to the errors that arise from the problem itself.
+ Bugs can sometimes first result in failures when the software is in deployment.
+ There are high-profile examples of this.
+ There is a need for better ways to program multithreaded systems that result
+ in predictable-by-default behavior.
+ To the extent that is possible, this thesis shall present a language that
+ can serve as a starting point for creating better ways of writing critical-appl
+ication, multithreaded programs.
 \end_layout
 
 \begin_layout Standard
@@ -8853,9 +8885,9 @@ In hindsight, the code generator could have been better written.
  the execution itself becomes sequential.
  It seems intuitively possible that this is simply a necessity when providing
  such an abstraction.
- Yet sometimes performance is more important than strict predictability.
- In such situations mechanisms need to be provided to the programmer so
- that determinism requirements can be relaxed.
+ In situations where performance is more important than predictability,
+ mechanisms need to be provided to the programmer so that determinism requiremen
+ts can be relaxed.
  Similarly, some kinds of recursion have memory use requirements which are
  hard to optimize away.
  The correct way to handle this is yet to be determined.
@@ -9141,6 +9173,45 @@ run [name of Fumurt file]
 
 \begin_layout Standard
 The Fumurt compiler uses Clang, and Clang must therefore be installed.
+ If Clang is not installed, the user may compile the generated C++ from
+ the generated 
+\begin_inset Quotes eld
+\end_inset
+
+generated.cpp
+\begin_inset Quotes erd
+\end_inset
+
+ file.
+ The options 
+\begin_inset Quotes eld
+\end_inset
+
+-pthread
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+-std=c++11
+\begin_inset Quotes erd
+\end_inset
+
+ are required.
+\end_layout
+
+\begin_layout Standard
+The output will be a binary executable named 
+\begin_inset Quotes eld
+\end_inset
+
+generated
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -9290,6 +9361,33 @@ scala fumurtCompiler.Main [fumurt source file here]
 
 \begin_layout Standard
 The Fumurt compiler uses Clang, and Clang must therefore be installed.
+ If Clang is not installed, the user may compile the generated C++ from
+ the generated 
+\begin_inset Quotes eld
+\end_inset
+
+generated.cpp
+\begin_inset Quotes erd
+\end_inset
+
+ file.
+ The options 
+\begin_inset Quotes eld
+\end_inset
+
+-pthread
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+-std=c++11
+\begin_inset Quotes erd
+\end_inset
+
+ are required.
 \end_layout
 
 \begin_layout Standard
