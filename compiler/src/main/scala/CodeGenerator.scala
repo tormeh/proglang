@@ -346,14 +346,14 @@ object FumurtCodeGenerator
           val functionend = "\n}\n"
           val (tailrecursestart, tailrecurseend) = ("while(true)\n{", "\n}")
           
-          def callargmodifier(in:aCallarg, threadargs:Option[aArguments]):aCallarg = in match 
+          def changeNamesToCppOnes(in:aCallarg, threadargs:Option[aArguments]):aCallarg = in match 
                 {
                   case call:aFunctionCallStatement=>
                   {
                     val newargs:Either[aCallarg,aNamedCallargs] = call.args match
                     {
-                      case Left(callarg)=>Left(callargmodifier(callarg, threadargs))
-                      case Right(aNamedCallargs(namedcallargs))=>Right(aNamedCallargs(namedcallargs.map(namedcallarg=>aNamedCallarg(namedcallarg.id, callargmodifier(namedcallarg.argument, threadargs)))))
+                      case Left(callarg)=>Left(changeNamesToCppOnes(callarg, threadargs))
+                      case Right(aNamedCallargs(namedcallargs))=>Right(aNamedCallargs(namedcallargs.map(namedcallarg=>aNamedCallarg(namedcallarg.id, changeNamesToCppOnes(namedcallarg.argument, threadargs)))))
                     }
                     aFunctionCallStatement(call.functionidentifier, call.cppfunctionidentifier, newargs, call.returntype)
                   }
@@ -393,7 +393,7 @@ object FumurtCodeGenerator
                           if( argid.value!=newvalue){"\nwe haven't figured out the correct way to handle this yet"}
                           else{""}
                         }
-                        else{"\n"+cppargid.value+" = "+callargTranslator(callargmodifier(callarg, args), id.value)+";\n"}
+                        else{"\n"+cppargid.value+" = "+callargTranslator(changeNamesToCppOnes(callarg, args), id.value)+";\n"}
                           
                       }
                       case Right(_)=>"error in generating updates1"
@@ -416,7 +416,7 @@ object FumurtCodeGenerator
                             else
                             {
                               val defarg = defargslist.find(defarg=>defarg.id.value == r.id.value) match{case Some(x)=>x;case None=>println("error in generating updates3");scala.sys.exit()}
-                              l+defarg.cppid.value+" = "+callargTranslator(callargmodifier(r.argument, args), id.value)+";\n"
+                              l+defarg.cppid.value+" = "+callargTranslator(changeNamesToCppOnes(r.argument, args), id.value)+";\n"
                             }
                           }
                         )
@@ -429,7 +429,7 @@ object FumurtCodeGenerator
               }
               case z:aFunctionCallStatement =>
               {
-                val modified = callargmodifier(z, args) match
+                val modified = changeNamesToCppOnes(z, args) match
                 {
                   case a:aFunctionCallStatement => a
                   case _=> println("eror when modifying function call");scala.sys.exit()
@@ -727,7 +727,7 @@ object FumurtCodeGenerator
           }
         }
       }
-    ).fold(List():List[String])((llist,rlist)=>llist++rlist).foldLeft("\n")((str,sublist)=>str+";\n"+sublist)
+    ).fold(List():List[String])((llist,rlist)=>llist++rlist).foldLeft("\n")((str,sublist)=>if(sublist!=""){str+"\n"+sublist}else{str})
     
     var threadsStart = ""
     

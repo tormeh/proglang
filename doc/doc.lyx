@@ -6003,6 +6003,16 @@ gets function body and signature of a function corresponding to the arguments
  as well as all functions defined in the body of the definition.
 \end_layout
 
+\begin_layout Itemize
+
+\emph on
+changeNamesToCppOnes
+\emph default
+ changes all identifiers which are arguments to a thread to their C++ names
+ throughout the thread.
+ 
+\end_layout
+
 \end_deeper
 \begin_layout Itemize
 
@@ -6864,7 +6874,7 @@ The square of 2.000000 is 4.000000
 \end_layout
 
 \begin_layout Section
-Full Program Test
+Full Program Test With C++ Intermediate
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:Full-program-test"
@@ -6924,7 +6934,8 @@ program p:Nothing =
 
 \begin_layout Plain Layout
 
-  threadPrintLol(actionPrintFoo=actionPrintFoo, integerIdentity=integerIdentity)
+  threadPrintBaz(actionPrintFoo=actionPrintFoo, counter=0.0, integerIdentity=inte
+gerIdentity)
 \end_layout
 
 \begin_layout Plain Layout
@@ -7013,8 +7024,8 @@ r, right=1))
 
 \begin_layout Plain Layout
 
-thread threadPrintLol(actionPrintFoo:Inclusion, integerIdentity:Inclusion):Nothi
-ng =
+thread threadPrintBaz(actionPrintFoo:Inclusion, integerIdentity:Inclusion,
+ counter:Double):Nothing =
 \end_layout
 
 \begin_layout Plain Layout
@@ -7024,7 +7035,7 @@ ng =
 
 \begin_layout Plain Layout
 
-  action actionPrintLol:Nothing =
+  action actionPrintBaz(counter:Double):Nothing =
 \end_layout
 
 \begin_layout Plain Layout
@@ -7034,7 +7045,17 @@ ng =
 
 \begin_layout Plain Layout
 
-    actionPrint("  LOL   ")
+    actionPrint("  BAZ ")
+\end_layout
+
+\begin_layout Plain Layout
+
+    actionPrint(toString(counter))
+\end_layout
+
+\begin_layout Plain Layout
+
+    actionPrint("   ")
 \end_layout
 
 \begin_layout Plain Layout
@@ -7048,7 +7069,7 @@ ng =
 
 \begin_layout Plain Layout
 
-  actionPrintLol()
+  actionPrintBaz(counter)
 \end_layout
 
 \begin_layout Plain Layout
@@ -7058,7 +7079,8 @@ ng =
 
 \begin_layout Plain Layout
 
-  threadPrintLol(actionPrintFoo=actionPrintFoo, integerIdentity=integerIdentity)
+  threadPrintBaz(counter=minus(right=1.0, left=counter), actionPrintFoo=actionPri
+ntFoo, integerIdentity=integerIdentity)
 \end_layout
 
 \begin_layout Plain Layout
@@ -7238,12 +7260,12 @@ status open
 
 \begin_layout Plain Layout
 
-[[noreturn]] static void threadPrintLol();
+[[noreturn]] static void threadPrintBaz();
 \end_layout
 
 \begin_layout Plain Layout
 
-void actionPrintLol$threadPrintLol();
+void actionPrintBaz$threadPrintBaz(double counter);
 \end_layout
 
 \begin_layout Plain Layout
@@ -7253,12 +7275,12 @@ int integerIdentity$(int x);
 
 \begin_layout Plain Layout
 
-void actionPrintFoo$threadPrintLol();
+void actionPrintFoo$threadPrintBaz();
 \end_layout
 
 \begin_layout Plain Layout
 
-void actionPrintFooo$threadPrintLolactionPrintFoo();
+void actionPrintFooo$threadPrintBazactionPrintFoo();
 \end_layout
 
 \begin_layout Plain Layout
@@ -7287,7 +7309,7 @@ static std::list<std::string> printthreadPrintWorld;
 
 \begin_layout Plain Layout
 
-static std::list<std::string> printthreadPrintLol;
+static std::list<std::string> printthreadPrintBaz;
 \end_layout
 
 \begin_layout Plain Layout
@@ -7302,8 +7324,17 @@ static std::mutex rendezvousSyncMutex;
 
 \begin_layout Plain Layout
 
-static std::condition_variable cv;static void waitForRendezvous(std::string
- name)
+static std::condition_variable cv;
+\end_layout
+
+\begin_layout Plain Layout
+
+static double threadPrintBaz$counter;
+\end_layout
+
+\begin_layout Plain Layout
+
+static void waitForRendezvous(std::string name)
 \end_layout
 
 \begin_layout Plain Layout
@@ -7393,17 +7424,17 @@ printthreadPrintWorld.pop_front();
 
 \begin_layout Plain Layout
 
-while(!printthreadPrintLol.empty()){
+while(!printthreadPrintBaz.empty()){
 \end_layout
 
 \begin_layout Plain Layout
 
-std::cout << printthreadPrintLol.front();
+std::cout << printthreadPrintBaz.front();
 \end_layout
 
 \begin_layout Plain Layout
 
-printthreadPrintLol.pop_front();
+printthreadPrintBaz.pop_front();
 \end_layout
 
 \begin_layout Plain Layout
@@ -7596,7 +7627,7 @@ n";
 
 \begin_layout Plain Layout
 
-[[noreturn]] static void threadPrintLol()
+[[noreturn]] static void threadPrintBaz()
 \end_layout
 
 \begin_layout Plain Layout
@@ -7611,17 +7642,26 @@ n";
 
 \begin_layout Plain Layout
 
-  actionPrintLol$threadPrintLol();
+  actionPrintBaz$threadPrintBaz(threadPrintBaz$counter);
 \end_layout
 
 \begin_layout Plain Layout
 
-  actionPrintFoo$threadPrintLol();
+  actionPrintFoo$threadPrintBaz();
 \end_layout
 
 \begin_layout Plain Layout
 
-  waitForRendezvous("threadPrintLol");
+  waitForRendezvous("threadPrintBaz");
+\end_layout
+
+\begin_layout Plain Layout
+
+threadPrintBaz$counter = (threadPrintBaz$counter - 1.0);
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \begin_layout Plain Layout
@@ -7645,7 +7685,7 @@ n";
 
 \begin_layout Plain Layout
 
-void actionPrintLol$threadPrintLol()
+void actionPrintBaz$threadPrintBaz(double counter)
 \end_layout
 
 \begin_layout Plain Layout
@@ -7655,7 +7695,17 @@ void actionPrintLol$threadPrintLol()
 
 \begin_layout Plain Layout
 
-  printthreadPrintLol.push_back("  LOL   ");
+  printthreadPrintBaz.push_back("  BAZ ");
+\end_layout
+
+\begin_layout Plain Layout
+
+  printthreadPrintBaz.push_back(std::to_string(counter));
+\end_layout
+
+\begin_layout Plain Layout
+
+  printthreadPrintBaz.push_back("   ");
 \end_layout
 
 \begin_layout Plain Layout
@@ -7693,7 +7743,7 @@ int integerIdentity$(int x)
 
 \begin_layout Plain Layout
 
-void actionPrintFoo$threadPrintLol()
+void actionPrintFoo$threadPrintBaz()
 \end_layout
 
 \begin_layout Plain Layout
@@ -7703,32 +7753,32 @@ void actionPrintFoo$threadPrintLol()
 
 \begin_layout Plain Layout
 
-  printthreadPrintLol.push_back("  FOO   ");
+  printthreadPrintBaz.push_back("  FOO   ");
 \end_layout
 
 \begin_layout Plain Layout
 
-  actionPrintFooo$threadPrintLolactionPrintFoo();
+  actionPrintFooo$threadPrintBazactionPrintFoo();
 \end_layout
 
 \begin_layout Plain Layout
 
-  printthreadPrintLol.push_back(std::to_string(integerIdentity$(5)));
+  printthreadPrintBaz.push_back(std::to_string(integerIdentity$(5)));
 \end_layout
 
 \begin_layout Plain Layout
 
-  printthreadPrintLol.push_back("  ");
+  printthreadPrintBaz.push_back("  ");
 \end_layout
 
 \begin_layout Plain Layout
 
-  printthreadPrintLol.push_back(std::to_string(6));
+  printthreadPrintBaz.push_back(std::to_string(6));
 \end_layout
 
 \begin_layout Plain Layout
 
-  printthreadPrintLol.push_back("
+  printthreadPrintBaz.push_back("
 \backslash
 n");
 \end_layout
@@ -7744,7 +7794,7 @@ n");
 
 \begin_layout Plain Layout
 
-void actionPrintFooo$threadPrintLolactionPrintFoo()
+void actionPrintFooo$threadPrintBazactionPrintFoo()
 \end_layout
 
 \begin_layout Plain Layout
@@ -7754,7 +7804,7 @@ void actionPrintFooo$threadPrintLolactionPrintFoo()
 
 \begin_layout Plain Layout
 
-  printthreadPrintLol.push_back("  FOOO  ");
+  printthreadPrintBaz.push_back("  FOOO  ");
 \end_layout
 
 \begin_layout Plain Layout
@@ -7787,6 +7837,15 @@ rendezvousCounter.store(0);
 
 \begin_layout Plain Layout
 
+\end_layout
+
+\begin_layout Plain Layout
+
+threadPrintBaz$counter = 0.0;
+\end_layout
+
+\begin_layout Plain Layout
+
 std::thread tthreadPrintHello (threadPrintHello);
 \end_layout
 
@@ -7797,7 +7856,7 @@ std::thread tthreadPrintWorld (threadPrintWorld);
 
 \begin_layout Plain Layout
 
-std::thread tthreadPrintLol (threadPrintLol);
+std::thread tthreadPrintBaz (threadPrintBaz);
 \end_layout
 
 \begin_layout Plain Layout
@@ -7854,62 +7913,27 @@ status open
 
 \begin_layout Plain Layout
 
-0 Hello world 0  LOL     FOO     FOOO  5  6
+0 Hello world 0  BAZ 0.000000     FOO     FOOO  5  6
 \end_layout
 
 \begin_layout Plain Layout
 
-1 Hello world 1  LOL     FOO     FOOO  5  6
+1 Hello world 1  BAZ -1.000000     FOO     FOOO  5  6
 \end_layout
 
 \begin_layout Plain Layout
 
-2 Hello world 2  LOL     FOO     FOOO  5  6
+2 Hello world 2  BAZ -2.000000     FOO     FOOO  5  6
 \end_layout
 
 \begin_layout Plain Layout
 
-3 Hello world 3  LOL     FOO     FOOO  5  6
+3 Hello world 3  BAZ -3.000000     FOO     FOOO  5  6
 \end_layout
 
 \begin_layout Plain Layout
 
-4 Hello world 4  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-5 Hello world 5  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-6 Hello world 6  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-7 Hello world 7  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-8 Hello world 8  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-9 Hello world 9  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-10 Hello world 10  LOL     FOO     FOOO  5  6
-\end_layout
-
-\begin_layout Plain Layout
-
-11 Hello world 11  LOL     FOO     FOOO  5  6
+4 Hello world 4  BAZ -4.000000     FOO     FOOO  5  6
 \end_layout
 
 \begin_layout Plain Layout
@@ -8930,7 +8954,8 @@ For performance reasons, making the threads lightweight, might be a good
 \end_layout
 
 \begin_layout Standard
-Implement tail call elimination for all actions and functions.
+Implement tail call elimination for all actions and functions, not just
+ threads recursing on themselves as is done currently.
 \end_layout
 
 \begin_layout Standard
