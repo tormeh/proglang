@@ -6784,7 +6784,12 @@ status open
 \end_layout
 
 \begin_layout Section
-Functions, Actions and Recursion
+Functions, Actions, Recursion and the Limitations of Integers
+\end_layout
+
+\begin_layout Standard
+An example with a single thread, a square and a factorial function and an
+ action is presented below.
 \end_layout
 
 \begin_layout Standard
@@ -6946,7 +6951,7 @@ n")
 \end_layout
 
 \begin_layout Standard
-gives
+When run, this example gives the following output:
 \end_layout
 
 \begin_layout Standard

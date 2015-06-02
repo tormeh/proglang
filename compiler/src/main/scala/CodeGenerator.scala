@@ -229,7 +229,7 @@ object FumurtCodeGenerator
         case Definition(DefLhs(ThreadT(),id,args,returntype),DefRhs(expressions)) => 
         {
           val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls.filter(x=>x.functionidentifier==id.value), id.value, Some(id.value))
-          println("\n"+args+"\n\n")
+          //println("\n"+args+"\n\n")
           val newargs = args.map(args=>aArguments(args.args.map(arg=>arg match
                 {
                   case Argument(id, TypeT("Inclusion")) => aArgument(id, id, TypeT("Inclusion"))
@@ -248,7 +248,7 @@ object FumurtCodeGenerator
               )  
             )
           )
-          println(newargs+"\n\n\n") 
+          //println(newargs+"\n\n\n") 
           Some(aDefinition(aDefLhs(ThreadT(),id,id,id.value,newargs,returntype),aDefRhs(aexps)))
         }
         
