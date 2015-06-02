@@ -3119,7 +3119,9 @@ C++11
 
 \begin_layout Standard
 This section covers only the features needed in order to understand the
- C++ code the compiler generates:
+ C++ code the compiler generates.
+ The features listed below may or may not have additional capabilities to
+ those mentioned:
 \end_layout
 
 \begin_layout Itemize
@@ -4834,7 +4836,7 @@ A main function is defined, inside of which:
 \begin_layout Enumerate
 rendezvousCounter is set to 0, std::thread are started with the thread functions
  (defined in previous step) as arguments and finally the main function enters
- a loop executing std::this_thread::sleep_for(std::chrono::seconds(1)).
+ a loop executing std::this_thread::sleep_for( std::chrono::seconds(1) ).
 \end_layout
 
 \end_deeper
@@ -10053,21 +10055,32 @@ $ ls fumurtCompiler
 
 \begin_layout Plain Layout
 
-aCallarg.class                                                          
-                  FumurtParser$$anonfun$subsequentArgsParser$1$$anonfun$apply$11.
-class
+aCallarg.class
 \end_layout
 
 \begin_layout Plain Layout
 
-ActionT.class                                                           
-                  FumurtParser$$anonfun$subsequentArgsParser$1.class
+FumurtParser$$anonfun$subsequentArgsParser$1$$anonfun$apply$11.class
 \end_layout
 
 \begin_layout Plain Layout
 
-ActionT$.class                                                          
-                  FumurtParser$$anonfun$subsequentArgsParser$2.class
+ActionT.class
+\end_layout
+
+\begin_layout Plain Layout
+
+FumurtParser$$anonfun$subsequentArgsParser$1.class
+\end_layout
+
+\begin_layout Plain Layout
+
+ActionT$.class
+\end_layout
+
+\begin_layout Plain Layout
+
+FumurtParser$$anonfun$subsequentArgsParser$2.class
 \end_layout
 
 \begin_layout Plain Layout
