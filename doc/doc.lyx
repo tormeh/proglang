@@ -341,18 +341,19 @@ newpage
 \end_layout
 
 \begin_layout Section*
-Foreword
+Preface
 \end_layout
 
 \begin_layout Standard
 This report describes a master thesis done as a part of the MSc Engineering
  Cybernetics course at NTNU.
+ The master thesis represents 30 ECTS points.
  It was written in the spring semester of 2015.
 \end_layout
 
 \begin_layout Standard
-It assumes that readers have prior experience working with a programming
- language and knows some common nomenclature.
+It assumes that readers have prior experience working with programming languages
+ and knows some common nomenclature.
 \end_layout
 
 \begin_layout Standard
@@ -379,6 +380,47 @@ newline
 
 \begin_layout Standard
 Tormod Gjeitnes Hellen
+\end_layout
+
+\begin_layout Section*
+Acknowledgements
+\end_layout
+
+\begin_layout Standard
+I want to thank:
+\end_layout
+
+\begin_layout Itemize
+My parents, Knut Jacob Windelstad Hellen and Liv Signy Gjeitnes Hellen,
+ who love me even though I call them way less than I should
+\end_layout
+
+\begin_layout Itemize
+My flatmates, Caroline Einen and Ingerid Hellen, who tolerate my mess
+\end_layout
+
+\begin_layout Itemize
+My supervisor, Sverre Hendseth, who provided crucial advice and motivation
+\end_layout
+
+\begin_layout Itemize
+My closest friends, Adrian Hjelvik and Jon-Håkon Bøe Røli, for making my
+ days a little brighter
+\end_layout
+
+\begin_layout Itemize
+The faculty at TU Berlin's compiler bau course, Peter Pepper and Judith
+ Rohloff, for teaching me how to write a compiler and for giving me points
+ even though I failed the exam
+\end_layout
+
+\begin_layout Itemize
+The Norwegian State Educational Loan Fund, which funded my education and
+ this thesis
+\end_layout
+
+\begin_layout Itemize
+A diverse set of characters who have taught me a lot about life
 \end_layout
 
 \begin_layout Standard
@@ -3075,8 +3117,232 @@ res4: (Int, String, Double) = (9,string,5.0)
 C++11
 \end_layout
 
+\begin_layout Standard
+This section covers only the features needed in order to understand the
+ C++ code the compiler generates:
+\end_layout
+
+\begin_layout Itemize
+std::atomic provides atomic transactions for integral types, boolean and
+ pointers.
+ This means a load and a store operations to this variable will never happen
+ concurrently.
+\end_layout
+
+\begin_layout Itemize
+std::mutex is a traditional mutual exclusion lock.
+\end_layout
+
+\begin_layout Itemize
+std::condition_variable provides a variable that threads can wait on.
+ Subsequently, one or all threads waiting can be awakened.
+ A thread that wishes to use it must hold a unique_lock first.
+ Also allows timeouts on waiting.
+\end_layout
+
+\begin_layout Itemize
+std::unique_lock allows more sophisitcated use of locks.
+ It is not a mutex, but instead provides more ways to acquire and release
+ locks on mutexes, including timed attempts at gaining locks and releasing
+ locks when leaving the scope of the unique_lock.
+\end_layout
+
 \begin_layout Section
 Regular Expressions
+\end_layout
+
+\begin_layout Standard
+Regular expressions are programs used to match strings of text.
+ More specifically, they are finite automata capable of parsing regular
+ languages.
+ In practice, what is called 
+\begin_inset Quotes eld
+\end_inset
+
+regular expressions
+\begin_inset Quotes erd
+\end_inset
+
+ are often capable of parsing more than just regular languages due to extra
+ features.
+ The IEEE POSIX standard specifies their syntax.
+\end_layout
+
+\begin_layout Standard
+The following explains enough to understand their use in this thesis:
+\end_layout
+
+\begin_layout Itemize
+Square brackets match a single character if that character is inside the
+ square brackets.
+ For instance, 
+\begin_inset Quotes eld
+\end_inset
+
+[ab]
+\begin_inset Quotes erd
+\end_inset
+
+ matches either 
+\begin_inset Quotes eld
+\end_inset
+
+a
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+b
+\begin_inset Quotes erd
+\end_inset
+
+, while 
+\begin_inset Quotes eld
+\end_inset
+
+[a-z]
+\begin_inset Quotes erd
+\end_inset
+
+ matches all latin lower case characters.
+\end_layout
+
+\begin_layout Itemize
+A question mark (
+\begin_inset Quotes eld
+\end_inset
+
+?
+\begin_inset Quotes erd
+\end_inset
+
+) signifies that the preceeding element can be matched one or zero times.
+\end_layout
+
+\begin_layout Itemize
+Parentheses marks a subexpression.
+\end_layout
+
+\begin_layout Itemize
+Backward slash (
+\begin_inset Quotes eld
+\end_inset
+
+
+\backslash
+
+\begin_inset Quotes erd
+\end_inset
+
+) escapes the following character, allowing characters that would usually
+ be interpreted as operators to be interpreted as actual character and vice
+ versa.
+ For instance, 
+\begin_inset Quotes eld
+\end_inset
+
+
+\backslash
+.
+\begin_inset Quotes erd
+\end_inset
+
+ matches a period, while 
+\begin_inset Quotes eld
+\end_inset
+
+
+\backslash
+d
+\begin_inset Quotes erd
+\end_inset
+
+ matches any digit.
+\end_layout
+
+\begin_layout Itemize
+A plus sign (
+\begin_inset Quotes eld
+\end_inset
+
++
+\begin_inset Quotes erd
+\end_inset
+
+) signifies that there are one or more of the preceeding element
+\end_layout
+
+\begin_layout Itemize
+A star (
+\begin_inset Quotes eld
+\end_inset
+
+*
+\begin_inset Quotes erd
+\end_inset
+
+) signifies that there are zero or more of the preceeding element
+\end_layout
+
+\begin_layout Itemize
+A vertical bar (
+\begin_inset Quotes eld
+\end_inset
+
+|
+\begin_inset Quotes erd
+\end_inset
+
+) signify that either the character to the left or the right is matched
+\end_layout
+
+\begin_layout Subsection*
+Example
+\end_layout
+
+\begin_layout Standard
+Integers are matched with this regular expression: 
+\begin_inset Quotes eld
+\end_inset
+
+[-+]?(0|[1-9]
+\backslash
+d*)
+\begin_inset Quotes erd
+\end_inset
+
+.
+ First, there can optionally be a plus or minus sign, then comes the characters
+ in the parenthesis: Either 0 or a number between 1 and 9 followed by a
+ string of digits are matched.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+0021
+\begin_inset Quotes erd
+\end_inset
+
+ will not match, but 
+\begin_inset Quotes eld
+\end_inset
+
+21
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+-21
+\begin_inset Quotes erd
+\end_inset
+
+ will match.
 \end_layout
 
 \begin_layout Section
@@ -4340,6 +4606,14 @@ multiply(left, right) returns
 
 \end_layout
 
+\begin_layout Itemize
+equal(left, right) returns 
+\begin_inset Formula $left==right$
+\end_inset
+
+
+\end_layout
+
 \begin_layout Chapter
 Analysis and Design
 \end_layout
@@ -4760,6 +5034,106 @@ This can be accomplished by doing two passes over the AST.
  In the last pass, all function calls are annotated with the final C++ name
  of the function they call, copying from the annotation done in pass one.
  
+\end_layout
+
+\begin_layout Section
+Limitations
+\end_layout
+
+\begin_layout Standard
+While the specification and design is satisfactory, there are many ways
+ in which it could be improved:
+\end_layout
+
+\begin_layout Itemize
+There are no compound statements, except in the right hand side of definitions
+\end_layout
+
+\begin_layout Itemize
+Definition right hand demarcation of the begin..end [function/x] type should
+ be optional, as it can be helpful when reading and writing deeply nested
+ expressions, where exactly what it is that is ending can often be unclear.
+\end_layout
+
+\begin_layout Itemize
+Performance of the current execution model may be a concern for some application
+s.
+ Allowing programmer-defined synchronization intervals would allow for greater
+ performance without sacrificing predictability.
+ The programmer could then specify that computation-heavy threads participate
+ in only every Nth communication phase.
+ In cases where the appropriate performance and responsiveness requires
+ sacrifices to predictability, it seems prudent to evaluate the possibility
+ of using an instruction-based logical clock system when the programmer
+ specifies it.
+ Systems such as CONSEQUENCE
+\begin_inset CommandInset citation
+LatexCommand cite
+key "merrifield2015highCONSEQUENCE"
+
+\end_inset
+
+ may make it possible to obtain greater performance in cases where the programme
+r can allow scheduling requirements to be relaxed.
+ Likewise, software transactional memory could be interesting, particularly
+ when a thread needs to wait on input from an unpredictable source, like
+ a human, while the rest of the threads needs to be responsive.
+\end_layout
+
+\begin_layout Itemize
+The design of Fumurt centers around predictability, but in order to guarantee
+ any predictability we have to assume correctness of the underlying hardware.
+ Fumurt is by design not fault-tolerant, because fault tolerance deals with,
+ and causes, unpredictability.
+ This is in many cases inappropriate.
+ It would be beneficial if it was possible to construct some system wherein
+ multiple computers or chips running Fumurt code could be coordinated by
+ a system that does deal with fault-tolerance.
+ 
+\end_layout
+
+\begin_layout Itemize
+As it is, the design of Fumurt has no emirical underpinnings.
+ User studies concerning how the various aspects of the language are received
+ , particularly by novice programmers, would shed light on whether all the
+ ideas introduced in this report are actually good ideas.
+ 
+\end_layout
+
+\begin_layout Itemize
+There is no appropriate response in the cases where the IO buffers can no
+ longer fit in memory.
+ A solution which would degrade performance but otherwise work well, would
+ be to pause all threads trying to put IO into a full memory while letting
+ the thread whose IO are to be effected first write directly to IO.
+ Once that first thread is finished, the second thread whose IO shall be
+ effected can write directly to IO and so on until all threads are ready
+ to enter the communicative phase.
+ This will serialize execution, which can degrade performance.
+ In those cases where responsiveness is more important than strict IO sequential
+ity, special mechanisms may be provided whereby the programmer can specify
+ that in such cases IO buffers shall be emptied to IO during the computational
+ phase.
+\end_layout
+
+\begin_layout Itemize
+Recursion can cause a stack overflow, leading to a segmentation fault.
+ Besides the recursion happening when a thread recurses on itself, no recursion
+ is optimized away.
+  This is problematic in a citical-application system.
+ Some types of recursion are easy to optimize away, some less so.
+ The appropriate behavior for the compiler towards recursion it can't optimize
+ away is undetermined.
+\end_layout
+
+\begin_layout Itemize
+There is no mechanism for direct access to memory, which is often needed
+ in embedded programming
+\end_layout
+
+\begin_layout Itemize
+There are no lists, arrays or similar sequences.
+ Likewise, user-defined types are missing.
 \end_layout
 
 \begin_layout Chapter
@@ -6566,6 +6940,19 @@ Synchronized Integer
 \begin_layout Standard
 Synchronized variables are the same in all threads, and mutations are published
  in
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=fumurt}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6716,6 +7103,19 @@ onizedCounter)
 
 \begin_layout Standard
 gives 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language={}}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6790,6 +7190,19 @@ Functions, Actions, Recursion and the Limitations of Integers
 \begin_layout Standard
 An example with a single thread, a square and a factorial function and an
  action is presented below.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=fumurt}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6952,6 +7365,19 @@ n")
 
 \begin_layout Standard
 When run, this example gives the following output:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language={}}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -7150,13 +7576,16 @@ The factorial of 35 is 0    The square of 17.500000 is 306.250000
 \end_layout
 
 \begin_layout Standard
-Here we see a problem with relying on native types.
+Here we see a problem with relying on integers of limited size.
  32-bit integer is clearly inadequate for the factorial calculation.
  As for the eventual answer to the factorial calculation being zero, this
  seems to be a result of the C++ compiler's optimizations.
  No optimization gives the stack overflow we expect; running the binary
  results in an immediate segmentation fault when compiled with GCC with
  -O0 or -O1 or Clang with -O0.
+ Though there are problems with integer wrap-around and stack overflow,
+ a recursive factorial function is a classic way to demsonstrate the syntax
+ of a language.
 \end_layout
 
 \begin_layout Section
@@ -9062,10 +9491,6 @@ ed model when the program is dominated by access to terminal output.
  to all inherently sequential IO
 \end_layout
 
-\begin_layout Section
-
-\end_layout
-
 \begin_layout Chapter
 Conclusion, Discussion and Further Work
 \end_layout
@@ -9161,9 +9586,7 @@ defRhs
  or a single line statement without brackets could serve as right hand side
  in a definition.
  Operators would make many common operations less verbose.
- Optional use of begin..end [function name or similar] syntax would be nice,
- as it can be helpful when reading deeply nested expressions, where exactly
- what it is that is ending can often be unclear.
+ Optional use of begin..end [function name or similar] syntax would be nice.
 \end_layout
 
 \begin_layout Standard
@@ -9178,50 +9601,21 @@ Fumurt lacks user-defined types, interfaces and generics as well as modules.
 \end_layout
 
 \begin_layout Standard
-Performance of the current execution model may be a concern for some application
-s.
- Allowing programmer-defined synchronization intervals would allow for greater
- performance without sacrificing predictability.
- The programmer could then specify that computation-heavy threads participate
- in only every Nth communication phase.
- In cases where the appropriate performance and responsiveness requires
- sacrifices to predictability, it seems prudent to evaluate the possibility
- of using an instruction-based logical clock system when the programmer
- specifies it.
- Systems such as CONSEQUENCE
-\begin_inset CommandInset citation
-LatexCommand cite
-key "merrifield2015highCONSEQUENCE"
-
-\end_inset
-
- may make it possible to obtain greater performance in cases where the programme
-r can allow scheduling requirements to be relaxed.
- Likewise, software transactional memory could be interesting, particularly
- when a thread needs to wait on input from an unpredictable source, like
- a human, while the rest of the threads needs to be responsive.
+Investigate improvements to the execution model.
 \end_layout
 
 \begin_layout Standard
-The design of Fumurt centers around predictability, but in order to guarantee
- any predictability we have to assume correctness of the underlying hardware.
- Fumurt is by design not fault-tolerant, because fault tolerance deals with,
- and causes, unpredictability.
- This is in many cases inappropriate.
- It would be beneficial if it was possible to construct some system wherein
- multiple computers or chips running Fumurt code could be coordinated by
- a system that does deal with fault-tolerance.
- Erlang with OTP seems like the standard for such applications.
+Investigate solutions to hardware faults and distributed systems.
+ Erlang with OTP might be helpful.
 \end_layout
 
 \begin_layout Standard
-User studies concerning how the various aspects of the language are received,
- particularly by novice programmers, would shed light on whether all the
- ideas introduced in this report are actually good ideas.
+Perform empirical studies amond programmers investigating whether the ideas
+ underlying the existing design and proposed work are actually good ideas.
 \end_layout
 
 \begin_layout Standard
-For performance reasons, making the threads lightweight, might be a good
+For performance reasons, making the threads lightweight might be a good
  idea.
 \end_layout
 
@@ -9231,24 +9625,14 @@ Implement tail call elimination for all actions and functions, not just
 \end_layout
 
 \begin_layout Standard
-Determine and implement an appropriate mechanism for direct access to memory,
- which is often needed in embedded programming.
+Determine an appropriate mechanism for directly accessing registers and
+ memory needed for embedded programming.
 \end_layout
 
 \begin_layout Standard
 Implement an appropriate procedure executed in the cases where the IO buffers
  can no longer fit in memory.
- A solution which would degrade performance but otherwise work well would
- be to pause all threads trying to put IO into a full memory while letting
- the thread whose IO are to be effected first write directly to IO.
- Once that first thread is finished, the second thread whose IO shall be
- effected can write directly to IO and so on until all threads are ready
- to enter the communicative phase.
- This will serialize execution, which can degrade performance.
- In those cases where responsiveness is more important than strict IO sequential
-ity, special mechanisms may be provided whereby the programmer can specify
- that in such cases IO buffers shall be emptied to IO during the computational
- phase.
+ 
 \end_layout
 
 \begin_layout Standard

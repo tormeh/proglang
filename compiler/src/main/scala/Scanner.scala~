@@ -17,7 +17,7 @@ object FumurtScanner extends RegexParsers /*with Parsers*/
   
   def scan(in:String):Either[NoSuccess, List[Token]] =
   {
-    println(in) 
+    //println(in) 
    
     parseAll((scanInternal*), in) match
     {
