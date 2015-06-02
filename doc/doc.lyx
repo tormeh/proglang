@@ -6180,9 +6180,8 @@ Not Implemented
 \end_layout
 
 \begin_layout Standard
-The things that are left to do are uncountable.
- Considering the nature of languages, the amount left undone could very
- well be countable infinity.
+Considering the nature of languages, the amount left undone could very well
+ be countable infinity.
  The following list are for things that make the current implementation
  feel incomplete.
  For a more extensive list, see 
@@ -6785,7 +6784,7 @@ status open
 \end_layout
 
 \begin_layout Section
-Functions and Actions
+Functions, Actions and Recursion
 \end_layout
 
 \begin_layout Standard
@@ -6805,7 +6804,7 @@ program helloworld:Nothing =
 
 \begin_layout Plain Layout
 
-  threadA(d=0.0, actionPrintSquare=actionPrintSquare)
+  threadA(d=0.0, i=0, actionPrintSquare=actionPrintSquare)
 \end_layout
 
 \begin_layout Plain Layout
@@ -6819,7 +6818,8 @@ program helloworld:Nothing =
 
 \begin_layout Plain Layout
 
-thread threadA(d:Double, actionPrintSquare:Inclusion):Nothing =
+thread threadA(d:Double, i:Integer, actionPrintSquare:Inclusion):Nothing
+ =
 \end_layout
 
 \begin_layout Plain Layout
@@ -6829,12 +6829,59 @@ thread threadA(d:Double, actionPrintSquare:Inclusion):Nothing =
 
 \begin_layout Plain Layout
 
+  function factorial(i:Integer):Integer =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    if(condition=equal(left=1, right=i), then=1, else=multiply(left=i, right=fac
+torial(minus(left=i, right=1))))
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("The factorial of ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(i))
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(" is ")
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint(toString(factorial(i)))
+\end_layout
+
+\begin_layout Plain Layout
+
+  actionPrint("    ")
+\end_layout
+
+\begin_layout Plain Layout
+
   actionPrintSquare(d)
 \end_layout
 
 \begin_layout Plain Layout
 
-  threadA(d = plus(left=d, right=0.5), actionPrintSquare=actionPrintSquare)
+  threadA(d = plus(left=d, right=0.5), i = plus(left=i, right=1), actionPrintSqua
+re=actionPrintSquare)
 \end_layout
 
 \begin_layout Plain Layout
@@ -6893,14 +6940,6 @@ n")
 }
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
@@ -6917,27 +6956,182 @@ status open
 
 \begin_layout Plain Layout
 
-The square of 0.000000 is 0.000000
+The factorial of 0 is 0    The square of 0.000000 is 0.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The square of 0.500000 is 0.250000
+The factorial of 1 is 1    The square of 0.500000 is 0.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The square of 1.000000 is 1.000000
+The factorial of 2 is 2    The square of 1.000000 is 1.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The square of 1.500000 is 2.250000
+The factorial of 3 is 6    The square of 1.500000 is 2.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The square of 2.000000 is 4.000000
+The factorial of 4 is 24    The square of 2.000000 is 4.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 5 is 120    The square of 2.500000 is 6.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 6 is 720    The square of 3.000000 is 9.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 7 is 5040    The square of 3.500000 is 12.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 8 is 40320    The square of 4.000000 is 16.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 9 is 362880    The square of 4.500000 is 20.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 10 is 3628800    The square of 5.000000 is 25.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 11 is 39916800    The square of 5.500000 is 30.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 12 is 479001600    The square of 6.000000 is 36.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 13 is 1932053504    The square of 6.500000 is 42.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 14 is 1278945280    The square of 7.000000 is 49.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 15 is 2004310016    The square of 7.500000 is 56.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 16 is 2004189184    The square of 8.000000 is 64.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 17 is -288522240    The square of 8.500000 is 72.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 18 is -898433024    The square of 9.000000 is 81.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 19 is 109641728    The square of 9.500000 is 90.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 20 is -2102132736    The square of 10.000000 is 100.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 21 is -1195114496    The square of 10.500000 is 110.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 22 is -522715136    The square of 11.000000 is 121.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 23 is 862453760    The square of 11.500000 is 132.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 24 is -775946240    The square of 12.000000 is 144.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 25 is 2076180480    The square of 12.500000 is 156.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 26 is -1853882368    The square of 13.000000 is 169.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 27 is 1484783616    The square of 13.500000 is 182.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 28 is -1375731712    The square of 14.000000 is 196.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 29 is -1241513984    The square of 14.500000 is 210.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 30 is 1409286144    The square of 15.000000 is 225.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 31 is 738197504    The square of 15.500000 is 240.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 32 is -2147483648    The square of 16.000000 is 256.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 33 is -2147483648    The square of 16.500000 is 272.250000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 34 is 0    The square of 17.000000 is 289.000000
+\end_layout
+
+\begin_layout Plain Layout
+
+The factorial of 35 is 0    The square of 17.500000 is 306.250000
 \end_layout
 
 \begin_layout Plain Layout
@@ -6948,6 +7142,16 @@ The square of 2.000000 is 4.000000
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Here we see a problem with relying on native types.
+ 32-bit integer is clearly inadequate for the factorial calculation.
+ As for the eventual answer to the factorial calculation being zero, this
+ seems to be a result of the C++ compiler's optimizations.
+ No optimization gives the stack overflow we expect; running the binary
+ results in an immediate segmentation fault when compiled with GCC with
+ -O0 or -O1 or Clang with -O0.
 \end_layout
 
 \begin_layout Section
