@@ -1,12 +1,21 @@
 program helloworld:Nothing =
 {
-  threadA(d=0.0, actionPrintSquare=actionPrintSquare)
+  threadA(d=0.0, i=0, actionPrintSquare=actionPrintSquare)
 }
 
-thread threadA(d:Double, actionPrintSquare:Inclusion):Nothing =
+thread threadA(d:Double, i:Integer, actionPrintSquare:Inclusion):Nothing =
 {
+  function factorial(i:Integer):Integer =
+  {
+    if(condition=equal(left=1, right=i), then=1, else=multiply(left=i, right=factorial(minus(left=i, right=1))))
+  }
+  actionPrint("The factorial of ")
+  actionPrint(toString(i))
+  actionPrint(" is ")
+  actionPrint(toString(factorial(i)))
+  actionPrint("    ")
   actionPrintSquare(d)
-  threadA(d = plus(left=d, right=0.5), actionPrintSquare=actionPrintSquare)
+  threadA(d = plus(left=d, right=0.5), i = plus(left=i, right=1), actionPrintSquare=actionPrintSquare)
 }
 
 action actionPrintSquare(d:Double):Nothing = 

@@ -219,15 +219,21 @@ object FumurtTypeChecker
         {
           checkmutatecall(y, expectedreturn, containingdefinition, arguments, basicFunctions, inSameDefinition)
         }
-        /*else if (y.functionidentifier=="equal")
+        else if (y.functionidentifier=="equal")
         {
-          val reterror = if(expectedreturn!=TypeT("Boolean")){List(FumurtError(ifcall.pos, "Call to equal always returns boolean, not "+expectedreturn.value))}else{List()}
+          val reterror = if(expectedreturn!=TypeT("Boolean")){List(FumurtError(tocheck.pos, "Call to equal always returns boolean, not "+expectedreturn.value))}else{List()}
           val argerrors = y.args match
           {
-            case Left(_)=>
+            case Right(NamedCallargs(List(NamedCallarg(IdT("left"), leftargument), NamedCallarg(IdT("right"), rightargument)))) =>
+            {
+              List()
+            }
+            
+            case _=>List(FumurtError(tocheck.pos, "Call to equal requires two arguments named left and right"))
           }
+          reterror++argerrors
         }
-        else if (y.functionidentifier=="lessThan" || "biggerthan")
+        /*else if (y.functionidentifier=="lessThan" || "biggerthan")
         {
           val reterror = if(expectedreturn!=TypeT("Boolean")){List(FumurtError(ifcall.pos, "Call to "+y.functionidentifier+" always returns boolean, not "+expectedreturn.value))}else{List()}
         }

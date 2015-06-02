@@ -6175,6 +6175,51 @@ class aDefLhs(val description:DefDescriptionT, val id:IdT, val cppid:IdT,
  modified to hold those as well.
 \end_layout
 
+\begin_layout Section
+Not Implemented
+\end_layout
+
+\begin_layout Standard
+The things that are left to do are uncountable.
+ Considering the nature of languages, the amount left undone could very
+ well be countable infinity.
+ The following list are for things that make the current implementation
+ feel incomplete.
+ For a more extensive list, see 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Suggestions-for-Future"
+
+\end_inset
+
+ Suggestions for Future Work.
+\end_layout
+
+\begin_layout Itemize
+Loops
+\end_layout
+
+\begin_layout Itemize
+User-defined types
+\end_layout
+
+\begin_layout Itemize
+Boolean functions and logic
+\end_layout
+
+\begin_layout Itemize
+Comparison functions
+\end_layout
+
+\begin_layout Itemize
+exit function
+\end_layout
+
+\begin_layout Itemize
+check that only the thread with write rights to a synchronized variable
+ is allowed to write to that variable
+\end_layout
+
 \begin_layout Chapter
 Testing
 \end_layout
@@ -8809,28 +8854,7 @@ ed model when the program is dominated by access to terminal output.
 \end_layout
 
 \begin_layout Section
-Not Implemented
-\end_layout
 
-\begin_layout Itemize
-Loops
-\end_layout
-
-\begin_layout Itemize
-User-defined types
-\end_layout
-
-\begin_layout Itemize
-Boolean functions and logic
-\end_layout
-
-\begin_layout Itemize
-exit function
-\end_layout
-
-\begin_layout Itemize
-check that only the thread with write rights to a synchronized variable
- is allowed to write to that variable
 \end_layout
 
 \begin_layout Chapter
@@ -8895,6 +8919,13 @@ ts can be relaxed.
 
 \begin_layout Section
 Suggestions for Future Work
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Suggestions-for-Future"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

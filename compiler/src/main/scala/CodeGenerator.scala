@@ -528,8 +528,22 @@ object FumurtCodeGenerator
       case aFunctionCallStatement("toString",_, Left(DoubleStatement(value)),_) => "std::to_string(" + value.toString + ")"
       case aFunctionCallStatement("toString",_, Left(TrueStatement()),_) => "true"
       case aFunctionCallStatement("toString",_, Left(FalseStatement()),_) => "false"
-      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),IntegerStatement(left)), aNamedCallarg(IdT("right"),IntegerStatement(right))))),_) => left.toString+" == "+right.toString
+      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),IntegerStatement(left)), aNamedCallarg(IdT("right"),IdentifierStatement(right))))),_) => left.toString+" == "+right.toString
+      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),IdentifierStatement(left)), aNamedCallarg(IdT("right"),IntegerStatement(right))))),_) => left.toString+" == "+right.toString
+      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),StringStatement(left)), aNamedCallarg(IdT("right"),IdentifierStatement(right))))),_) => left.toString+" == "+right.toString
+      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),IdentifierStatement(left)), aNamedCallarg(IdT("right"),StringStatement(right))))),_) => left.toString+" == "+right.toString
+      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),IdentifierStatement(left)), aNamedCallarg(IdT("right"),IdentifierStatement(right))))),_) => left.toString+" == "+right.toString
+      
+      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),IntegerStatement(left)), aNamedCallarg(IdT("right"),x:aFunctionCallStatement)))),_) => left.toString+" == "+functioncalltranslator(x,callingthread)
+      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),x:aFunctionCallStatement), aNamedCallarg(IdT("right"),IntegerStatement(right))))),_) => functioncalltranslator(x,callingthread)+" == "+right.toString
+      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),StringStatement(left)), aNamedCallarg(IdT("right"),x:aFunctionCallStatement)))),_) => left.toString+" == "+functioncalltranslator(x,callingthread)
+      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),x:aFunctionCallStatement), aNamedCallarg(IdT("right"),StringStatement(right))))),_) => functioncalltranslator(x,callingthread)+" == "+right.toString
+      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),x:aFunctionCallStatement), aNamedCallarg(IdT("right"),IdentifierStatement(right))))),_) => functioncalltranslator(x,callingthread)+" == "+right.toString
+      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),IdentifierStatement(left)), aNamedCallarg(IdT("right"),x:aFunctionCallStatement)))),_) => left.toString+" == "+functioncalltranslator(x,callingthread)
+      case aFunctionCallStatement("equal",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),x:aFunctionCallStatement), aNamedCallarg(IdT("right"),y:aFunctionCallStatement)))),_) => functioncalltranslator(x,callingthread)+" == "+functioncalltranslator(y,callingthread)
+      
       case aFunctionCallStatement("lessThan",_,Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),IntegerStatement(left)), aNamedCallarg(IdT("right"),IntegerStatement(right))))),_) => left.toString+" < "+right.toString
+      //TODO: Make better solution for commutative functions
       //TODO: add more types that the comparison functions can accept
       case aFunctionCallStatement("actionMutate",_, Right(aNamedCallargs(List(aNamedCallarg(IdT("newValue"),IdentifierStatement(newval)), aNamedCallarg(IdT("variable"),IdentifierStatement(vari))))),_) => vari + " = " + newval
       case aFunctionCallStatement("actionMutate",_, Right(aNamedCallargs(List(aNamedCallarg(IdT("newValue"),x:aFunctionCallStatement), aNamedCallarg(IdT("variable"),IdentifierStatement(vari))))),_) =>
