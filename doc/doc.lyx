@@ -556,9 +556,31 @@ Report Structure
 \end_layout
 
 \begin_layout Standard
+The report is divided into chapters as follows:
+\end_layout
+
+\begin_layout Itemize
 The Background chapter contains information needed to understand the rest
  of the report.
- [more here]
+ 
+\end_layout
+
+\begin_layout Itemize
+The specification loosely outlines how the language should look and behave
+\end_layout
+
+\begin_layout Itemize
+Analysis and Design discusses the more interesting choices done during the
+ implementation
+\end_layout
+
+\begin_layout Itemize
+Implementation documents how the compiler is written
+\end_layout
+
+\begin_layout Itemize
+Testing contains examples of input source code and resulting error messages
+ or runtime behavior
 \end_layout
 
 \begin_layout Standard
@@ -960,7 +982,7 @@ The back end is composed of successive passes, of which every step transform
  example C to C) the number of necessary passes would be zero.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsection*
 Grammars
 \begin_inset CommandInset label
 LatexCommand label
@@ -1167,7 +1189,7 @@ The result is a very simple grammar, which allows us to partition up a text
  into sentences and words.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection*
 Abstract Syntax Trees
 \end_layout
 
@@ -1457,7 +1479,7 @@ Let's discuss these operators:
 \end_layout
 
 \begin_layout Section
-A Quick Tour of The Compiler Implementation Language
+A Quick Tour of Scala, the Compiler Implementation Language
 \end_layout
 
 \begin_layout Standard
@@ -2132,30 +2154,6 @@ scala> class A(int:Int, str:String)
 \begin_layout Plain Layout
 
 defined class A
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-scala> val a = A(3,"a string")
-\end_layout
-
-\begin_layout Plain Layout
-
-<console>:7: error: not found: value A
-\end_layout
-
-\begin_layout Plain Layout
-
-       val a = A(3,"a string")
-\end_layout
-
-\begin_layout Plain Layout
-
-               ^
 \end_layout
 
 \begin_layout Plain Layout
@@ -3367,6 +3365,9 @@ key "merrifield2015highCONSEQUENCE"
 \end_inset
 
  unless otherwise stated.
+ This section is to be understood as a discussion of contemporary approaches
+ to multithreading determinism - they have not influenced this thesis because
+ their determinism models are generally less strict.
  
 \end_layout
 
@@ -3448,8 +3449,8 @@ There are related work which also tries to make multithreaded programs easier
  Among these are CoreDet and Deterministic Parallel Java.
  CoreDet is a custom compiler for C/C++ made by modifying LLVM.
  Deterministic Parallel Java is a language extension for Java.
- Given that they are about making multithreading easier they're worth mentioning
-, even though they haven't influenced this thesis.
+ Given that they are about making multithreading easier they are worth mentionin
+g, even though they have not influenced this thesis.
 \end_layout
 
 \begin_layout Subsection
@@ -5008,9 +5009,12 @@ Technically, the finished code can always be determined directly from the
  AST, but it was discovered that in order to do this in the Fumurt case,
  the same rules would have to be encoded into the code in several different
  places.
- In the current state of implementation, the only rule that required annotation
- was the rule for determining the C++ names of function.
- There are three aspects to the naming: 
+ In the current state of implementation, there are two rules that require
+ annotation.
+ The first was the rule for determining the C++ names of function and the
+ second is the rule for naming arguments to threads.
+ In both cases, Fumurt's semantics are very different from C++'s.
+ There are four aspects to the naming: 
 \end_layout
 
 \begin_layout Enumerate
@@ -5029,10 +5033,15 @@ Actions need to be demultiplexed, as their C++ code needs to be different
 Function calls need to be changed so they refer to the new names
 \end_layout
 
+\begin_layout Enumerate
+Arguments to threads need to have new C++ names that will be globally unique.
+ 
+\end_layout
+
 \begin_layout Standard
 This can be accomplished by doing two passes over the AST.
- In the first pass, all function definitions are annotated with their final
- C++ names.
+ In the first pass, all function definitions and thread arguments are annotated
+ with their final C++ names.
  In the last pass, all function calls are annotated with the final C++ name
  of the function they call, copying from the annotation done in pass one.
  
@@ -5096,7 +5105,7 @@ The design of Fumurt centers around predictability, but in order to guarantee
 
 \begin_layout Itemize
 As it is, the design of Fumurt has no emirical underpinnings.
- User studies concerning how the various aspects of the language are received
+ User surveys concerning how the various aspects of the language are received
  , particularly by novice programmers, would shed light on whether all the
  ideas introduced in this report are actually good ideas.
  
@@ -5120,7 +5129,7 @@ ity, special mechanisms may be provided whereby the programmer can specify
 
 \begin_layout Itemize
 Recursion can cause a stack overflow, leading to a segmentation fault.
- Besides the recursion happening when a thread recurses on itself, no recursion
+ Except the recursion happening when a thread recurses on itself, no recursion
  is optimized away.
   This is problematic in a citical-application system.
  Some types of recursion are easy to optimize away, some less so.
