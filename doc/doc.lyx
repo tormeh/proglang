@@ -301,7 +301,7 @@ Problem Statement
 
 \begin_layout Standard
 In critical applications, multithreading is often problematic, introducing
- its own errors in addition to the errors that arise from the problem itself.
+ its own errors in addition to the ones that arise from the problem itself.
  Bugs can sometimes first result in failures when the software is in deployment.
  There are high-profile examples of this.
  There is a need for better ways to program multithreaded systems that result
@@ -321,7 +321,25 @@ y, real-time multithreaded programs
 \end_layout
 
 \begin_layout Enumerate
-Implement this language
+Make a prototype implementation of this language
+\end_layout
+
+\begin_layout Enumerate
+Provide adequate background information for others to understand the student's
+ work and the choices made therein
+\end_layout
+
+\begin_layout Enumerate
+Perform and document tests showing that the implementation works
+\end_layout
+
+\begin_layout Enumerate
+Discuss important shortcomings and limitations of the student's work
+\end_layout
+
+\begin_layout Enumerate
+Provide a short summary of related work and contemporary approaches to the
+ same or similar problems 
 \end_layout
 
 \begin_layout Standard
@@ -415,8 +433,8 @@ The faculty at TU Berlin's compiler bau course, Peter Pepper and Judith
 \end_layout
 
 \begin_layout Itemize
-The Norwegian State Educational Loan Fund, which funded my education and
- this thesis
+The Norwegian State Educational Loan Fund, which funded my education, this
+ thesis and my other questionable endeavours
 \end_layout
 
 \begin_layout Itemize
@@ -474,7 +492,7 @@ ssige og noen av de ytelsesmessige fordelene forblir.
  ser ut til å bli erstattet med det første, må vi fremdeles gjøre en innsats
  for å finne det neste steget i språkutviklingen.
  I det presenterte språket er tråder skrevet på samme måte som funksjoner,
- avhengighet mellom funksjoner er eksplisitt or argumenter skilles fra hverandre
+ avhengighet mellom funksjoner er eksplisitt og argumenter skilles fra hverandre
  ved navn, ikke relativ posisjon.
 \end_layout
 
@@ -489,32 +507,6 @@ LatexCommand tableofcontents
 
 \begin_layout Chapter
 Introduction
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-First and foremost, you should write about the most interesting or important
- parts of your project.
- Devote most space and time to this.
- For example:
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-What design choices did you have along the way, and why did you make the
- choices you made? What was the most difficult part of the project? Why
- was it difficult? How did you overcome the difficulties? Did you discover
- anything novel? What did you learn?
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-Set the scene and problem statement/specification.
- Provide the motivation for reading this report.
- Introduce the structure of report (what you will cover in which chapters).
 \end_layout
 
 \begin_layout Standard
@@ -533,8 +525,12 @@ It is commonly understood that writing software is hard and that writing
 Specifying a language and implementing a compiler are inherently difficult
  tasks.
  The former is an exercise in subjective judgment and trade-offs and the
- latter is a highly challenging exercise in software engineering.
- 
+ latter is a challenging exercise in software engineering.
+ When starting to work with this thesis, a language was envisioned that
+ made manual scheduling of threads easier than before, but it was decided
+ that this placed too heavy of a burden on the programmer.
+ The ideas that culminated in this report are the result of several weeks
+ of reconsideration.
 \end_layout
 
 \begin_layout Standard
@@ -583,6 +579,27 @@ Testing contains examples of input source code and resulting error messages
  or runtime behavior
 \end_layout
 
+\begin_layout Itemize
+Conclusion, Discussion and Future Work evaluates and reflects on the work
+ done and presents recommendations for future work
+\end_layout
+
+\begin_layout Standard
+In addition there are appendices:
+\end_layout
+
+\begin_layout Itemize
+System manual describes how to compile and run the compiler from source
+\end_layout
+
+\begin_layout Itemize
+User manual describes how to run the compiler from Java bytecode
+\end_layout
+
+\begin_layout Itemize
+Code listing contains the code
+\end_layout
+
 \begin_layout Standard
 The report layout adheres to a standard set by University College London
 \begin_inset CommandInset citation
@@ -598,52 +615,18 @@ key "UCLReportStructure"
 The citation style is that of the Association for Computing Machinery.
 \end_layout
 
+\begin_layout Section*
+A Note on Terminology
+\end_layout
+
+\begin_layout Standard
+During the writing of this report, a word that described both statements
+ and definitions was needed, and it was decided to call them both expressions,
+ despite this not being the usual way to use that word.
+\end_layout
+
 \begin_layout Chapter
 Background
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-You should provide enough background to the reader for them to understand
- what the project is all about.
- For example:
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-What the reader needs to know in order to understand the rest of the report.
- Examiners like to know that you have done some background research and
- that you know what else has been done in the field (where relevant).
- Try to include some references.
- Related work (if you know of any) What problem are you solving? Why are
- you solving it? How does this relate to other work in this area? What work
- does it build on?
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-For 'research-style' projects - ones in which a computational technique
- (for example neural networks, genetic algorithms, finite element analysis,
- ray tracing) is used to explore or extend the properties of a mathematical
- model, or to make predictions of some kind - it may be a good idea to split
- this chapter into two shorter ones, one covering the computational technique
- itself and one the area of application.
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-The Examiners are just as interested in the process you went through in
- performing your project work as the results you finally produced.
- So, make sure your reports concentrate on why you made the particular choices
- and decisions that you did.
- We are looking for reasoned arguments and for critical assessment.
- This is especially so where design, implementation and engineering decisions
- have been made not just on technical merit but under pressure of non-functional
- requirements and external influences.
 \end_layout
 
 \begin_layout Standard
@@ -3386,6 +3369,25 @@ A deterministic memory consistency model, which ensures unsynchronized load
  operations have deterministic results
 \end_layout
 
+\begin_layout Standard
+Two modern implementations that address these are Dthreads
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2011dthreads"
+
+\end_inset
+
+, a deterministic replacement for Pthreads, and CONSEQUENCE
+\begin_inset CommandInset citation
+LatexCommand cite
+key "merrifield2015highCONSEQUENCE"
+
+\end_inset
+
+ which is a library with a more relaxed and performant approach than that
+ of Dthread.
+\end_layout
+
 \begin_layout Subsection
 Deterministic Logical Clock
 \end_layout
@@ -3458,8 +3460,15 @@ CoreDet
 \end_layout
 
 \begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
 A compiler and runtime system that runs arbitrary multithreaded C/C++ POSIX
  Threads programs deterministically
+\begin_inset Quotes erd
+\end_inset
+
+
 \begin_inset CommandInset citation
 LatexCommand cite
 key "bergan2010coredet"
@@ -3500,17 +3509,18 @@ key "bocchino2009parallel"
 
 \end_inset
 
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "DPJ"
+
+\end_inset
+
 .
 \end_layout
 
 \begin_layout Chapter
 Specification
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-Elaboration of the problem
 \end_layout
 
 \begin_layout Standard
@@ -3715,6 +3725,24 @@ Inter-thread communication is provided by synchronized variables.
 \end_layout
 
 \begin_layout Section
+Input and Output
+\end_layout
+
+\begin_layout Standard
+Input and output sequence must be deterministic.
+ To achieve this, output requests are placed in a queue, and are written
+ to the output devices during the communicative phase.
+ Whenever input is desired, the thread will immediately pause and wait for
+ the communicative phase, during which the input will be returned to the
+ thread.
+ In the case where several pieces of input and output do not depend on each
+ other, they can be combined to a composite IO action, whose effects will
+ be performed in the same communicative phase, though we leave the syntax
+ for this unspecified.
+ 
+\end_layout
+
+\begin_layout Section
 Syntax
 \end_layout
 
@@ -3738,6 +3766,12 @@ Be simple.
 
 \begin_layout Itemize
 Be predictable, and aid the programmer in the understanding of the program.
+\end_layout
+
+\begin_layout Standard
+A language made as part of a master thesis is simple, not only by default,
+ but by necessity.
+ The two other goals require more explanation:
 \end_layout
 
 \begin_layout Subsection
@@ -4623,30 +4657,6 @@ Analysis and Design
 
 \begin_layout Standard
 
-\emph on
-If your project involves designing a system, give a good high-level overview
- of your design.
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-In many projects, the initial design and the final design differ somewhat.
- If the differences are interesting, write about them, and why the changes
- were made.
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-If your design was not implemented fully, describe which parts you did implement
-, and which you didn't.
- If the reason you didn't implement everything is interesting (
-\emph default
-eg.
-
-\emph on
- it turned out to be difficult for unexpected reasons), write about it.
 \end_layout
 
 \begin_layout Section
@@ -5144,7 +5154,7 @@ There is no mechanism for direct access to memory, which is often needed
 
 \begin_layout Itemize
 There are no lists, arrays or similar sequences.
- Likewise, user-defined types are missing.
+ Likewise, loops, values, operators and user-defined types are missing.
 \end_layout
 
 \begin_layout Chapter
@@ -5160,11 +5170,6 @@ name "chap:Implementation"
 
 \begin_layout Standard
 
-\emph on
-Give code details (not a complete listing, but descriptions of key parts).
- Discuss the most important/interesting aspects.
- It probably won't be possible to discuss everything - give a rationale
- for what you do discuss.
 \end_layout
 
 \begin_layout Section
@@ -6604,17 +6609,16 @@ check that only the thread with write rights to a synchronized variable
  is allowed to write to that variable
 \end_layout
 
+\begin_layout Itemize
+Any other IO than print to console
+\end_layout
+
 \begin_layout Chapter
 Testing
 \end_layout
 
 \begin_layout Standard
 
-\emph on
-Test plan -- how the program/system was verified.
- Put the actual test results in the Appendix.
- This section is useful if your project is more on the software engineering
- side than research focused.
 \end_layout
 
 \begin_layout Section
@@ -9508,10 +9512,6 @@ Conclusion, Discussion and Further Work
 
 \begin_layout Standard
 
-\emph on
-What have you achieved? Give a critical appraisal (evaluation) of your own
- work - how could the work be taken further (perhaps by another student
- next year)?
 \end_layout
 
 \begin_layout Section
@@ -9548,10 +9548,10 @@ In hindsight, the code generator could have been better written.
  may grow to be too large to be stored in memory.
  While this is not an issue for desktop and laptop computers where filling
  up the memory takes so long that the program's unresponsiveness is the
- bigger issue, for microcontrollers.
- In general, the sequential IO and inter-thread communication abstraction
- which the programming language provides can in extreme cases require that
- the execution itself becomes sequential.
+ bigger issue, it's a bigger problem for microcontrollers.
+ Fixing this problem means that the sequential IO and inter-thread communication
+ abstraction which the programming language provides can in extreme cases
+ require that the execution itself becomes sequential.
  It seems intuitively possible that this is simply a necessity when providing
  such an abstraction.
  In situations where performance is more important than predictability,
@@ -9560,6 +9560,13 @@ ts can be relaxed.
  Similarly, some kinds of recursion have memory use requirements which are
  hard to optimize away.
  The correct way to handle this is yet to be determined.
+\end_layout
+
+\begin_layout Standard
+More fundamentally, the litterature concerning multithreading seems divided
+ over what should be required to be deterministic by the language and what
+ should require programmer intervention if a deterministic sequence is required.
+ It is unclear whether this thesis has the best approach.
 \end_layout
 
 \begin_layout Section
@@ -9671,10 +9678,6 @@ name "chap:System-manual"
 
 \begin_layout Standard
 
-\emph on
-This should include all the technical details (where is the code? what do
- you type to compile it? etc) that would enable a student to continue your
- project next year, to be able to amend your code and extend it.
 \end_layout
 
 \begin_layout Standard
@@ -9928,13 +9931,6 @@ User manual
 \end_layout
 
 \begin_layout Standard
-
-\emph on
-This should give enough information for someone to use what you have designed
- and implemented.
-\end_layout
-
-\begin_layout Standard
 You need to have Scala installed to run the Fumurt compiler from compiled
  bytecode.
  The current directory must be the one 
@@ -10126,20 +10122,6 @@ name "chap:Code-listing"
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-Your code should be well commented.
- In order not to use up too many pages of your maximum 120 on code, you
- may like to use the 'a2ps' Unix facility, which allows you to put two pages
- of code onto one side of paper - see the Unix 'man' pages for details.
- If you have a great deal of code, and including all of it would take you
- over the page limit, you can make the rest available on a floppy disk or
- CD-ROM.
- You will need to bring in two copies of any disks or CDs you include when
- you hand in your project report, one to go with each copy of your project.
 \end_layout
 
 \end_body
