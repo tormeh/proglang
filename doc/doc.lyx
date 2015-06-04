@@ -414,16 +414,18 @@ My parents, Knut Jacob Windelstad Hellen and Liv Signy Gjeitnes Hellen,
 \end_layout
 
 \begin_layout Itemize
-My flatmates, Caroline Einen and Ingerid Hellen, who tolerate my mess
+My flatmates, Caroline Einen and Ingerid Gjeitnes Hellen, who tolerate my
+ mess
 \end_layout
 
 \begin_layout Itemize
-My supervisor, Sverre Hendseth, who provided crucial advice and motivation
+My supervisor, Sverre Hendseth, who scared me into working when I thought
+ the compiler would never function and also had some advice
 \end_layout
 
 \begin_layout Itemize
 My closest friends, Adrian Hjelvik and Jon-Håkon Bøe Røli, for making my
- days a little brighter
+ days a little brighter and a little more indecent
 \end_layout
 
 \begin_layout Itemize
@@ -434,11 +436,12 @@ The faculty at TU Berlin's compiler bau course, Peter Pepper and Judith
 
 \begin_layout Itemize
 The Norwegian State Educational Loan Fund, which funded my education, this
- thesis and my other questionable endeavours
+ thesis and my other questionable endeavors
 \end_layout
 
 \begin_layout Itemize
-A diverse set of characters who have taught me a lot about life
+A diverse set of characters who have brought me joy and taught me a lot
+ about life
 \end_layout
 
 \begin_layout Standard
@@ -749,7 +752,7 @@ key "hewitt1973universalActors"
 \end_layout
 
 \begin_layout Itemize
-CSP 
+Communicating sequential processes 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "hoare1978communicatingCSP"
@@ -781,9 +784,139 @@ key "berry1992esterel"
 
 \end_layout
 
+\begin_layout Paragraph*
+Actors
+\end_layout
+
 \begin_layout Standard
-In the end a decision was made in favor of using the synchronous programming
- paradigm.
+Actors are nondeterministic by definition.
+ Each actor has a function that processes incoming messages.
+ This function can run on its own thread, or a more lightweight system can
+ be used.
+ Regardless, the only way actors can exchange information is through messages.
+ Each actor has a queue and each message received ends up at the back of
+ this queue.
+ When there is a message to process, the actor springs to life, processing
+ messages (in the process probably sending some messages of its own) until
+ its queue is empty again.
+ Actors are similar to computers; actors are like processors with running
+ software, and queues are like network buffers.
+ This means that there is no need to adjust the actor system when there
+ is a desire to spread the actors over several machines; communication over
+ the network and communication over shared memory can both be abstracted
+ away by the actor system.
+ The two mainstream implementations of actors are Akka and Erlang.
+\end_layout
+
+\begin_layout Paragraph*
+Communicating Sequential Processes
+\end_layout
+
+\begin_layout Standard
+Communicating sequential processes (CSP) are also based on messages.
+ The crucial difference is that in CSP there's no queue; the sending process
+ blocks until the receiving process has received the message and, depending
+ on whether this is desired, responded to the message.
+ A very elegant property of CSP is that calling a function can be implemented
+ as sending a message; the same syntax can be used for both.
+ The two mainstream implementations of CSP are Go and Rust.
+\end_layout
+
+\begin_layout Paragraph*
+Transactional memory
+\end_layout
+
+\begin_layout Standard
+Transactional memory is implemented both in hardware and software, but hardware
+ implementations are not widely available for consumer systems yet.
+ The essence of transactional memory is the same that that of mutexes and
+ locks - that is, shared memory where one prevent concurrent processes from
+ accessing shared memory objects.
+ The difference is that, where mutexes and locks assume that there will
+ be memory collisions, transactional memory assumes that the normal state
+ of the system is that no two threads write to the same memory at the same
+ time.
+ From the perspective of a thread, it looks like this:
+\end_layout
+
+\begin_layout Enumerate
+The thread locks the variable (O), and makes a read copy (C1)
+\end_layout
+
+\begin_layout Enumerate
+The thread performs whatever calculations it wants to perform with the variable
+\end_layout
+
+\begin_layout Enumerate
+If the calculation involves writing to the variable, then the result is
+ written to a write copy (C2)
+\end_layout
+
+\begin_layout Enumerate
+Now the thread locks the variable (O), and checks whether it is equal to
+ the read copy (C1).
+ If 
+\begin_inset Formula $O==C1$
+\end_inset
+
+, then the result from the calculation is still valid.
+ If 
+\begin_inset Formula $O!=C1$
+\end_inset
+
+ then the thread deletes the copies (C1 and C2) and reverts to step 1.
+\end_layout
+
+\begin_layout Enumerate
+If the calculation involved writing to the variable (O), then the write
+ copy is assigned to the variable(
+\begin_inset Formula $O\leftarrow C2$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Enumerate
+The thread now unlocks the variable (O)
+\end_layout
+
+\begin_layout Standard
+For big structures, such as arrays, the copies made are usually only of
+ the read (read-set) and written (write-set) parts of the variable, which
+ reduces copying, and lets several threads modify the same variable at the
+ same time as long they do not affect the same parts of the variable.
+ In transactional memory, it is desired to hold locks in as short time intervals
+ as possible.
+ Assuming the calculation takes a long time and no other thread tries to
+ write to the same variables, the performance gains can be significant.
+ And since protecting variables like this has such a low cost except under
+ write contention, this technique can be applied to all memory the threads
+ share.
+ Transactional memory has many popular implementations, but it is particularly
+ much used in Haskell and Clojure.
+\end_layout
+
+\begin_layout Paragraph*
+Synchronous Programming
+\end_layout
+
+\begin_layout Standard
+Synchronous programming provides a synchronicity abstraction, the same as
+ is used for logical circuits: Time is discretized and all operations during
+ a time step are done instantly and computed from memory as it was at the
+ beginning of the time step.
+ Notice that the operations done in a time step does not affect each other.
+ Synchronous programming is a rarity and the most mainstream implementation
+ is Esterel, which is proprietary.
+\end_layout
+
+\begin_layout Paragraph*
+The Decision Made for This Thesis
+\end_layout
+
+\begin_layout Standard
+In the end a decision was made in favor of using a variation on the synchronous
+ programming paradigm.
  There are trade-offs associated with choosing synchronous programming,
  but they were determined to be preferable to the alternatives.
  The main problems with synchronous programming are 
@@ -5437,7 +5570,7 @@ Function List
 \emph on
 scan(in:String):Either[NoSuccess, List[Token]] 
 \emph default
-Takes the source file as a string and either outputs a list of tokens or
+takes the source file as a string and either outputs a list of tokens or
  an error message
 \end_layout
 
@@ -5446,8 +5579,8 @@ Takes the source file as a string and either outputs a list of tokens or
 \emph on
 scanInternal:Parser[Token]
 \emph default
- Is the internal scanner.
- The parser combinator library will use this to create a sparser to serve
+ is the internal scanner.
+ The parser combinator library will use this to create a parser to serve
  as scanner at compile time
 \end_layout
 
@@ -5456,7 +5589,7 @@ x
 \emph on
 Parser: Parser[XT] 
 \emph default
-Parses that particular type of token, for example 
+parses that particular type of token, for example 
 \emph on
 newlineParser: Parser[NewlineT]
 \end_layout
@@ -5655,7 +5788,7 @@ type = upper case, {(upper case | lower case)}
 \end_layout
 
 \begin_layout Standard
-For help understanding this, see 
+For help understanding this, see section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:Grammars"
@@ -6430,7 +6563,7 @@ returns an AST with with final C++ names for functions
 \emph on
 getFunctionDeclarations 
 \emph default
-gets the functions, in C++, from the AST
+gets the functions, in C++, from the annotated AST
 \end_layout
 
 \begin_deeper
@@ -6485,7 +6618,7 @@ translates (basic) Fumurt types to their C++ equivalents
 \emph on
 callargTranslator 
 \emph default
-translates a call argument to C++ equivalent
+translates a call argument to the C++ equivalent
 \end_layout
 
 \begin_layout Itemize
@@ -6493,7 +6626,7 @@ translates a call argument to C++ equivalent
 \emph on
 functioncalltranslator 
 \emph default
-translates function call
+translates function calls to C++ syntax
 \end_layout
 
 \begin_layout Itemize
@@ -6520,6 +6653,7 @@ getprintlistdeclarations
 \emph default
 gets the printList declarations.
  These are lists in which strings to be printed are kept.
+ One for each thread
 \end_layout
 
 \begin_layout Itemize
