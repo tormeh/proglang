@@ -7,18 +7,8 @@ version := "0.1.0"
 
 scalaVersion := "2.11.6"
 
-scalacOptions ++= Seq("-feature", "-optimize", "-Xlint", "-Xfatal-warnings")
+scalacOptions ++= Seq("-feature", "-optimise", "-Xlint", "-Xfatal-warnings", "-deprecation", "-Ywarn-unused", "-Ywarn-infer-any", "-Ywarn-unused-import", "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-numeric-widen", "-Ywarn-nullary-override", "-Ywarn-nullary-unit", "-Ywarn-adapted-args")
 
-libraryDependencies ++= Seq("org.specs2"  %% "specs2"  % "2.3.12"  withSources(), "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3")
-	//"org.specs2" %% "specs2" % "2.3.12" % "test")
-    //"org.specs2" %% "specs2" % "1.12.4.1" % "test"
-    // with Scala 2.9.3 (specs2 1.12.4.1 is the latest version for scala 2.9.3)
-
-
-scalacOptions in Test ++= Seq("-Yrangepos")
-
-resolvers ++= Seq("snapshots", "releases").map(Resolver.sonatypeRepo)
-
-unmanagedBase := baseDirectory.value / "lib"
+libraryDependencies ++= Seq( "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3")
 
 

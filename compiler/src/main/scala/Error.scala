@@ -1,7 +1,7 @@
 package fumurtCompiler
 
 import scala.util.parsing.input.Position
-import scala.util.parsing.input.NoPosition
+//import scala.util.parsing.input.NoPosition
 
 case object Global extends Position
 {

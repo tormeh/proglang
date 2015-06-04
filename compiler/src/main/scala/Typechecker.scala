@@ -5,15 +5,8 @@ object FumurtTypeChecker
 {
   def check(in:List[Definition]):Option[List[FumurtError]] =
   {
-    val providedTypes = List("Integer", "Double", "Boolean", "String", "Nothing")
     val print = DefLhs(ActionT(), IdT("actionPrint"), Some(Arguments(List(Argument(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
-    val multiply = DefLhs(FunctionT(), IdT("multiply"), Some(Arguments(List(Argument(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
-    val plus = DefLhs(FunctionT(), IdT("plus"), Some(Arguments(List(Argument(IdT("left"), TypeT("Integer")), Argument(IdT("right"), TypeT("Integer"))))), TypeT("Integer"))
-    val divide = DefLhs(FunctionT(), IdT("actionPrintln"), Some(Arguments(List(Argument(IdT("left"), TypeT("Integer")), Argument(IdT("right"), TypeT("Integer"))))), TypeT("Integer"))
-    val minus = DefLhs(FunctionT(), IdT("minus"), Some(Arguments(List(Argument(IdT("left"), TypeT("Integer")), Argument(IdT("right"), TypeT("Integer"))))), TypeT("Integer"))
-    val mutate = DefLhs(FunctionT(), IdT("actionMutate"), Some(Arguments(List(Argument(IdT("newValue"), TypeT("Integer")), Argument(IdT("variable"), TypeT("Integer"))))), TypeT("Nothing"))
-    val integerToString = DefLhs(ActionT(), IdT("integerToString"), Some(Arguments(List(Argument(IdT("int"), TypeT("Integer"))))), TypeT("String"))
-    val basicfunctions = List(print) //List(multiply, plus, divide, minus, mutate, print, integerToString)
+    val basicfunctions = List(print) 
     
     
     //all standard library functions available everywhere (maybe also actions). 
@@ -138,11 +131,6 @@ object FumurtTypeChecker
     {
       case x:Definition=>
       { 
-        val localscope = containingdefinition match
-        {
-          case None => List()
-          case Some(contdef) => indexlefts(contdef.rightside.expressions)
-        }
         val (newargs, argpropagationerrors) = x.leftside.args match
         {
           case None => (List(), List())
@@ -475,18 +463,6 @@ object FumurtTypeChecker
       }
       case c:FunctionCallStatement => 
       {
-        /*val resulterrors = findinscope(arguments, inSameDefinition, basicFunctions, Some(containingdefinition), c.functionidentifier) match
-        {
-          case Left(str) => List(FumurtError(c.pos, "in checkcallarg_2 "+str))
-          case Right(functioncallarg) =>
-          {
-            if(expectedtype.value != functioncallarg.returntype.value)
-            {
-              List(FumurtError(c.pos, "Expected function to return argument of type "+expectedtype.value+". Got "+functioncallarg.returntype.value))
-            }
-            else {List()}
-          }
-        }*/
         //check that call end result is correct
         
         //check that call itself is correct
@@ -567,17 +543,6 @@ object FumurtTypeChecker
         case _:Statement=> list
       }
     )
-    /*in.head match
-    {
-      case Definition(leftside, _)=>
-      {
-        leftside +: indexlefts(in.tail)
-      }
-      case _:Statement=>
-      {
-        indexlefts(in.tail)
-      }
-    }*/
   }
   
   def findinscope(arguments:Option[List[DefLhs]], inSameDefinition:List[DefLhs], basicfunctions:List[DefLhs], enclosingDefinition:Option[DefLhs], searchFor:String):Either[String, DefLhs]=
@@ -628,10 +593,6 @@ object FumurtTypeChecker
     }
   }
   
-  /*def indexargumentlefts(argumentspassed:Option[List[Arguments]], argumentleftsgiven:Option[List[DefLhs]], leftsincallingdefinition:List[DefLhs], basicfunctions:List[DefLhs])
-  {
-    
-  }*/
 }
 
 

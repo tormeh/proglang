@@ -147,7 +147,7 @@ object FumurtCodeGenerator
               }
               Right(aNamedCallargs(mnewargs.toList))
             }
-            case None=>println("in getCallsAnnotatedTreeInternal");scala.sys.exit();Left(NoArgs())
+            case None=>println("in getCallsAnnotatedTreeInternal");scala.sys.exit()
             //case _=>Left(NoArgs())
           }
         }
@@ -580,7 +580,6 @@ object FumurtCodeGenerator
           }
         }
       }
-      //case aFunctionCallStatement("equals",_, Right(aNamedCallargs(List(aNamedCallarg(IdT("left"),), aNamedCallarg(IdT("right"),)))),_)
       case aFunctionCallStatement(funcid,cppfuncid,args,_) =>
       {
         val argstr = args match
@@ -604,9 +603,6 @@ object FumurtCodeGenerator
     val operator = if(call.functionidentifier=="plus"){" + "}else if(call.functionidentifier=="minus"){" - "}else if(call.functionidentifier=="multiply"){" * "}else if(call.functionidentifier=="minus"){" / "}
     call match
     {
-      //case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IdentifierStatement(right)))))) => left + operator + right
-      //case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),IntegerStatement(right)))))) => left + operator + right
-      //case FunctionCallStatement(_, Right(NamedCallargs(List(NamedCallarg(IdT("left"),IdentifierStatement(left)), NamedCallarg(IdT("right"),DoubleStatement(right)))))) => left + operator + right
       case aFunctionCallStatement(_,_, Right(aNamedCallargs(callargs)),_) =>
       {
         val argstr = callargs.map(arg=>
@@ -767,7 +763,7 @@ object FumurtCodeGenerator
     var printstatements = ""
     for(i<-topthreads)
     {
-      var currentprintqueuename = "print" + i.functionidentifier
+      val currentprintqueuename = "print" + i.functionidentifier
       printstatements += "while(!"+currentprintqueuename+".empty()){\nstd::cout << "+currentprintqueuename+".front();\n"+currentprintqueuename+".pop_front();\n}\n"
     }
     
@@ -848,19 +844,7 @@ object FumurtCodeGenerator
 
 
 
-trait aExpression
-trait aCallarg extends Callarg with aStatement
-trait aStatement extends aExpression
 
-case class aDefinition(val leftside:aDefLhs, val rightside:aDefRhs) extends aExpression
-case class aDefLhs(val description:DefDescriptionT, val id:IdT, val cppid:IdT, val callingthread:String, val args:Option[aArguments], val returntype:TypeT)
-case class aArguments(val args:List[aArgument])
-case class aArgument(val id:IdT, cppid:IdT, val typestr:TypeT)
-case class aDefRhs(val expressions:List[aExpression] )
-case class aNamedCallarg(id:IdT, argument:aCallarg) //extends Callarg
-case class aNamedCallargs(val value:List[aNamedCallarg])
-
-case class aFunctionCallStatement(val functionidentifier:String, val cppfunctionidentifier:String, val args:Either[aCallarg,aNamedCallargs], val returntype:String) extends aStatement with aCallarg
 
 
 

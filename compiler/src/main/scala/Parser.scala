@@ -1,12 +1,12 @@
 package fumurtCompiler
 
-import scala.util.parsing._
+//import scala.util.parsing._
 import scala.language.postfixOps
 import scala.language.implicitConversions
 import scala.util.parsing.input._
 import scala.util.parsing.combinator._
 //import scala.util.parsing.combinator.PackratParsers.PackratReader
-import scala.util.parsing.combinator.syntactical._
+//import scala.util.parsing.combinator.syntactical._
 import scala.util.parsing.combinator.PackratParsers
 
 object FumurtParser extends Parsers //with PackratParsers
@@ -109,31 +109,7 @@ object FumurtParser extends Parsers //with PackratParsers
   }
 }
 
-class Expression() extends Positional
-trait Callarg extends Positional
-trait Statement extends Expression
-trait BasicValueStatement extends Statement with Callarg with aCallarg with aStatement
 
-case class Definition(val leftside:DefLhs, val rightside:DefRhs) extends Expression
-case class DefLhs(val description:DefDescriptionT, val id:IdT, val args:Option[Arguments], val returntype:TypeT)
-/*case class Arguments(val id:IdT, val typestr:TypeT, val args2:Option[Arguments2])
-case class Arguments2(val id:IdT, val typestr:TypeT, val args2:Option[Arguments2])*/
-case class Arguments(val args:List[Argument])
-case class Argument(val id:IdT, val typestr:TypeT)
-case class DefRhs(val expressions:List[Expression] )
-case class Empty();
-case class DefDescription(val value:Token)
-case class NamedCallarg(id:IdT, argument:Callarg) //extends Callarg
-case class NamedCallargs(val value:List[NamedCallarg])
-case class NoArgs() extends Callarg with aCallarg
-
-case class StringStatement(val value:String) extends BasicValueStatement
-case class IntegerStatement(val value:Int) extends BasicValueStatement
-case class DoubleStatement(val value:Double) extends BasicValueStatement
-case class TrueStatement() extends BasicValueStatement
-case class FalseStatement() extends BasicValueStatement
-case class IdentifierStatement(val value:String) extends Statement with Callarg with aCallarg with aStatement
-case class FunctionCallStatement(val functionidentifier:String, val args:Either[Callarg,NamedCallargs]) extends Statement with Callarg
 
 
 

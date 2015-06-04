@@ -6000,7 +6000,7 @@ defParser:Parser[Definition]
 \end_layout
 
 \begin_layout Paragraph
-Class List
+Classes
 \end_layout
 
 \begin_layout Itemize
@@ -6049,12 +6049,6 @@ rest
 \end_layout
 
 \end_deeper
-\begin_layout Itemize
-Different classes forming parts of the AST, for example 
-\emph on
-class Definition(val leftside:DefLhs, val rightside:DefRhs).
-\end_layout
-
 \begin_layout Section
 Checker
 \end_layout
@@ -10142,6 +10136,10438 @@ Code listing
 \begin_inset CommandInset label
 LatexCommand label
 name "chap:Code-listing"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=scala}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+build.sbt
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+name := "solution"
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+organization := "NTNU ITK"
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+version := "0.1.0"
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scalaVersion := "2.11.6"
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scalacOptions ++= Seq("-feature", "-optimise", "-Xlint", "-Xfatal-warnings",
+ "-deprecation", "-Ywarn-unused", "-Ywarn-infer-any", "-Ywarn-unused-import",
+ "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-numeric-widen", "-Ywarn-null
+ary-override", "-Ywarn-nullary-unit", "-Ywarn-adapted-args")
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+libraryDependencies ++= Seq( "org.scala-lang.modules" %% "scala-parser-combinators
+" % "1.0.3")
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Main.scala
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+package fumurtCompiler
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.io.Source._
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.util.parsing.input.Positional
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+object CompileTypeOption extends Enumeration
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  type CompileTypeOption = Value
+\end_layout
+
+\begin_layout Plain Layout
+
+  val compiledToGo, compiledToC, compiledToCpp, interpreted = Value 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+import CompileTypeOption._
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+object Main
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  def main(args: Array[String]) :Unit ={
+\end_layout
+
+\begin_layout Plain Layout
+
+    if(args.length <1)
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+        println("no file found in arguments
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    else
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      val parts = args(0).split("""
+\backslash
+.""")
+\end_layout
+
+\begin_layout Plain Layout
+
+      if(parts.length==2)
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        if(parts(1)=="fumurt")
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          compile(getOptions(args.drop(1), args(0)))
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        else
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          println("unknown file ending: " + parts(1) + "
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      else
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        println("too many arguments
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def getOptions(args:Array[String],file:String): Options =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println(args.toString)
+\end_layout
+
+\begin_layout Plain Layout
+
+    new Options(CompileTypeOption.interpreted, true, file)
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def compile(opts:Options):Unit =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println("Now compiling!")
+\end_layout
+
+\begin_layout Plain Layout
+
+    val sourcestring = fromFile(opts.file).mkString
+\end_layout
+
+\begin_layout Plain Layout
+
+    FumurtScanner.scan(sourcestring) match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Left(error) => println("Error in scanner: " + error.toString)
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Right(tokens) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        //println("successful scan.
+ Tokens: "+tokens.toString+"
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+        FumurtParser.parse(tokens) match
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          case Left(error) => println("Error in parser: " + error.toString)
+\end_layout
+
+\begin_layout Plain Layout
+
+          case Right(ast) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            //println("Success in parser: " + ast.toString)
+\end_layout
+
+\begin_layout Plain Layout
+
+            FumurtTypeChecker.check(ast) match
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              case Some(errors) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                errors.map(x=>println(x))
+\end_layout
+
+\begin_layout Plain Layout
+
+                val errornum:String = errors.length match
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 1 => "one"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 2 => "two"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 3 => "three"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 4 => "four"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 5 => "five"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 6 => "six"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 7 => "seven"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 8 => "eight"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case 9 => "nine"
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case x => x.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                val singularplural:String = if(errors.length==1){" error"}else{"
+ errors"}
+\end_layout
+
+\begin_layout Plain Layout
+
+                println(errornum.capitalize + singularplural + " found")
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+              case None => 
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                //println("
+\backslash
+nNo errors in checker")
+\end_layout
+
+\begin_layout Plain Layout
+
+                val generatedcode = FumurtCodeGenerator.generate(ast)
+\end_layout
+
+\begin_layout Plain Layout
+
+                //println("
+\backslash
+ncode generated: 
+\backslash
+n" + generatedcode)
+\end_layout
+
+\begin_layout Plain Layout
+
+                import java.nio.file.{Paths, Files}
+\end_layout
+
+\begin_layout Plain Layout
+
+                import java.nio.charset.StandardCharsets
+\end_layout
+
+\begin_layout Plain Layout
+
+                val outname = "generated"
+\end_layout
+
+\begin_layout Plain Layout
+
+                val fileending = ".cpp"
+\end_layout
+
+\begin_layout Plain Layout
+
+                Files.write(Paths.get("./"+outname+fileending), generatedcode.getByt
+es(StandardCharsets.UTF_8))
+\end_layout
+
+\begin_layout Plain Layout
+
+                val options = " -pthread -std=c++11 -O3 -march=native"
+\end_layout
+
+\begin_layout Plain Layout
+
+                //println("
+\backslash
+n
+\backslash
+n===Starting GCC cpp compilation===")
+\end_layout
+
+\begin_layout Plain Layout
+
+                //println("options = " + options)
+\end_layout
+
+\begin_layout Plain Layout
+
+                import scala.sys.process._
+\end_layout
+
+\begin_layout Plain Layout
+
+                val command = "g++ " + outname + fileending + options +
+ " -o " + outname
+\end_layout
+
+\begin_layout Plain Layout
+
+                //println(command)
+\end_layout
+
+\begin_layout Plain Layout
+
+                if( System.getProperty( "os.name" ).startsWith("Windows") )
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  println("OS identified as Windows.
+ Please use the Microsoft Visual C++ compiler (included in Visual Studio)
+ to compile the generated 
+\backslash
+"generated.cpp
+\backslash
+" file")
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                else
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  (command).!
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+class Options(val compileTypeOption:CompileTypeOption, val debug:Boolean,
+ val file:String)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Ast.scala
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+package fumurtCompiler
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.util.parsing.input.Positional
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+abstract class Token() extends Positional
+\end_layout
+
+\begin_layout Plain Layout
+
+abstract class DefDescriptionT() extends Token
+\end_layout
+
+\begin_layout Plain Layout
+
+abstract class BasicValueT() extends Token
+\end_layout
+
+\begin_layout Plain Layout
+
+abstract class SyntaxT() extends Token
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+case class EmptyT() extends Token
+\end_layout
+
+\begin_layout Plain Layout
+
+case class TrueT() extends BasicValueT {override def toString = "true"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class FalseT() extends BasicValueT {override def toString = "false"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class ProgramT() extends DefDescriptionT {override def toString = "program"
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class ActionT() extends DefDescriptionT {override def toString = "action"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class ThreadT() extends DefDescriptionT {override def toString = "thread"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class FunctionT() extends DefDescriptionT {override def toString =
+ "function"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class ValueT() extends DefDescriptionT {override def toString = "value"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class SynchronizedVariableT() extends DefDescriptionT {override def
+ toString = "synchronized variable"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class OpenParenthesisT() extends SyntaxT {override def toString = "
+\backslash
+"(
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class CloseParenthesisT() extends SyntaxT {override def toString =
+ "
+\backslash
+")
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class OpenCurlyBracketT() extends SyntaxT {override def toString =
+ "
+\backslash
+"{
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class CloseCurlyBracketT() extends SyntaxT {override def toString =
+ "
+\backslash
+"}
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class DoubleT(val value:Double) extends BasicValueT {override def toString
+ = "decimal number"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class IntegerT(val value:Int) extends BasicValueT {override def toString
+ = "integer"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class EqualT() extends SyntaxT {override def toString = "
+\backslash
+"=
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class ColonT() extends SyntaxT {override def toString = "
+\backslash
+":
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class CommaT() extends SyntaxT {override def toString = "
+\backslash
+",
+\backslash
+""}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class NewlineT() extends SyntaxT {override def toString = "newline"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class IdT(val value:String) extends Token {override def toString =
+ "identifier(
+\backslash
+""+value+"
+\backslash
+")"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class TypeT(val value:String) extends Token {override def toString
+ = "type(
+\backslash
+""+value+"
+\backslash
+")"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class StringT(val value:String) extends BasicValueT {override def toString
+ = "string"}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class SpaceT() extends SyntaxT
+\end_layout
+
+\begin_layout Plain Layout
+
+case class DummyT() extends Token
+\end_layout
+
+\begin_layout Plain Layout
+
+case class EofT() extends SyntaxT {override def toString = "end of file"}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+class Expression() extends Positional
+\end_layout
+
+\begin_layout Plain Layout
+
+trait Callarg extends Positional
+\end_layout
+
+\begin_layout Plain Layout
+
+trait Statement extends Expression
+\end_layout
+
+\begin_layout Plain Layout
+
+trait BasicValueStatement extends Statement with Callarg with aCallarg with
+ aStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+case class Definition(val leftside:DefLhs, val rightside:DefRhs) extends
+ Expression
+\end_layout
+
+\begin_layout Plain Layout
+
+case class DefLhs(val description:DefDescriptionT, val id:IdT, val args:Option[A
+rguments], val returntype:TypeT)
+\end_layout
+
+\begin_layout Plain Layout
+
+/*case class Arguments(val id:IdT, val typestr:TypeT, val args2:Option[Arguments
+2])
+\end_layout
+
+\begin_layout Plain Layout
+
+case class Arguments2(val id:IdT, val typestr:TypeT, val args2:Option[Arguments2
+])*/
+\end_layout
+
+\begin_layout Plain Layout
+
+case class Arguments(val args:List[Argument])
+\end_layout
+
+\begin_layout Plain Layout
+
+case class Argument(val id:IdT, val typestr:TypeT)
+\end_layout
+
+\begin_layout Plain Layout
+
+case class DefRhs(val expressions:List[Expression] )
+\end_layout
+
+\begin_layout Plain Layout
+
+case class Empty();
+\end_layout
+
+\begin_layout Plain Layout
+
+case class DefDescription(val value:Token)
+\end_layout
+
+\begin_layout Plain Layout
+
+case class NamedCallarg(id:IdT, argument:Callarg) //extends Callarg
+\end_layout
+
+\begin_layout Plain Layout
+
+case class NamedCallargs(val value:List[NamedCallarg])
+\end_layout
+
+\begin_layout Plain Layout
+
+case class NoArgs() extends Callarg with aCallarg
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+case class StringStatement(val value:String) extends BasicValueStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+case class IntegerStatement(val value:Int) extends BasicValueStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+case class DoubleStatement(val value:Double) extends BasicValueStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+case class TrueStatement() extends BasicValueStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+case class FalseStatement() extends BasicValueStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+case class IdentifierStatement(val value:String) extends Statement with
+ Callarg with aCallarg with aStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+case class FunctionCallStatement(val functionidentifier:String, val args:Either[
+Callarg,NamedCallargs]) extends Statement with Callarg
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+trait aExpression
+\end_layout
+
+\begin_layout Plain Layout
+
+trait aCallarg extends Callarg with aStatement
+\end_layout
+
+\begin_layout Plain Layout
+
+trait aStatement extends aExpression
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+case class aDefinition(val leftside:aDefLhs, val rightside:aDefRhs) extends
+ aExpression
+\end_layout
+
+\begin_layout Plain Layout
+
+case class aDefLhs(val description:DefDescriptionT, val id:IdT, val cppid:IdT,
+ val callingthread:String, val args:Option[aArguments], val returntype:TypeT)
+\end_layout
+
+\begin_layout Plain Layout
+
+case class aArguments(val args:List[aArgument])
+\end_layout
+
+\begin_layout Plain Layout
+
+case class aArgument(val id:IdT, cppid:IdT, val typestr:TypeT)
+\end_layout
+
+\begin_layout Plain Layout
+
+case class aDefRhs(val expressions:List[aExpression] )
+\end_layout
+
+\begin_layout Plain Layout
+
+case class aNamedCallarg(id:IdT, argument:aCallarg) //extends Callarg
+\end_layout
+
+\begin_layout Plain Layout
+
+case class aNamedCallargs(val value:List[aNamedCallarg])
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+case class aFunctionCallStatement(val functionidentifier:String, val cppfunction
+identifier:String, val args:Either[aCallarg,aNamedCallargs], val returntype:Stri
+ng) extends aStatement with aCallarg
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Scanner.scala
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+package fumurtCompiler
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.language.implicitConversions
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.util.parsing.combinator.RegexParsers
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.util.matching.Regex
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.language.postfixOps
+\end_layout
+
+\begin_layout Plain Layout
+
+//import scala.util.parsing.combinator.lexical._
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.util.parsing.input.Positional
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+object FumurtScanner extends RegexParsers /*with Parsers*/
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  override val skipWhitespace = false
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def scan(in:String):Either[NoSuccess, List[Token]] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println(in) 
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\end_layout
+
+\begin_layout Plain Layout
+
+    parseAll((scanInternal*), in) match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Success(result, _) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        val tokens = result.filter(x=>x match{case SpaceT() => false; case
+ _ => true}) :+ EofT()
+\end_layout
+
+\begin_layout Plain Layout
+
+        Right(tokens)
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case f:Failure => Left(f)
+\end_layout
+
+\begin_layout Plain Layout
+
+      case e:Error => Left(e)
+\end_layout
+
+\begin_layout Plain Layout
+
+      //case Failure(message, reader) => Left(new FumurtError(reader.pos,
+ "Failure: "+message,"
+\backslash
+n" + in.lines.toList(reader.pos.line) +"
+\backslash
+n"))
+\end_layout
+
+\begin_layout Plain Layout
+
+      //case Error(message,_) => Left(new FumurtError(Global, "Error: "
+ + message, ""))
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  def spaceParser:Parser[SpaceT] = positioned( new Regex(""" """) ^^ {x
+ => /*println("scanned space");*/SpaceT()} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def programStrParser: Parser[ProgramT] = positioned( new Regex("program
+ ") ^^ {x => /*println("scanned program "+x.toString);*/ProgramT()} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def functionParser: Parser[FunctionT] = positioned( new Regex("function
+ ") ^^ {x => /*println("scanned function "+x.toString);*/FunctionT()} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def threadParser: Parser[ThreadT] = positioned( new Regex("thread ") ^^
+ {x => /*println("scanned thread "+x.toString);*/ThreadT()} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def synchronizedVariableParser: Parser[SynchronizedVariableT] = positioned(new
+ Regex("synchronized variable ") ^^ {x => /*println("scanned synchronized
+ variable "+x.toString);*/ SynchronizedVariableT()})
+\end_layout
+
+\begin_layout Plain Layout
+
+  def valueParser: Parser[ValueT] = positioned( new Regex("value ") ^^ {x
+ => /*println("scanned unsafe value "+x.toString);*/ValueT()} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def actionParser: Parser[ActionT] = positioned( new Regex("action ") ^^
+ {x => /*println("scanned action "+x.toString);*/ActionT()} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def trueParser: Parser[TrueT] = positioned( new Regex("true") ^^ {x =>
+ /*println("scanned true "+x.toString);*/TrueT()} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def falseParser: Parser[FalseT] = positioned( new Regex("false") ^^ {x
+ => /*println("scanned false "+x.toString);*/FalseT()} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def openParenthesisParser: Parser[OpenParenthesisT] = positioned( new
+ Regex("""
+\backslash
+(""") ^^ {x => /*println("scanned ( "+x.toString);*/OpenParenthesisT()} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def closeParenthesisParser: Parser[CloseParenthesisT] = positioned( new
+ Regex("""
+\backslash
+)""") ^^ {x => /*println("scanned ) "+x.toString);*/CloseParenthesisT()}
+ )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def openCurlyBracketParser: Parser[OpenCurlyBracketT] = positioned( new
+ Regex("""
+\backslash
+{""") ^^ {x => /*println("scanned { "+x.toString);*/OpenCurlyBracketT()}
+ )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def closeCurlyBracketParser: Parser[CloseCurlyBracketT] = positioned(
+ new Regex("""
+\backslash
+}""") ^^ {x => /*println("scanned } "+x.toString);*/CloseCurlyBracketT()}
+ )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def doubleParser: Parser[DoubleT] = positioned( new Regex("""[-+]?[0-9]*
+\backslash
+.[0-9]+""") ^^ {x => /*println("scanned double "+x.toString);*/DoubleT(x.toDouble)}
+ )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def intParser: Parser[IntegerT] = positioned( new Regex("""[-+]?(0|[1-9]
+\backslash
+d*)""") ^^ {x => /*println("scanned integer "+x.toString);*/IntegerT(x.toInt)}
+ )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def equalParser: Parser[EqualT] = positioned( new Regex("=") ^^ {x =>
+ /*println("scanned = "+x.toString);*/EqualT()} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def colonParser: Parser[ColonT] = positioned( new Regex(":") ^^ {x =>
+ /*println("scanned : "+x.toString);*/ColonT()} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def commaParser: Parser[CommaT] = positioned( new Regex(",") ^^ {x =>
+ /*println("scanned , "+x.toString);*/CommaT()} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  //def emptyParser: Parser[EmptyT] = new Regex("") ^^ {x => println("scanned
+ empty");EmptyT()}
+\end_layout
+
+\begin_layout Plain Layout
+
+  def newlineParser: Parser[NewlineT] = positioned( new Regex("
+\backslash
+n") ^^ {x => /*println("scanned newline ");*/NewlineT()} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def idParser: Parser[IdT] = positioned( new Regex("[a-z]+[a-zA-Z]*") ^^
+ {x => /*println("scanned id "+x.toString);*/IdT(x.toString)} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def stringParser: Parser[StringT] = positioned( new Regex("""("[^"]*")""")
+ ^^ {x => /*println("scanned string "+x.toString);*/StringT(x.toString)} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def typeParser: Parser[TypeT] = positioned( new Regex("[A-Z][a-zA-Z]*")
+ ^^ {x => /*println("scanned type "+x.toString);*/TypeT(x.toString)} )
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def scanInternal: Parser[Token] = 
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    (
+\end_layout
+
+\begin_layout Plain Layout
+
+      spaceParser               |
+\end_layout
+
+\begin_layout Plain Layout
+
+      programStrParser          |
+\end_layout
+
+\begin_layout Plain Layout
+
+      threadParser        |
+\end_layout
+
+\begin_layout Plain Layout
+
+      actionParser              |
+\end_layout
+
+\begin_layout Plain Layout
+
+      synchronizedVariableParser  |
+\end_layout
+
+\begin_layout Plain Layout
+
+      functionParser            |
+\end_layout
+
+\begin_layout Plain Layout
+
+      trueParser                |
+\end_layout
+
+\begin_layout Plain Layout
+
+      falseParser               |
+\end_layout
+
+\begin_layout Plain Layout
+
+      openParenthesisParser     |
+\end_layout
+
+\begin_layout Plain Layout
+
+      closeParenthesisParser    |
+\end_layout
+
+\begin_layout Plain Layout
+
+      openCurlyBracketParser    |
+\end_layout
+
+\begin_layout Plain Layout
+
+      closeCurlyBracketParser   |
+\end_layout
+
+\begin_layout Plain Layout
+
+      doubleParser              |
+\end_layout
+
+\begin_layout Plain Layout
+
+      intParser                 |
+\end_layout
+
+\begin_layout Plain Layout
+
+      equalParser               |
+\end_layout
+
+\begin_layout Plain Layout
+
+      colonParser               |
+\end_layout
+
+\begin_layout Plain Layout
+
+      commaParser               |
+\end_layout
+
+\begin_layout Plain Layout
+
+      //emptyParser               |
+\end_layout
+
+\begin_layout Plain Layout
+
+      newlineParser             |
+\end_layout
+
+\begin_layout Plain Layout
+
+      stringParser              |
+\end_layout
+
+\begin_layout Plain Layout
+
+      idParser                  |
+\end_layout
+
+\begin_layout Plain Layout
+
+      typeParser  
+\end_layout
+
+\begin_layout Plain Layout
+
+    )            
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Parser.scala
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+package fumurtCompiler
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+//import scala.util.parsing._
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.language.postfixOps
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.language.implicitConversions
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.util.parsing.input._
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.util.parsing.combinator._
+\end_layout
+
+\begin_layout Plain Layout
+
+//import scala.util.parsing.combinator.PackratParsers.PackratReader
+\end_layout
+
+\begin_layout Plain Layout
+
+//import scala.util.parsing.combinator.syntactical._
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.util.parsing.combinator.PackratParsers
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+object FumurtParser extends Parsers //with PackratParsers
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  override type Elem = Token
+\end_layout
+
+\begin_layout Plain Layout
+
+  //type Tokens = Token
+\end_layout
+
+\begin_layout Plain Layout
+
+  //type Token = Elem
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  def parse(in:List[Token]):Either[NoSuccess, List[Definition]]=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    //val ast = parseAll((progParser), in)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val res = progParser(new TokenReader(in))
+\end_layout
+
+\begin_layout Plain Layout
+
+    res match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case ns:NoSuccess=>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+         println(res+"
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+         //Left(new FumurtError(ns.next.pos, ns.msg, ""))
+\end_layout
+
+\begin_layout Plain Layout
+
+         Left(ns)
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case _=>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        val ast = res.get
+\end_layout
+
+\begin_layout Plain Layout
+
+        //println("
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+        //println(ast.toString+"
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+        Right(ast)
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def progParser: Parser[List[Definition]] = (paddedDefParser.+) <~ eofParser
+\end_layout
+
+\begin_layout Plain Layout
+
+  def paddedDefParser:Parser[Definition] = {/*println("paddeddefparser");*/
+ newlineParser.* ~> defParser <~ newlineParser.* }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def defParser: Parser[Definition] = {/*println("defparser");*/  positioned((de
+flhsParser <~ equalParser ~! newlineParser.*) ~! defrhsParser ^^ {x=>Definition(x.
+_1,x._2)}) }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def deflhsParser: Parser[DefLhs] = {/*println("deflhsparser");*/  (defdescript
+ionParser ~ idParser ~ argsParser ~! (colonParser ~> typeParser)) ^^ {x=>DefLhs(
+x._1._1._1, x._1._1._2, x._1._2, x._2)} }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def argsParser: Parser[Option[Arguments]] = {/*println("argsparser");*/
+ openParenthesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ subsequentAr
+gsParser.*) <~ closeParenthesisParser ^^{x=>Some(Arguments( (Argument(x._1._1,
+ x._1._2) +: x._2).sortWith((left,right)=>left.id.value<right.id.value) ))} | emptyParse
+r ^^ {x=>None} }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def subsequentArgsParser: Parser[Argument] = {/*println("args2parserparser");*
+/  commaParser ~> (idParser <~ colonParser) ~ typeParser ^^{x=>Argument(x._1,
+ x._2)} }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def defrhsParser: Parser[DefRhs] = {/*println("-defrhsparser");*/ (openCurlyBr
+acketParser ~ newlineParser.* ~> expressionParser ~ (newlineParser.+ ~> expression
+Parser).*) <~ newlineParser.* ~ closeCurlyBracketParser ^^{x=>DefRhs(x._1 +:
+ x._2)} }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def expressionParser: Parser[Expression] = {/*println("expressionparser");*/
+ positioned(defParser | statementParser) }
+\end_layout
+
+\begin_layout Plain Layout
+
+  /*
+\end_layout
+
+\begin_layout Plain Layout
+
+  def defrhsParser: Parser[DefRhs] = {println("-defrhsparser"); (openCurlyBracke
+tParser ~> expressionParser.+) <~ newlineParser.* ~ closeCurlyBracketParser
+ ^^{x=>DefRhs(x)} }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def expressionParser: Parser[Expression] = {println("expressionparser");
+ newlineParser.+ ~> positioned(defParser | statementParser) }
+\end_layout
+
+\begin_layout Plain Layout
+
+  */
+\end_layout
+
+\begin_layout Plain Layout
+
+  def statementParser: Parser[Statement] = {/*println("statementparser");*/
+ functionCallParser | basicStatementParser  | identifierStatementParser
+ }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def callargsParser: Parser[Either[Callarg,NamedCallargs]] = {/*println("callar
+gsparser");*/ openParenthesisParser ~> (namedcallargsParser | callargParser)
+ <~ closeParenthesisParser ^^{x=>x match{case x:Callarg => Left(x); case
+ x:NamedCallargs=>Right(x)}} }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def callargParser: Parser[Callarg] = {/*println("callargparser");*/ positioned
+(functionCallParser | identifierStatementParser | basicStatementParser |
+ success(NoArgs())) }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def namedcallargsParser: Parser[NamedCallargs] = {/*println("namedcallargspars
+er");*/ namedcallargParser ~ subsequentnamedcallargsParser.+ ^^ {x => NamedCallar
+gs((x._1 +: x._2).sortWith((left,right)=>left.id.value<right.id.value))} }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def subsequentnamedcallargsParser: Parser[NamedCallarg] = {/*println("subseque
+ntnamedcallargsParser");*/ (commaParser ~! success(Unit)) ~> namedcallargParser
+ }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def namedcallargParser:Parser[NamedCallarg] = {/*println("namedcallargparser")
+;*/ (idParser <~ equalParser) ~ callargParser ^^ {x=>NamedCallarg(x._1, x._2)}
+ }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def functionCallParser:Parser[FunctionCallStatement] = {/*println("functioncal
+lparser");*/ idParser ~ callargsParser ^^ {x=>FunctionCallStatement(x._1
+ match{case IdT(str)=>str}, x._2)} }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  /*
+\end_layout
+
+\begin_layout Plain Layout
+
+  def argsParser: Parser[Option[Arguments]] = {println("argsparser"); openParent
+hesisParser ~> ((idParser <~ colonParser) ~ typeParser ~ args2Parser) <~
+ closeParenthesisParser ^^{x=>Some(Arguments(x._1._1, x._1._2, x._2))} | emptyParser
+ ^^ {x=>None} }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def args2Parser: Parser[Option[Arguments2]] = {println("args2parserparser");
+  commaParser ~> (idParser <~ colonParser) ~ typeParser ~ args2Parser ^^{x=>Some
+(Arguments2(x._1._1, x._1._2, x._2))} | emptyParser ^^^{None} }
+\end_layout
+
+\begin_layout Plain Layout
+
+  */
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def equalParser:Parser[Token] = accept(EqualT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def colonParser:Parser[Elem] = accept(ColonT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def commaParser:Parser[Elem] = accept(CommaT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def newlineParser:Parser[Elem] = accept(NewlineT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def emptyParser:Parser[Empty] = success(Empty())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def openParenthesisParser:Parser[Elem] = accept(OpenParenthesisT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def closeParenthesisParser:Parser[Elem] = accept(CloseParenthesisT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def openCurlyBracketParser:Parser[Elem] = accept(OpenCurlyBracketT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def closeCurlyBracketParser:Parser[Elem] = accept(CloseCurlyBracketT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def programStrParser:Parser[Elem] = accept(ProgramT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def actionParser:Parser[Elem] = accept(ActionT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def threadParser:Parser[Elem] = accept(ThreadT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def functionParser:Parser[DefDescription] = accept("function", {case FunctionT
+() => DefDescription(FunctionT())})
+\end_layout
+
+\begin_layout Plain Layout
+
+  def eofParser:Parser[Elem] = accept(EofT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def idParser:Parser[IdT] = accept("identifier", {case IdT(value) => {/*println
+("idparser accepted "+value);*/IdT(value)}})
+\end_layout
+
+\begin_layout Plain Layout
+
+  def trueParser:Parser[Elem] = accept(TrueT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def falseParser:Parser[Elem] = accept(FalseT())
+\end_layout
+
+\begin_layout Plain Layout
+
+  def identifierStatementParser:Parser[IdentifierStatement] ={/*println("identif
+ierstatementparser");*/ accept("identifier", {case IdT(str)=>{/*println("identif
+ierstatementparser accepted "+str);*/ IdentifierStatement(str)}}) }
+\end_layout
+
+\begin_layout Plain Layout
+
+  def basicStatementParser:Parser[BasicValueStatement] = accept("expected
+ string, integer, boolean or float", {case StringT(value) => StringStatement(val
+ue); 
+\end_layout
+
+\begin_layout Plain Layout
+
+                                                                       
+                         case IntegerT(value)=> IntegerStatement(value)
+\end_layout
+
+\begin_layout Plain Layout
+
+                                                                       
+                         case DoubleT(value) => DoubleStatement(value)
+\end_layout
+
+\begin_layout Plain Layout
+
+                                                                       
+                         case TrueT() => TrueStatement()
+\end_layout
+
+\begin_layout Plain Layout
+
+                                                                       
+                         case FalseT() => FalseStatement()}
+\end_layout
+
+\begin_layout Plain Layout
+
+                                                                       
+                         )
+\end_layout
+
+\begin_layout Plain Layout
+
+  def typeParser:Parser[TypeT] = accept("expected type.
+ Types are written with a leading capital letter", {case x:TypeT => x})
+\end_layout
+
+\begin_layout Plain Layout
+
+  def intParser:Parser[Elem] = accept("integer", {case x:IntegerT => x})
+\end_layout
+
+\begin_layout Plain Layout
+
+  def doubleParser:Parser[Elem] = accept("double", {case x:DoubleT => x})
+\end_layout
+
+\begin_layout Plain Layout
+
+  def defdescriptionParser: Parser[DefDescriptionT] = {/*println("defdescription
+Parser");*/ accept("expected function, action, thread or program", {case
+ x:DefDescriptionT => x}) }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  class TokenReader(in:List[Token]) extends Reader[Elem]
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    def atEnd:Boolean = in.isEmpty
+\end_layout
+
+\begin_layout Plain Layout
+
+    def first:Elem = in.head
+\end_layout
+
+\begin_layout Plain Layout
+
+    def pos:Position = in.head.pos;
+\end_layout
+
+\begin_layout Plain Layout
+
+    def rest = new TokenReader(in.tail)
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Typechecker.scala
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+package fumurtCompiler
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.collection.mutable.ListBuffer
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+object FumurtTypeChecker
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  def check(in:List[Definition]):Option[List[FumurtError]] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    val print = DefLhs(ActionT(), IdT("actionPrint"), Some(Arguments(List(Argume
+nt(IdT("toPrint"), TypeT("String"))))), TypeT("Nothing"))
+\end_layout
+
+\begin_layout Plain Layout
+
+    val basicfunctions = List(print) 
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    //all standard library functions available everywhere (maybe also actions).
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+    //checkexpression(in, DefLhs(UnsafeActionT(), IdT(""), None, TypeT("Nothing"
+)), None, List(List():List[Definition]), basics, List():List[DefLhs], List():Lis
+t[FumurtErrors])
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println()
+\end_layout
+
+\begin_layout Plain Layout
+
+    val errors = checktop(in, basicfunctions)
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println()
+\end_layout
+
+\begin_layout Plain Layout
+
+    if (errors.isEmpty)
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      None
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    else
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      Some(errors)
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def checktop(in:List[Definition], basicFunctions:List[DefLhs]): List[FumurtErr
+or]=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    val topdefs = indexlefts(in)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val programs = in.filter(x=>(x.leftside.description match {case ProgramT()
+ => true; case _=> false}))
+\end_layout
+
+\begin_layout Plain Layout
+
+    val implicitargs = topdefs.filter(x=>(x.description match {case ProgramT()
+ => false; case _=> true}))
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println("
+\backslash
+nimplicitargs is: "+implicitargs)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val programerrors = if(programs.length==1)
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      checkprogram(programs(0), implicitargs, basicFunctions)
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    else {List(FumurtError(Global, "There must be exactly one program definition.
+ "+programs.length+" program definitions detected"))}
+\end_layout
+
+\begin_layout Plain Layout
+
+    val program = programs(0)
+\end_layout
+
+\begin_layout Plain Layout
+
+    //val synchronizedvars = program.rightside.expressions.filter(x=> x match
+ {case Definition(DefLhs(SynchronizedVariableT(),_,_,_),_)=>true; case _=>false}
+):List[Definition]
+\end_layout
+
+\begin_layout Plain Layout
+
+    val synchronizedvars = program.rightside.expressions.flatMap(x=> x match
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case deff:Definition=>if(deff.leftside.description == SynchronizedVariable
+T()) {Some(deff.leftside)} else {None}; 
+\end_layout
+
+\begin_layout Plain Layout
+
+        case _=>None
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    ):List[DefLhs]
+\end_layout
+
+\begin_layout Plain Layout
+
+    val nonProgramDefs = in.filter(x=>(x.leftside.description match {case ProgramT(
+) => false; case _=> true}))
+\end_layout
+
+\begin_layout Plain Layout
+
+    val othererrors = checkexpressions(nonProgramDefs, None, Some(implicitargs++
+synchronizedvars), basicFunctions) 
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+     programerrors++othererrors 
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def checkprogram(program:Definition, topleveldefs:List[DefLhs], basicFunctions
+:List[DefLhs]): List[FumurtError]=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    def checkuseofthread(program:Definition, thread:DefLhs):List[FumurtError]=
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      thread.description match
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case ThreadT() => program.rightside.expressions.find(y=>y match{case
+ FunctionCallStatement(thread.id.value, _) => true; case _=>false}) 
+\end_layout
+
+\begin_layout Plain Layout
+
+          match
+\end_layout
+
+\begin_layout Plain Layout
+
+          { 
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Some(_)=> List(); 
+\end_layout
+
+\begin_layout Plain Layout
+
+            case None=> List(FumurtError(Global, "thread "+thread.id.value+"
+ is declared but not used"))
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        case _=> List()
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    val unusedthreaderrors:List[FumurtError] = topleveldefs.foldLeft(List():
+ List[FumurtError])((x:List[FumurtError], y:DefLhs)=>
+\end_layout
+
+\begin_layout Plain Layout
+
+      x++checkuseofthread(program,y)
+\end_layout
+
+\begin_layout Plain Layout
+
+    ):List[FumurtError]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    val lefts = indexlefts(program.rightside.expressions)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val unsuitableexpressions = program.rightside.expressions.foldLeft(List():
+ List[FumurtError])( (x,y)=>
+\end_layout
+
+\begin_layout Plain Layout
+
+      y match
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case z:Definition=>
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          z.leftside.description match
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            case SynchronizedVariableT() => 
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              if(z.rightside.expressions.length != 1){x++List(FumurtError(z.pos,
+ "only single call to synchronized permitted"))}
+\end_layout
+
+\begin_layout Plain Layout
+
+              else
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                val synchcall = z.rightside.expressions(0)
+\end_layout
+
+\begin_layout Plain Layout
+
+                val signatureerror = 
+\end_layout
+
+\begin_layout Plain Layout
+
+                synchcall match
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case FunctionCallStatement( "synchronized", Right(NamedCallarg
+s(List( NamedCallarg(IdT("variable"), variablearg:Callarg), NamedCallarg(IdT("wr
+iter"),writerarg: Callarg))))) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+                  {
+\end_layout
+
+\begin_layout Plain Layout
+
+                    x++checkCallarg(z.leftside.returntype, variablearg, IdT("varia
+ble"), program.leftside, None, basicFunctions, List()) //TODO: make sure
+ that writer is a thread that exists.
+\end_layout
+
+\begin_layout Plain Layout
+
+                  }
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case _=>x++List(FumurtError(synchcall.pos, "must be call
+ to synchronized with 
+\backslash
+"variable
+\backslash
+" and 
+\backslash
+"writer
+\backslash
+" arguments"))
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                x++signatureerror
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+              
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            case _=> x++List(FumurtError(z.pos,"Do not define functions,
+ actions or unsynchronized values in Program"))
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        case z:FunctionCallStatement=>
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          if(!z.functionidentifier.startsWith("thread")) {x ++ List(FumurtError(z.p
+os, "Only threads can be called in Program"))} 
+\end_layout
+
+\begin_layout Plain Layout
+
+          else
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            x++checkstatement(z, program.leftside, None, basicFunctions,
+ lefts++topleveldefs, TypeT("Nothing"))
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+          
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        case z:Expression=>x++List(FumurtError(z.pos, "Only definitions and
+ thread start statements allowed in Program"))
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    )
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println(program.rightside.expressions)
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println("unsuit "+(unusedthreaderrors ++ unsuitabledefinitions.toList))
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    (unusedthreaderrors ++ unsuitableexpressions.toList):List[FumurtError]
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def checkexpressions(tree:List[Expression], containingdefinition:Option[Defini
+tion], containingdefinitionarguments:Option[List[DefLhs]], basicFunctions:List[D
+efLhs]):List[FumurtError]=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    val insamedefinition = indexlefts(tree)
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println("
+\backslash
+nin checkexpressions:   insamedefinition is "+insamedefinition+" containingdefin
+ition is "+containingdefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+    tree.foldLeft(List():List[FumurtError])((x,y) =>x ++checkexpression(y,
+ containingdefinition, containingdefinitionarguments, basicFunctions, insamedefi
+nition))
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def checkexpression(tocheck:Expression, containingdefinition:Option[Definition
+], arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition
+:List[DefLhs]):List[FumurtError] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println("
+\backslash
+nIn checkexpression:   tocheck: "+tocheck+"containingdefinition: "+containingdef
+inition+" arguments: "+arguments)
+\end_layout
+
+\begin_layout Plain Layout
+
+    tocheck match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case x:Definition=>
+\end_layout
+
+\begin_layout Plain Layout
+
+      { 
+\end_layout
+
+\begin_layout Plain Layout
+
+        val (newargs, argpropagationerrors) = x.leftside.args match
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          case None => (List(), List())
+\end_layout
+
+\begin_layout Plain Layout
+
+          case Some(Arguments(args)) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            val hits = arguments match
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              case Some(contargs) => args.flatMap(arg => (contargs++inSameDefinit
+ion).find(y => y.id.value==arg.id.value))
+\end_layout
+
+\begin_layout Plain Layout
+
+              case None => args.flatMap(arg => inSameDefinition.find(y =>
+ y.id.value==arg.id.value))
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            if (hits.length == args.length)      //used to be !=.
+ Don't know why.
+ bug?
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              (hits, List())
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            else 
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              
+\end_layout
+
+\begin_layout Plain Layout
+
+              //(hits, List(FumurtError(x.pos,"One or more arguments not
+ found in local scope"))) TODO: Find better solution than just abandoning
+ compile time dependent checking.
+ Checking for each function call might be possible...
+\end_layout
+
+\begin_layout Plain Layout
+
+              (hits,List())
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        checkdefinition(x, containingdefinition.map(x=>x.leftside), Some(newargs),
+ basicFunctions) ++ argpropagationerrors
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case x:Statement => containingdefinition match
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case None => List(FumurtError(x.pos, "Statements must be enclosed
+ in either Program or another definition"))
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Some(contdef) => /*println("
+\backslash
+n"+x);*/ checkstatement(x, contdef.leftside, arguments, basicFunctions, inSameDef
+inition, contdef.leftside.returntype)
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def checkstatement(tocheck:Statement, containingdefinition:DefLhs, arguments:O
+ption[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefinition:List[DefLhs],
+ expectedreturn:TypeT): List[FumurtError]=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println("
+\backslash
+nIn checkstatement:   tocheck: "+tocheck+"containingdefinition: "+containingdefi
+nition+" arguments: "+arguments)
+\end_layout
+
+\begin_layout Plain Layout
+
+    tocheck match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case b:BasicValueStatement=> checkbasicvaluestatement(expectedreturn,
+ b, "Return")
+\end_layout
+
+\begin_layout Plain Layout
+
+      case b:IdentifierStatement=>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        val statedvalue = findinscope(arguments, inSameDefinition, basicFunction
+s, Some(containingdefinition), b.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+        statedvalue match
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          case Left(string) => List(FumurtError(b.pos, /*"in checkstatement
+ "+*/string))
+\end_layout
+
+\begin_layout Plain Layout
+
+          case Right(deflhs) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            if(containingdefinition.returntype.value != deflhs.returntype.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              List(FumurtError(b.pos, "expected: " +expectedreturn.value+
+ ".
+ Got: " +deflhs.returntype.value))
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            else
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              List()
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case y:FunctionCallStatement=>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        //println("found "+y)
+\end_layout
+
+\begin_layout Plain Layout
+
+        if (y.functionidentifier=="if")
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          checkifcall(y, expectedreturn, containingdefinition, arguments,
+ basicFunctions, inSameDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        else if (y.functionidentifier=="plus" || y.functionidentifier=="minus"
+ || y.functionidentifier=="multiply" || y.functionidentifier=="divide")
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          checkbasicmathcall(y, expectedreturn, containingdefinition, arguments,
+ basicFunctions, inSameDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        else if (y.functionidentifier=="toString")
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          checktostringcall(y, expectedreturn, containingdefinition, arguments,
+ basicFunctions, inSameDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        else if (y.functionidentifier=="actionMutate")
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          checkmutatecall(y, expectedreturn, containingdefinition, arguments,
+ basicFunctions, inSameDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        else if (y.functionidentifier=="equal")
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          val reterror = if(expectedreturn!=TypeT("Boolean")) {List(FumurtError(
+tocheck.pos, "Call to equal always returns boolean, not "+expectedreturn.value))}e
+lse{List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+          val argerrors = y.args match
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Right(NamedCallargs(List(NamedCallarg(IdT("left"), leftargument
+), NamedCallarg(IdT("right"), rightargument)))) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              List()
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            
+\end_layout
+
+\begin_layout Plain Layout
+
+            case _=>List(FumurtError(tocheck.pos, "Call to equal requires
+ two arguments named left and right"))
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+          reterror++argerrors
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        /*else if (y.functionidentifier=="lessThan" || "biggerthan")
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          val reterror = if(expectedreturn!=TypeT("Boolean")) {List(FumurtError(
+ifcall.pos, "Call to "+y.functionidentifier+" always returns boolean, not
+ "+expectedreturn.value))} else{List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        else if (y.functionidentifier=="not")
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          val reterror = if(expectedreturn!=TypeT("Boolean")) {List(FumurtError(
+ifcall.pos, "Call to not always returns boolean, not "+expectedreturn.value))}
+ else{List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+        }*/
+\end_layout
+
+\begin_layout Plain Layout
+
+        else
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          findinscope(arguments, inSameDefinition, basicFunctions, Some(containi
+ngdefinition), y.functionidentifier) match
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Left(string) => List(FumurtError(y.pos, /*"in checkstatement_2
+ "+*/string))
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Right(calledfunction) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              val argumenterrors:List[FumurtError] = y.args match 
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                case Left(NoArgs()) => calledfunction.args match
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case None => List()
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case Some(_) => List(FumurtError(y.pos, "expected arguments,
+ but none were given")) 
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                case Left(callarg) => calledfunction.args match //checkCallarg(,
+ callarg, containingdefinition, arguments, basicFunctions, inSameDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case Some(Arguments(args)) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+                  {
+\end_layout
+
+\begin_layout Plain Layout
+
+                    if (args.length != 1) { List(FumurtError(y.pos, "expected
+ "+args.length+" arguments, but only one was given")) }
+\end_layout
+
+\begin_layout Plain Layout
+
+                    else { checkCallarg(args(0).typestr, callarg, args(0).id,
+ containingdefinition, arguments, basicFunctions, inSameDefinition) }
+\end_layout
+
+\begin_layout Plain Layout
+
+                  }
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case None => List(FumurtError(y.pos, "expected no arguments,
+ but some were given")) 
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                case Right(NamedCallargs(value)) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  //println("checking namedcallargs "+value)
+\end_layout
+
+\begin_layout Plain Layout
+
+                  checknamedcallargs(calledfunction, value, containingdefinition
+, arguments, basicFunctions, inSameDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+              } 
+\end_layout
+
+\begin_layout Plain Layout
+
+              val returnerror:List[FumurtError] = if (expectedreturn !=
+ calledfunction.returntype)
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                List(FumurtError(y.pos, "Expected return type "+expectedreturn.val
+ue+".
+ Got "+calledfunction.returntype.value/*+".
+ containingdefinition is"+containingdefinition*/))
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+              else {List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+              returnerror ++ argumenterrors
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+          
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def checkifcall(ifcall:FunctionCallStatement, expectedtype:TypeT, containingde
+finition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
+ inSameDefinition:List[DefLhs]):List[FumurtError] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    ifcall.args match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Left(callarg) => List(FumurtError(ifcall.pos, "Call to if needs
+ three arguments"))
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Right(NamedCallargs(arglist))=>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        if (arglist.length != 3)
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          List(FumurtError(ifcall.pos, "Call to if needs three arguments"))
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        else
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          ( if(arglist(0).id.value != "condition"){List(FumurtError(ifcall.pos,
+ "Call to if needs a condition argument"))} else {List()} )++
+\end_layout
+
+\begin_layout Plain Layout
+
+          ( if(arglist(1).id.value != "else"){List(FumurtError(ifcall.pos,
+ "Call to if needs an else argument"))} else {List()} )++
+\end_layout
+
+\begin_layout Plain Layout
+
+          ( if(arglist(2).id.value != "then"){List(FumurtError(ifcall.pos,
+ "Call to if needs a then argument"))} else {List()} )++
+\end_layout
+
+\begin_layout Plain Layout
+
+          checkCallarg(TypeT("Boolean"), arglist(0).argument, IdT("condition"),
+ containingdefinition, arguments, basicFunctions, inSameDefinition)++
+\end_layout
+
+\begin_layout Plain Layout
+
+          (checkCallarg(expectedtype, arglist(1).argument, IdT("else"), containin
+gdefinition, arguments, basicFunctions, inSameDefinition))++
+\end_layout
+
+\begin_layout Plain Layout
+
+          (checkCallarg(expectedtype, arglist(2).argument, IdT("then"), containin
+gdefinition, arguments, basicFunctions, inSameDefinition))
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def checkmutatecall(call:FunctionCallStatement, expectedtype:TypeT, containing
+definition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs],
+ inSameDefinition:List[DefLhs]):List[FumurtError] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println("mutate call "+call)
+\end_layout
+
+\begin_layout Plain Layout
+
+    call.args match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Left=>List(FumurtError(call.pos, "call to mutate requires both
+ a variable, and a new value to assign to that variable"))
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Right(NamedCallargs(List(value:NamedCallarg, variable:NamedCallarg)))
+=>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        val firstnameerror = if(value.id.value != "newValue"){List(FumurtError(cal
+l.pos, "call to mutate requires argument 
+\backslash
+"newValue
+\backslash
+""))} else{List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+        val lastnameerror = if(variable.id.value != "variable"){List(FumurtError(c
+all.pos, "call to mutate requires argument 
+\backslash
+"variable
+\backslash
+""))} else{List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+        val variabletypeerror = variable.argument match
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          case z:IdentifierStatement=>
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            findinscope(arguments, inSameDefinition, basicFunctions, Some(contai
+ningdefinition), z.value) match
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              case Left(str) => List(FumurtError(z.pos, str))
+\end_layout
+
+\begin_layout Plain Layout
+
+              case Right(defl)=>
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                (if (defl.description != SynchronizedVariableT()) {List(FumurtErr
+or(call.pos, "Variable must be synchronized"))}else{List()})++
+\end_layout
+
+\begin_layout Plain Layout
+
+                (checkCallarg(defl.returntype, value.argument, IdT("variable"),
+ containingdefinition, arguments, basicFunctions, inSameDefinition))
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+          case z:Expression=>List(FumurtError(call.pos, "variable argument
+ must be an identifier"))
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        
+\end_layout
+
+\begin_layout Plain Layout
+
+        firstnameerror++lastnameerror++variabletypeerror
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def checkbasicmathcall(call:FunctionCallStatement, expectedtype:TypeT,
+ containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:Lis
+t[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println("in checkbasicmathcall.
+ Call is "+call)
+\end_layout
+
+\begin_layout Plain Layout
+
+    call.args match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Left(callarg) => List(FumurtError(call.pos, "Call to "+call.functionide
+ntifier+" needs two arguments"))
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Right(NamedCallargs(arglist))=>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        if (arglist.length != 2)
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          List(FumurtError(call.pos, "Call to "+call.functionidentifier+"
+ needs two arguments"))
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        else
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          val leftinterrors = checkCallarg(TypeT("Integer"), arglist(0).argument,
+ IdT("left"), containingdefinition, arguments, basicFunctions, inSameDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+          val rightinterrors = checkCallarg(TypeT("Integer"), arglist(1).argument
+, IdT("right"), containingdefinition, arguments, basicFunctions, inSameDefinitio
+n)
+\end_layout
+
+\begin_layout Plain Layout
+
+          val leftdoubleerrors = checkCallarg(TypeT("Double"), arglist(0).argumen
+t, IdT("left"), containingdefinition, arguments, basicFunctions, inSameDefinitio
+n)
+\end_layout
+
+\begin_layout Plain Layout
+
+          val rightdoubleerrors = checkCallarg(TypeT("Double"), arglist(1).argume
+nt, IdT("right"), containingdefinition, arguments, basicFunctions, inSameDefinit
+ion)
+\end_layout
+
+\begin_layout Plain Layout
+
+          val (lefterrors, leftdouble) = if (leftinterrors.length < leftdoubleerr
+ors.length){(leftinterrors,false)} else {(leftdoubleerrors,true)}
+\end_layout
+
+\begin_layout Plain Layout
+
+          val (righterrors, rightdouble) = if (rightinterrors.length < rightdoubl
+eerrors.length){(rightinterrors,false)} else {(rightdoubleerrors,true)}
+\end_layout
+
+\begin_layout Plain Layout
+
+          val returnsdouble = leftdouble || rightdouble
+\end_layout
+
+\begin_layout Plain Layout
+
+          ( if(arglist(0).id.value != "left"){List(FumurtError(call.pos, "Call
+ to "+call.functionidentifier+" needs a left argument"))} else {List()} )++
+\end_layout
+
+\begin_layout Plain Layout
+
+          ( if(arglist(1).id.value != "right"){List(FumurtError(call.pos, "Call
+ to "+call.functionidentifier+" needs a right argument"))} else {List()}
+ )++
+\end_layout
+
+\begin_layout Plain Layout
+
+          ( lefterrors )++
+\end_layout
+
+\begin_layout Plain Layout
+
+          ( righterrors )++
+\end_layout
+
+\begin_layout Plain Layout
+
+          ( expectedtype match
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              case TypeT("Double")=>List(); 
+\end_layout
+
+\begin_layout Plain Layout
+
+              case TypeT("Integer") => if(returnsdouble){List(FumurtError(call.po
+s, "This call to "+call.functionidentifier+" returns a Double not an Integer"))}
+ else{List()} 
+\end_layout
+
+\begin_layout Plain Layout
+
+              case TypeT(str)=>
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                if(returnsdouble){List(FumurtError(call.pos, "This call to
+ "+call.functionidentifier+" returns a Double not "+str))}
+\end_layout
+
+\begin_layout Plain Layout
+
+                else{List(FumurtError(call.pos, "This call to "+call.functionident
+ifier+" returns an Integer not "+str))}
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          )
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def checktostringcall(call:FunctionCallStatement, expectedtype:TypeT,
+ containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:Lis
+t[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    call.args match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Left(callarg) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        val integererrors = checkCallarg(TypeT("Integer"), callarg, IdT("none
+ needed as not user defined and single argument"), containingdefinition,
+ arguments, basicFunctions, inSameDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+        val doubleerrors = checkCallarg(TypeT("Double"), callarg, IdT("none
+ needed as not user defined and single argument"), containingdefinition,
+ arguments, basicFunctions, inSameDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+        val argumenterrors = if(integererrors.length < doubleerrors.length){intege
+rerrors} else{doubleerrors}
+\end_layout
+
+\begin_layout Plain Layout
+
+        val outerrors = expectedtype match{ case TypeT("String")=>List();
+ case TypeT(str)=>List(FumurtError(call.pos, "toString returns String not
+ "+str))}
+\end_layout
+
+\begin_layout Plain Layout
+
+        argumenterrors++outerrors
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Right(NamedCallargs(arglist))=>List(FumurtError(call.pos, "Call
+ to toString needs one argument"))
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def checknamedcallargs(calledfunction:DefLhs, namedcallargs:List[NamedCallarg]
+, containingdefinition:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:Li
+st[DefLhs], inSameDefinition:List[DefLhs]):List[FumurtError] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    calledfunction.args match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case None => List(FumurtError(namedcallargs(0).id.pos, "No arguments
+ expected, but "+namedcallargs.length+" were given"))
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Some(Arguments(defargs)) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        if (defargs.length != namedcallargs.length) 
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          List(FumurtError(namedcallargs(0).id.pos, "expected "+defargs.length+"
+ arguments.
+ Got "+namedcallargs.length+" arguments"))
+\end_layout
+
+\begin_layout Plain Layout
+
+        } 
+\end_layout
+
+\begin_layout Plain Layout
+
+        else 
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          if( !namedcallargs.groupBy(x => x.id.value).filter(y => y._2.length>1).isEmpt
+y ) //ensure uniqueness of arguments
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            List(FumurtError(namedcallargs(0).id.pos, "two or more arguments
+ were given with the same name"))
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+          else 
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            val individualargumenterrors = ListBuffer():ListBuffer[FumurtError]
+\end_layout
+
+\begin_layout Plain Layout
+
+            for(i<-0 until namedcallargs.length)
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              individualargumenterrors ++= (if(namedcallargs(i).id.value !=
+ defargs(i).id.value) 
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  //println("FOUND INCORRECT NAMES")
+\end_layout
+
+\begin_layout Plain Layout
+
+                  List(FumurtError(namedcallargs(i).id.pos, "Wrong argument
+ name.
+ Argument in definition named "+defargs(i).id.value+".
+ In calling named "+namedcallargs(i).id.value ))
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                else 
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  checkCallarg(defargs(i).typestr, namedcallargs(i).argument,
+ defargs(i).id, containingdefinition, arguments:Option[List[DefLhs]], basicFuncti
+ons:List[DefLhs], inSameDefinition:List[DefLhs])
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+              )
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            
+\end_layout
+
+\begin_layout Plain Layout
+
+            //println("individualargumenterrors.toList: "+individualargumenterror
+s.toList)
+\end_layout
+
+\begin_layout Plain Layout
+
+            individualargumenterrors.toList
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def checkCallarg(expectedtype:TypeT, arg:Callarg, id:IdT, containingdefinition
+:DefLhs, arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs], inSameDefi
+nition:List[DefLhs]):List[FumurtError] = 
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println("in checkCallarg.
+ arg is "+arg)
+\end_layout
+
+\begin_layout Plain Layout
+
+    arg match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case c:BasicValueStatement=> checkbasicvaluestatement(expectedtype,
+ c, "Call argument")
+\end_layout
+
+\begin_layout Plain Layout
+
+      case c:NoArgs => 
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        println("NoArgs got checked by checkCallarg.
+ This is better checked in checkstatement"); scala.sys.exit()
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case c:IdentifierStatement => 
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        findinscope(arguments, inSameDefinition, basicFunctions, Some(containing
+definition), c.value) match
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          case Left(str) => List(FumurtError(c.pos, /*"in checkcallarg "+*/str))
+\end_layout
+
+\begin_layout Plain Layout
+
+          case Right(thingdef) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            if(expectedtype.value == "Inclusion")
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              if(thingdef.id.value != id.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                List(FumurtError(c.pos, "Passed inclusion must be the same
+ as the one referenced inside the function"))
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+              else{List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            else if(expectedtype.value != thingdef.returntype.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              List(FumurtError(c.pos, "Expected type "+expectedtype.value+".
+ Got "+thingdef.returntype.value))
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            else {List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case c:FunctionCallStatement => 
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        //check that call end result is correct
+\end_layout
+
+\begin_layout Plain Layout
+
+        
+\end_layout
+
+\begin_layout Plain Layout
+
+        //check that call itself is correct
+\end_layout
+
+\begin_layout Plain Layout
+
+        val callerrors = checkstatement(c, containingdefinition, arguments,
+ basicFunctions, inSameDefinition, expectedtype)
+\end_layout
+
+\begin_layout Plain Layout
+
+        callerrors //++ resulterrors
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def checkbasicvaluestatement(expectedtype:TypeT, basicstatement:BasicValueStat
+ement, role:String):List[FumurtError] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    basicstatement match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case c:StringStatement => {if (expectedtype.value != "String") List(FumurtE
+rror(c.pos, role+" type should be "+expectedtype.value+".
+ "+role+" type was String")) else List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+      case c:IntegerStatement => {if (expectedtype.value != "Integer") List(Fumur
+tError(c.pos, role+" type should be "+expectedtype.value+".
+ "+role+" type was Integer")) else List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+      case c:DoubleStatement => {if (expectedtype.value != "Double") List(FumurtE
+rror(c.pos, role+" type should be "+expectedtype.value+".
+ "+role+" type was Double")) else List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+      case c:TrueStatement => {if (expectedtype.value != "Boolean") List(FumurtEr
+ror(c.pos, role+" type should be "+expectedtype.value+".
+ "+role+" type was Boolean")) else List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+      case c:FalseStatement => {if (expectedtype.value != "Boolean") List(FumurtE
+rror(c.pos, role+" type should be "+expectedtype.value+".
+ "+role+" type was Boolean")) else List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def checkdefinition(tocheck:Definition, containingdefinition:Option[DefLhs],
+ arguments:Option[List[DefLhs]], basicFunctions:List[DefLhs]): List[FumurtError]
+=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println("
+\backslash
+nIn checkdefinition:   tocheck: "+tocheck+"containingdefinition: "+containingdef
+inition+" arguments: "+arguments)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val undererrors = checkexpressions(tocheck.rightside.expressions, Some(tocheck
+), arguments, basicFunctions)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val threadenderror:List[FumurtError] = tocheck.leftside.description match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case ThreadT() => tocheck.rightside.expressions.last match
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case FunctionCallStatement(functionidentifier,_) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          if(functionidentifier != tocheck.leftside.id.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            List(FumurtError(tocheck.rightside.expressions.last.pos, "A thread
+ must recurse on itself (at least until exit() is implemented)"))
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+          else
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            List()
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        case _ => List(FumurtError(tocheck.rightside.expressions.last.pos, "A
+ thread must recurse on itself (at least until exit() is implemented)"))
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case _ => List()
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    val nameerror = tocheck.leftside.description match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case ActionT() => if(!tocheck.leftside.id.value.startsWith("action"))
+ {List(FumurtError(tocheck.pos, "Name of action is not prefixed with 
+\backslash
+"action
+\backslash
+""))} else{List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+      case ThreadT() => if(!tocheck.leftside.id.value.startsWith("thread"))
+ {List(FumurtError(tocheck.pos, "Name of thread is not prefixed with 
+\backslash
+"thread
+\backslash
+""))} else{List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+      case FunctionT() => List()
+\end_layout
+
+\begin_layout Plain Layout
+
+      case ValueT() => List()
+\end_layout
+
+\begin_layout Plain Layout
+
+      case ProgramT() => println("Program got checked by checkdefinition.
+ This is better checked in checkprogram"); scala.sys.exit()
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    val permissionerror = tocheck.leftside.description match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case ActionT() => containingdefinition match
+\end_layout
+
+\begin_layout Plain Layout
+
+      { 
+\end_layout
+
+\begin_layout Plain Layout
+
+        case None=>List()
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Some(DefLhs(ValueT(),_,_,_))=> List(FumurtError(tocheck.pos,
+ "actions cannot be defined in values"))
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Some(DefLhs(FunctionT(),_,_,_))=> List(FumurtError(tocheck.pos,
+ "actions cannot be defined in  functions"))
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Some(something) => List()
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case ThreadT() => containingdefinition match{ case None => List();
+ case Some(_)=>List(FumurtError(tocheck.pos, "threads must be defined on
+ top "+containingdefinition))}
+\end_layout
+
+\begin_layout Plain Layout
+
+      case FunctionT() => containingdefinition match{ case Some(DefLhs(ValueT(),
+_,_,_)) => List(FumurtError(tocheck.pos, "functions cannot be defined in
+ values")); case _=> List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+      case SynchronizedVariableT() => List(FumurtError(tocheck.pos, "synchronized
+ variables must be defined in Program definition"))
+\end_layout
+
+\begin_layout Plain Layout
+
+      case ValueT() => List()
+\end_layout
+
+\begin_layout Plain Layout
+
+      case ProgramT() => println("Program got checked by checkdefinition.
+ This is better checked in checkprogram"); scala.sys.exit()
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    undererrors.toList ++ nameerror ++ permissionerror ++ threadenderror
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def indexlefts(in:List[Expression]):List[DefLhs]=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    in.foldLeft(List():List[DefLhs]) ((list,y)=> y match
+\end_layout
+
+\begin_layout Plain Layout
+
+      { 
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Definition(leftside, _)=>list :+ leftside; 
+\end_layout
+
+\begin_layout Plain Layout
+
+        case _:Statement=> list
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    )
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def findinscope(arguments:Option[List[DefLhs]], inSameDefinition:List[DefLhs],
+ basicfunctions:List[DefLhs], enclosingDefinition:Option[DefLhs], searchFor:Stri
+ng):Either[String, DefLhs]=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    val argsres = arguments match{ case Some(args)=>args.filter(y=>y.id.value==sear
+chFor); case None=>List():List[DefLhs]}
+\end_layout
+
+\begin_layout Plain Layout
+
+    val inscoperes = inSameDefinition.filter(x=>x.id.value==searchFor)
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println()
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println(basicfunctions)
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println()
+\end_layout
+
+\begin_layout Plain Layout
+
+    val basicfunctionres = basicfunctions.filter(x=>x.id.value==searchFor)
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    val enclosingres = enclosingDefinition match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case None => List()
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Some(deff) => if (deff.id.value == searchFor) {List(deff)} else
+ {List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    val res = argsres ++ inscoperes ++ basicfunctionres ++ enclosingres
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    if(res.length == 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      Right(res.head)
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    else if(res.length>1)
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      Left("Ambiguous reference to "+searchFor)
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    else if(res.length == 0)
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      enclosingDefinition match
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case None=>Left(searchFor+" not found" /*+" arguments is: "+arguments+".
+ insamedefinition is "+inSameDefinition*/)
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Some(DefLhs(_,_,Some(Arguments(internalargs)),_))=>
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          internalargs.find(x=>x.id.value==searchFor) match
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Some(Argument(id, TypeT("Inclusion")))=> Left(searchFor+"
+ not found" /*+" arguments is: "+arguments+".
+ insamedefinition is "+inSameDefinition*/)
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Some(Argument(id, typestr))=> Right(DefLhs(ValueT(),id,None,typ
+estr))
+\end_layout
+
+\begin_layout Plain Layout
+
+            case None=>Left(searchFor+" not found" /*+" arguments is: "+argument
+s+".
+ insamedefinition is "+inSameDefinition*/)
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Some(_)=> Left(searchFor+" not found" /*+" arguments is: "+argument
+s+".
+ insamedefinition is "+inSameDefinition*/)
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    else
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      Left("error in search for "+searchFor)
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+//TODO: add type for synchronized variables and use it to pass them around,
+ so that it can be controlled that a thread calling actionMutate has write
+ rights
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+CodeGenerator.scala
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+package fumurtCompiler
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.collection.mutable.ListBuffer
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+object FumurtCodeGenerator
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  def generate(ast:List[Definition]):String =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    val includestatement = "#include <iostream>
+\backslash
+n#include <thread>
+\backslash
+n#include <string>
+\backslash
+n#include <atomic>
+\backslash
+n#include <condition_variable>
+\backslash
+n#include <list>
+\backslash
+n#include <chrono>
+\backslash
+n
+\backslash
+n
+\backslash
+n"
+\end_layout
+
+\begin_layout Plain Layout
+
+    val topthreads = gettopthreadstatements(ast)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val atree = getAnnotatedTree(ast, topthreads)
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println(atree)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val numtopthreads = topthreads.length
+\end_layout
+
+\begin_layout Plain Layout
+
+    val synchronizationGlobalVars = "static std::atomic<int> rendezvousCounter;
+\backslash
+nstatic std::mutex rendezvousSyncMutex;
+\backslash
+nstatic std::condition_variable cv;"
+\end_layout
+
+\begin_layout Plain Layout
+
+    val main = getmain(topthreads, atree)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val synchvars = getsynchronizedvariables(ast)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val syncfunc = getsynchronizerfunction(synchvars, topthreads)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val synchvardeclarations = getGlobalSynchVariableDeclarations(synchvars)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val printdecs = getprintlistdeclarations(topthreads)
+\end_layout
+
+\begin_layout Plain Layout
+
+    //val topthreaddeclarations = gettopthreaddeclarations(ast)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val (funSignatures, funDeclarations) = getFunctionDeclarations(atree)
+\end_layout
+
+\begin_layout Plain Layout
+
+    val staticthreadargs = getStaticThreadArgs(atree:List[aExpression])
+\end_layout
+
+\begin_layout Plain Layout
+
+    val topThreadNumMacroln = "#define NUMTOPTHREADS " + numtopthreads.toString
+ + "
+\backslash
+n"
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println(funSignatures)
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    includestatement + topThreadNumMacroln + funSignatures + "
+\backslash
+n" + synchvardeclarations + printdecs + "
+\backslash
+n" + synchronizationGlobalVars + staticthreadargs + syncfunc + "
+\backslash
+n
+\backslash
+n" /*+ topthreaddeclarations*/ + "
+\backslash
+n"+ funDeclarations + "
+\backslash
+n
+\backslash
+n" + main
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def getAnnotatedTree(ast:List[Expression], topthreadcalls:List[FunctionCallSta
+tement]):List[aExpression] = 
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    val treeWithAnnotatedDefinitions = getAnnotatedTreeInternal(ast,topthreadcal
+ls,"", None)
+\end_layout
+
+\begin_layout Plain Layout
+
+    getCallsAnnotatedTreeInternal(treeWithAnnotatedDefinitions, List(),
+ None)
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def getCallsAnnotatedTreeInternal(ast:List[aExpression], arguments:List[aDefLh
+s], containingDefinition:Option[aDefinition]):List[aExpression] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    val inSameDefinition = indexlefts(ast)
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+    ast.flatMap(node=>node match
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case deff @ aDefinition(aDefLhs(desc, id, cppid, callingthread,
+ args, returntype), aDefRhs(expressions))=>
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          val argumentsToDef = args match
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            case None => List()
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Some(aArguments(arglist)) => arglist.flatMap(arg =>
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  val fromargs = arguments.find(x=>x.id.value==arg.id.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+                  val fromSame = inSameDefinition.find(x => x.id.value == arg.id.valu
+e)
+\end_layout
+
+\begin_layout Plain Layout
+
+                  fromargs match
+\end_layout
+
+\begin_layout Plain Layout
+
+                  {
+\end_layout
+
+\begin_layout Plain Layout
+
+                    case Some(_)=>fromargs
+\end_layout
+
+\begin_layout Plain Layout
+
+                    case None=>fromSame
+\end_layout
+
+\begin_layout Plain Layout
+
+                  }
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+              )
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+          //println("
+\backslash
+n{deff: "+deff+"
+\backslash
+nargumentsToDef: "+argumentsToDef+"
+\backslash
+nargs: "+args+"
+\backslash
+n
+\backslash
+nast: "+ast+"
+\backslash
+n
+\backslash
+narguments: "+arguments+"}
+\backslash
+n
+\backslash
+n
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+          val aexpressions = getCallsAnnotatedTreeInternal(expressions,
+ argumentsToDef, Some(deff))
+\end_layout
+
+\begin_layout Plain Layout
+
+          Some(aDefinition(aDefLhs(desc, id, cppid, callingthread, args,
+ returntype), aDefRhs(aexpressions)))
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        case call @ aFunctionCallStatement(fid,_,args,_) => Some(annotateFunctio
+nCall(call, arguments, inSameDefinition, containingDefinition))
+\end_layout
+
+\begin_layout Plain Layout
+
+        case z:IdentifierStatement=>Some(z)
+\end_layout
+
+\begin_layout Plain Layout
+
+        case z:BasicValueStatement=>Some(z)
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    )
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def annotateFunctionCall( functioncall:aFunctionCallStatement, arguments:List[
+aDefLhs], inSameDefinition:List[aDefLhs], containingDefinition:Option[aDefinitio
+n] ): aFunctionCallStatement=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    def annotateCallargs(args: Either[aCallarg,aNamedCallargs], arguments:List[a
+DefLhs], inSameDefinition:List[aDefLhs], containingDefinition:Option[aDefinition
+]): Either[aCallarg,aNamedCallargs] =
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      args match
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Left(callarg)=>callarg match
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          case z:aFunctionCallStatement=>Left(annotateFunctionCall(z, arguments,
+ inSameDefinition, containingDefinition))
+\end_layout
+
+\begin_layout Plain Layout
+
+          case z:aStatement=>Left(z)
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Right(aNamedCallargs(callargs)) => Right(aNamedCallargs(callargs.map
+(namedcallarg => namedcallarg.argument match
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            case z:aFunctionCallStatement => aNamedCallarg(namedcallarg.id,
+ annotateFunctionCall(z, arguments, inSameDefinition, containingDefinition))
+\end_layout
+
+\begin_layout Plain Layout
+
+            case aCallarg=>namedcallarg:aNamedCallarg
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        )))
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    val fid = functioncall.functionidentifier
+\end_layout
+
+\begin_layout Plain Layout
+
+    val args = functioncall.args
+\end_layout
+
+\begin_layout Plain Layout
+
+    if(fid=="actionPrint" || fid=="toString" || fid=="actionMutate")
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      val newargs = annotateCallargs(args, arguments, inSameDefinition,
+ containingDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+      aFunctionCallStatement(fid,fid,newargs,"Nothing")
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    else if(fid=="plus" || fid=="minus" || fid=="multiply" || fid=="divide")
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      val newargs = annotateCallargs(args, arguments, inSameDefinition,
+ containingDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+      aFunctionCallStatement(fid,fid,newargs,"Number") //TODO: Find actual
+ type like in typechecker.
+ As it is, it only matters if it is Nothing or not.
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    else if(fid=="equal" || fid=="lessThan")
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      val newargs = annotateCallargs(args, arguments, inSameDefinition,
+ containingDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+      aFunctionCallStatement(fid,fid,newargs,"Boolean")
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    else if(fid=="if")
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      val newargs = annotateCallargs(args, arguments, inSameDefinition,
+ containingDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+      aFunctionCallStatement(fid,fid,newargs,"Something") //TODO: Find actual
+ type like in typechecker.
+ As it is, it only matters if it is Nothing or not.
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    else
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      def removeInclusions(args: Either[aCallarg,aNamedCallargs],  ldeffargs:Opt
+ion[aArguments]): Either[aCallarg,aNamedCallargs] = args match
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Left(callarg)=>
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          ldeffargs match
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Some(aArguments(defargs))=>
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              if(defargs.head.typestr.value == "Inclusion") {Left(NoArgs())}
+\end_layout
+
+\begin_layout Plain Layout
+
+              else
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                args
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            case None=>Left(NoArgs())
+\end_layout
+
+\begin_layout Plain Layout
+
+            //case _=>Left(NoArgs())
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Right(aNamedCallargs(namedcallargs))=>
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          ldeffargs match
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Some(aArguments(defargs))=>
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              val mnewargs = ListBuffer():ListBuffer[aNamedCallarg]
+\end_layout
+
+\begin_layout Plain Layout
+
+              for(i<-0 until defargs.length)
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                if(defargs(i).typestr.value!="Inclusion")
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  mnewargs += namedcallargs(i)
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+              Right(aNamedCallargs(mnewargs.toList))
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            case None=>println("in getCallsAnnotatedTreeInternal");scala.sys.exit(
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+            //case _=>Left(NoArgs())
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      val ldeff = findinscope(Some(arguments), inSameDefinition, containingDefin
+ition.map(x=>x.leftside), fid)
+\end_layout
+
+\begin_layout Plain Layout
+
+      val newargs = annotateCallargs(removeInclusions(args, ldeff.args),
+ arguments, inSameDefinition, containingDefinition)
+\end_layout
+
+\begin_layout Plain Layout
+
+      //println("ldeff.cppid.value: "+ldeff.cppid.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+      aFunctionCallStatement(fid, ldeff.cppid.value, newargs, ldeff.returntype.value
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def indexlefts(in:List[aExpression]):List[aDefLhs]=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    in.foldLeft(List():List[aDefLhs]) ((list,y)=> y match
+\end_layout
+
+\begin_layout Plain Layout
+
+      { 
+\end_layout
+
+\begin_layout Plain Layout
+
+        case aDefinition(leftside, _)=>list :+ leftside; 
+\end_layout
+
+\begin_layout Plain Layout
+
+        case _=> list
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    )
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def findinscope(arguments:Option[List[aDefLhs]], inSameDefinition:List[aDefLhs
+], enclosingDefinition:Option[aDefLhs], searchFor:String):aDefLhs=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    val argsres = arguments match{ case Some(args)=>args.filter(y=>y.id.value==sear
+chFor); case None=>List():List[aDefLhs]}
+\end_layout
+
+\begin_layout Plain Layout
+
+    val inscoperes = inSameDefinition.filter(x=>x.id.value==searchFor)
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    val enclosingres = enclosingDefinition match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case None => List()
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Some(deff) => if (deff.id.value == searchFor) {List(deff)} else
+ {List()}
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    val res = argsres ++ inscoperes ++ enclosingres
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    if(res.length==0){println("{arguments: "+arguments+"
+\backslash
+n
+\backslash
+ninSameDefinition: "+inSameDefinition+"
+\backslash
+n
+\backslash
+nenclosingDefinition: "+enclosingDefinition+"
+\backslash
+n
+\backslash
+nsearchFor: "+searchFor+"}
+\backslash
+n
+\backslash
+n
+\backslash
+n");scala.sys.exit()}
+\end_layout
+
+\begin_layout Plain Layout
+
+    res.head
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def getAnnotatedTreeInternal(ast:List[Expression], topthreadcalls:List[Functio
+nCallStatement], hierarchy:String, callingthread:Option[String]):List[aExpressio
+n] =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    val topactions:List[aExpression] = 
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      if(hierarchy=="")
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        val mess = topthreadcalls.map(threadcall=>threadcall.args match
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Left(IdentifierStatement(argname)) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              val deff = ast.filter(x => x match {case Definition(DefLhs(ActionT(
+), IdT(thisargname), _, _),_) =>argname==thisargname; case _=> false})
+\end_layout
+
+\begin_layout Plain Layout
+
+              getAnnotatedTreeInternal(deff, List(), threadcall.functionidentifie
+r, Some(threadcall.functionidentifier)): List[aExpression]
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Left(_)=> List():List[aExpression]
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Right(NamedCallargs(namedargs))=>
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              val deffs = namedargs.flatMap(namedarg=>
+\end_layout
+
+\begin_layout Plain Layout
+
+                namedarg match
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case NamedCallarg(_,IdentifierStatement(argname))=>
+\end_layout
+
+\begin_layout Plain Layout
+
+                  {
+\end_layout
+
+\begin_layout Plain Layout
+
+                    ast.find(y=>y match{case Definition(DefLhs(ActionT(),
+ IdT(thisargname), _, _) ,_) => argname == thisargname; case _=> false})
+\end_layout
+
+\begin_layout Plain Layout
+
+                  }
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case _=>None
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+              )
+\end_layout
+
+\begin_layout Plain Layout
+
+              getAnnotatedTreeInternal(deffs,List(), threadcall.functionidentifie
+r, Some(threadcall.functionidentifier)): List[aExpression]
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        ):List[List[aExpression]]
+\end_layout
+
+\begin_layout Plain Layout
+
+        
+\end_layout
+
+\begin_layout Plain Layout
+
+        mess.foldLeft(List(): List[aExpression])((x,y) => x++y): List[aExpression
+]
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      else
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        List()
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    val rest:List[aExpression] = ast.flatMap(x=>x match
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Definition(DefLhs(ThreadT(), id, args, returntype), DefRhs(expressi
+ons)) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls.filter
+(x => x.functionidentifier == id.value), id.value, Some(id.value))
+\end_layout
+
+\begin_layout Plain Layout
+
+          //println("
+\backslash
+n"+args+"
+\backslash
+n
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+          val newargs = args.map(args=>aArguments(args.args.map(arg=>arg match
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case Argument(id, TypeT("Inclusion")) => aArgument(id,
+ id, TypeT("Inclusion"))
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case Argument(argid, typee) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+                  {
+\end_layout
+
+\begin_layout Plain Layout
+
+                    if (argid.value.startsWith("synchronized"))
+\end_layout
+
+\begin_layout Plain Layout
+
+                    {
+\end_layout
+
+\begin_layout Plain Layout
+
+                      aArgument(argid, argid, typee)
+\end_layout
+
+\begin_layout Plain Layout
+
+                    }
+\end_layout
+
+\begin_layout Plain Layout
+
+                    else
+\end_layout
+
+\begin_layout Plain Layout
+
+                    {
+\end_layout
+
+\begin_layout Plain Layout
+
+                      aArgument(argid, IdT(id.value+"$"+argid.value), typee)
+\end_layout
+
+\begin_layout Plain Layout
+
+                    }
+\end_layout
+
+\begin_layout Plain Layout
+
+                  }
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+              )  
+\end_layout
+
+\begin_layout Plain Layout
+
+            )
+\end_layout
+
+\begin_layout Plain Layout
+
+          )
+\end_layout
+
+\begin_layout Plain Layout
+
+          //println(newargs+"
+\backslash
+n
+\backslash
+n
+\backslash
+n") 
+\end_layout
+
+\begin_layout Plain Layout
+
+          Some(aDefinition(aDefLhs(ThreadT(), id, id, id.value, newargs,
+ returntype),aDefRhs(aexps)))
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Definition(DefLhs(FunctionT(), id, args, returntype), DefRhs(expres
+sions)) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls,
+ hierarchy+id.value, callingthread)
+\end_layout
+
+\begin_layout Plain Layout
+
+          val newargs = args.map(args=>aArguments(args.args.map(arg => aArgument(ar
+g.id, arg.id, arg.typestr))))
+\end_layout
+
+\begin_layout Plain Layout
+
+          Some(aDefinition(aDefLhs(FunctionT(), id, IdT(id.value+"$"+hierarchy),
+ "shouldn't matter", newargs, returntype), aDefRhs(aexps)))
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Definition(DefLhs(ProgramT(),_,_,_),_) => None //we don't really
+ care about it...
+\end_layout
+
+\begin_layout Plain Layout
+
+        case Definition(DefLhs(ActionT(), id, args, returntype), DefRhs(expressi
+ons)) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          if(hierarchy=="")
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            None
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+          else
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            val aexps = getAnnotatedTreeInternal(expressions, topthreadcalls,
+ hierarchy+id.value, callingthread)
+\end_layout
+
+\begin_layout Plain Layout
+
+            val newargs = args.map(args=>aArguments(args.args.map(arg => aArgument(
+arg.id, arg.id, arg.typestr))))
+\end_layout
+
+\begin_layout Plain Layout
+
+            Some(aDefinition(aDefLhs(ActionT(), id, IdT(id.value+"$"+hierarchy),
+ callingthread match {case Some(z)=>z; case None=>"not found"}, newargs,
+ returntype), aDefRhs(aexps)))
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        case FunctionCallStatement(fid,args)=>
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          def annotateCallarg(callarg:Callarg):aCallarg=
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            callarg match
+\end_layout
+
+\begin_layout Plain Layout
+
+            { 
+\end_layout
+
+\begin_layout Plain Layout
+
+              case z:aCallarg => z
+\end_layout
+
+\begin_layout Plain Layout
+
+              case FunctionCallStatement(fid,args)=>
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                val newargs:Either[aCallarg,aNamedCallargs] = args match
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case Left(arg)=>Left(annotateCallarg(arg))
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case Right(NamedCallargs(arglist)) => Right(aNamedCallargs(arg
+list.map(x => aNamedCallarg(x.id, annotateCallarg(x.argument)) )))
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                aFunctionCallStatement(fid,"not filled out",newargs,"not
+ filled out")
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+          Some(annotateCallarg(FunctionCallStatement(fid, args))): Option[aExpre
+ssion]
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        case z:IdentifierStatement=>Some(z)
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    ):List[aExpression]
+\end_layout
+
+\begin_layout Plain Layout
+
+    rest++topactions
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def getFunctionDeclarations(ast:List[aExpression]):(String,String) =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    def actfunrecursivetranslate(cppid:IdT, callingthread:String, args:Option[aA
+rguments], returntype:TypeT, expressions:List[aExpression]):Option[(String,Strin
+g)] =
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      val signature = getFunctionSignature(cppid, args, returntype)
+\end_layout
+
+\begin_layout Plain Layout
+
+      val functionstart = signature+"
+\backslash
+n{"
+\end_layout
+
+\begin_layout Plain Layout
+
+      val functionend = "
+\backslash
+n}
+\backslash
+n"
+\end_layout
+
+\begin_layout Plain Layout
+
+      val generals = expressions.flatMap(
+\end_layout
+
+\begin_layout Plain Layout
+
+        y=> y match
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          case aDefinition(leftside, rightside)=>None
+\end_layout
+
+\begin_layout Plain Layout
+
+          case z:aFunctionCallStatement =>
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            if(z.returntype!="Nothing")
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              Some("return "+functioncalltranslator(z, callingthread) +
+ "; //returntype: "+z.returntype)
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            else
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              Some(functioncalltranslator(z, callingthread) + ";")
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+          case IdentifierStatement(value) => Some("return "+value+";")
+\end_layout
+
+\begin_layout Plain Layout
+
+          case StringStatement(value) => Some("return "+value+";")
+\end_layout
+
+\begin_layout Plain Layout
+
+          case IntegerStatement(value) => Some("return "+value.toString+";")
+\end_layout
+
+\begin_layout Plain Layout
+
+          case DoubleStatement(value) => Some("return "+value.toString+";")
+\end_layout
+
+\begin_layout Plain Layout
+
+          case TrueStatement() => Some("return true;")
+\end_layout
+
+\begin_layout Plain Layout
+
+          case FalseStatement() => Some("return false;")
+\end_layout
+
+\begin_layout Plain Layout
+
+          //case _=> "not implemented" //println("Error in gettopthreaddeclarati
+ons.
+ Not implemented."); scala.sys.exit()
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+      ).foldLeft("")((x,y)=>x+"
+\backslash
+n  "+y)
+\end_layout
+
+\begin_layout Plain Layout
+
+      val underfunctions = getFunctionDeclarations(expressions)
+\end_layout
+
+\begin_layout Plain Layout
+
+      val body = functionstart+generals+functionend
+\end_layout
+
+\begin_layout Plain Layout
+
+      //Some((signature+";",body))
+\end_layout
+
+\begin_layout Plain Layout
+
+      Some((signature+";"+underfunctions._1, body+underfunctions._2))
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    val list = ast.flatMap(node=>node match
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case aDefinition(aDefLhs(ThreadT(), id, cppid, _, args, _), aDefRhs(expr
+essions)) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          val attributeNoreturn = if( System.getProperty("os.name").startsWith("Win
+dows") ) {"__declspec(noreturn)"} else{"[[noreturn]]"} //Microsoft Visual
+ C++ does not support C++11 attribute syntax
+\end_layout
+
+\begin_layout Plain Layout
+
+          val signature = attributeNoreturn+" static void "+cppid.value+"()"
+\end_layout
+
+\begin_layout Plain Layout
+
+          val functionstart = signature+"
+\backslash
+n{"
+\end_layout
+
+\begin_layout Plain Layout
+
+          val functionend = "
+\backslash
+n}
+\backslash
+n"
+\end_layout
+
+\begin_layout Plain Layout
+
+          val (tailrecursestart, tailrecurseend) = ("while(true)
+\backslash
+n{", "
+\backslash
+n}")
+\end_layout
+
+\begin_layout Plain Layout
+
+          
+\end_layout
+
+\begin_layout Plain Layout
+
+          def changeNamesToCppOnes(in:aCallarg, threadargs:Option[aArguments]):a
+Callarg = in match 
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case call:aFunctionCallStatement=>
+\end_layout
+
+\begin_layout Plain Layout
+
+                  {
+\end_layout
+
+\begin_layout Plain Layout
+
+                    val newargs:Either[aCallarg,aNamedCallargs] = call.args
+ match
+\end_layout
+
+\begin_layout Plain Layout
+
+                    {
+\end_layout
+
+\begin_layout Plain Layout
+
+                      case Left(callarg) => Left(changeNamesToCppOnes(callarg,
+ threadargs))
+\end_layout
+
+\begin_layout Plain Layout
+
+                      case Right(aNamedCallargs(namedcallargs)) => Right(aNamedC
+allargs(namedcallargs.map( namedcallarg => aNamedCallarg(namedcallarg.id,
+ changeNamesToCppOnes( namedcallarg.argument, threadargs )))) )
+\end_layout
+
+\begin_layout Plain Layout
+
+                    }
+\end_layout
+
+\begin_layout Plain Layout
+
+                    aFunctionCallStatement(call.functionidentifier, call.cppfuncti
+onidentifier, newargs, call.returntype)
+\end_layout
+
+\begin_layout Plain Layout
+
+                  }
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case IdentifierStatement(value)=>
+\end_layout
+
+\begin_layout Plain Layout
+
+                  {
+\end_layout
+
+\begin_layout Plain Layout
+
+                    threadargs match
+\end_layout
+
+\begin_layout Plain Layout
+
+                    {
+\end_layout
+
+\begin_layout Plain Layout
+
+                      case None => IdentifierStatement(value)
+\end_layout
+
+\begin_layout Plain Layout
+
+                      case Some(aArguments(arglist)) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+                      {
+\end_layout
+
+\begin_layout Plain Layout
+
+                        val arg = arglist.find(arg=>arg.id.value == value)
+ match{case Some(x)=>x;case None => println("error in functioncallargmodifier");
+ scala.sys.exit()}
+\end_layout
+
+\begin_layout Plain Layout
+
+                        IdentifierStatement(arg.cppid.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+                      } 
+\end_layout
+
+\begin_layout Plain Layout
+
+                    }
+\end_layout
+
+\begin_layout Plain Layout
+
+                  }
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case _=>in
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+          
+\end_layout
+
+\begin_layout Plain Layout
+
+          val generals = expressions.flatMap(
+\end_layout
+
+\begin_layout Plain Layout
+
+            y=> y match
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              case aDefinition(leftside, rightside)=>None
+\end_layout
+
+\begin_layout Plain Layout
+
+              case aFunctionCallStatement(id.value,_, callargs,_) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                val updates = args match
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case None => ""
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case Some(aArguments(List(aArgument(argid, cppargid, _))))
+ =>
+\end_layout
+
+\begin_layout Plain Layout
+
+                  {
+\end_layout
+
+\begin_layout Plain Layout
+
+                    callargs match
+\end_layout
+
+\begin_layout Plain Layout
+
+                    {
+\end_layout
+
+\begin_layout Plain Layout
+
+                      case Left(callarg) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+                      {
+\end_layout
+
+\begin_layout Plain Layout
+
+                        val newvalue = callargTranslator(callarg, id.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+                        if (argid.value.startsWith("synchronized"))
+\end_layout
+
+\begin_layout Plain Layout
+
+                        {
+\end_layout
+
+\begin_layout Plain Layout
+
+                          if( argid.value!=newvalue){"
+\backslash
+nwe haven't figured out the correct way to handle this yet"}
+\end_layout
+
+\begin_layout Plain Layout
+
+                          else{""}
+\end_layout
+
+\begin_layout Plain Layout
+
+                        }
+\end_layout
+
+\begin_layout Plain Layout
+
+                        else{"
+\backslash
+n"+cppargid.value+" = "+callargTranslator( changeNamesToCppOnes(callarg,
+ args), id.value )+";
+\backslash
+n"}
+\end_layout
+
+\begin_layout Plain Layout
+
+                          
+\end_layout
+
+\begin_layout Plain Layout
+
+                      }
+\end_layout
+
+\begin_layout Plain Layout
+
+                      case Right(_)=>"error in generating updates1"
+\end_layout
+
+\begin_layout Plain Layout
+
+                    }
+\end_layout
+
+\begin_layout Plain Layout
+
+                  }
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case Some(aArguments(defargslist)) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+                  {
+\end_layout
+
+\begin_layout Plain Layout
+
+                    callargs match
+\end_layout
+
+\begin_layout Plain Layout
+
+                    {
+\end_layout
+
+\begin_layout Plain Layout
+
+                      case Right(namedcallargs) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+                      {
+\end_layout
+
+\begin_layout Plain Layout
+
+                        namedcallargs.value.foldLeft("
+\backslash
+n")((l,r)=>
+\end_layout
+
+\begin_layout Plain Layout
+
+                          {
+\end_layout
+
+\begin_layout Plain Layout
+
+                            val newvalue = callargTranslator(r.argument,
+ id.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+                            if( r.id.value.startsWith( "synchronized" ) )
+\end_layout
+
+\begin_layout Plain Layout
+
+                            {
+\end_layout
+
+\begin_layout Plain Layout
+
+                              if (r.id.value.startsWith( "synchronized" ) &&
+ r.id.value != newvalue) {l + "
+\backslash
+nwe haven't figured out the correct way to handle this yet"}
+\end_layout
+
+\begin_layout Plain Layout
+
+                              else{l}
+\end_layout
+
+\begin_layout Plain Layout
+
+                            }
+\end_layout
+
+\begin_layout Plain Layout
+
+                            else
+\end_layout
+
+\begin_layout Plain Layout
+
+                            {
+\end_layout
+
+\begin_layout Plain Layout
+
+                              val defarg = defargslist.find(defarg => defarg.id.val
+ue == r.id.value) match{case Some(x) => x; case None => println("error in
+ generating updates3"); scala.sys.exit()}
+\end_layout
+
+\begin_layout Plain Layout
+
+                              l+defarg.cppid.value +" = "+ callargTranslator(
+ changeNamesToCppOnes( r.argument, args ) , id.value) + ";
+\backslash
+n"
+\end_layout
+
+\begin_layout Plain Layout
+
+                            }
+\end_layout
+
+\begin_layout Plain Layout
+
+                          }
+\end_layout
+
+\begin_layout Plain Layout
+
+                        )
+\end_layout
+
+\begin_layout Plain Layout
+
+                      }
+\end_layout
+
+\begin_layout Plain Layout
+
+                      case Left(_)=>"error in generating updates2"
+\end_layout
+
+\begin_layout Plain Layout
+
+                    }
+\end_layout
+
+\begin_layout Plain Layout
+
+                  }
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                Some("waitForRendezvous(
+\backslash
+""+ cppid.value+"
+\backslash
+");" +updates+ "
+\backslash
+n  continue;") 
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+              case z:aFunctionCallStatement =>
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                val modified = changeNamesToCppOnes(z, args) match
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case a:aFunctionCallStatement => a
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case _=> println("eror when modifying function call");scala.sys.
+exit()
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                Some(functioncalltranslator(modified, id.value) + ";")
+\end_layout
+
+\begin_layout Plain Layout
+
+              } 
+\end_layout
+
+\begin_layout Plain Layout
+
+              //case z:aFunctionCallStatement => Some(functioncalltranslator(z,
+ id.value) + ";")
+\end_layout
+
+\begin_layout Plain Layout
+
+              //case _=> "not implemented" //println("Error in gettopthreaddecla
+rations.
+ Not implemented."); scala.sys.exit()
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          ).foldLeft("")((x,y)=>x+"
+\backslash
+n  "+y)
+\end_layout
+
+\begin_layout Plain Layout
+
+          val underfunctions = getFunctionDeclarations(expressions)
+\end_layout
+
+\begin_layout Plain Layout
+
+          val body = functionstart + tailrecursestart + generals + tailrecurseen
+d + functionend
+\end_layout
+
+\begin_layout Plain Layout
+
+          Some((signature+";"+underfunctions._1, body+underfunctions._2))
+\end_layout
+
+\begin_layout Plain Layout
+
+          
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        case z:aFunctionCallStatement=>None
+\end_layout
+
+\begin_layout Plain Layout
+
+        case z:IdentifierStatement=>None
+\end_layout
+
+\begin_layout Plain Layout
+
+        case aDefinition(aDefLhs(ActionT(), id, cppid, callingthread, args,
+ returntype), aDefRhs(expressions)) => actfunrecursivetranslate(cppid, callingth
+read, args, returntype, expressions)
+\end_layout
+
+\begin_layout Plain Layout
+
+        case aDefinition(aDefLhs(FunctionT(), id, cppid, callingthread,
+ args, returntype),aDefRhs(expressions)) => actfunrecursivetranslate(cppid,
+ callingthread, args, returntype, expressions)
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    ):List[(String,String)]
+\end_layout
+
+\begin_layout Plain Layout
+
+    list.foldLeft(("",""))((x,y)=>(x._1+"
+\backslash
+n"+y._1,x._2+"
+\backslash
+n"+y._2))
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def getFunctionSignature(cppid:IdT, optargs:Option[aArguments], returntype:Typ
+eT):String =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    def argtranslator(arg:aArgument):String=
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      typetranslator(arg.typestr)+" "+arg.id.value
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    val argsString = optargs match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case None=>""
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Some(aArguments(List(arg)))=>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        if(arg.typestr.value!="Inclusion")
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          argtranslator(arg)
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        else{""}
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Some(aArguments(args))=>argtranslator(args.head) + args.tail.foldLeft(""
+)((x,y)=>
+\end_layout
+
+\begin_layout Plain Layout
+
+        if(y.typestr.value!="Inclusion"){x+", "+argtranslator(y)} else{x}
+\end_layout
+
+\begin_layout Plain Layout
+
+      )
+\end_layout
+
+\begin_layout Plain Layout
+
+      
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+    typetranslator(returntype)+" "+cppid.value+"("+argsString+")"
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def typetranslator(in:TypeT):String =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    in.value match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case "Integer"=>"int"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case "Double"=>"double"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case "String"=>"std::string"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case "Nothing"=>"void"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case "Inclusion"=>"shouldn't be here"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case "Boolean"=>"bool"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case _=>"not implemented"
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def callargTranslator(callarg:aCallarg, callingthread:String):String =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    callarg match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case StringStatement(value)=>value
+\end_layout
+
+\begin_layout Plain Layout
+
+      case IntegerStatement(value)=>value.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+      case DoubleStatement(value)=>value.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+      case TrueStatement()=>"true"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case FalseStatement()=>"false"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case IdentifierStatement(value)=>value
+\end_layout
+
+\begin_layout Plain Layout
+
+      case call:aFunctionCallStatement => functioncalltranslator(call: aFunction
+CallStatement, callingthread:String)
+\end_layout
+
+\begin_layout Plain Layout
+
+      case NoArgs()=>""
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def functioncalltranslator(call:aFunctionCallStatement, callingthread:String):
+String =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println("in functioncalltranslator.
+ call is "+call)
+\end_layout
+
+\begin_layout Plain Layout
+
+    //if(call.functionidentifier=="plus"){println("found")}
+\end_layout
+
+\begin_layout Plain Layout
+
+    //println("
+\backslash
+n
+\backslash
+n"+call)
+\end_layout
+
+\begin_layout Plain Layout
+
+    call match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("actionPrint",_, Left(StringStatement(value)),
+_) => "print" + callingthread + ".push_back(" + value + ")"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("actionPrint",_, Left(IdentifierStatement(valu
+e)),_) => "print" + callingthread + ".push_back(std::to_string(" + value
+ + "))"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("actionPrint",_, Left(x:aFunctionCallStatement
+),_) => "print" + callingthread + ".push_back(" + functioncalltranslator(x,callin
+gthread) + ")"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("toString",_, Left(x:aFunctionCallStatement),_
+) => "std::to_string(" + functioncalltranslator(x,callingthread) + ")"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("toString",_, Left(IdentifierStatement(value))
+,_) => "std::to_string(" + value + ")"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("toString",_, Left(IntegerStatement(value)),_)
+ => "std::to_string(" + value.toString + ")"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("toString",_, Left(DoubleStatement(value)),_)
+ => "std::to_string(" + value.toString + ")"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("toString",_, Left(TrueStatement()),_)
+ => "true"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("toString",_, Left(FalseStatement()),_)
+ => "false"
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("equal", _, Right(aNamedCallargs(List(aNamedCa
+llarg(IdT("left"), IntegerStatement(left)), aNamedCallarg(IdT("right"),
+ IdentifierStatement(right))))), _) => left.toString +" == "+ right.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("equal", _, Right(aNamedCallargs(List(aNamedCa
+llarg(IdT("left"), IdentifierStatement(left)), aNamedCallarg(IdT("right"),
+ IntegerStatement(right))))),_) => left.toString +" == "+ right.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("equal", _, Right(aNamedCallargs(List(aNamedCa
+llarg(IdT("left"), StringStatement(left)), aNamedCallarg(IdT("right"), Identifie
+rStatement(right))))), _) => left.toString +" == "+ right.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("equal", _, Right(aNamedCallargs(List(aNamedCa
+llarg(IdT("left"), IdentifierStatement(left)), aNamedCallarg(IdT("right"),String
+Statement(right))))),_) => left.toString+" == "+right.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("equal", _, Right(aNamedCallargs(List(aNamedCa
+llarg(IdT("left"), IdentifierStatement(left)), aNamedCallarg(IdT("right"),
+ IdentifierStatement(right))))),_) => left.toString+" == "+right.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+      
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("equal", _, Right(aNamedCallargs(List(aNamedCa
+llarg(IdT("left"), IntegerStatement(left)), aNamedCallarg(IdT("right"),x:
+ aFunctionCallStatement)))),_) => left.toString+" == "+functioncalltranslator(x,
+ callingthread)
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("equal", _, Right(aNamedCallargs(List(aNamedCa
+llarg(IdT("left"), x: aFunctionCallStatement), aNamedCallarg(IdT("right"),
+ IntegerStatement(right))))), _) => functioncalltranslator(x, callingthread)
+ +" == "+ right.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("equal", _, Right(aNamedCallargs(List(aNamedCa
+llarg(IdT("left"), StringStatement(left)),  aNamedCallarg(IdT("right"),
+ x:aFunctionCallStatement)))), _) => left.toString+" == "+functioncalltranslator(
+x, callingthread)
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("equal", _, Right(aNamedCallargs(List(aNamedCa
+llarg(IdT("left"), x:aFunctionCallStatement), aNamedCallarg(IdT("right"),
+ StringStatement(right))))), _) => functioncalltranslator(x, callingthread)
+ +" == "+ right.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("equal", _, Right(aNamedCallargs(List(aNamedCa
+llarg(IdT("left"), x:aFunctionCallStatement), aNamedCallarg(IdT("right"),
+ IdentifierStatement(right))))), _) => functioncalltranslator(x, callingthread)
+ +" == "+ right.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("equal", _, Right(aNamedCallargs(List(aNamedCa
+llarg(IdT("left"), IdentifierStatement(left)), aNamedCallarg(IdT("right"),
+ x:aFunctionCallStatement)))),_) => left.toString+" == "+functioncalltranslator(x
+, callingthread)
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("equal", _, Right(aNamedCallargs(List(aNamedCa
+llarg(IdT("left"), x:aFunctionCallStatement), aNamedCallarg(IdT("right"),
+ y:aFunctionCallStatement)))),_) => functioncalltranslator(x, callingthread)
+ +" == "+ functioncalltranslator(y, callingthread)
+\end_layout
+
+\begin_layout Plain Layout
+
+      
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("lessThan", _, Right(aNamedCallargs(List(aName
+dCallarg(IdT("left"), IntegerStatement(left)), aNamedCallarg(IdT("right"),
+ IntegerStatement(right))))),_) => left.toString +" < "+right.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+      //TODO: Make better solution for commutative functions
+\end_layout
+
+\begin_layout Plain Layout
+
+      //TODO: add more types that the comparison functions can accept
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("actionMutate", _,  Right(aNamedCallargs(List(
+aNamedCallarg(IdT("newValue"), IdentifierStatement(newval)), aNamedCallarg(IdT("
+variable"), IdentifierStatement(vari))))),_) => vari + " = " + newval
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("actionMutate", _,  Right(aNamedCallargs(List(
+aNamedCallarg(IdT("newValue"), x:aFunctionCallStatement), aNamedCallarg(IdT("var
+iable"), IdentifierStatement(vari))))), _) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        "write" + vari.capitalize + " = " + functioncalltranslator(x, callingthre
+ad)
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("plus",_,_,_) => basicmathcalltranslator(call,
+ callingthread)
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("minus",_,_,_) => basicmathcalltranslator(call
+, callingthread)
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("multiply",_,_,_) => basicmathcalltranslator(c
+all, callingthread)
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("divide",_,_,_) => basicmathcalltranslator(cal
+l, callingthread)
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement("if",_, Right(aNamedCallargs(List(aNamedCallar
+g(IdT("condition"), condstat), aNamedCallarg(IdT("else"), elsestat), aNamedCalla
+rg(IdT("then"), thenstat)))), _) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        def translator(in:aStatement):String=
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          in match
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            case TrueStatement()=>"true"
+\end_layout
+
+\begin_layout Plain Layout
+
+            case FalseStatement()=>"false"
+\end_layout
+
+\begin_layout Plain Layout
+
+            case StringStatement(value)=>value
+\end_layout
+
+\begin_layout Plain Layout
+
+            case IntegerStatement(value)=>value.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+            case DoubleStatement(value)=>value.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+            case IdentifierStatement(value)=>value //Correct behaviour?
+ .....
+\end_layout
+
+\begin_layout Plain Layout
+
+            case z:aFunctionCallStatement=>functioncalltranslator(z, callingthre
+ad)
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        condstat match
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          case TrueStatement()=>translator(thenstat)
+\end_layout
+
+\begin_layout Plain Layout
+
+          case FalseStatement()=>translator(elsestat)
+\end_layout
+
+\begin_layout Plain Layout
+
+          case _=> 
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            translator(condstat)+" ? "+translator(thenstat)+" : "+translator(els
+estat)
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement(funcid,cppfuncid,args,_) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        val argstr = args match
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Left(callarg)=>callargTranslator(callarg, callingthread)
+\end_layout
+
+\begin_layout Plain Layout
+
+            case Right(aNamedCallargs(args)) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              val first = callargTranslator(args.head.argument, callingthread)
+\end_layout
+
+\begin_layout Plain Layout
+
+              val subsequent = args.foldLeft("")((x,y)=>x+", "+callargTranslator(
+y.argument, callingthread))
+\end_layout
+
+\begin_layout Plain Layout
+
+              first+subsequent
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        cppfuncid+"("+argstr+")"
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      case _=> "not implemented"
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def basicmathcalltranslator(call:aFunctionCallStatement, callingthread:String)
+:String=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    val operator = if(call.functionidentifier=="plus"){" + "}else if(call.function
+identifier=="minus"){" - "}else if(call.functionidentifier=="multiply"){"
+ * "}else if(call.functionidentifier=="minus"){" / "}
+\end_layout
+
+\begin_layout Plain Layout
+
+    call match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case aFunctionCallStatement(_,_, Right(aNamedCallargs(callargs)),_)
+ =>
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        val argstr = callargs.map(arg=>
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            arg match
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              case aNamedCallarg(_, IdentifierStatement(value)) => value
+\end_layout
+
+\begin_layout Plain Layout
+
+              case aNamedCallarg(_, IntegerStatement(value)) => value.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+              case aNamedCallarg(_, DoubleStatement(value)) => value.toString
+\end_layout
+
+\begin_layout Plain Layout
+
+              case aNamedCallarg(_, f:aFunctionCallStatement) => functioncalltra
+nslator(f, callingthread)
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        ):List[String]
+\end_layout
+
+\begin_layout Plain Layout
+
+        "(" + argstr(0) + operator + argstr(1) + ")"
+\end_layout
+
+\begin_layout Plain Layout
+
+      } 
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def gettopthreadstatements(ast:List[Definition]): List[FunctionCallStatement]
+ =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    ast.find(x => (x.leftside.description match {case ProgramT() => true; case
+ _=> false})) match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case None => println("Error in getthreads.
+ Should be caught by checker."); scala.sys.exit()
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Some(res) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        res.rightside.expressions.flatMap(x => x match
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          case x:FunctionCallStatement => if (x.functionidentifier.startsWith("thr
+ead")) {Some(x)} else {None}
+\end_layout
+
+\begin_layout Plain Layout
+
+          case _ => None
+\end_layout
+
+\begin_layout Plain Layout
+
+        })
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def getprintlistdeclarations(topthreads: List[FunctionCallStatement]):
+ String=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    val topthreadnames = topthreads.map(x=>x.functionidentifier)
+\end_layout
+
+\begin_layout Plain Layout
+
+    var out = ""
+\end_layout
+
+\begin_layout Plain Layout
+
+    for(i<-topthreadnames)
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      out += "
+\backslash
+nstatic std::list<std::string> print"+i+";"
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    out
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def getStaticThreadArgs(atree:List[aExpression]):String =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    atree.flatMap(exp=>exp match
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case aDefinition(aDefLhs(ThreadT(), _, _, _, Some(aArguments(args)),
+ _), _) => Some(args.flatMap(arg =>
+\end_layout
+
+\begin_layout Plain Layout
+
+            if (arg.typestr.value == "Inclusion" || arg.id.value.startsWith("synchron
+ized"))
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              None
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            else
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              Some("static "+typetranslator(arg.typestr)+" "+arg.cppid.value+";
+\backslash
+n")
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          ).fold("")((l,r)=>l+r)
+\end_layout
+
+\begin_layout Plain Layout
+
+        )
+\end_layout
+
+\begin_layout Plain Layout
+
+        case _=> None
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    ).fold("
+\backslash
+n")((l,r)=>l+r)
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def getmain(topthreads:List[FunctionCallStatement], atree:List[aExpression]):S
+tring =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    val threaddefls:List[aDefLhs] = atree.flatMap(exp=>exp match
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case aDefinition(a @ aDefLhs(ThreadT(),_,_,_,_,_),_) => Some(a)
+\end_layout
+
+\begin_layout Plain Layout
+
+        case _=>None
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    )
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    val threadargsSet:String = topthreads.map(topthreadcall => 
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        val threaddefl = threaddefls.find(threaddefl => threaddefl.id.value
+ == topthreadcall.functionidentifier) match {case Some(x)=>x; case None=>println(
+"error in getmain");scala.sys.exit()}
+\end_layout
+
+\begin_layout Plain Layout
+
+        topthreadcall.args match
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          case Left(callarg) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            threaddefl.args match
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              case None=>List("")
+\end_layout
+
+\begin_layout Plain Layout
+
+              case Some(aArguments(List(defarg)))=>
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                if (defarg.typestr.value == "Inclusion" || defarg.id.value.startsWith
+("synchronized"))
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  List("")
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                else
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  val modcallarg:aCallarg = callarg match
+\end_layout
+
+\begin_layout Plain Layout
+
+                  {
+\end_layout
+
+\begin_layout Plain Layout
+
+                    case a:aCallarg => a
+\end_layout
+
+\begin_layout Plain Layout
+
+                    case _=>println("error in getmain2(should be forbidden)");sc
+ala.sys.exit() //function calls in assignment in program statement doesn't
+ make much sense and should be forbidden
+\end_layout
+
+\begin_layout Plain Layout
+
+                  }
+\end_layout
+
+\begin_layout Plain Layout
+
+                  List(defarg.cppid.value+" = "+callargTranslator(modcallarg:aCall
+arg, "shouldn't be here")+";")
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+              case _=>println("error in getmain3");scala.sys.exit()
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+          case Right(NamedCallargs(namedarglist)) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            val defarglist = threaddefl.args match
+\end_layout
+
+\begin_layout Plain Layout
+
+            {
+\end_layout
+
+\begin_layout Plain Layout
+
+              case None => println("error in getmain4");scala.sys.exit()
+\end_layout
+
+\begin_layout Plain Layout
+
+              case Some(aArguments(defarglist))=>defarglist
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+            namedarglist.foldLeft(List():List[String])((list, namedarg)=>
+\end_layout
+
+\begin_layout Plain Layout
+
+              {
+\end_layout
+
+\begin_layout Plain Layout
+
+                val modcallarg:aCallarg = namedarg.argument match
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case a:aCallarg => a
+\end_layout
+
+\begin_layout Plain Layout
+
+                  case _=>println("error in getmain5(should be forbidden)");scal
+a.sys.exit() //function calls in assignment in program statement doesn't make
+ much sense and should be forbidden
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                val defarg = defarglist.find(defarg => defarg.id.value==namedarg.id.v
+alue) match {case Some(x)=>x; case None=>println("error in getmain6");scala.sys.ex
+it()}
+\end_layout
+
+\begin_layout Plain Layout
+
+                if (defarg.typestr.value == "Inclusion" || defarg.id.value.startsWith
+("synchronized"))
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  list
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+                else
+\end_layout
+
+\begin_layout Plain Layout
+
+                {
+\end_layout
+
+\begin_layout Plain Layout
+
+                  list :+ (defarg.cppid.value+" = "+callargTranslator(modcallarg:a
+Callarg, "shouldn't be here")+";")
+\end_layout
+
+\begin_layout Plain Layout
+
+                }
+\end_layout
+
+\begin_layout Plain Layout
+
+              }
+\end_layout
+
+\begin_layout Plain Layout
+
+            )
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    ).fold(List(): List[String]) ((llist,rlist) => llist ++ rlist).foldLeft("
+\backslash
+n") ((str,sublist) => if(sublist!="") {str+"
+\backslash
+n"+sublist} else{str})
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    var threadsStart = ""
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    for(i<-topthreads)
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      threadsStart = threadsStart + "
+\backslash
+n" + "std::thread t" + i.functionidentifier + " (" + i.functionidentifier
+ + ");"
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    "int main()
+\backslash
+n{
+\backslash
+nrendezvousCounter.store(0);" + threadargsSet + threadsStart + "
+\backslash
+nwhile(true)
+\backslash
+n {
+\backslash
+n std::this_thread::sleep_for(std::chrono::seconds(1)); 
+\backslash
+n}" + "
+\backslash
+n}"
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def getsynchronizerfunction(synchvariables:List[Definition], topthreads:List[F
+unctionCallStatement]):String=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    var synchvariablestrings = ""
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    for(i<-synchvariables)
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      val name = i.leftside.id.value
+\end_layout
+
+\begin_layout Plain Layout
+
+      synchvariablestrings += name + " = write" + name.capitalize + ";
+\backslash
+n"
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    var printstatements = ""
+\end_layout
+
+\begin_layout Plain Layout
+
+    for(i<-topthreads)
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      val currentprintqueuename = "print" + i.functionidentifier
+\end_layout
+
+\begin_layout Plain Layout
+
+      printstatements += "while(!"+currentprintqueuename+".empty()) {
+\backslash
+nstd::cout << "+currentprintqueuename + ".front(); 
+\backslash
+n"+currentprintqueuename+".pop_front(); 
+\backslash
+n}
+\backslash
+n"
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    ("""static void waitForRendezvous(std::string name)
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  std::unique_lock<std::mutex> lk(rendezvousSyncMutex);
+\end_layout
+
+\begin_layout Plain Layout
+
+  ++rendezvousCounter;
+\end_layout
+
+\begin_layout Plain Layout
+
+  if(rendezvousCounter.load() < NUMTOPTHREADS)
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    cv.wait(lk);
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  else if (rendezvousCounter.load() == NUMTOPTHREADS)
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    """
+\end_layout
+
+\begin_layout Plain Layout
+
+     + printstatements + synchvariablestrings + """
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      rendezvousCounter.store(0);
+\end_layout
+
+\begin_layout Plain Layout
+
+      cv.notify_all();
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  else
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    std::cout << "error in wait for " << name << ".
+ Rendezvouscounter out of bounds.
+ RedezvousCounter = " << rendezvousCounter.load() << "
+\backslash
+n";
+\end_layout
+
+\begin_layout Plain Layout
+
+    exit(0);
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}""")
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def getGlobalSynchVariableDeclarations(synchvariables: List[Definition]):
+ String=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    var synchdeclares = ""
+\end_layout
+
+\begin_layout Plain Layout
+
+    for(i<-synchvariables)
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      val fumurttype = i.leftside.returntype.value
+\end_layout
+
+\begin_layout Plain Layout
+
+      val initialValue = i.rightside.expressions(0) match
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        case FunctionCallStatement(functionidentifier, args) => args match
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          case Right(namedcallargs) => namedcallargs.value(0).argument match
+\end_layout
+
+\begin_layout Plain Layout
+
+          {
+\end_layout
+
+\begin_layout Plain Layout
+
+            case IntegerStatement(value) => value
+\end_layout
+
+\begin_layout Plain Layout
+
+            //case DoubleStatement(value) => value
+\end_layout
+
+\begin_layout Plain Layout
+
+            case _=> println("Error in getGlobalSynchVariableDeclarations.
+ Should be caught by checker."); scala.sys.exit()
+\end_layout
+
+\begin_layout Plain Layout
+
+          }
+\end_layout
+
+\begin_layout Plain Layout
+
+          case _=> println("Error in getGlobalSynchVariableDeclarations.
+ Should be caught by checker."); scala.sys.exit()
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        case _=> println(i.rightside.expressions(0).toString); println("Error
+ in getGlobalSynchVariableDeclarations.
+ Should be caught by checker."); scala.sys.exit()
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      if (fumurttype == "Integer")
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        synchdeclares += "
+\backslash
+nstatic int " + i.leftside.id.value + " = " + initialValue + ";"
+\end_layout
+
+\begin_layout Plain Layout
+
+        synchdeclares += "
+\backslash
+nstatic int write" + i.leftside.id.value.capitalize + " = " + initialValue +
+ ";"
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    synchdeclares
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+  def getsynchronizedvariables(ast: List[Definition]): List[Definition]
+ =
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    ast.find(x => (x.leftside.description match {case ProgramT() => true; case
+ _=> false})) match
+\end_layout
+
+\begin_layout Plain Layout
+
+    {
+\end_layout
+
+\begin_layout Plain Layout
+
+      case None => println("Error in getthreads.
+ Should be caught by checker."); scala.sys.exit()
+\end_layout
+
+\begin_layout Plain Layout
+
+      case Some(res) => 
+\end_layout
+
+\begin_layout Plain Layout
+
+      {
+\end_layout
+
+\begin_layout Plain Layout
+
+        res.rightside.expressions.flatMap(x => x match
+\end_layout
+
+\begin_layout Plain Layout
+
+        {
+\end_layout
+
+\begin_layout Plain Layout
+
+          case x:Definition => x.leftside.description match {case SynchronizedVari
+ableT() => Some(x); case _=> None}
+\end_layout
+
+\begin_layout Plain Layout
+
+          case _=> None
+\end_layout
+
+\begin_layout Plain Layout
+
+        })
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Error.scala
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+package fumurtCompiler
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+import scala.util.parsing.input.Position
+\end_layout
+
+\begin_layout Plain Layout
+
+//import scala.util.parsing.input.NoPosition
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+case object Global extends Position
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  def column:Int = 0
+\end_layout
+
+\begin_layout Plain Layout
+
+  def line:Int = 0
+\end_layout
+
+\begin_layout Plain Layout
+
+  protected def lineContents:String = "global position"
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+case class Source(val line:Int, val column:Int, val lineContents:String)
+ extends Position
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+case class FumurtError(val position:Position, val message:String)
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+  override def toString:String=
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\end_layout
+
+\begin_layout Plain Layout
+
+    position.toString + ": " + message + "
+\backslash
+n" + position.longString + "
+\backslash
+n"
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \end_inset
 
