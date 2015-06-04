@@ -93,12 +93,19 @@ object Main
                 val fileending = ".cpp"
                 Files.write(Paths.get("./"+outname+fileending), generatedcode.getBytes(StandardCharsets.UTF_8))
                 val options = " -pthread -std=c++11 -O3 -march=native"
-                println("\n\n===Starting Clang cpp compilation===")
+                //println("\n\n===Starting GCC cpp compilation===")
                 //println("options = " + options)
                 import scala.sys.process._
-                val command = "clang++ " + outname + fileending + options + " -o " + outname
-                println(command)
-                (command).!
+                val command = "g++ " + outname + fileending + options + " -o " + outname
+                //println(command)
+                if(System.getProperty("os.name").startsWith("Windows"))
+                {
+                  "OS identified as Windows. Please use the Microsoft Visual C++ compiler (included in Visual Studio) to compile the generated \"generated.cpp\" file"
+                }
+                else
+                {
+                  (command).!
+                }
               }
             }
           }

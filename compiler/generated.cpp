@@ -7,16 +7,19 @@
 #include <chrono>
 
 
-#define NUMTOPTHREADS 2
+#define NUMTOPTHREADS 1
 
-[[noreturn]] static void threadPrintWorld();
-[[noreturn]] static void threadPrintHello();
+[[noreturn]] static void threadA();
+int factorial$threadA(int i);
+void actionPrintSquare$threadA(double d);
+double square$threadAactionPrintSquare(double x);
 
-static std::list<std::string> printthreadPrintHello;
-static std::list<std::string> printthreadPrintWorld;
+static std::list<std::string> printthreadA;
 static std::atomic<int> rendezvousCounter;
 static std::mutex rendezvousSyncMutex;
 static std::condition_variable cv;
+static double threadA$d;
+static int threadA$i;
 static void waitForRendezvous(std::string name)
 {
   std::unique_lock<std::mutex> lk(rendezvousSyncMutex);
@@ -27,13 +30,9 @@ static void waitForRendezvous(std::string name)
   }
   else if (rendezvousCounter.load() == NUMTOPTHREADS)
   {
-    while(!printthreadPrintHello.empty()){
-std::cout << printthreadPrintHello.front();
-printthreadPrintHello.pop_front();
-}
-while(!printthreadPrintWorld.empty()){
-std::cout << printthreadPrintWorld.front();
-printthreadPrintWorld.pop_front();
+    while(!printthreadA.empty()){
+std::cout << printthreadA.front();
+printthreadA.pop_front();
 }
 
     {
@@ -50,22 +49,40 @@ printthreadPrintWorld.pop_front();
 
 
 
-[[noreturn]] static void threadPrintWorld()
+[[noreturn]] static void threadA()
 {while(true)
 {
-  printthreadPrintWorld.push_back("World\n");
-  waitForRendezvous("threadPrintWorld");
+  printthreadA.push_back("The factorial of ");
+  printthreadA.push_back(std::to_string(threadA$i));
+  printthreadA.push_back(" is ");
+  printthreadA.push_back(std::to_string(factorial$threadA(threadA$i)));
+  printthreadA.push_back("    ");
+  actionPrintSquare$threadA(threadA$d);
+  waitForRendezvous("threadA");
+threadA$d = (threadA$d + 0.5);
+threadA$i = (threadA$i + 1);
+
   continue;
 }
 }
 
-[[noreturn]] static void threadPrintHello()
-{while(true)
+int factorial$threadA(int i)
 {
-  printthreadPrintHello.push_back("Hello ");
-  waitForRendezvous("threadPrintHello");
-  continue;
+  return 1 == i ? 1 : (i * factorial$threadA((i - 1))); //returntype: Something
 }
+
+void actionPrintSquare$threadA(double d)
+{
+  printthreadA.push_back("The square of ");
+  printthreadA.push_back(std::to_string(d));
+  printthreadA.push_back(" is ");
+  printthreadA.push_back(std::to_string(square$threadAactionPrintSquare(d)));
+  printthreadA.push_back("\n");
+}
+
+double square$threadAactionPrintSquare(double x)
+{
+  return (x * x); //returntype: Number
 }
 
 
@@ -73,8 +90,9 @@ int main()
 {
 rendezvousCounter.store(0);
 
-std::thread tthreadPrintHello (threadPrintHello);
-std::thread tthreadPrintWorld (threadPrintWorld);
+threadA$d = 0.0;
+threadA$i = 0;
+std::thread tthreadA (threadA);
 while(true)
 {
 std::this_thread::sleep_for(std::chrono::seconds(1));

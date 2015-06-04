@@ -181,3 +181,5 @@ run actionsFunctions.fumurt
 run test.fumurt
 run helloworld.fumurt
 run helloworldmulti.fumurt
+run test.fumurt
+run actionsFunctions.fumurt

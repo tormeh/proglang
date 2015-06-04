@@ -4764,8 +4764,8 @@ Other languages under consideration were C, C++ and Haskell.
  been made during development.
  Haskell has all the features necessary, but the author had previously had
  problems learning it.
- It was also a concern that Haskell does not provide loops when this is
- the cases where this is the best solution to a problem.
+ It was also a concern that Haskell does not provide loops in the cases
+ where this is the best solution to a problem.
 \end_layout
 
 \begin_layout Section
@@ -4774,11 +4774,18 @@ Choice of C++ Compiler
 
 \begin_layout Standard
 There were two compilers under consideration: GCC and Clang.
- Clang is available for Windows, while GCC is tricky to get working on Windows.
- On the other hand, GCC is available as standard on most Linux distributions.
- The choice ultimately fell on Clang, as it is better that the compiler
- is easily available on all platforms rather than being standard on some
- and hard to install on others.
+ While Clang is in many ways the better compiler, GCC is installed by default
+ on most Unix systems.
+ That leaves Windows.
+ After some trial and error, it was found that installing a C++11 compliant
+ standard library was difficult on Windows, and that the by far easiest
+ solution on Windows is to install Visual Studio and use the Microsoft Visual
+ C++ compiler.
+ In the end it was decided that the Fumurt compiler will compile the C++
+ code using GCC, unless it is run on Windows, in which case it will ask
+ the user to compile the C++ code using Visual C++ manually.
+ This is quite clearly the lesser evil, rather than a particularly good
+ solution.
 \end_layout
 
 \begin_layout Section
@@ -4837,6 +4844,23 @@ A [[noreturn]] static void threadName() is defined for each thread, holding
  its values.
  All arguments to thread in the source code are converted to static global
  variables.
+ If the platform is Windows, 
+\begin_inset Quotes eld
+\end_inset
+
+__declspec(noreturn)
+\begin_inset Quotes erd
+\end_inset
+
+ is used instead of 
+\begin_inset Quotes eld
+\end_inset
+
+[[noreturn]]
+\begin_inset Quotes erd
+\end_inset
+
+, since Microsoft Visual C++ does not support C++11 syntax for attributes.
 \end_layout
 
 \begin_layout Enumerate

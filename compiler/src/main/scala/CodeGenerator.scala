@@ -341,7 +341,8 @@ object FumurtCodeGenerator
       {
         case aDefinition(aDefLhs(ThreadT(),id,cppid,_,args,_),aDefRhs(expressions))=>
         {
-          val signature = "[[noreturn]] static void "+cppid.value+"()"
+          val attributeNoreturn = if(System.getProperty("os.name").startsWith("Windows")){"__declspec(noreturn)"}else{"[[noreturn]]"} //Microsoft Visual C++ does not support C++11 attribute syntax
+          val signature = attributeNoreturn+" static void "+cppid.value+"()"
           val functionstart = signature+"\n{"
           val functionend = "\n}\n"
           val (tailrecursestart, tailrecurseend) = ("while(true)\n{", "\n}")
