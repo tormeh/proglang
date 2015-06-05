@@ -80,7 +80,7 @@ showtabs=false}
 \paperfontsize default
 \spacing single
 \use_hyperref false
-\papersize a4paper
+\papersize b5paper
 \use_geometry false
 \use_amsmath 1
 \use_esint 1
@@ -527,8 +527,8 @@ Fumurt is a language built with the intention that the programmer shall
  It strives to make the least possible demands on programmers ability to
  build mental models and memorize.
  Therefore Fumurt strives to imbue its syntax with as much meaning as possible
- and to concentrate declaration of concurrent code in one place (parallel
- but not concurrent code not affected).
+ and to concentrate declaration of concurrent code in one place (fork-join
+ concurrency not affected).
  Language design inherently necessitates compromise and Fumurt compromises
  minimally on readability and predictability, sacrificing instead keyboard
  typing and rapid iteration.
@@ -573,7 +573,7 @@ Conclusion, Discussion and Future Work evaluates and reflects on the work
 \end_layout
 
 \begin_layout Standard
-In addition there are appendices:
+The appendices are as follows:
 \end_layout
 
 \begin_layout Itemize
@@ -585,7 +585,7 @@ User manual describes how to run the compiler from Java bytecode
 \end_layout
 
 \begin_layout Itemize
-Code listing contains the code
+Code listing contains the source code
 \end_layout
 
 \begin_layout Standard
@@ -713,7 +713,7 @@ key "sutter2005freeLunch"
  The problems inherent to concurrency can roughly be divided into two categories
 : Communication and scheduling; making sure the correct information is shared
  between threads in a correct way and making sure tasks are done at correct
- times, respectively[citation needed].
+ times, respectively.
  One possibility is to let the programmer deal with these problems in an
  application-specific way.
  This is notoriously error-prone, however.
@@ -800,7 +800,7 @@ Communicating sequential processes (CSP) are also based on messages.
  on whether this is desired, responded to the message.
  A very elegant property of CSP is that calling a function can be implemented
  as sending a message; the same syntax can be used for both.
- The two mainstream implementations of CSP are Go and Rust.
+ Two mainstream implementations of CSP are Go and Rust.
 \end_layout
 
 \begin_layout Paragraph*
@@ -874,7 +874,7 @@ For big structures, such as arrays, the copies made are usually only of
  write contention, this technique can be applied to all memory the threads
  share.
  Transactional memory has many popular implementations, but it is particularly
- much used in Haskell and Clojure.
+ heavily used in Haskell and Clojure.
 \end_layout
 
 \begin_layout Paragraph*
@@ -889,9 +889,9 @@ Synchronous programming provides a synchronicity abstraction, the same as
  Notice that the operations done in a time step does not affect each other.
  Synchronous programming is thus 
 \emph on
-deterministic, 
+deterministic
 \emph default
-and the language implemented in this thesis will be as well.
+.
  Synchronous programming is a rarity and the most mainstream implementation
  is Esterel, which is proprietary.
 \end_layout
@@ -920,12 +920,13 @@ Performance loss due to processing resources idling as the synchronization
 
 \begin_layout Standard
 Synchronous programming therefore has substantial problems, yet for single-machi
-ne systems it presents a way to achieve multi-threaded performance and architect
-ure but with single-threaded predictability and therefore debugability.
- While the other abstractions place the responsibility for correct concurrent
- behavior on the programmer, synchronous programming takes care of that
- and replaces it with the responsibility for performance, as the program
- performs best if all threads has an equal amount of work.
+ne systems it presents a way to achieve near-multi-threaded performance
+ and multi-threaded architecture but with single-threaded predictability
+ and therefore debugability.
+ While the other abstractions place some of the responsibility for correct
+ concurrent behavior on the programmer, synchronous programming takes care
+ of all of that and replaces it with the responsibility for performance,
+ as the program performs best if all threads has an equal amount of work.
  Let us discuss the problems of the other abstractions
 \end_layout
 
@@ -935,7 +936,7 @@ Actors assume infinite message queues, with the failure mode being a loss
  In a producer-consumer relationship, producer actors can overwhelm consumer
  actors.
  Actors are designed to mimic distributed systems and create a unified abstracti
-on over these.
+on over these, with the limited guarantees that requires.
  Distributed systems have to correctly handle hardware failures, so loss
  of information is an acceptable failure mode for actors.
  However, this makes actors unsuitable for real-time systems as recovering
@@ -957,6 +958,7 @@ Transactional memory, though it makes it look as if thread communication
  is easy, has its own problems.
  The unpredictability of the sequence of writing is a problem, as well as
  the unpredictable time it takes.
+ Again, IO order is unpredictable.
 \end_layout
 
 \begin_layout Section
