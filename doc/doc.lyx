@@ -300,19 +300,23 @@ Problem Statement
 \end_layout
 
 \begin_layout Standard
-In critical applications, multithreading is often problematic, introducing
- its own errors in addition to the ones that arise from the problem itself.
- Bugs can sometimes first result in failures when the software is in deployment.
- There are high-profile examples of this.
- There is a need for better ways to program multithreaded systems that result
- in predictable-by-default behavior.
- To the extent that is possible, this thesis shall present a language that
- can serve as a starting point for creating better ways of writing critical-appl
-ication, multithreaded programs.
+Multithreading is often problematic in that effects of timing and scheduling
+ may lead to nondeterministic behavior.
+ This again leads to race conditions and limits testability of the system,
+ in a manner that might not be acceptable for critical systems.
+\end_layout
+
+\begin_layout Standard
+The possibility of making a programming language with multithreading semantics
+ more suitable to critical systems should be explored.
 \end_layout
 
 \begin_layout Standard
 The student shall:
+\end_layout
+
+\begin_layout Enumerate
+Provide a short summary of systematic approaches to multithreading
 \end_layout
 
 \begin_layout Enumerate
@@ -322,24 +326,6 @@ y, real-time multithreaded programs
 
 \begin_layout Enumerate
 Make a prototype implementation of this language
-\end_layout
-
-\begin_layout Enumerate
-Provide adequate background information for others to understand the student's
- work and the choices made therein
-\end_layout
-
-\begin_layout Enumerate
-Perform and document tests showing that the implementation works
-\end_layout
-
-\begin_layout Enumerate
-Discuss important shortcomings and limitations of the student's work
-\end_layout
-
-\begin_layout Enumerate
-Provide a short summary of related work and contemporary approaches to the
- same or similar problems 
 \end_layout
 
 \begin_layout Standard
@@ -375,8 +361,7 @@ It assumes that readers have prior experience working with programming languages
 \end_layout
 
 \begin_layout Standard
-26.
- mai 2015
+26th of may, 2015
 \end_layout
 
 \begin_layout Standard
@@ -712,12 +697,8 @@ key "milne2002difficulties"
  increasing feature number outweigh the benefit of increased analyzability
  and predictability? Answering these questions is outside the scope of this
  report.
- Much 
-\begin_inset Quotes eld
-\end_inset
-
-progress has been made in making programs easier to understand and analyze
- in this fashion, yet there is always room for improvement.
+ Much progress has been made in making programs easier to understand and
+ analyze in this fashion, yet there is always room for improvement.
  In later years, one feature in particular has risen to notability: Concurrency.
  In the past, concurrency has not been an issue for most programmers but
  as multi-processor (or multi-core) systems have gone mainstream, so has
@@ -736,7 +717,7 @@ key "sutter2005freeLunch"
  One possibility is to let the programmer deal with these problems in an
  application-specific way.
  This is notoriously error-prone, however.
- Several abstractions have been deviced for dealing with the two concurrency
+ Several abstractions have been devised for dealing with the two concurrency
  problems in a systematic manner, to the author's knowledge:
 \end_layout
 
@@ -906,6 +887,11 @@ Synchronous programming provides a synchronicity abstraction, the same as
  a time step are done instantly and computed from memory as it was at the
  beginning of the time step.
  Notice that the operations done in a time step does not affect each other.
+ Synchronous programming is thus 
+\emph on
+deterministic, 
+\emph default
+and the language implemented in this thesis will be as well.
  Synchronous programming is a rarity and the most mainstream implementation
  is Esterel, which is proprietary.
 \end_layout
@@ -3502,25 +3488,6 @@ A deterministic memory consistency model, which ensures unsynchronized load
  operations have deterministic results
 \end_layout
 
-\begin_layout Standard
-Two modern implementations that address these are Dthreads
-\begin_inset CommandInset citation
-LatexCommand cite
-key "liu2011dthreads"
-
-\end_inset
-
-, a deterministic replacement for Pthreads, and CONSEQUENCE
-\begin_inset CommandInset citation
-LatexCommand cite
-key "merrifield2015highCONSEQUENCE"
-
-\end_inset
-
- which is a library with a more relaxed and performant approach than that
- of Dthread.
-\end_layout
-
 \begin_layout Subsection
 Deterministic Logical Clock
 \end_layout
@@ -3566,12 +3533,96 @@ Deterministic Memory Consistency Model
 \begin_layout Standard
 The memory consistency model concerns itself with making guarantees about
  the determinism of memory access.
- Total Store Order guarantees that all writes are globally visible in determinis
-tic order, yet makes no guarantees about when.
- Other models relax this to guaranteeing that a write with respect to a
- synchronization object is only visible to the next thread that holds the
- synchronization object.
+ Total Store Order (TSO) guarantees that all writes are globally visible
+ in deterministic order, yet makes no guarantees about when.
+ In both DTHREADS and CONSEQUENCE described below, synchronization of memory
+ is done whenever there is a synchronization (for example 
+\emph on
+lock()
+\emph default
+) operation, which ensures determinism since the position of these operations
+ relative to memory loads are defined in the source code.
+ This read determinism is then a result of implementation; TSO does not
+ require it.
+ Alternatives to TSO (for example DRF0
+\begin_inset CommandInset citation
+LatexCommand cite
+key "devietti2011rcdc"
+
+\end_inset
+
+ and LRC
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lu2014efficient"
+
+\end_inset
+
+) relax the total store order requirements to guaranteeing that a write
+ with respect to a synchronization object is only visible to the next thread
+ that holds the synchronization object.
+ While the computational result is the same, the total store order requires
+ less memory than relaxed models, since all shared memory needs only one
+ copy and thread-local writes will always be applied and memory freed.
+ In relaxed models, memory copies will have to be made whenever a thread
+ releases a synchronization object and freed when the synchronization object
+ is locked by a new thread.
+ This means memory use scales with the amount of synchronization objects.
+ That said, relaxed models can be faster than TSO since individual threads
+ can be isolated until they need updates, even while other threads synchronize
+ memory among themselves.
+\end_layout
+
+\begin_layout Subsection
+DTHREADS
+\end_layout
+
+\begin_layout Standard
+DTHREADS
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2011dthreads"
+
+\end_inset
+
+ is a deterministic replacement for Pthreads, using round-robin scheduling
+ and total store order.
+ DTHREADS work by giving each thread, as declared in C/C++, its own process
+ and then cleverly hiding this by reimplementing functions such as 
+\emph on
+getpid()
+\emph default
+ to give the same answer for all processes that make up the program.
+ All threads do work in a parallel phase, and upon an event that triggers
+ synchronization, for instance the acquisition of a lock, a serial phase
+ is entered.
+ The updates that any single thread applies to shared memory will be applied
+ in deterministic order in the serial phase.
  
+\end_layout
+
+\begin_layout Subsection
+CONSEQUENCE
+\end_layout
+
+\begin_layout Standard
+CONSEQUENCE
+\begin_inset CommandInset citation
+LatexCommand cite
+key "merrifield2015highCONSEQUENCE"
+
+\end_inset
+
+ is, like DTHREADS, a library for C/C++.
+ It uses instruction-count based scheduling and provides total store order.
+ Instruction-count based scheduling allows CONSEQUENCE to be faster than
+ DTHREADS.
+ The downside is that CONSEQUENCE is nondeterministic in the face of changing
+ input and changing behavior when inserting debugging operations like print-stat
+ements.
+ CONSEQUENCE relies on CONVERSION, a kernel-implemented version control
+ system, for the memory consistency model.
+ Like in DTHREADS, each thread is actually run in its own process.
 \end_layout
 
 \begin_layout Section
@@ -3753,14 +3804,19 @@ In the computational phase, the order in which computations are performed
  this phase, the only difference between concurrent execution and sequential
  execution is speed.
  In the communicative phase, however, execution has to be single threaded.
- This is somewhat reminiscent of a very conservative low-tech Dthreads
+ This is similar to DTHREADS
 \begin_inset CommandInset citation
 LatexCommand cite
 key "liu2011dthreads"
 
 \end_inset
 
-.
+, except here IO sequence is also deterministic and only one thread per
+ synchronized variable have write rights to that variable.
+ Having only one thread have write privileges means last-writer-wins semantics
+ are avoided, in which everything but the last write since the start of
+ the computational phase will never be visible to other threads.
+ This seems like it would very rarely be the programmer's intended behavior.
 \end_layout
 
 \begin_layout Standard
@@ -9715,7 +9771,7 @@ ts can be relaxed.
 \end_layout
 
 \begin_layout Standard
-More fundamentally, the litterature concerning multithreading seems divided
+More fundamentally, the literature concerning multithreading seems divided
  over what should be required to be deterministic by the language and what
  should require programmer intervention if a deterministic sequence is required.
  It is unclear whether this thesis has the best approach.
