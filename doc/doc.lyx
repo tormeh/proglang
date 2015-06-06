@@ -1055,7 +1055,8 @@ Scanner: Transforms source text into a list of tokens (simple objects),
 \end_layout
 
 \begin_layout Itemize
-Parser: Transforms a list of tokens into an abstract syntax tree.
+Parser: Transforms a list of tokens into an intermediate representation,
+ usually an abstract syntax tree.
  In the process, it checks whether the syntax of the program is correct.
 \end_layout
 
@@ -1064,16 +1065,10 @@ Context Sensitive Analysis: Checks the correctness of program semantics.
  Most interpreted languages skip this step and deal with semantic errors
  at runtime.
  The correct time to do semantic analysis is not a settled matter, but in
- a static compiler such as the one in 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "chap:Implementation"
-
-\end_inset
-
- it is done here.
- In the case where a language has type inference, this step may emit a modified
- intermediate representation.
+ a static compiler such as the one for Fumurt it is done at compilation.
+ This step may or may not emit a modified intermediate representation, but
+ a case in which it would be expected to do so would be when the language
+ has type inference.
 \end_layout
 
 \begin_layout Standard
@@ -1083,7 +1078,7 @@ The back end is composed of successive passes, of which every step transform
  The number of passes required vary greatly and depend on the differences
  between the source and output formats.
  In the trivial case, where the input and output format is identical (for
- example C to C) the number of necessary passes would be zero.
+ example C to C), the number of necessary passes would be zero.
 \end_layout
 
 \begin_layout Subsection*
@@ -1109,7 +1104,14 @@ production rules
 \end_inset
 
 .
- 
+ The standard used here is the Extended Backus-Naur Form of ISO/IEC 14977
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wirth1996extended"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Paragraph
@@ -1159,7 +1161,7 @@ Where
 \begin_inset Quotes erd
 \end_inset
 
- signify the two sides of the production rule, 
+ signify the division of the two sides of the production rule, 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1217,8 +1219,8 @@ lower case word = lower case letter, {lower case letter};
 
 \begin_layout Standard
 Note that the correctness of the word as it pertains to English is ignored.
- The comma signify a sequence, and the curly brackets signify that their
- contents can be repeated one or more time.
+ The comma signify a sequence, and contents of curly brackets can be repeated
+ from zero up to an infinite amount of times.
  A lower case word, as it has been defined here, is simply one lower case
  letter, followed by zero or more lower case letters.
  Next, the same is done for sentences, again ignoring rules for English:
@@ -1252,6 +1254,13 @@ lower case sentence = lower case word, {(", ", lower case word) | (" ",
 \end_layout
 
 \begin_layout Standard
+A lower case sentence is here a lower case word followed either by a comma
+ plus space or just space, both followed by a new word.
+ This is repeated as many times as desired and terminated by a period and
+ a space.
+\end_layout
+
+\begin_layout Standard
 Parentheses allows grouping of sequences.
  Here, it allows us to alternate between sequences of symbols rather than
  just single symbols.
@@ -1276,11 +1285,6 @@ status open
 \begin_layout Plain Layout
 
 lower case text = lower case sentence, {lower case sentence}; 
-\end_layout
-
-\begin_layout Plain Layout
-
-lols
 \end_layout
 
 \end_inset
@@ -1595,7 +1599,7 @@ reference "chap:Code-listing"
 
 \end_inset
 
- it is helpful to understand the language it is written in.
+, it is helpful to understand the language it is written in.
  This section gives a quick introduction to Scala.
 \end_layout
 
@@ -1627,7 +1631,7 @@ The compiler is executed as compiled Java bytecode.
  for compilation, but in the REPL and in a script there are no such restrictions.
  In the REPL and script, statements are evaluated starting from the top,
  while a main method is required if the program is supposed to be compiled.
- This report only uses code meant to be compiled or code as it would look
+ This report uses only code meant to be compiled or code as it would look
  in a REPL.
  The two are easily distinguished by the latter's use of the 
 \begin_inset Quotes eld
@@ -1703,6 +1707,7 @@ Some types are container types, such as List[Int] or Array[String].
  These can hold any type through generics.
  In this case the square brackets means that args is an object of type Array,
  which in this case holds String.
+ In other words, args is an array of strings.
 \end_layout
 
 \begin_layout Itemize
@@ -1796,8 +1801,8 @@ Functions are objects, but methods are not
 
 \begin_deeper
 \begin_layout Itemize
-Functions are objects that implement an interface, for example Function1
- for functions with one argument.
+Internally, functions are objects that implement an interface, for example
+ Function1 for functions with one argument.
  This interface has a method 
 \begin_inset Quotes eld
 \end_inset
@@ -1815,6 +1820,7 @@ function
 \end_inset
 
 , in the C sense of the word, is stored.
+ This is completely transparent to the programmer, however.
 \end_layout
 
 \end_deeper
@@ -2052,7 +2058,7 @@ res3: String = <function1>
 
 \begin_layout Plain Layout
 
-scala>//but methods are not
+scala>//methods are not objects
 \end_layout
 
 \begin_layout Plain Layout
@@ -2199,8 +2205,8 @@ val x:String = input match
 
 \begin_layout Plain Layout
 
-  case reference @ TypeA(str) => "both a reference and the constructor parameter
-"
+  case reference @ TypeA(str) => "both the reference and the constructor
+ parameter"
 \end_layout
 
 \begin_layout Plain Layout
@@ -2243,7 +2249,7 @@ status open
 
 \begin_layout Plain Layout
 
-scala>//classes in scala function mutch like classes in Java
+scala>//classes in scala function much like classes in Java
 \end_layout
 
 \begin_layout Plain Layout
@@ -2430,8 +2436,8 @@ Inheritance
 \end_layout
 
 \begin_layout Itemize
-A trait is an interface, a class with only abstract methods, that can also
- have default implementations of methods
+A trait is like an interface, a class with only abstract methods, but one
+ that can also have default implementations of methods
 \end_layout
 
 \begin_layout Itemize
@@ -2450,7 +2456,8 @@ extends [first super] with [second super] with [third super]
 A class can inherit multiple traits.
  In the case where two traits have the same signature for different method
  implementations, the last trait to be inherited is the one whose implementation
- will be used
+ will be used.
+ Inheriting two classes is not allowed.
 \end_layout
 
 \begin_layout Standard
@@ -2516,7 +2523,7 @@ defined class Sub
 \end_layout
 
 \begin_layout Standard
-Inheritance is used very sparingly in this report.
+Inheritance is used very sparingly in this thesis.
 \end_layout
 
 \begin_layout Subsection
@@ -2549,7 +2556,9 @@ for(x <- -1 until Int.MaxValue){println(x)}
 \begin_inset Quotes erd
 \end_inset
 
- is a range with Int.MaxValue +1 elements
+ is a range with Int.MaxValue +1 elements.
+ Put differently, the last element's index in this case is higher than the
+ maximum value of 32-bit integers, which is not allowed.
 \end_layout
 
 \begin_layout Itemize
@@ -2792,7 +2801,10 @@ For fold, foldLeft, foldRight, map and flatMap examples:
 fold is supplied with a function which produces a single value from two
  input values, all three of the same type, fold repeatedly uses this to
  produce a single value from a list.
- Can be executed in parallel.
+ It takes two arguments using currying syntax; the first is the starting
+ value and the second is the function used to fold two elements into one.
+ It can be executed in parallel.
+ 
 \begin_inset ERT
 status open
 
@@ -2836,13 +2848,62 @@ res2: Int = 3
 
 \end_inset
 
+If the fold is executed in parallel, having the starting argument be non-zero
+ or otherwise have consequence in application will give unexpected results:
+\begin_inset listings
+inline false
+status open
 
+\begin_layout Plain Layout
+
+scala> (0 to 2).fold(1)((left,right) => left+right)
+\end_layout
+
+\begin_layout Plain Layout
+
+res1: Int = 4
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> (0 to 2).par.fold(1)((left,right) => left+right) 
+\end_layout
+
+\begin_layout Plain Layout
+
+res3: Int = 6 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+scala> (0 to 2).par.fold(1)((left,right) => left+right)
+\end_layout
+
+\begin_layout Plain Layout
+
+res2: Int = 5
+\end_layout
+
+\end_inset
+
+This is generally true: Trying to apply necessarily sequential operations
+ to parallel collections is a bad idea, and a highly unfortunate pitfall
+ for newcomers to Scala.
 \end_layout
 
 \begin_layout Itemize
 foldLeft and foldRight are equivalent, except that the iteration over the
  list goes in opposite directions.
  In contrast to fold, the input and output types can be unequal.
+ These can not be done in parallel.
 \begin_inset listings
 inline false
 status open
@@ -3020,7 +3081,7 @@ str
 
 \begin_layout Itemize
 Sets are somewhat similar to arrays in that their size is fixed.
- However, each element has a fixed type.
+ However, each element can have a unique fixed type.
  So 
 \begin_inset Quotes eld
 \end_inset
@@ -3037,7 +3098,7 @@ str
 \begin_inset Quotes erd
 \end_inset
 
- is of type (Int, String, Double).
+ is a set with type (Int, String, Double).
  specific places in the set are accessed using 
 \begin_inset Quotes eld
 \end_inset
@@ -3251,6 +3312,11 @@ std::unique_lock allows more sophisitcated use of locks.
  locks when leaving the scope of the unique_lock.
 \end_layout
 
+\begin_layout Itemize
+std::thread provides a standardized wrapping around Pthread and similar
+ OS-specific thread libraries.
+\end_layout
+
 \begin_layout Section
 Regular Expressions
 \end_layout
@@ -3311,7 +3377,7 @@ b
 \begin_inset Quotes erd
 \end_inset
 
- matches all latin lower case characters.
+ matches all Latin lower case characters.
 \end_layout
 
 \begin_layout Itemize
@@ -3323,7 +3389,7 @@ A question mark (
 \begin_inset Quotes erd
 \end_inset
 
-) signifies that the preceeding element can be matched one or zero times.
+) signifies that the preceding element can be matched one or zero times.
 \end_layout
 
 \begin_layout Itemize
@@ -3376,7 +3442,7 @@ A plus sign (
 \begin_inset Quotes erd
 \end_inset
 
-) signifies that there are one or more of the preceeding element
+) signifies that there are one or more of the preceding element
 \end_layout
 
 \begin_layout Itemize
@@ -3388,7 +3454,7 @@ A star (
 \begin_inset Quotes erd
 \end_inset
 
-) signifies that there are zero or more of the preceeding element
+) signifies that there are zero or more of the preceding element
 \end_layout
 
 \begin_layout Itemize
@@ -3421,7 +3487,7 @@ d*)
 .
  First, there can optionally be a plus or minus sign, then comes the characters
  in the parenthesis: Either 0 or a number between 1 and 9 followed by a
- string of digits are matched.
+ string of digits.
  
 \begin_inset Quotes eld
 \end_inset
@@ -3434,7 +3500,7 @@ d*)
 \begin_inset Quotes eld
 \end_inset
 
-21
+201
 \begin_inset Quotes erd
 \end_inset
 
@@ -3442,7 +3508,7 @@ d*)
 \begin_inset Quotes eld
 \end_inset
 
--21
+-201
 \begin_inset Quotes erd
 \end_inset
 
@@ -3523,8 +3589,9 @@ Both concern themselves with which thread's turn it is to do synchronization
  In instruction-count scheduling, the next recipient of the lock is determined
  by which thread has completed the least amount of instructions, with a
  tie-breaker.
- Notice that in the latter model, synchronization call order is not robust
- in the face of changing inputs.
+ Notice that in the latter model, synchronization call order is not necessarily
+ robust in the face of changing inputs, as some inputs may require more
+ instructions to be performed than others.
  
 \end_layout
 
@@ -3537,7 +3604,7 @@ The memory consistency model concerns itself with making guarantees about
  the determinism of memory access.
  Total Store Order (TSO) guarantees that all writes are globally visible
  in deterministic order, yet makes no guarantees about when.
- In both DTHREADS and CONSEQUENCE described below, synchronization of memory
+ In both Dthreads and Consequence described below, synchronization of memory
  is done whenever there is a synchronization (for example 
 \emph on
 lock()
@@ -3576,11 +3643,11 @@ key "lu2014efficient"
 \end_layout
 
 \begin_layout Subsection
-DTHREADS
+Dthreads
 \end_layout
 
 \begin_layout Standard
-DTHREADS
+Dthreads
 \begin_inset CommandInset citation
 LatexCommand cite
 key "liu2011dthreads"
@@ -3604,27 +3671,27 @@ getpid()
 \end_layout
 
 \begin_layout Subsection
-CONSEQUENCE
+Consequence
 \end_layout
 
 \begin_layout Standard
-CONSEQUENCE
+Consequence
 \begin_inset CommandInset citation
 LatexCommand cite
 key "merrifield2015highCONSEQUENCE"
 
 \end_inset
 
- is, like DTHREADS, a library for C/C++.
+ is, like Dthreads, an deterministic implementation for C/C++.
  It uses instruction-count based scheduling and provides total store order.
- Instruction-count based scheduling allows CONSEQUENCE to be faster than
- DTHREADS.
- The downside is that CONSEQUENCE is nondeterministic in the face of changing
+ Instruction-count based scheduling allows Consequence to be faster than
+ Dthreads.
+ The downside is that Consequence is nondeterministic in the face of changing
  input and changing behavior when inserting debugging operations like print-stat
 ements.
- CONSEQUENCE relies on CONVERSION, a kernel-implemented version control
+ Consequence relies on Conversion, a kernel-implemented version control
  system, for the memory consistency model.
- Like in DTHREADS, each thread is actually run in its own process.
+ Like in Dthreads, each thread is actually run in its own process.
 \end_layout
 
 \begin_layout Section
@@ -3646,11 +3713,12 @@ CoreDet
 \end_layout
 
 \begin_layout Standard
+CoreDet is 
 \begin_inset Quotes eld
 \end_inset
 
-A compiler and runtime system that runs arbitrary multithreaded C/C++ POSIX
- Threads programs deterministically
+[a] compiler and runtime system that runs arbitrary multithreaded C/C++
+ POSIX Threads programs deterministically
 \begin_inset Quotes erd
 \end_inset
 
@@ -3714,17 +3782,9 @@ Specification
 \end_layout
 
 \begin_layout Standard
-Initially, the goal of this thesis was to create a fundamentally new approach
- to managing concurrency, wherein the programmer would manually schedule
- the execution of tasks at compile time.
- Tasks would be allowed to write to special variables which would be used
- in lieu of final ones if the task could not finish in the alloted time
- frame.
- This effort was abandoned because of the burden it would impose on the
- programmer, the perceived difficulty of implementation and the unsatisfactory
- failure modes.
- Instead, it was decided that an approach belonging to the tradition of
- synchronous programming would be preferable.
+It was decided that an approach belonging to the tradition of synchronous
+ programming would be the best choice for this thesis, as described in the
+ background chapter.
  Given the importance of a familiar superficialities for language adoption
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -5670,7 +5730,14 @@ Grammar
 The grammar serves as a formal definition of the language.
  Though not needed in order to understand the language, it is included for
  completeness.
- Here's the EBNF (ISO/IEC 14977) for the grammar, as implemented:
+ Here's the EBNF (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wirth1996extended"
+
+\end_inset
+
+) for the grammar, as implemented:
 \begin_inset ERT
 status open
 
