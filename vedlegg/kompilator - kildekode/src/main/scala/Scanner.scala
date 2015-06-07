@@ -1,0 +1,103 @@
+
+
+
+package fumurtCompiler
+
+import scala.language.implicitConversions
+import scala.util.parsing.combinator.RegexParsers
+import scala.util.matching.Regex
+import scala.language.postfixOps
+//import scala.util.parsing.combinator.lexical._
+import scala.util.parsing.input.Positional
+
+object FumurtScanner extends RegexParsers /*with Parsers*/
+{
+  override val skipWhitespace = false
+  
+  def scan(in:String):Either[NoSuccess, List[Token]] =
+  {
+    //println(in) 
+   
+    parseAll((scanInternal*), in) match
+    {
+      case Success(result, _) =>
+      {
+        val tokens = result.filter(x=>x match{case SpaceT() => false; case _ => true}) :+ EofT()
+        Right(tokens)
+      }
+      case f:Failure => Left(f)
+      case e:Error => Left(e)
+      //case Failure(message, reader) => Left(new FumurtError(reader.pos, "Failure: "+message,"\n" + in.lines.toList(reader.pos.line) +"\n"))
+      //case Error(message,_) => Left(new FumurtError(Global, "Error: " + message, ""))
+    }
+   
+  }
+  
+  
+
+  def spaceParser:Parser[SpaceT] = positioned( new Regex(""" """) ^^ {x => /*println("scanned space");*/SpaceT()} )
+  def programStrParser: Parser[ProgramT] = positioned( new Regex("program ") ^^ {x => /*println("scanned program "+x.toString);*/ProgramT()} )
+  def functionParser: Parser[FunctionT] = positioned( new Regex("function ") ^^ {x => /*println("scanned function "+x.toString);*/FunctionT()} )
+  def threadParser: Parser[ThreadT] = positioned( new Regex("thread ") ^^ {x => /*println("scanned thread "+x.toString);*/ThreadT()} )
+  def synchronizedVariableParser: Parser[SynchronizedVariableT] = positioned(new Regex("synchronized variable ") ^^ {x => /*println("scanned synchronized variable "+x.toString);*/ SynchronizedVariableT()})
+  def valueParser: Parser[ValueT] = positioned( new Regex("value ") ^^ {x => /*println("scanned unsafe value "+x.toString);*/ValueT()} )
+  def actionParser: Parser[ActionT] = positioned( new Regex("action ") ^^ {x => /*println("scanned action "+x.toString);*/ActionT()} )
+  def trueParser: Parser[TrueT] = positioned( new Regex("true") ^^ {x => /*println("scanned true "+x.toString);*/TrueT()} )
+  def falseParser: Parser[FalseT] = positioned( new Regex("false") ^^ {x => /*println("scanned false "+x.toString);*/FalseT()} )
+  def openParenthesisParser: Parser[OpenParenthesisT] = positioned( new Regex("""\(""") ^^ {x => /*println("scanned ( "+x.toString);*/OpenParenthesisT()} )
+  def closeParenthesisParser: Parser[CloseParenthesisT] = positioned( new Regex("""\)""") ^^ {x => /*println("scanned ) "+x.toString);*/CloseParenthesisT()} )
+  def openCurlyBracketParser: Parser[OpenCurlyBracketT] = positioned( new Regex("""\{""") ^^ {x => /*println("scanned { "+x.toString);*/OpenCurlyBracketT()} )
+  def closeCurlyBracketParser: Parser[CloseCurlyBracketT] = positioned( new Regex("""\}""") ^^ {x => /*println("scanned } "+x.toString);*/CloseCurlyBracketT()} )
+  def doubleParser: Parser[DoubleT] = positioned( new Regex("""[-+]?[0-9]*\.[0-9]+""") ^^ {x => /*println("scanned double "+x.toString);*/DoubleT(x.toDouble)} )
+  def intParser: Parser[IntegerT] = positioned( new Regex("""[-+]?(0|[1-9]\d*)""") ^^ {x => /*println("scanned integer "+x.toString);*/IntegerT(x.toInt)} )
+  def equalParser: Parser[EqualT] = positioned( new Regex("=") ^^ {x => /*println("scanned = "+x.toString);*/EqualT()} )
+  def colonParser: Parser[ColonT] = positioned( new Regex(":") ^^ {x => /*println("scanned : "+x.toString);*/ColonT()} )
+  def commaParser: Parser[CommaT] = positioned( new Regex(",") ^^ {x => /*println("scanned , "+x.toString);*/CommaT()} )
+  //def emptyParser: Parser[EmptyT] = new Regex("") ^^ {x => println("scanned empty");EmptyT()}
+  def newlineParser: Parser[NewlineT] = positioned( new Regex("\n") ^^ {x => /*println("scanned newline ");*/NewlineT()} )
+  def idParser: Parser[IdT] = positioned( new Regex("[a-z]+[a-zA-Z]*") ^^ {x => /*println("scanned id "+x.toString);*/IdT(x.toString)} )
+  def stringParser: Parser[StringT] = positioned( new Regex("""("[^"]*")""") ^^ {x => /*println("scanned string "+x.toString);*/StringT(x.toString)} )
+  def typeParser: Parser[TypeT] = positioned( new Regex("[A-Z][a-zA-Z]*") ^^ {x => /*println("scanned type "+x.toString);*/TypeT(x.toString)} )
+  
+  
+  def scanInternal: Parser[Token] = 
+  {
+    (
+      spaceParser               |
+      programStrParser          |
+      threadParser        |
+      actionParser              |
+      synchronizedVariableParser  |
+      functionParser            |
+      trueParser                |
+      falseParser               |
+      openParenthesisParser     |
+      closeParenthesisParser    |
+      openCurlyBracketParser    |
+      closeCurlyBracketParser   |
+      doubleParser              |
+      intParser                 |
+      equalParser               |
+      colonParser               |
+      commaParser               |
+      //emptyParser               |
+      newlineParser             |
+      stringParser              |
+      idParser                  |
+      typeParser  
+    )            
+  }
+  
+  
+
+}
+
+
+
+
+
+
+
+
+
+

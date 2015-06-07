@@ -1,0 +1,10 @@
+program helloworld:Nothing =
+{
+  threadPrintHelloWorld()
+}
+
+thread threadPrintHelloWorld:Nothing =
+{
+  actionPrint("Hello World\n")
+  threadPrintHelloWorld()
+}

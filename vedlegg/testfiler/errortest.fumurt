@@ -1,0 +1,50 @@
+program p:Nothing =
+{
+  synchronized variable synchronizedNumber:Integer = {synchronized(variable=0, writer=threadPrintHello)}
+  threadPrintWorld(synchronizedNumber)
+  threadPrintLol(actionPrintFoo=integerIdentity, integerIdentity=integerIdentityyy)
+}
+
+thread threadPrintWorld(synchronizedNumber:Integer):Nothing =
+{
+  actionPrint("world ")
+  actionPrint(toString(synchronizedNumber))
+  threadPrintWorld(synchronizedNumber)
+}
+  
+thread threadPrintHello(synchronizedNumber:Integer):Nothing =
+{
+  actionPrint(synchronizedNumber)
+  actionPrint(" Hello ")
+  actionMutate(variable=synchronizedNumber, newValue=plus(left=synchronizedNumber, right=1))
+  threadPrintHello(synchronizedNumber)
+}
+
+thread threadPrintLol(actionPrintFoo:Inclusion, integerIdentity:Inclusion):Nothing =
+{
+  action actionPrintLol:Nothing =
+  {
+    actionPrint("  LOL   ")
+  }
+
+  actionPrintLol()
+  actionPrintFoo(integerIdentity)
+  threadPrintLol(actionPrintFoo=actionPrintFoo, integerIdentity=integerIdentity)
+}
+
+function printFoo(integerIdentity:Inclusion):Nothing =
+{
+  action actionPrintFooo:Nothin =
+  {
+    actionPrint("  FOOO  ")
+  }
+  actionPrint("  FOO   ")
+  actionPrintFooo()
+  actionPrint(toString(integerIdentity(5.0)))
+  actionPrint("  ")
+  actionPrint(if(condition=0, then=6, else=toString(3)))
+  actionPrint(toString(if(condition=false, then=6, else=3)))
+  actionPrint("\n")
+}
+
+function integerIdentity(x:Integer):Integer = {multiply(left=x, right=1.0)}

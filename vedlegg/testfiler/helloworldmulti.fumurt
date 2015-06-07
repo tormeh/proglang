@@ -1,0 +1,17 @@
+program helloworld:Nothing =
+{
+  threadPrintHello()
+  threadPrintWorld()
+}
+
+thread threadPrintWorld:Nothing =
+{
+  actionPrint("World\n")
+  threadPrintWorld()
+}
+
+thread threadPrintHello:Nothing =
+{
+  actionPrint("Hello ")
+  threadPrintHello()
+}

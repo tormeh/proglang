@@ -1,0 +1,27 @@
+program helloworld:Nothing =
+{
+  synchronized variable synchronizedCounter:Integer = {synchronized(variable=0, writer=threadC)}
+  threadA(synchronizedCounter)
+  threadB(synchronizedCounter)
+  threadC(synchronizedCounter)
+}
+
+thread threadA(synchronizedCounter:Integer):Nothing =
+{
+  actionPrint(toString(synchronizedCounter))
+  actionPrint(" == ")
+  threadA(synchronizedCounter)
+}
+
+thread threadB(synchronizedCounter:Integer):Nothing =
+{
+  actionPrint(toString(synchronizedCounter))
+  actionPrint("\n")
+  threadB(synchronizedCounter)
+}
+
+thread threadC(synchronizedCounter:Integer):Nothing =
+{
+  actionMutate(newValue=plus(left=synchronizedCounter, right=1), variable=synchronizedCounter)
+  threadC(synchronizedCounter)
+}

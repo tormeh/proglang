@@ -1,0 +1,31 @@
+program helloworld:Nothing =
+{
+  threadA(d=1.0, i=1, actionPrintSquare=actionPrintSquare)
+}
+
+thread threadA(d:Double, i:Integer, actionPrintSquare:Inclusion):Nothing =
+{
+  function factorial(i:Integer):Integer =
+  {
+    if(condition=equal(left=1, right=i), then=1, else=multiply(left=i, right=factorial(minus(left=i, right=1))))
+  }
+  actionPrint("The factorial of ")
+  actionPrint(toString(i))
+  actionPrint(" is ")
+  actionPrint(toString(factorial(i)))
+  actionPrint("    ")
+  actionPrintSquare(d)
+  threadA(d = plus(left=d, right=0.5), i = plus(left=i, right=1), actionPrintSquare=actionPrintSquare)
+}
+
+action actionPrintSquare(d:Double):Nothing = 
+{
+  function square(x:Double):Double = {multiply(left=x, right=x)}
+  actionPrint("The square of ")
+  actionPrint(toString(d))
+  actionPrint(" is ")
+  actionPrint(toString(square(d)))
+  actionPrint("\n")
+}
+
+
