@@ -3796,6 +3796,19 @@ key "meyerovich2013empiricalProgrammingLanguageAdoption"
  syntax, rather than invent or adopt something less common.
 \end_layout
 
+\begin_layout Subsubsection*
+A Note on the Finality of This Specification
+\end_layout
+
+\begin_layout Standard
+Much of what has been specified has not been implemented.
+ While everything has been given thought, this thought has not been distributed
+ equally, but concentrated on the basic things and that which has been implement
+ed.
+ Everything herein, especially that which is left unimplemented, is to be
+ considered preliminary.
+\end_layout
+
 \begin_layout Section
 Language Design Goals
 \end_layout
@@ -3825,28 +3838,7 @@ The goal of the programming language is to make a multithreaded program
  single thread can happen concurrently.
  All IO and inter-thread communication are required happen in a statically
  determined sequence.
- There are several ways to do this.
- CONSEQUENCE
-\begin_inset CommandInset citation
-LatexCommand cite
-key "merrifield2015highCONSEQUENCE"
-
-\end_inset
-
- and similar systems built using an instruction-based logical clock
-\begin_inset CommandInset citation
-LatexCommand cite
-key "olszewski2009kendo"
-
-\end_inset
-
- provide superior performance to round-robin systems.
- However, IO sequence in these schemes depends on input, requiring programmer
- intervention where this is undesirable.
- While performance is undoubtedly good, it seems prudent to make such optimizati
-ons opt-in rather than opt-out.
- [more stuff here] One way to do this is to have the program have two alternatin
-g phases:
+ One way to do this is to have the program have two alternating phases:
 \end_layout
 
 \begin_layout Itemize
@@ -3866,7 +3858,7 @@ In the computational phase, the order in which computations are performed
  this phase, the only difference between concurrent execution and sequential
  execution is speed.
  In the communicative phase, however, execution has to be single threaded.
- This is similar to DTHREADS
+ This is similar to Dthreads
 \begin_inset CommandInset citation
 LatexCommand cite
 key "liu2011dthreads"
@@ -3874,7 +3866,7 @@ key "liu2011dthreads"
 \end_inset
 
 , except here IO sequence is also deterministic and only one thread per
- synchronized variable have write rights to that variable.
+ synchronized variable have write rights to a synchronized variable.
  Having only one thread have write privileges means last-writer-wins semantics
  are avoided, in which everything but the last write since the start of
  the computational phase will never be visible to other threads.
@@ -3972,7 +3964,8 @@ Inter-thread communication is provided by synchronized variables.
  can read them during the communication phase.
  Having only one thread have write rights circumvents the entire problem
  of store order, and makes sure the programmer doesn't have to worry about
- whose threads writes are effected in which order.
+ the order in which a synchronized variable is written to by the different
+ threads.
 \end_layout
 
 \begin_layout Section
@@ -3988,8 +3981,8 @@ Input and output sequence must be deterministic.
  thread.
  In the case where several pieces of input and output do not depend on each
  other, they can be combined to a composite IO action, whose effects will
- be performed in the same communicative phase, though we leave the syntax
- for this unspecified.
+ be performed in the same communicative phase.
+ The syntax for this is left unspecified.
  
 \end_layout
 
@@ -3998,9 +3991,9 @@ Syntax
 \end_layout
 
 \begin_layout Standard
-Syntax is by definition somewhat arbitrary, but as Brainfuck demonstrates,
+Syntax is by definition somewhat arbitrary but, as Brainfuck demonstrates,
  some syntaxes are better than others.
- The following goals were decided on:
+ The following goals were decided upon:
 \end_layout
 
 \begin_layout Itemize
@@ -4020,8 +4013,7 @@ Be predictable, and aid the programmer in the understanding of the program.
 \end_layout
 
 \begin_layout Standard
-A language made as part of a master thesis is simple, not only by default,
- but by necessity.
+A language made as part of a master thesis is simple by necessity.
  The two other goals require more explanation:
 \end_layout
 
@@ -4182,6 +4174,8 @@ synchronized
 \end_inset
 
 .
+ This means that one can observe much about the properties of a call or
+ a variable where it is used without looking up the definitions.
 \end_layout
 
 \begin_layout Itemize
@@ -4221,7 +4215,7 @@ Type classes are an alternative to named arguments, the idea being that
 \begin_deeper
 \begin_layout Itemize
 It's unnecessarily verbose.
- Worst case, you'll end up with one type class declaration per value.
+ Worst case, you'll end up with one type class declaration per argument.
 \end_layout
 
 \begin_layout Itemize
@@ -4433,6 +4427,29 @@ In keeping with the goal of being modern and familiar, definitions of functions
  Recursive function definitions, that is.
  This means that developers can hide functions inside other functions when
  they are not needed outside them.
+ Inclusions are not needed when functions are defined inside each other,
+ as dependence is implied.
+\end_layout
+
+\begin_layout Section
+Pointers
+\end_layout
+
+\begin_layout Standard
+There are no pointers in the language.
+ Any pointers required by C++ is to be hidden by Fumurt.
+ This is because pointers are colloquially as well as formally
+\begin_inset CommandInset citation
+LatexCommand cite
+key "milne2002difficulties"
+
+\end_inset
+
+ known to be hard to reason about.
+ Programmers should be able to specify specific memory ranges that can later
+ be written to with functions for this purpose.
+ These are intended to be used only when the programmer needs to store data
+ to specific addresses.
 \end_layout
 
 \begin_layout Section
@@ -4452,13 +4469,13 @@ Convention suggests that their names should be information-anemically short,
 \end_layout
 
 \begin_layout Enumerate
-Their arguments are nameless, which kind of sabotages the point of having
- named arguments for functions a little
+It can be hard to figure out what role the different arguments have
 \end_layout
 
 \begin_layout Enumerate
-How to define operator precedence? For math operators there's convention,
- but otherwise this may be confusing for users of operators
+Operator precedence for user-defined operators is tricky.
+ For math operators there's convention, but otherwise this may be confusing
+ for users of operators
 \end_layout
 
 \begin_layout Standard
@@ -4486,7 +4503,7 @@ Either the types of the two arguments has to be the same or one of the types
 \end_layout
 
 \begin_layout Enumerate
-There's no operator precedence, it has to be defined on a case-by-case basis
+There's no operator precedence, it has to be defined on a use-by-use basis
  using parentheses.
  Ambiguous use of operators are not allowed.
 \end_layout
