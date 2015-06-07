@@ -90,8 +90,8 @@ int main()
 {
 rendezvousCounter.store(0);
 
-threadA$d = 0.0;
-threadA$i = 0;
+threadA$d = 1.0;
+threadA$i = 1;
 std::thread tthreadA (threadA);
 while(true)
 {

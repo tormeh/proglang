@@ -4474,8 +4474,8 @@ It can be hard to figure out what role the different arguments have
 
 \begin_layout Enumerate
 Operator precedence for user-defined operators is tricky.
- For math operators there's convention, but otherwise this may be confusing
- for users of operators
+ For math operators there's convention, but for user-defined ones this may
+ be confusing for users of those operators
 \end_layout
 
 \begin_layout Standard
@@ -4648,8 +4648,8 @@ All variables passed to the loop would then need to be copied.
 \begin_layout Standard
 An additional benefit of loops is that their use has constant memory consumption
  independent of number of iterations.
- While the same can be achieved using tail recursion with optimizing compilers,
- such compilers are still not the norm.
+ While the same can be achieved for recursion using tail recursion with
+ optimizing compilers, such compilers are still not the norm.
  Mutual tail recursion optimization is particularly rare.
  Since optimizations are not an immediate goal for the Fumurt compiler,
  loops would offer an important guarantee for the programmer.
@@ -5032,8 +5032,8 @@ Other languages under consideration were C, C++ and Haskell.
  been made during development.
  Haskell has all the features necessary, but the author had previously had
  problems learning it.
- It was also a concern that Haskell does not provide loops in the cases
- where this is the best solution to a problem.
+ It was also a concern that Haskell does not provide non-functional mechanisms,
+ even when this is the best solution to a problem.
 \end_layout
 
 \begin_layout Section
@@ -5137,9 +5137,10 @@ A main function is defined, inside of which:
 
 \begin_deeper
 \begin_layout Enumerate
-rendezvousCounter is set to 0, std::thread are started with the thread functions
- (defined in previous step) as arguments and finally the main function enters
- a loop executing std::this_thread::sleep_for( std::chrono::seconds(1) ).
+rendezvousCounter is set to 0, threads (std::thread) are started with the
+ thread functions (defined in previous step) as arguments and finally the
+ main function enters a loop executing std::this_thread::sleep_for( std::chrono:
+:seconds(1) ).
 \end_layout
 
 \end_deeper
@@ -5164,10 +5165,10 @@ If the value in the rendezvousCounter is less than NUMTOPTHREADS, the thread
  unlocked.
  If the rendezvousCounter equals NUMTOPTHREADS, the thread prints all strings
  held in the printLists as described above, sets any global synchronized
- variables to its local values, sets rendezvousCounter to 0 and finally
+ variables to its writer-local values, sets rendezvousCounter to 0 and finally
  notifies all other threads using cv.notify_all before exiting the function.
  rendezvousSyncMutex is unlocked on function exit.
- Consider the salient details:
+ Example of a generated waitForRendezvous function:
 \begin_inset ERT
 status open
 
@@ -5267,7 +5268,13 @@ static void waitForRendezvous(std::string name)
 
 \begin_layout Plain Layout
 
-    synchronizedNumber = writeSynchronizedNumber;
+    synchronizedNumber = writeSynchronizedNumber; //where synchronizedNumber
+ is the name of a synchonized variable
+\end_layout
+
+\begin_layout Plain Layout
+
+	//similarly for other synchronized variables
 \end_layout
 
 \begin_layout Plain Layout
@@ -5321,12 +5328,12 @@ Technically, the finished code can always be determined directly from the
 
 \begin_layout Enumerate
 Actions and functions that are in other functions need to get new names
- and the hierarchy needs to be flattened
+ because the hierarchy needs to be flattened
 \end_layout
 
 \begin_layout Enumerate
-Actions need to be demultiplexed, as their C++ code needs to be different
- depending on which thread calls that action.
+Actions need to be demultiplexed, as the C++ code they contain needs to
+ be different depending on which thread calls that action.
  For instance, an actionPrint needs to be transformed to a push to a list
  whose name depends on the calling thread
 \end_layout
@@ -5343,9 +5350,9 @@ Arguments to threads need to have new C++ names that will be globally unique.
 \begin_layout Standard
 This can be accomplished by doing two passes over the AST.
  In the first pass, all function definitions and thread arguments are annotated
- with their final C++ names.
- In the last pass, all function calls are annotated with the final C++ name
- of the function they call, copying from the annotation done in pass one.
+ with their C++ names.
+ In the last pass, all function calls are annotated with the C++ name of
+ the function they call, copying from the annotation done in pass one.
  
 \end_layout
 
@@ -5387,7 +5394,7 @@ key "merrifield2015highCONSEQUENCE"
 \end_inset
 
  may make it possible to obtain greater performance in cases where the programme
-r can allow scheduling requirements to be relaxed.
+r can allow predictability requirements to be relaxed.
  Likewise, software transactional memory could be interesting, particularly
  when a thread needs to wait on input from an unpredictable source, like
  a human, while the rest of the threads needs to be responsive.
@@ -5398,15 +5405,16 @@ The design of Fumurt centers around predictability, but in order to guarantee
  any predictability we have to assume correctness of the underlying hardware.
  Fumurt is by design not fault-tolerant, because fault tolerance deals with,
  and causes, unpredictability.
- This is in many cases inappropriate.
+ This is in many cases insufficient.
  It would be beneficial if it was possible to construct some system wherein
  multiple computers or chips running Fumurt code could be coordinated by
  a system that does deal with fault-tolerance.
- 
+ Erlang with OTP is often used for such applications, but no study has been
+ carried out regarding how to combine Erlang and Fumurt.
 \end_layout
 
 \begin_layout Itemize
-As it is, the design of Fumurt has no emirical underpinnings.
+As it is, the design of Fumurt has some, but very little empirical underpinnings.
  User surveys concerning how the various aspects of the language are received
  , particularly by novice programmers, would shed light on whether all the
  ideas introduced in this report are actually good ideas.
@@ -5431,9 +5439,9 @@ ity, special mechanisms may be provided whereby the programmer can specify
 
 \begin_layout Itemize
 Recursion can cause a stack overflow, leading to a segmentation fault.
- Except the recursion happening when a thread recurses on itself, no recursion
- is optimized away.
-  This is problematic in a citical-application system.
+ With the exception of the recursion happening when a thread recurses on
+ itself, no recursion is optimized away.
+  This is problematic in a critical-application system.
  Some types of recursion are easy to optimize away, some less so.
  The appropriate behavior for the compiler towards recursion it can't optimize
  away is undetermined.
@@ -5472,9 +5480,11 @@ Overview
 The compiler consists of four parts: The scanner, parser, checker and code
  generator.
  There is no optimizer, although the requirement for no dynamic destruction
- or creation allows us to use a loop in threads instead of just recursion.
+ or creation of threads allows us to use a loop in threads instead of just
+ recursion.
  This is necessary because neither Clang nor GCC could correctly optimize
- that tail recursion into a loop in testing, leading to a stack overflow.
+ that tail recursion into a loop in testing, leading to an inevitable stack
+ overflow.
 \end_layout
 
 \begin_layout Standard
@@ -5489,14 +5499,14 @@ The compiler consists of four parts: The scanner, parser, checker and code
 \end_layout
 
 \begin_layout Standard
-Consider the steps:
+Consider the steps taken by the compiler:
 \end_layout
 
 \begin_layout Enumerate
 The code is scanned.
  If there is an error it's printed and compilation ended.
  Note that neither scanner nor parser are advanced enough to detect more
- than one error.
+ than one error at a time.
  
 \end_layout
 
@@ -5518,14 +5528,7 @@ The AST from from the parser is given to the code generator, which produces
 \end_layout
 
 \begin_layout Enumerate
-The Clang C family compiler
-\begin_inset CommandInset citation
-LatexCommand cite
-key "clang2005language"
-
-\end_inset
-
- is used to compile the C++ code to native binaries.
+GCC is used to compile the C++ code to native binaries.
 \end_layout
 
 \begin_layout Section
@@ -6248,7 +6251,7 @@ takes a list of tokens and returns either an error message or an AST
 \emph on
 progParser: Parser[List[Definition]]
 \emph default
- is the head of the parsers, from which the parser combinator library will
+ is the first of the parsers, from which the parser combinator library will
  generate the final parser
 \end_layout
 
@@ -6267,11 +6270,11 @@ defParser:Parser[Definition]
 \emph on
 paddedDefParser:Parser[Definition] 
 \emph default
-parses a definition with newlines around it, but using 
+parses a definition with newlines around it, but uses 
 \emph on
 defParser:Parser[Definition]
 \emph default
- to parse the definition part.
+ to parse the definition part of that.
 \end_layout
 
 \begin_layout Paragraph
@@ -6372,7 +6375,7 @@ Function List
 check 
 \emph default
 is the interface to the rest of the program.
- Takes in a AST and returns a list of errors, if there are any.
+ Takes in an AST and returns a list of errors, if there are any.
 \end_layout
 
 \begin_layout Itemize
@@ -6391,8 +6394,12 @@ checks the top level of the program.
 checkprogram 
 \emph default
 checks the program statement.
- Uses checkuseofthread and checks whether there are any calls to non-threads
- or definition of non-synchronized variables.
+ Uses 
+\emph on
+checkuseofthread
+\emph default
+ and checks whether there are any calls to non-threads or definition of
+ non-synchronized variables.
 \end_layout
 
 \begin_deeper
@@ -6503,7 +6510,11 @@ checknamedcallargs
 \emph default
 checks named call arguments.
  Checks that the correct names are used, that the correct number of arguments
- are given and uses checkcallarg to check each argument individually.
+ are given and uses 
+\emph on
+checkCallarg
+\emph default
+ to check each argument individually.
 \end_layout
 
 \begin_layout Itemize
@@ -6521,7 +6532,7 @@ checkCallarg
 \emph on
 checkbasicvaluestatement
 \emph default
- checks that the type is correct.
+ checks that the type of the basic value is correct.
 \end_layout
 
 \begin_layout Itemize
@@ -6557,7 +6568,7 @@ Code generator
 \end_layout
 
 \begin_layout Standard
-Step by step approach:
+The code generator can best be explained step by step:
 \end_layout
 
 \begin_layout Enumerate
@@ -6572,7 +6583,8 @@ We scan the program declaration and find the threads that will be started
 \end_layout
 
 \begin_layout Enumerate
-The main function is determined from the list of thread statements
+The main function is determined from the list of thread statements and their
+ arguments
 \end_layout
 
 \begin_layout Enumerate
@@ -6584,7 +6596,7 @@ The NUMTHREADS macro is determined from the length of the list of threads.
 \end_layout
 
 \begin_layout Enumerate
-We pass the abstract syntax tree and a list of the threads to the annotator,
+The abstract syntax tree and a list of the threads are passed to the annotator,
  which returns an annotated tree.
 \end_layout
 
@@ -6593,6 +6605,7 @@ We pass the abstract syntax tree and a list of the threads to the annotator,
 The definitions are annotated with their C++ names, and actions called by
  several threads are demultiplexed into one per calling thread.
  Inclusion arguments are removed from the signatures.
+ Thread arguments are annotated with their C++ names.
 \end_layout
 
 \begin_layout Enumerate
@@ -6607,7 +6620,9 @@ The C++ equivalent of the threads, actions and functions are constructed
 \end_layout
 
 \begin_layout Enumerate
-synchglobalvars handwritten [do something]
+The global synchronization variables for use in the runtime (for example
+ rendezvousCounter) are generated.
+ This is currently handwritten.
 \end_layout
 
 \begin_layout Enumerate
@@ -6617,8 +6632,8 @@ The synchronized variables are found in the program declaration and the
 \end_layout
 
 \begin_layout Enumerate
-The synchronizer function, also called waitForRendezvous, is constructed
- from the synchronized variables and the thread list.
+The synchronizer function (waitForRendezvous) is constructed from the synchroniz
+ed variables and the thread list.
 \end_layout
 
 \begin_layout Paragraph
@@ -6639,7 +6654,8 @@ generate
 getAnnotatedTree 
 \emph default
 Returns an annotated version of the supplied AST.
- This version has the final C++ names for functions and function calls
+ This version has the final C++ names for functions and their arguments
+ and function calls
 \end_layout
 
 \begin_layout Itemize
@@ -6752,7 +6768,9 @@ argtranslator
 \emph on
 typetranslator 
 \emph default
-translates (basic) Fumurt types to their C++ equivalents
+translates Fumurt types to their C++ equivalents.
+ Currently there are no user-defined types, so only basic types need to
+ be translated.
 \end_layout
 
 \begin_layout Itemize
@@ -6804,7 +6822,7 @@ gets the printList declarations.
 getmain 
 \emph default
 gets the main function.
- This only spawns the threads and then goes to sleep
+ The main function only spawns the threads and then goes to sleep
 \end_layout
 
 \begin_layout Itemize
@@ -6855,8 +6873,7 @@ class aDefLhs(val description:DefDescriptionT, val id:IdT, val cppid:IdT,
 .
  Here, we see the new C++ name, as well as which thread is meant to call
  the function.
- In cases where functions need to be demultiplexed, the new AST will be
- modified to hold those as well.
+ 
 \end_layout
 
 \begin_layout Section
@@ -6868,14 +6885,6 @@ Considering the nature of languages, the amount left undone could very well
  be countable infinity.
  The following list are for things that make the current implementation
  feel incomplete.
- For a more extensive list, see 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Suggestions-for-Future"
-
-\end_inset
-
- Suggestions for Future Work.
 \end_layout
 
 \begin_layout Itemize
@@ -6887,19 +6896,19 @@ User-defined types
 \end_layout
 
 \begin_layout Itemize
-Boolean functions and logic
+Boolean functions
 \end_layout
 
 \begin_layout Itemize
-Comparison functions
+Comparison functions (beside equal)
 \end_layout
 
 \begin_layout Itemize
-exit function
+Exit function
 \end_layout
 
 \begin_layout Itemize
-check that only the thread with write rights to a synchronized variable
+A check that only the thread with write rights to a synchronized variable
  is allowed to write to that variable
 \end_layout
 
@@ -7248,7 +7257,7 @@ Synchronized Integer
 
 \begin_layout Standard
 Synchronized variables are the same in all threads, and mutations are published
- in
+ in the communicative phase.
 \begin_inset ERT
 status open
 
@@ -7531,7 +7540,7 @@ program helloworld:Nothing =
 
 \begin_layout Plain Layout
 
-  threadA(d=0.0, i=0, actionPrintSquare=actionPrintSquare)
+  threadA(d=1.0, i=1, actionPrintSquare=actionPrintSquare)
 \end_layout
 
 \begin_layout Plain Layout
@@ -7696,182 +7705,177 @@ status open
 
 \begin_layout Plain Layout
 
-The factorial of 0 is 0    The square of 0.000000 is 0.000000
+The factorial of 1 is 1    The square of 1.000000 is 1.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 1 is 1    The square of 0.500000 is 0.250000
+The factorial of 2 is 2    The square of 1.500000 is 2.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 2 is 2    The square of 1.000000 is 1.000000
+The factorial of 3 is 6    The square of 2.000000 is 4.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 3 is 6    The square of 1.500000 is 2.250000
+The factorial of 4 is 24    The square of 2.500000 is 6.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 4 is 24    The square of 2.000000 is 4.000000
+The factorial of 5 is 120    The square of 3.000000 is 9.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 5 is 120    The square of 2.500000 is 6.250000
+The factorial of 6 is 720    The square of 3.500000 is 12.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 6 is 720    The square of 3.000000 is 9.000000
+The factorial of 7 is 5040    The square of 4.000000 is 16.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 7 is 5040    The square of 3.500000 is 12.250000
+The factorial of 8 is 40320    The square of 4.500000 is 20.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 8 is 40320    The square of 4.000000 is 16.000000
+The factorial of 9 is 362880    The square of 5.000000 is 25.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 9 is 362880    The square of 4.500000 is 20.250000
+The factorial of 10 is 3628800    The square of 5.500000 is 30.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 10 is 3628800    The square of 5.000000 is 25.000000
+The factorial of 11 is 39916800    The square of 6.000000 is 36.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 11 is 39916800    The square of 5.500000 is 30.250000
+The factorial of 12 is 479001600    The square of 6.500000 is 42.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 12 is 479001600    The square of 6.000000 is 36.000000
+The factorial of 13 is 1932053504    The square of 7.000000 is 49.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 13 is 1932053504    The square of 6.500000 is 42.250000
+The factorial of 14 is 1278945280    The square of 7.500000 is 56.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 14 is 1278945280    The square of 7.000000 is 49.000000
+The factorial of 15 is 2004310016    The square of 8.000000 is 64.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 15 is 2004310016    The square of 7.500000 is 56.250000
+The factorial of 16 is 2004189184    The square of 8.500000 is 72.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 16 is 2004189184    The square of 8.000000 is 64.000000
+The factorial of 17 is -288522240    The square of 9.000000 is 81.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 17 is -288522240    The square of 8.500000 is 72.250000
+The factorial of 18 is -898433024    The square of 9.500000 is 90.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 18 is -898433024    The square of 9.000000 is 81.000000
+The factorial of 19 is 109641728    The square of 10.000000 is 100.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 19 is 109641728    The square of 9.500000 is 90.250000
+The factorial of 20 is -2102132736    The square of 10.500000 is 110.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 20 is -2102132736    The square of 10.000000 is 100.000000
+The factorial of 21 is -1195114496    The square of 11.000000 is 121.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 21 is -1195114496    The square of 10.500000 is 110.250000
+The factorial of 22 is -522715136    The square of 11.500000 is 132.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 22 is -522715136    The square of 11.000000 is 121.000000
+The factorial of 23 is 862453760    The square of 12.000000 is 144.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 23 is 862453760    The square of 11.500000 is 132.250000
+The factorial of 24 is -775946240    The square of 12.500000 is 156.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 24 is -775946240    The square of 12.000000 is 144.000000
+The factorial of 25 is 2076180480    The square of 13.000000 is 169.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 25 is 2076180480    The square of 12.500000 is 156.250000
+The factorial of 26 is -1853882368    The square of 13.500000 is 182.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 26 is -1853882368    The square of 13.000000 is 169.000000
+The factorial of 27 is 1484783616    The square of 14.000000 is 196.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 27 is 1484783616    The square of 13.500000 is 182.250000
+The factorial of 28 is -1375731712    The square of 14.500000 is 210.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 28 is -1375731712    The square of 14.000000 is 196.000000
+The factorial of 29 is -1241513984    The square of 15.000000 is 225.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 29 is -1241513984    The square of 14.500000 is 210.250000
+The factorial of 30 is 1409286144    The square of 15.500000 is 240.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 30 is 1409286144    The square of 15.000000 is 225.000000
+The factorial of 31 is 738197504    The square of 16.000000 is 256.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 31 is 738197504    The square of 15.500000 is 240.250000
+The factorial of 32 is -2147483648    The square of 16.500000 is 272.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 32 is -2147483648    The square of 16.000000 is 256.000000
+The factorial of 33 is -2147483648    The square of 17.000000 is 289.000000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 33 is -2147483648    The square of 16.500000 is 272.250000
+The factorial of 34 is 0    The square of 17.500000 is 306.250000
 \end_layout
 
 \begin_layout Plain Layout
 
-The factorial of 34 is 0    The square of 17.000000 is 289.000000
-\end_layout
-
-\begin_layout Plain Layout
-
-The factorial of 35 is 0    The square of 17.500000 is 306.250000
+The factorial of 35 is 0    The square of 18.000000 is 324.000000
 \end_layout
 
 \begin_layout Plain Layout
@@ -7890,10 +7894,10 @@ Here we see a problem with relying on integers of limited size.
  As for the eventual answer to the factorial calculation being zero, this
  seems to be a result of the C++ compiler's optimizations.
  No optimization gives the stack overflow we expect; running the binary
- results in an immediate segmentation fault when compiled with GCC with
- -O0 or -O1 or Clang with -O0.
+ results in a segmentation fault when compiled with GCC with -O0 or -O1
+ or Clang with -O0.
  Though there are problems with integer wrap-around and stack overflow,
- a recursive factorial function is a classic way to demsonstrate the syntax
+ a recursive factorial function is a classic way to demonstrate the syntax
  of a language.
 \end_layout
 
@@ -8968,10 +8972,6 @@ status open
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-Observe that all output is deterministic.
 \end_layout
 
 \begin_layout Section

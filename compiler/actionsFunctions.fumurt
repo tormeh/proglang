@@ -1,6 +1,6 @@
 program helloworld:Nothing =
 {
-  threadA(d=0.0, i=0, actionPrintSquare=actionPrintSquare)
+  threadA(d=1.0, i=1, actionPrintSquare=actionPrintSquare)
 }
 
 thread threadA(d:Double, i:Integer, actionPrintSquare:Inclusion):Nothing =
