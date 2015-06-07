@@ -9,6 +9,7 @@
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
+\usepackage{lmodern}
 
 
 \lstdefinelanguage{scala}{
@@ -361,7 +362,7 @@ It assumes that readers have prior experience working with programming languages
 \end_layout
 
 \begin_layout Standard
-26th of may, 2015
+8th of june, 2015
 \end_layout
 
 \begin_layout Standard
@@ -405,7 +406,8 @@ My flatmates, Caroline Einen and Ingerid Gjeitnes Hellen, who tolerate my
 
 \begin_layout Itemize
 My supervisor, Sverre Hendseth, who scared me into working when I thought
- the compiler would never function and also had some advice
+ the compiler would never function.
+ He was a valuable source of calm, motivation and advice
 \end_layout
 
 \begin_layout Itemize
@@ -589,7 +591,7 @@ Code listing contains the source code
 \end_layout
 
 \begin_layout Standard
-The report layout adheres to a standard set by University College London
+The report layout adheres to a recommendation by University College London
 \begin_inset CommandInset citation
 LatexCommand cite
 key "UCLReportStructure"
@@ -5358,6 +5360,13 @@ This can be accomplished by doing two passes over the AST.
 
 \begin_layout Section
 Limitations
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Limitations"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5730,6 +5739,15 @@ Parser: Parser[XT]
 parses that particular type of token, for example 
 \emph on
 newlineParser: Parser[NewlineT]
+\end_layout
+
+\begin_layout Paragraph*
+Classes
+\end_layout
+
+\begin_layout Itemize
+The scanner uses token classes.
+ These are held in Ast.scala
 \end_layout
 
 \begin_layout Section
@@ -6327,6 +6345,11 @@ rest
 \end_layout
 
 \end_deeper
+\begin_layout Itemize
+The parser uses AST and token classes.
+ These are in the Ast.scala file.
+\end_layout
+
 \begin_layout Section
 Checker
 \end_layout
@@ -6858,7 +6881,7 @@ Classes
 \end_layout
 
 \begin_layout Standard
-The generator holds classes needed to annotate the AST, for example 
+The generator uses classes needed to annotate the AST, for example 
 \emph on
 class aDefinition(val leftside:aDefLhs, val rightside:aDefRhs).
  
@@ -6873,16 +6896,23 @@ class aDefLhs(val description:DefDescriptionT, val id:IdT, val cppid:IdT,
 .
  Here, we see the new C++ name, as well as which thread is meant to call
  the function.
- 
+ These are in the Ast.scala file.
 \end_layout
 
 \begin_layout Section
 Not Implemented
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Not-Implemented"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 Considering the nature of languages, the amount left undone could very well
- be countable infinity.
+ be countably infinite.
  The following list are for things that make the current implementation
  feel incomplete.
 \end_layout
@@ -9879,72 +9909,41 @@ It is common for programming languages to need a decade of intensive development
  by several contributors before it is ready for serious usage.
  It is therefore not hard to come up with ways in which Fumurt could be
  improved.
-\end_layout
+ For ideas, see section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Limitations"
 
-\begin_layout Standard
-The grammar needs further development.
- The 
-\begin_inset Quotes eld
 \end_inset
 
-defRhs
-\begin_inset Quotes erd
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Not-Implemented"
+
 \end_inset
 
- in the current grammar is essentially a multi-line statement.
- It would be beneficial if the line between statement and defRhs could be
- eliminated.
- For instance, multi-line statements could replace function calls in if-calls
- or a single line statement without brackets could serve as right hand side
- in a definition.
- Operators would make many common operations less verbose.
- Optional use of begin..end [function name or similar] syntax would be nice.
-\end_layout
+.
+ But not all improvements to Fumurt are of academic interest; much of the
+ work is simply implementation of pretty mundane things.
+ Improvements to the execution model might be more interesting.
+ There are many ideas in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Limitations"
 
-\begin_layout Standard
-A larger standard library is needed.
- More specifically, more IO primitives, Boolean functions, sequence objects,
- higher-order functions as well as loops.
-\end_layout
+\end_inset
 
-\begin_layout Standard
-Fumurt lacks user-defined types, interfaces and generics as well as modules.
- Mechanisms such as these make it easier to write large programs.
-\end_layout
-
-\begin_layout Standard
-Investigate improvements to the execution model.
-\end_layout
-
-\begin_layout Standard
-Investigate solutions to hardware faults and distributed systems.
- Erlang with OTP might be helpful.
-\end_layout
-
-\begin_layout Standard
-Perform empirical studies amond programmers investigating whether the ideas
- underlying the existing design and proposed work are actually good ideas.
-\end_layout
-
-\begin_layout Standard
-For performance reasons, making the threads lightweight might be a good
- idea.
-\end_layout
-
-\begin_layout Standard
-Implement tail call elimination for all actions and functions, not just
- threads recursing on themselves as is done currently.
-\end_layout
-
-\begin_layout Standard
-Determine an appropriate mechanism for directly accessing registers and
- memory needed for embedded programming.
-\end_layout
-
-\begin_layout Standard
-Implement an appropriate procedure executed in the cases where the IO buffers
- can no longer fit in memory.
- 
+ about how the model might be refined.
+ Investigating solutions to employing deterministic Fumurt or Fumurt-like
+ systems while accommodating hardware faults and distributed systems is
+ another possibility.
+ An Erlang/OTP system might be able to serve as a supervisor for several
+ networked systems running deterministic code.
+ Lastly, there seems to be little empirical work when it comes to programming
+ language design.
+ Performing empirical studies among programmers investigating what programming
+ language ideas are actually helpful seems like a good idea.
 \end_layout
 
 \begin_layout Standard
@@ -10104,9 +10103,9 @@ run [name of Fumurt file]
 \end_layout
 
 \begin_layout Standard
-The Fumurt compiler uses Clang, and Clang must therefore be installed.
- If Clang is not installed, the user may compile the generated C++ from
- the generated 
+The Fumurt compiler uses GCC, and GCC must therefore be installed.
+ If GCC is not installed, the user may compile the generated C++ from the
+ generated 
 \begin_inset Quotes eld
 \end_inset
 
@@ -10131,11 +10130,12 @@ generated.cpp
 \begin_inset Quotes erd
 \end_inset
 
- are required.
+ are required when using Clang/GCC on Linux, but not using the Microsoft
+ Visual C++ compiler on Windows.
 \end_layout
 
 \begin_layout Standard
-The output will be a binary executable named 
+If everything goes well, the output will be a binary executable named 
 \begin_inset Quotes eld
 \end_inset
 
@@ -10143,7 +10143,23 @@ generated
 \begin_inset Quotes erd
 \end_inset
 
+, with 
+\begin_inset Quotes eld
+\end_inset
 
+-O3
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+march=native
+\begin_inset Quotes erd
+\end_inset
+
+ options.
 \end_layout
 
 \begin_layout Standard
@@ -10272,8 +10288,8 @@ fumurtCompiler
 \begin_inset Quotes erd
 \end_inset
 
-, i.e.
- the name of the package and the command to run must be 
+ (i.e.
+ the name of the package), and the command to run must be 
 \begin_inset Quotes eld
 \end_inset
 
@@ -10285,9 +10301,9 @@ scala fumurtCompiler.Main [fumurt source file here]
 \end_layout
 
 \begin_layout Standard
-The Fumurt compiler uses Clang, and Clang must therefore be installed.
- If Clang is not installed, the user may compile the generated C++ from
- the generated 
+The Fumurt compiler uses GCC, and GCC must therefore be installed.
+ If GCC is not installed, the user may compile the generated C++ from the
+ generated 
 \begin_inset Quotes eld
 \end_inset
 
@@ -10312,7 +10328,8 @@ generated.cpp
 \begin_inset Quotes erd
 \end_inset
 
- are required.
+ are required when using Clang/GCC on Linux, but not using the Microsoft
+ Visual C++ compiler on Windows.
 \end_layout
 
 \begin_layout Standard
@@ -10385,6 +10402,11 @@ FumurtParser$$anonfun$subsequentArgsParser$2.class
 \begin_layout Plain Layout
 
 /*more bytecode files here*/
+\end_layout
+
+\begin_layout Plain Layout
+
+$
 \end_layout
 
 \begin_layout Plain Layout

@@ -1,15 +1,108 @@
 [0m[[0mdebug[0m] [0m[0m
 [0m[[0mdebug[0m] [0mInitial source changes: [0m
 [0m[[0mdebug[0m] [0m	removed:Set()[0m
-[0m[[0mdebug[0m] [0m	added: Set()[0m
+[0m[[0mdebug[0m] [0m	added: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/CodeGenerator.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Ast.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Error.scala)[0m
 [0m[[0mdebug[0m] [0m	modified: Set()[0m
 [0m[[0mdebug[0m] [0mRemoved products: Set()[0m
 [0m[[0mdebug[0m] [0mExternal API changes: API Changes: Set()[0m
 [0m[[0mdebug[0m] [0mModified binary dependencies: Set()[0m
-[0m[[0mdebug[0m] [0mInitial directly invalidated sources: Set()[0m
+[0m[[0mdebug[0m] [0mInitial directly invalidated sources: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/CodeGenerator.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Ast.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Error.scala)[0m
 [0m[[0mdebug[0m] [0m[0m
 [0m[[0mdebug[0m] [0mSources indirectly invalidated by:[0m
 [0m[[0mdebug[0m] [0m	product: Set()[0m
 [0m[[0mdebug[0m] [0m	binary dep: Set()[0m
 [0m[[0mdebug[0m] [0m	external source: Set()[0m
-[0m[[0mdebug[0m] [0mAll initially invalidated sources: Set()[0m
+[0m[[0mdebug[0m] [0mAll initially invalidated sources: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/CodeGenerator.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Ast.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala, /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Error.scala)[0m
+[0m[[0mdebug[0m] [0mRecompiling all 7 sources: invalidated sources (7) exceeded 50.0% of all sources[0m
+[0m[[0minfo[0m] [0mCompiling 7 Scala sources to /home/tormod/Documents/skole/spring2015/proglang/compiler/target/scala-2.11/classes...[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.6[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.6[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 4c229801, interfacing (CompilerInterface) with Scala compiler version 2.11.6[0m
+[0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
+[0m[[0mdebug[0m] [0m	-feature[0m
+[0m[[0mdebug[0m] [0m	-optimise[0m
+[0m[[0mdebug[0m] [0m	-Xlint[0m
+[0m[[0mdebug[0m] [0m	-Xfatal-warnings[0m
+[0m[[0mdebug[0m] [0m	-deprecation[0m
+[0m[[0mdebug[0m] [0m	-Ywarn-unused[0m
+[0m[[0mdebug[0m] [0m	-Ywarn-infer-any[0m
+[0m[[0mdebug[0m] [0m	-Ywarn-unused-import[0m
+[0m[[0mdebug[0m] [0m	-Ywarn-dead-code[0m
+[0m[[0mdebug[0m] [0m	-Ywarn-inaccessible[0m
+[0m[[0mdebug[0m] [0m	-Ywarn-numeric-widen[0m
+[0m[[0mdebug[0m] [0m	-Ywarn-nullary-override[0m
+[0m[[0mdebug[0m] [0m	-Ywarn-nullary-unit[0m
+[0m[[0mdebug[0m] [0m	-Ywarn-adapted-args[0m
+[0m[[0mdebug[0m] [0m	-bootclasspath[0m
+[0m[[0mdebug[0m] [0m	/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jfr.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/classes:/home/tormod/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.6.jar[0m
+[0m[[0mdebug[0m] [0m	-classpath[0m
+[0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/proglang/compiler/target/scala-2.11/classes:/home/tormod/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/bundles/scala-parser-combinators_2.11-1.0.3.jar[0m
+[0m[[0mdebug[0m] [0mScala compilation took 18.389552849 s[0m
+[0m[[0mdebug[0m] [0mInvalidating /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala)[0m
+[0m[[0mdebug[0m] [0mThe /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, checktop, checknamedcallargs, checkifcall, wait, $asInstanceOf, checkexpressions, equals, checkbasicvaluestatement, asInstanceOf, synchronized, checkCallarg, $isInstanceOf, checkprogram, FumurtTypeChecker, checkbasicmathcall, notifyAll, isInstanceOf, findinscope, check, indexlefts, checkmutatecall, ==, checkexpression, clone, toString, !=, checkdefinition, checktostringcall, getClass, checkstatement, ne, eq, ##, finalize, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala: Set(asInstanceOf, FumurtTypeChecker, isInstanceOf, check, ==, toString)[0m
+[0m[[0mdebug[0m] [0mInvalidating /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Error.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Error.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Error.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Error.scala)[0m
+[0m[[0mdebug[0m] [0mThe /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Error.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, Global, wait, copy$default$2, $asInstanceOf, productArity, equals, line, asInstanceOf, <, synchronized, $isInstanceOf, canEqual, productPrefix, notifyAll, readResolve, isInstanceOf, lineContents, <init>, Source, ==, clone, longString, copy$default$3, copy, position, message, column, toString, !=, FumurtError, getClass, copy$default$1, ne, eq, productIterator, ##, finalize, productElement, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala: Set(Global, asInstanceOf, <, isInstanceOf, <init>, ==, !=, FumurtError, ne)[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala: Set(asInstanceOf, <, isInstanceOf, <init>, Source, ==, toString)[0m
+[0m[[0mdebug[0m] [0mInvalidating /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Ast.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Ast.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Ast.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Ast.scala)[0m
+[0m[[0mdebug[0m] [0mThe /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Ast.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	cppfunctionidentifier, notify, ValueT, Argument, aExpression, BasicValueT, wait, OpenCurlyBracketT, Callarg, copy$default$2, $asInstanceOf, FalseStatement, copy$default$5, CommaT, aArguments, productArity, IntegerT, rightside, equals, SpaceT, ActionT, aFunctionCallStatement, description, typestr, asInstanceOf, FunctionCallStatement, pos, aCallarg, synchronized, aNamedCallargs, DummyT, $isInstanceOf, CloseParenthesisT, FalseT, Expression, EmptyT, NewlineT, DoubleStatement, callingthread, IdT, aStatement, SyntaxT, cppid, canEqual, expressions, copy$default$4, IdentifierStatement, productPrefix, notifyAll, aDefRhs, CloseCurlyBracketT, EofT, isInstanceOf, Definition, SynchronizedVariableT, NamedCallarg, Arguments, ThreadT, DefRhs, NoArgs, DefDescriptionT, <init>, id, aDefLhs, Statement, Empty, functionidentifier, BasicValueStatement, ==, clone, StringStatement, setPos, aArgument, aNamedCallarg, ProgramT, copy$default$3, copy, returntype, toString, args, !=, getClass, DoubleT, copy$default$1, StringT, FunctionT, TrueT, TrueStatement, DefLhs, NamedCallargs, copy$default$6, ne, Token, argument, leftside, value, eq, OpenParenthesisT, productIterator, aDefinition, DefDescription, ##, finalize, ColonT, productElement, hashCode, IntegerStatement, EqualT, TypeT.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala: Set(ValueT, OpenCurlyBracketT, CommaT, IntegerT, SpaceT, ActionT, asInstanceOf, CloseParenthesisT, FalseT, NewlineT, IdT, CloseCurlyBracketT, isInstanceOf, SynchronizedVariableT, ThreadT, <init>, ProgramT, toString, DoubleT, StringT, FunctionT, TrueT, Token, OpenParenthesisT, ColonT, EqualT, TypeT)[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/CodeGenerator.scala: Set(cppfunctionidentifier, aExpression, Callarg, aArguments, rightside, aFunctionCallStatement, description, typestr, asInstanceOf, FunctionCallStatement, aCallarg, aNamedCallargs, Expression, callingthread, IdT, aStatement, cppid, expressions, isInstanceOf, Definition, <init>, id, aDefLhs, functionidentifier, ==, aArgument, aNamedCallarg, returntype, toString, args, !=, ne, argument, leftside, value, aDefinition, TypeT)[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala: Set(asInstanceOf, isInstanceOf, <init>, ==, toString, args)[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala: Set(Argument, Callarg, asInstanceOf, FunctionCallStatement, pos, Expression, IdT, IdentifierStatement, isInstanceOf, Definition, NamedCallarg, Arguments, DefRhs, DefDescriptionT, <init>, id, Statement, Empty, BasicValueStatement, DefLhs, NamedCallargs, ne, Token, value, DefDescription, TypeT)[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Typechecker.scala: Set(Callarg, rightside, description, typestr, asInstanceOf, FunctionCallStatement, pos, Expression, IdT, expressions, isInstanceOf, Definition, NamedCallarg, <init>, id, Statement, functionidentifier, BasicValueStatement, ==, returntype, args, !=, DefLhs, ne, argument, leftside, value, TypeT)[0m
+[0m[[0mdebug[0m] [0mInvalidating /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/CodeGenerator.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/CodeGenerator.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/CodeGenerator.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/CodeGenerator.scala)[0m
+[0m[[0mdebug[0m] [0mThe /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/CodeGenerator.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, callargTranslator, wait, getprintlistdeclarations, $asInstanceOf, gettopthreadstatements, basicmathcalltranslator, equals, getGlobalSynchVariableDeclarations, generate, getAnnotatedTree, asInstanceOf, synchronized, $isInstanceOf, notifyAll, isInstanceOf, functioncalltranslator, findinscope, indexlefts, ==, FumurtCodeGenerator, getStaticThreadArgs, clone, getmain, getAnnotatedTreeInternal, getFunctionDeclarations, toString, annotateFunctionCall, !=, getClass, getCallsAnnotatedTreeInternal, getsynchronizedvariables, typetranslator, ne, getFunctionSignature, getsynchronizerfunction, eq, ##, finalize, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala: Set(generate, asInstanceOf, isInstanceOf, ==, FumurtCodeGenerator, toString)[0m
+[0m[[0mdebug[0m] [0mInvalidating /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala)[0m
+[0m[[0mdebug[0m] [0mThe /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala source file has the following implicit definitions changed:[0m
+[0m[[0mdebug[0m] [0m	accept.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following member ref dependencies of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Parser.scala are invalidated:[0m
+[0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala[0m
+[0m[[0mdebug[0m] [0mInvalidating /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala)[0m
+[0m[[0mdebug[0m] [0mThe /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala source file has the following implicit definitions changed:[0m
+[0m[[0mdebug[0m] [0m	ordering, canBuildFrom, mkOrderingOps.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mInvalidating /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala)[0m
+[0m[[0mdebug[0m] [0mThe /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala source file has the following implicit definitions changed:[0m
+[0m[[0mdebug[0m] [0m	literal, accept, regex.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following member ref dependencies of /home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Scanner.scala are invalidated:[0m
+[0m[[0mdebug[0m] [0m	/home/tormod/Documents/skole/spring2015/proglang/compiler/src/main/scala/Main.scala[0m
+[0m[[0mdebug[0m] [0mNew invalidations:[0m
+[0m[[0mdebug[0m] [0m	Set()[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set()[0m
+[0m[[0mdebug[0m] [0mPreviously invalidated, but (transitively) depend on new invalidations:[0m
+[0m[[0mdebug[0m] [0m	Set()[0m
+[0m[[0mdebug[0m] [0mAll newly invalidated sources after taking into account (previously) recompiled sources:Set()[0m
