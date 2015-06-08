@@ -78,11 +78,11 @@ showtabs=false}
 \output_sync 0
 \bibtex_command default
 \index_command default
-\paperfontsize default
+\paperfontsize 10
 \spacing single
 \use_hyperref false
-\papersize a4paper
-\use_geometry false
+\papersize b5paper
+\use_geometry true
 \use_amsmath 1
 \use_esint 1
 \use_mhchem 1
@@ -97,13 +97,17 @@ showtabs=false}
 \shortcut idx
 \color #008000
 \end_index
+\leftmargin 25mm
+\topmargin 27mm
+\rightmargin 25mm
+\bottommargin 30mm
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
 \quotes_language english
 \papercolumns 1
-\papersides 1
+\papersides 2
 \paperpagestyle default
 \tracking_changes false
 \output_changes false
@@ -296,9 +300,12 @@ g are preserved.
  and while the popular embedded programming languages are unlikely to be
  replaced anytime soon, effort still has to be made to figure out the next
  step in the language evolution.
- In the language presented, threads are written much like functions, dependencie
-s between functions not contained in each other are explicit and arguments
- are distinguished by name, not sequence.
+ In the language presented, there are also other changes meant to aid in
+ the programming of critical systems besides determinism: Threads are written
+ much like functions, dependencies between functions not contained in each
+ other are explicit and arguments are distinguished by name, not sequence.
+ Finally, threads and objects shared between threads are all visible in
+ a single place.
 \end_layout
 
 \begin_layout Section*
@@ -315,9 +322,11 @@ ssige og noen av de ytelsesmessige fordelene forblir.
  abstraksjon, og selv om de populære språkene for mikrokontrollere ikke
  ser ut til å bli erstattet med det første, må vi fremdeles gjøre en innsats
  for å finne det neste steget i språkutviklingen.
- I det presenterte språket er tråder skrevet på samme måte som funksjoner,
- avhengighet mellom funksjoner er eksplisitt og argumenter skilles fra hverandre
- ved navn, ikke relativ posisjon.
+ I det presenterte språket er det også andre forandringer ment å lette programme
+ringen av kritiske systemer: Tråder skrives som funksjoner, avhengigheter
+ mellom funksjoner som ikke er erklært i hverandre er uttalt og argumenter
+ er skilt fra hverandre ved navn, ikke relativ posisjon.
+ Til slutt er tråder og objekter delt mellom tråder synlig på ett sted.
 \end_layout
 
 \begin_layout Standard
@@ -381,8 +390,7 @@ The report is divided into chapters as follows:
 
 \begin_layout Itemize
 The Background chapter contains information needed to understand the rest
- of the report.
- 
+ of the report and a summary of the state of the art 
 \end_layout
 
 \begin_layout Itemize
@@ -390,8 +398,8 @@ The specification loosely outlines how the language should look and behave
 \end_layout
 
 \begin_layout Itemize
-Analysis and Design discusses the more interesting choices done during the
- implementation
+Analysis and Design discusses the high-level choices taken during implementation
+ and the limitations of the current design
 \end_layout
 
 \begin_layout Itemize
@@ -763,7 +771,7 @@ ne systems it presents a way to achieve near-multi-threaded performance
  concurrent behavior on the programmer, synchronous programming takes care
  of all of that and replaces it with the responsibility for performance,
  as the program performs best if all threads has an equal amount of work.
- Let us discuss the problems of the other abstractions
+ Let us discuss the problems of the other abstractions:
 \end_layout
 
 \begin_layout Itemize
@@ -856,14 +864,14 @@ The back end accepts the intermediate representation and outputs the the
 \end_layout
 
 \begin_layout Standard
-Since the compiler described in 
+Since the Fumurt compiler (described in chapter 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "chap:Implementation"
 
 \end_inset
 
- does not deal with optimization and conversion to binary itself, but rather
+) does not deal with optimization and conversion to binary itself, but rather
  outsources this to a C++ compiler, all of the difficult material on instruction
  selection, scheduling and register allocation is of no relevance.
  The parts of relevance to this report is the front end and a relatively
@@ -955,7 +963,7 @@ Example:
 \end_layout
 
 \begin_layout Standard
-Consider a notion of a lower case letter can be described like this:
+Consider that a lower case letter can be described like this:
 \begin_inset ERT
 status open
 
@@ -1209,7 +1217,7 @@ A parser combinator is a higher order function that accepts parsers as input
  and returns a new parser
 \begin_inset CommandInset citation
 LatexCommand cite
-key "Parser combinators"
+key "frost1989constructingParserCombinators"
 
 \end_inset
 
@@ -1994,7 +2002,7 @@ Their constructor parameters are exported
 \begin_layout Itemize
 One can use pattern matching on them.
  Pattern matching allows one to test which type an object has and extract
- it, its values or both.
+ its values, a reference to it or both.
 \end_layout
 
 \begin_deeper
@@ -2630,7 +2638,7 @@ scala> for(x <- list){println(x)}
 \end_layout
 
 \begin_layout Standard
-For fold, foldLeft, foldRight, map and flatMap examples:
+Fold, foldLeft, foldRight, map and flatMap examples:
 \end_layout
 
 \begin_layout Itemize
@@ -2730,9 +2738,9 @@ res2: Int = 5
 
 \end_inset
 
-This is generally true: Trying to apply necessarily sequential operations
- to parallel collections is a bad idea, and a highly unfortunate pitfall
- for newcomers to Scala.
+This is generally true: Mixing necessarily sequential operations and parallel
+ collections is a bad idea, and a highly unfortunate pitfall for newcomers
+ to Scala.
 \end_layout
 
 \begin_layout Itemize
@@ -2856,8 +2864,8 @@ status open
 
 \begin_layout Plain Layout
 
-scala> (0 to 9).par.flatMap(x=>if(x%2==0){None}else{Some(x*x)}).fold(0)((left,right
-)=>left+right) 
+scala> (0 to 9).par.flatMap(x=>if(x%2==0){None} else{Some(x*x)}).fold(0)((left,righ
+t)=>left+right) 
 \end_layout
 
 \begin_layout Plain Layout
@@ -3328,7 +3336,7 @@ d*)
 \begin_inset Quotes eld
 \end_inset
 
-0021
+00201
 \begin_inset Quotes erd
 \end_inset
 
@@ -3446,7 +3454,7 @@ The memory consistency model concerns itself with making guarantees about
 lock()
 \emph default
 ) operation, which ensures determinism since the position of these operations
- relative to memory loads are defined in the source code.
+ are determined by the logical clock.
  This read determinism is then a result of implementation; TSO does not
  require it.
  Alternatives to TSO (for example DRF0
@@ -3523,8 +3531,8 @@ key "merrifield2015highCONSEQUENCE"
  Instruction-count based scheduling allows Consequence to be faster than
  Dthreads.
  The downside is that Consequence is nondeterministic in the face of changing
- input and changing behavior when inserting debugging operations like print-stat
-ements.
+ input and also changes behavior when inserting debugging operations like
+ print-statements.
  Consequence relies on Conversion, a kernel-implemented version control
  system, for the memory consistency model.
  Like in Dthreads, each thread is actually run in its own process.
@@ -3643,6 +3651,7 @@ Much of what has been specified has not been implemented.
 ed.
  Everything herein, especially that which is left unimplemented, is to be
  considered preliminary.
+ Future work should not give this specification undue consideration.
 \end_layout
 
 \begin_layout Section
@@ -4281,9 +4290,9 @@ key "milne2002difficulties"
 
 \end_inset
 
- known to be hard to reason about.
+ known to be hard to understand.
  Programmers should be able to specify specific memory ranges that can later
- be written to with functions for this purpose.
+ be written to with functions.
  These are intended to be used only when the programmer needs to store data
  to specific addresses.
 \end_layout
@@ -4315,7 +4324,7 @@ Operator precedence for user-defined operators is tricky.
 \end_layout
 
 \begin_layout Standard
-A prime example of unhelpful operator behavior is found in 
+A prime example of unhelpful operator names can be found in section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:The-Scala-Parser"
@@ -4869,7 +4878,7 @@ Other languages under consideration were C, C++ and Haskell.
  Haskell has all the features necessary, but the author had previously had
  problems learning it.
  It was also a concern that Haskell does not provide non-functional mechanisms,
- even when this is the best solution to a problem.
+ even when these are the best solution to a problem.
 \end_layout
 
 \begin_layout Section
@@ -4904,7 +4913,7 @@ reference "sec:Runtime-Execution-Model"
 
 \end_inset
 
- needs be formulated in the compiled C++ code.
+ needs to be formulated in the compiled C++ code.
 \end_layout
 
 \begin_layout Itemize
@@ -5213,9 +5222,10 @@ There are no compound statements, except in the right hand side of definitions
 \end_layout
 
 \begin_layout Itemize
-Definition right hand demarcation of the begin..end [function/x] type should
- be optional, as it can be helpful when reading and writing deeply nested
- expressions, where exactly what it is that is ending can often be unclear.
+Definition right hand demarcation of the begin..end [function/x] type (for
+ example begin..end loop) should be optional, as it can be helpful when reading
+ and writing deeply nested expressions, where exactly what it is that is
+ ending can often be unclear.
 \end_layout
 
 \begin_layout Itemize
@@ -5229,7 +5239,7 @@ s.
  sacrifices to predictability, it seems prudent to evaluate the possibility
  of using an instruction-based logical clock system when the programmer
  specifies it.
- Systems such as CONSEQUENCE
+ Systems such as Consequence
 \begin_inset CommandInset citation
 LatexCommand cite
 key "merrifield2015highCONSEQUENCE"
@@ -5379,7 +5389,8 @@ Scanner
 \end_layout
 
 \begin_layout Standard
-Drawing on experience from the TU Berlin course (see 
+Scanners, it should be noted, are sometimes called lexers.
+ Drawing on experience from the TU Berlin course (see 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:TUB course"
@@ -5387,6 +5398,7 @@ reference "sec:TUB course"
 \end_inset
 
 ), the Scala Standard Parser Combinator Library was chosen.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -5431,21 +5443,18 @@ def equalParser: Parser[EqualT] = positioned( new Regex("=") ^^ {x => EqualT()}
 
 \begin_layout Standard
 The parsers are then combined into the final scanner using the alternate
- operator
+ operator (
+\begin_inset Quotes eld
+\end_inset
+
+|
 \begin_inset Quotes erd
 \end_inset
 
-
+)
 \begin_inset CommandInset citation
 LatexCommand cite
-key "scala parser combinator doc"
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "scanner combined"
+key "ScalaParserCombinatorDoc"
 
 \end_inset
 
@@ -6746,7 +6755,7 @@ name "sec:Not-Implemented"
 
 \begin_layout Standard
 Considering the nature of languages, the amount left undone could very well
- be countably infinite.
+ be infinite.
  The following list are for things that make the current implementation
  feel incomplete.
 \end_layout
@@ -6768,12 +6777,22 @@ Comparison functions (beside equal)
 \end_layout
 
 \begin_layout Itemize
-Exit function
+Exit function.
+ This is not particularly important, as the systems Fumurt is made for are
+ not expected to ever exit
 \end_layout
 
 \begin_layout Itemize
 A check that only the thread with write rights to a synchronized variable
  is allowed to write to that variable
+\end_layout
+
+\begin_layout Itemize
+Some checks for the 
+\emph on
+equal
+\emph default
+ function
 \end_layout
 
 \begin_layout Itemize
@@ -7284,7 +7303,7 @@ onizedCounter)
 \end_layout
 
 \begin_layout Standard
-gives 
+And we can see that the number is consistent across threads: 
 \begin_inset ERT
 status open
 
@@ -8066,7 +8085,7 @@ function integerIdentity(x:Integer):Integer = {x}
 \end_layout
 
 \begin_layout Standard
-Gets compiled to the following C++11 code:
+The program gets compiled to the following C++11 code:
 \begin_inset ERT
 status open
 
@@ -8851,9 +8870,7 @@ reference "sec:Full-program-test"
 
 \end_inset
 
- to the following erroneous program allow us to test them:[have a lot more
- errors.
- Preferably all possible]
+ to the following erroneous program allow us to test them:
 \begin_inset ERT
 status open
 
@@ -9131,7 +9148,7 @@ function integerIdentity(x:Integer):Integer = {multiply(left=x, right=1.0)}
 \end_layout
 
 \begin_layout Standard
-The following type errors are produced:
+This causes the Fumurt checker produces the following errors:
 \begin_inset ERT
 status open
 
@@ -9808,7 +9825,8 @@ name "chap:System-manual"
 \end_layout
 
 \begin_layout Standard
-To avoid confusion, the Fumurt compiler will be referred to as 
+To avoid confusion when discussing compiling the compiler, the Fumurt compiler
+ will be referred to as 
 \begin_inset Quotes eld
 \end_inset
 
@@ -10075,8 +10093,18 @@ User manual
 \end_layout
 
 \begin_layout Standard
-You need to have Scala installed to run the Fumurt compiler from compiled
- bytecode.
+You need to have Scala installed (
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.scala-lang.org/download/
+\end_layout
+
+\end_inset
+
+) to run the Fumurt compiler from compiled bytecode.
  The current directory must be the one 
 \emph on
 above
