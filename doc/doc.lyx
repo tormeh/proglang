@@ -243,9 +243,10 @@ My flatmates, Caroline Einen and Ingerid Gjeitnes Hellen, who tolerate my
 \end_layout
 
 \begin_layout Itemize
-My supervisor, Sverre Hendseth, who scared me into working when I thought
- the compiler would never function.
- He was a valuable source of calm, motivation and advice
+My supervisor, Sverre Hendseth, whose suspender-belt combination taught
+ me the value of redundancy.
+ He was also a valuable source of calm, motivation and advice while working
+ on the thesis
 \end_layout
 
 \begin_layout Itemize
@@ -6036,7 +6037,7 @@ case class DefDescription(val value:Token)
 
 \begin_layout Plain Layout
 
-case class NamedCallarg(id:IdT, argument:Callarg) //extends Callarg
+case class NamedCallarg(id:IdT, argument:Callarg)
 \end_layout
 
 \begin_layout Plain Layout
@@ -9148,7 +9149,7 @@ function integerIdentity(x:Integer):Integer = {multiply(left=x, right=1.0)}
 \end_layout
 
 \begin_layout Standard
-This causes the Fumurt checker produces the following errors:
+This causes the Fumurt checker to produce the following errors:
 \begin_inset ERT
 status open
 
@@ -10316,6 +10317,11 @@ lstset{language=scala}
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Comments and commented-out diagnostics are left in, as they might prove
+ useful to anyone improving on the work.
 \end_layout
 
 \begin_layout Section
